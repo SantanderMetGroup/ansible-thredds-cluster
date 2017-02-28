@@ -1,0 +1,45 @@
+---
+- hosts: all
+  sudo: true
+  vars:
+    http_port: 8000
+    domain: example.com
+  tasks:
+
+    - name: install Apache2.2
+      yum: 
+        name: httpd
+        update_cache: yes
+
+    - name: apache2 listen on port {{ http_port }}
+      lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="^Listen" line="Listen "{{ http_port }}"" state=present
+      notify:
+        - restart apache2
+
+    - name: Enable proxy related modules
+      apache2_module: 
+        name: "{{ item }}" 
+        state: present
+      with_items:
+        - alias
+        #- ratelimit
+        - rewrite
+        - headers
+        - proxy_ajp
+        - proxy_balancer
+        - proxy_connect
+        #- proxy_express
+        - proxy_ftp
+        #- proxy_html
+        - proxy_http
+        #- proxy_scgi
+        #- proxy_wstunnel
+        #- ssl
+        - vhost_alias
+        #- xml2enc
+      notify: 
+        - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=httpd state=restarted
