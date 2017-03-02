@@ -1,0 +1,49 @@
+- name: Enable proxy related modules
+  apache2_module: 
+    name: "{{ item }}" 
+    state: present
+  with_items:
+    - alias
+    #- ratelimit
+    - rewrite
+    - headers
+    - proxy_ajp
+    - proxy_balancer
+    - proxy_connect
+    #- proxy_express
+    - proxy_ftp
+    #- proxy_html
+    - proxy_http
+    #- proxy_scgi
+    #- proxy_wstunnel
+    #- ssl
+    - vhost_alias
+    #- xml2enc
+  notify: 
+    - restart apache2
+
+- stat: path=/etc/httpd/conf.d/reverse_proxy.conf
+  register: reverse_file
+
+- name: Create reverse.conf file if it doesn't exist
+  file:
+    dest: /etc/httpd/conf.d/reverse_proxy.conf
+    state: touch
+  when: reverse_file.stat.exists == false
+
+- name: Configure reverse proxy 
+  blockinfile:
+    dest: /etc/httpd/conf.d/reverse_proxy.conf
+    block: |
+        <IfModule mod_proxy.c>
+            ProxyRequests Off
+            <Proxy *>
+            Order allow,deny
+            Allow from all
+            </Proxy>
+
+            ProxyPass /reverseproxy http://{{ ip_address }}:{{ httpd_port }}
+            ProxyPassReverse /reverseproxy http://{{ ip_address }}:{{ httpd_port }}
+        </IfModule>
+  notify:
+    - restart apache2

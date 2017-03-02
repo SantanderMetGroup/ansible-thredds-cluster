@@ -1,0 +1,21 @@
+---
+- name: deploy apache and reverse proxy in centos6
+  hosts: centos6
+  sudo: true
+  vars_files:
+    - apache_ports.yml
+  roles: 
+    - role: apache
+      httpd_port: "{{ httpd_port_centos6 }}"
+    - role: reverse-proxy
+      httpd_port: "{{ httpd_port_centos7}}"
+      ip_address: "{{ip_address_centos7}}"
+
+- name: deploy apache in centos7
+  sudo: true
+  hosts: centos7
+  vars_files:
+    - apache_ports.yml
+  roles:
+    - role: apache
+      httpd_port: "{{ httpd_port_centos7 }}"

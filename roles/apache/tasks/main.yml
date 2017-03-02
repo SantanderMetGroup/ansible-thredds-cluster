@@ -1,0 +1,16 @@
+- name: install Apache2.2
+  yum: 
+    name: httpd
+    update_cache: yes
+
+- name: install selinux
+  yum: 
+    name: libselinux-python
+  when:
+    - ansible_distribution == "CentOS"
+    - ansible_distribution_major_version == "6"
+
+- name: apache2 listen on port {{ httpd_port }}
+  lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="^Listen" line="Listen "{{ httpd_port }}"" state=present
+  notify:
+    - restart apache2
