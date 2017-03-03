@@ -8,8 +8,13 @@
     - role: apache
       httpd_port: "{{ httpd_port_centos6 }}"
     - role: reverse-proxy
-      httpd_port: "{{ httpd_port_centos7}}"
-      ip_address: "{{ip_address_centos7}}"
+      httpd_port_client: "{{httpd_port_centos7}}"
+      ip_address_client: "{{ip_address_centos7}}"
+      ip_address_w1: "{{ip_address_worker1}}"
+      httpd_port_w1: "{{httpd_port_worker1}}"
+      ip_address_w2: "{{ip_address_worker2}}"
+      httpd_port_w2: "{{httpd_port_worker2}}"
+
 
 - name: deploy apache in centos7
   sudo: true
@@ -19,3 +24,21 @@
   roles:
     - role: apache
       httpd_port: "{{ httpd_port_centos7 }}"
+
+- name: deploy apache in worker1
+  sudo: true
+  hosts: worker1
+  vars_files:
+    - apache_ports.yml
+  roles:
+    - role: apache
+      httpd_port: "{{ httpd_port_worker1 }}"
+
+- name: deploy apache in worker2
+  sudo: true
+  hosts: worker2
+  vars_files:
+    - apache_ports.yml
+  roles:
+    - role: apache
+      httpd_port: "{{ httpd_port_worker2 }}"

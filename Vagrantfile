@@ -23,6 +23,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   centos7.vm.network "forwarded_port", guest: 80, host: 8081
   centos7.vm.network "forwarded_port", guest: 443, host: 8444
   centos7.vm.network "private_network", ip: "192.168.33.11"
+  end
+
+  config.vm.define "worker1" do |worker1|
+  worker1.vm.box = "centos/7"
+  worker1.vm.network "forwarded_port", guest: 80, host: 8082
+  worker1.vm.network "forwarded_port", guest: 443, host: 8445
+  worker1.vm.network "private_network", ip: "192.168.33.12"
+  end 
+
+  config.vm.define "worker2" do |worker2|
+  worker2.vm.box = "centos/7"
+  worker2.vm.network "forwarded_port", guest: 80, host: 8083
+  worker2.vm.network "forwarded_port", guest: 443, host: 8446
+  worker2.vm.network "private_network", ip: "192.168.33.13"
   end 
 
   # The most common configuration options are documented and commented below.

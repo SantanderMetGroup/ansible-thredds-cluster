@@ -34,6 +34,7 @@
 - name: Configure reverse proxy 
   blockinfile:
     dest: /etc/httpd/conf.d/reverse_proxy.conf
+    marker: "## {mark} Enable reverse proxy"
     block: |
         <IfModule mod_proxy.c>
             ProxyRequests Off
@@ -42,8 +43,53 @@
             Allow from all
             </Proxy>
 
-            ProxyPass /reverseproxy http://{{ ip_address }}:{{ httpd_port }}
-            ProxyPassReverse /reverseproxy http://{{ ip_address }}:{{ httpd_port }}
+            ProxyPass /reverse_proxy http://{{ ip_address_client }}:{{ httpd_port_client }}
+            ProxyPassReverse /reverse_proxy http://{{ ip_address_client }}:{{ httpd_port_client }}
         </IfModule>
+  notify:
+    - restart apache2
+
+- name: Enabling Status Support
+  blockinfile:
+    dest: /etc/httpd/conf.d/reverse_proxy.conf
+    marker: "## {mark} Enable server status"
+    block: |
+        
+        <IfModule mod_status.c>
+            <Location "/server-status">
+                SetHandler server-status
+                Allow from all
+            </Location>
+
+        </IfModule>
+        
+  notify:
+    - restart apache2
+
+- name: Enabling Load-Balancing
+  blockinfile:
+    dest: /etc/httpd/conf.d/reverse_proxy.conf
+    marker: "## {mark} Enable load-balancing"
+    block: |
+        
+        <IfModule mod_proxy_balancer.c>
+            <Location "/balancer-manager">
+                SetHandler balancer-manager
+                Allow from all
+            </Location>
+
+            <Proxy balancer://mycluster>
+            # Server 1
+            BalancerMember http://{{ip_address_w1}}:{{httpd_port_w1}}
+            
+            # Server 2
+            BalancerMember http://{{ip_address_w2}}:{{httpd_port_w2}}
+            </Proxy>
+
+            ProxyPass /test balancer://mycluster
+            ProxyPassReverse /test balancer://mycluster
+            
+        </IfModule>
+        
   notify:
     - restart apache2
