@@ -1,0 +1,191 @@
+- name: Create download folder
+  file:
+    dest: "{{item}}"
+    state: directory
+  with_items:
+    - "{{apache_path}}"
+    - "{{downloads_path}}"
+    - "{{unpack_path}}"
+    - "{{httpd_path}}"
+
+- find:
+    paths: "{{downloads_path}}"
+    patterns: "*.tar.gz"
+  register: downloads_file
+
+- name: download Apache2.4 APR APR-Util PCRE
+  get_url:
+    url: "{{item}}"
+    dest: "{{downloads_path}}"
+  with_items:
+    - http://apache.mirrors.tds.net/httpd/httpd-2.4.25.tar.gz
+    - http://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
+    - http://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+    - http://ftp.cs.stanford.edu/pub/exim/pcre/pcre-8.40.tar.gz
+  when:
+    - downloads_file.matched != 4
+
+- stat: path={{unpack_path}}/apr-1.5.2
+  register: apr_file
+
+- name: extracting APR
+  unarchive:
+    src: "{{downloads_path}}/apr-1.5.2.tar.gz"
+    dest: "{{unpack_path}}"
+    remote_src: True
+  when:
+    - apr_file.stat.exists == false
+
+- stat: path={{unpack_path}}/apr-util-1.5.4
+  register: apr_util_file
+
+- name: extracting APR-Utils
+  unarchive:
+    src: "{{downloads_path}}/apr-util-1.5.4.tar.gz"
+    dest: "{{unpack_path}}"
+    remote_src: True
+  when:
+    - apr_util_file.stat.exists == false
+
+
+- stat: path={{unpack_path}}/pcre-8.40
+  register: pcre_file
+
+- name: extracting PCRE
+  unarchive:
+    src: "{{downloads_path}}/pcre-8.40.tar.gz"
+    dest: "{{unpack_path}}"
+    remote_src: True
+  when:
+    - pcre_file.stat.exists == false
+
+- stat: path={{unpack_path}}/httpd-2.4.25
+  register: httpd_file
+
+- name: extracting Apache 2.4
+  unarchive:
+    src: "{{downloads_path}}/httpd-2.4.25.tar.gz"
+    dest: "{{unpack_path}}"
+    remote_src: True
+  when:
+    - httpd_file.stat.exists == false
+
+- name: install gcc gcc++ lynx
+  yum:
+    name: "{{item}}"
+  with_items:
+    - gcc
+    - gcc-c++
+    - lynx
+
+- stat: path={{apache_path}}/apr
+  register: apr_installed
+
+- name: install APR
+  command: "{{item}}"
+  args:
+    chdir: "{{unpack_path}}/apr-1.5.2/"
+  with_items:
+    - ./configure --prefix={{apache_path}}/apr
+    - /usr/bin/make
+    - /usr/bin/make install
+  when:
+    - apr_installed.stat.exists == false
+
+- stat: path={{apache_path}}/apr-util
+  register: apr_util_installed
+
+- name: install APR-Utils
+  command: "{{item}}"
+  args:
+    chdir: "{{unpack_path}}/apr-util-1.5.4/"
+  with_items:
+    - ./configure --with-apr={{apache_path}}/apr --prefix={{apache_path}}/apr-util
+    - /usr/bin/make
+    - /usr/bin/make install
+  when:
+    - apr_util_installed.stat.exists == false
+
+- stat: path={{apache_path}}/pcre
+  register: pcre_installed
+
+- name: install PCRE
+  command: "{{item}}"
+  args:
+    chdir: "{{unpack_path}}/pcre-8.40/"
+  with_items:
+    - ./configure --prefix={{apache_path}}/pcre
+    - /usr/bin/make
+    - /usr/bin/make install
+  when:
+    - pcre_installed.stat.exists == false
+
+- name: install Apache 2.4
+  command: "{{item}}"
+  args:
+    chdir: "{{unpack_path}}/httpd-2.4.25/"
+  with_items:
+    - ./configure --prefix={{httpd_path}} --enable-mpms-shared=all --with-pcre={{apache_path}}/pcre --with-apr={{apache_path}}/apr --with-apr-util={{apache_path}}/apr-util
+    - /usr/bin/make
+    - /usr/bin/make install
+
+- find: 
+    paths: /etc/init.d/
+    patterns: httpd
+  register: service_httpd
+
+- name: Create httpd service 
+  command: cp {{httpd_path}}/bin/apachectl /etc/init.d/httpd
+  when:
+    - service_httpd.matched == 0 
+
+- find: 
+    paths: /usr/bin/
+    patterns: apachectl
+  register: link_apachectl
+
+- name: Create apachectl link
+  command: ln -s {{httpd_path}}/bin/apachectl /usr/bin/
+  when:
+    - link_apachectl.matched == 0 
+
+- name: included ServerName in httpd.conf
+  lineinfile: 
+    dest: "{{ httpd_path }}/conf/httpd.conf" 
+    regexp: "^ServerName" 
+    line: "ServerName localhost"
+    state: present
+  notify:
+    - restart apache2
+
+- name: Create www directory
+  file:
+    dest: /var/www
+    state: directory
+  
+- name: Create html directory
+  file:
+    dest: /var/www/html
+    state: directory
+
+- name: Change DocumentRoot
+  lineinfile:
+    dest: "{{ httpd_path }}/conf/httpd.conf"
+    regexp: "^DocumentRoot "
+    line: "DocumentRoot '/var/www/html'"
+    state: present
+
+- name: Change DirectoryRoot
+  blockinfile:
+    dest: "{{ httpd_path }}/conf/httpd.conf"
+    insertafter: "DocumentRoot '/var/www/html'"
+    marker: "# {mark} Change DirectoryRoot"
+    block: |
+      
+        <Directory "/var/www/html">
+    
+          Options Indexes FollowSymLinks
+          AllowOverride None
+          Require all granted
+        
+        </Directory>

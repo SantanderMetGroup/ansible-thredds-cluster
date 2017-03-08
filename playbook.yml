@@ -1,9 +1,10 @@
 ---
 - name: deploy apache and reverse proxy in centos6
   hosts: centos6
-  sudo: true
+  sudo: True
   vars_files:
     - apache_ports.yml
+    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles: 
     - role: apache
       httpd_port: "{{ httpd_port_centos6 }}"
@@ -21,6 +22,7 @@
   hosts: centos7
   vars_files:
     - apache_ports.yml
+    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
       httpd_port: "{{ httpd_port_centos7 }}"
@@ -30,6 +32,7 @@
   hosts: worker1
   vars_files:
     - apache_ports.yml
+    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
       httpd_port: "{{ httpd_port_worker1 }}"
@@ -39,6 +42,7 @@
   hosts: worker2
   vars_files:
     - apache_ports.yml
+    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
       httpd_port: "{{ httpd_port_worker2 }}"
