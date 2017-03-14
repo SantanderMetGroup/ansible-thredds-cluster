@@ -1,0 +1,45 @@
+- name: Download mod_jk connector
+  get_url:
+    url: http://apache.mirrors.tds.net/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
+    dest: "{{ downloads_path }}"
+
+- name: Unpack mod_jk
+  unarchive: 
+    src: "{{ downloads_path}}/tomcat-connectors-1.2.42-src.tar.gz"
+    dest: "{{ unpack_path }}"
+    remote_src: True
+
+- name: Install mod_jk
+  command: "{{ item }}"
+  args:
+    chdir: "{{unpack_path}}/tomcat-connectors-1.2.42-src/native"
+  with_items:
+    - ./configure --prefix={{httpd_path}}/modules --with-apxs={{apxs_path}}
+    - /usr/bin/make
+    - /usr/bin/make install
+
+- name: Configure jk module
+  blockinfile:
+    dest: "{{httpd_path}}/conf/httpd.conf"
+    marker: "## {mark} Enable jk module"
+    block: |
+        LoadModule jk_module modules/mod_jk.so
+        
+        <IfModule mod_jk.c>
+           JkWorkersFile {{httpd_path}}/conf/workers.properties
+           JkShmFile     {{httpd_path}}/logs/mod_jk.shm
+           JkLogFile     {{httpd_path}}/logs/mod_jk.log
+           JkLogLevel    info
+           JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+           JkMount /thredds/* lb
+           JkMount /status/* jk-manager
+        </IfModule>
+  notify:
+    - restart apache2
+
+- name: Configure workers.properties
+  template:
+    src: workers.properties.j2
+    dest: "{{httpd_path}}/conf/workers.properties"
+  notify:
+    - restart apache2

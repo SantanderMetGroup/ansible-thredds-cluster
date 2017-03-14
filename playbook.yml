@@ -4,46 +4,41 @@
   become: true
   become_method: sudo
   vars_files:
-    - apache_ports.yml
     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles: 
     - role: apache
-      httpd_port: "{{ httpd_port_centos6 }}"
-    - role: reverse-proxy
+    - role: load-balancer
+  tags: centos6
 
 - name: deploy apache in centos7
   become: true
   become_method: sudo
   hosts: centos7
   vars_files:
-    - apache_ports.yml
     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
-      httpd_port: "{{ httpd_port_centos7 }}"
+  tags: centos7
 
 - name: deploy apache in worker1
   become: true
   become_method: sudo
   hosts: worker1
   vars_files:
-    - apache_ports.yml
     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
-      httpd_port: "{{ httpd_port_worker1 }}"
+  tags: work1
 
 - name: deploy apache in worker2
   become: true
   become_method: sudo
   hosts: worker2
   vars_files:
-    - apache_ports.yml
     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles:
     - role: apache
-      httpd_port: "{{ httpd_port_worker2 }}"
-
+  tags: work2
 
 - name: Deploy Java
   hosts: workers
@@ -68,16 +63,25 @@
         port_connector: 18080
         port_redirect: 18443 
         port_shutdown: 18005
-        jvm_route: "{{ inventory_hostname}}1"
+        jvm_route: "{{ inventory_hostname }}1"
       - name: bar
         service_name: tomcat@bar
         port_ajp: 28009
         port_connector: 28080
         port_redirect: 28443
         port_shutdown: 28005
-        jvm_route: "{{ inventory_hostname}}2"
+        jvm_route: "{{ inventory_hostname }}2"
   roles:
     - ansible-tomcat
   tags: deploy_tomcat
 
+- name: jk workers
+  become: true
+  become_method: sudo
+  hosts: workers
+  vars_files:
+    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
+  roles: 
+    - load-balancer
+  tags: jk_workers
 

@@ -1,23 +1,3 @@
-- name: Download mod_jk connector
-  get_url:
-    url: http://apache.mirrors.tds.net/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz
-    dest: "{{ downloads_path }}"
-
-- name: Unpack mod_jk
-  unarchive: 
-    src: "{{ downloads_path}}/tomcat-connectors-1.2.42-src.tar.gz"
-    dest: "{{ unpack_path }}"
-    remote_src: True
-
-- name: Install mod_jk
-  command: "{{ item }}"
-  args:
-    chdir: "{{unpack_path}}/tomcat-connectors-1.2.42-src/native"
-  with_items:
-    - ./configure --prefix={{httpd_path}}/modules --with-apxs={{httpd_path}}/bin/apxs
-    - /usr/bin/make
-    - /usr/bin/make install
-
 - name: Enable apache modules
   blockinfile: 
     dest: "{{ httpd_path }}/conf/httpd.conf" 
@@ -46,7 +26,7 @@
         LoadModule vhost_alias_module modules/mod_vhost_alias.so
         LoadModule watchdog_module modules/mod_watchdog.so
         LoadModule slotmem_shm_module modules/mod_slotmem_shm.so
-        LoadModule jk_module modules/mod_jk.so
+        #LoadModule jk_module modules/mod_jk.so
         #LoadModule cache_module modules/mod_cache.so
 
     state: present
@@ -78,30 +58,6 @@
   notify: 
     - restart apache2
 
-- name: Configure jk module
-  blockinfile:
-    dest: "{{httpd_path}}/conf/httpd.conf"
-    marker: "## {mark} Enable jk module"
-    block: |
-        <IfModule mod_jk.c>
-           JkWorkersFile {{httpd_path}}/conf/workers.properties
-           JkShmFile     {{httpd_path}}/logs/mod_jk.shm
-           JkLogFile     {{httpd_path}}/logs/mod_jk.log
-           JkLogLevel    info
-           JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
-           JkMount /thredds/* lb
-           JkMount /status/* jk-manager
-        </IfModule>
-  notify:
-    - restart apache2
-
-- name: Configure workers.properties
-  template:
-    src: workers.properties.j2
-    dest: "{{httpd_path}}/conf/workers.properties"
-  notify:
-    - restart apache2
-
 - name: Configure reverse proxy 
   blockinfile:
     dest: "{{httpd_path}}/conf/httpd.conf"
@@ -114,9 +70,39 @@
             Allow from all
             </Proxy>
 
-            ProxyPass /reverse_proxy http://{{ ip_address_centos7 }}:{{ httpd_port_centos7}}
-            ProxyPassReverse /reverse_proxy http://{{ ip_address_centos7 }}:{{ httpd_port_centos7 }}
+            ProxyPass /reverse_proxy http://{{ hostvars['centos7']['ip_address'] }}:{{ hostvars['centos7']['httpd_port'] }}
+            ProxyPassReverse /reverse_proxy http://{{ hostvars['centos7']['ip_address'] }}:{{ hostvars['centos7']['httpd_port'] }}
         </IfModule>
+  notify:
+    - restart apache2
+
+- name: Enabling Load-Balancing http
+  blockinfile:
+    dest: "{{ httpd_path }}/conf/httpd.conf"
+    marker: "## {mark} Enable load-balancing http"
+    block: |
+
+        <IfModule mod_proxy_balancer.c>
+            
+             <Location "/balancer-manager">
+                SetHandler balancer-manager
+                Allow from all
+            </Location>
+
+            <Proxy balancer://mycluster>
+            # Server 1
+            BalancerMember http://{{ hostvars['worker1']['ip_address'] }}:{{ hostvars['worker1']['httpd_port'] }}
+            
+            # Server 2
+            BalancerMember http://{{ hostvars['worker2']['ip_address'] }}:{{ hostvars['worker2']['httpd_port'] }}
+           
+            </Proxy>
+
+            ProxyPass /test balancer://mycluster/thredds/
+            ProxyPassReverse /test balancer://mycluster/thredds/
+
+        </IfModule>
+
   notify:
     - restart apache2
 
