@@ -85,3 +85,34 @@
     - load-balancer
   tags: jk_workers
 
+- name: Deploy nginx in CentOS 6
+  become: true
+  become_method: sudo
+  hosts: centos6
+  vars:
+    nginx_http_params:
+      - sendfile "on"
+      - access_log "/var/log/nginx/access.log"
+    nginx_sites:
+      bar:
+        template: load-balancer.conf.j2
+        server_name: localhost
+        server_ip: "{{hostvars[inventory_hostname]['ip_address']}}"
+        server_port: 8080
+        backend_name: tomcat
+        backends:
+          - name: w11
+            backend: "{{hostvars['worker1']['ip_address']}}"
+            backend_port: 18080
+          - name: w12
+            backend: "{{hostvars['worker1']['ip_address']}}"
+            backend_port: 28080
+          - name: w21
+            backend: "{{hostvars['worker2']['ip_address']}}"
+            backend_port: 18080
+          - name: w22
+            backend: "{{hostvars['worker2']['ip_address']}}"
+            backend_port: 28080
+  roles:
+    - ansible-role-nginx
+  tags: nginx
