@@ -116,3 +116,21 @@
   roles:
     - ansible-role-nginx
   tags: nginx
+
+- name: HAProxy in workers
+  hosts: worker2
+  vars:
+    haproxy_configs:
+      loadbalance:
+        haproxy_port: 8080
+        balance_directive: leastconn
+        servers:
+          - name: "{{hostvars['centos6']['inventory_hostname']}}-httpd"
+            ip: "{{hostvars['centos6']['ip_address']}}"
+            port: "{{hostvars['centos6']['httpd_port']}}"
+          - name: "{{hostvars['centos6']['inventory_hostname']}}-nginx"
+            ip: "{{hostvars['centos6']['ip_address']}}"
+            port: 8080
+  roles:
+    - HAproxy
+  tags: haproxy

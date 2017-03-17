@@ -1,0 +1,200 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          haproxy
+# Required-Start:    $local_fs $network $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: fast and reliable load balancing reverse proxy
+# Description:       This file should be used to start and stop haproxy.
+### END INIT INFO
+
+# Author: Arnaud Cornet <acornet@debian.org>
+# Modified by: Shane Rainville <shane.rainville@serverlab.ca>
+
+HAPROXYPREFIX={{ haproxy_home }}
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+PIDFILE=$HAPROXYPREFIX/var/run/haproxy.pid
+CONFIG=$HAPROXYPREFIX/etc/haproxy.cfg
+HAPROXY=$HAPROXYPREFIX/sbin/haproxy
+CONFIGTEST_LOG=$HAPROXYPREFIX/var/log/haproxy_configtest.log
+EXTRAOPTS=
+ENABLED=1
+
+
+test "$ENABLED" != "0" || exit 0
+
+
+haproxy_start()
+{
+    
+    $HAPROXY -f "$CONFIG" -D -p "$PIDFILE" \
+    $EXTRAOPTS || return 2
+    return 0
+}
+
+haproxy_stop()
+{
+    if [ ! -f $PIDFILE ] ; then
+        # This is a success according to LSB
+        return 0
+    fi
+    for pid in $(cat $PIDFILE) ; do
+        /bin/kill $pid || return 4
+    done
+    rm -f $PIDFILE
+    return 0
+}
+
+haproxy_reload()
+{
+    $HAPROXY -f "$CONFIG" -p $PIDFILE -D $EXTRAOPTS -sf $(cat $PIDFILE) \
+        || return 2
+    return 0
+}
+
+haproxy_status()
+{
+    if [ ! -f $PIDFILE ] ; then
+        # program not running
+        return 3
+    fi
+
+    for pid in $(cat $PIDFILE) ; do
+        if ! ps --no-headers p "$pid" | grep haproxy > /dev/null ; then
+            # program running, bogus pidfile
+            return 1
+        fi
+    done
+
+    return 0
+}
+
+haproxy_configtest()
+{
+    $HAPROXY -f "$CONFIG" -c > "$CONFIGTEST_LOG" 2>&1
+    ret=$?
+    if [ $ret -eq 0 ]; then
+        # Valid config - remove $CONFIGTEST_LOG
+        rm "$CONFIGTEST_LOG"
+    fi
+
+    return $ret
+}
+
+
+case "$1" in
+start)
+    echo -n "Starting haproxy ..."
+    haproxy_start
+    ret=$?
+    case "$ret" in
+    0)
+        echo "OK"
+        ;;
+    1)
+        echo -n "FAILED ("
+        echo -n "pid file '$PIDFILE' found, haproxy not started."
+        echo ")"
+        ;;
+    2)
+        echo "FAILED"
+        ;;
+    esac
+    exit $ret
+    ;;
+
+stop)
+    echo -n "Stopping haproxy ..."
+    haproxy_stop
+    ret=$?
+    case "$ret" in
+    0|1)
+        echo "OK"
+        ;;
+    2)
+        echo "FAILED"
+        ;;
+    esac
+    exit $ret
+    ;;
+
+reload|force-reload)
+    echo -n "Reloading haproxy ..."
+    haproxy_reload
+    case "$?" in
+    0|1)
+        echo "OK"
+        ;;
+    2)
+        echo "FAILED"
+        ;;
+    esac
+    ;;
+
+restart)
+    echo -n "Checking haproxy configuration ..."
+    haproxy_configtest
+    ret=$?
+    case "$ret" in
+    0)
+        echo "OK"
+        ;;
+    1)
+        echo "FAILED"
+        echo "Restart process aborted."
+        echo "Check $CONFIGTEST_LOG for details."
+        # Abort restart
+        exit $ret
+        ;;
+    esac
+    echo -n "Restarting haproxy ..."
+    haproxy_stop
+    haproxy_start
+    case "$?" in
+    0)
+        echo "OK"
+        ;;
+    1)
+        echo "FAILED"
+        ;;
+    2)
+        echo "FAILED"
+        ;;
+    esac
+    ;;
+
+status)
+    haproxy_status
+    ret=$?
+    case "$ret" in
+    0)
+        echo "haproxy is running."
+        ;;
+    1)
+        echo "haproxy dead, but $PIDFILE exists."
+        ;;
+    *)
+        echo "haproxy not running."
+        ;;
+    esac
+    exit $ret
+    ;;
+configtest)
+    haproxy_configtest
+    ret=$?
+    case "$ret" in
+    0)
+        echo "haproxy configuration is valid."
+        ;;
+    1)
+        echo "haproxy configuration is NOT valid. Check $CONFIGTEST_LOG for details."
+        ;;
+    esac
+    exit $ret
+    ;;
+*)
+    echo "Usage: /etc/init.d/haproxy {start|stop|reload|restart|status|configtest}"
+    exit 2
+    ;;
+esac

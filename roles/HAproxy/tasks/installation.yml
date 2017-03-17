@@ -1,0 +1,63 @@
+- name: install packages dependencies
+  become: true
+  become_method: sudo
+  yum: 
+    name: "{{ item }}"
+  with_items:
+    - "@Development-tools"
+    - openssl-devel
+    - pcre 
+    - pcre-devel
+
+- name: Check if binary exists
+  local_action: find path={{ local_download }} patterns=haproxy-1.7.3+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz
+  register: binary_file
+
+- name: Unarchive binary
+  unarchive:
+    src: "{{ local_download }}/haproxy-1.7.3+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz"
+    dest: .
+  when:
+    - binary_file.matched == 1
+
+- name: Check if .tar.gz exists
+  local_action: find path={{ local_download }} patterns=haproxy-1.7.3.tar.gz
+  register: tar_file
+  when:
+    - binary_file.matched == 0
+
+- name: Download HAproxy source
+  local_action: get_url url=http://www.haproxy.org/download/1.7/src/haproxy-1.7.3.tar.gz dest={{ local_download }}
+  when:
+    - binary_file.matched == 0
+    - tar_file.matched == 0
+
+- name: Unarchive HAproxy
+  unarchive:
+    src: "{{ local_download }}/haproxy-1.7.3.tar.gz"
+    dest: "{{ home }}"
+  when:
+    - binary_file.matched == 0
+
+- name: Install HAproxy
+  command: "{{ item }}"
+  args:
+    chdir: "{{ home }}/haproxy-1.7.3"
+  with_items:
+    - make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1
+    - make install PREFIX={{ haproxy_home }}
+  when:
+    - binary_file.matched == 0
+
+- name: Create directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ haproxy_home }}"
+    - "{{ haproxy_home }}/etc"
+    - "{{ haproxy_home }}/var"
+    - "{{ haproxy_home }}/var/log"
+    - "{{ haproxy_home }}/var/run"
+  when:
+    - binary_file.matched == 0 
