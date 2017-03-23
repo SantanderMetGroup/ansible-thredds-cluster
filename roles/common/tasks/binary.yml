@@ -1,0 +1,33 @@
+- name: Create directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+   - "{{ service_home }}"
+   - "{{ opt_service }}"
+
+- name: Check if binary exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ binary }}"
+  register: binary_file
+
+- include: source.yml
+  when: 
+    - binary_file.matched == 0 
+
+- name: Archive binary
+  command: tar -czvf {{ home }}/{{ service_name }}-{{ version }}.{{ subversion }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz .
+  args:
+    chdir: "{{ opt_service }}"
+  when: 
+    - binary_file.matched == 0 
+
+- name: Copy binary to local
+  fetch:
+    src: "{{ home }}/{{ service_name }}-{{ version }}.{{ subversion }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz"
+    dest: "{{ local_download }}"
+    flat: yes
+  when: 
+    - binary_file.matched == 0 

@@ -1,0 +1,33 @@
+- name: Check if packages exist
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ item.name }}-{{ item.version }}.{{ item.subversion }}.tar.gz"
+  run_once: true
+  with_items:
+    - "{{ packages }}"
+  register: packages_file
+
+- name: Download packages
+  run_once: true
+  local_action: get_url 
+  args:
+    url: "{{ item.source }}" 
+    dest: "{{ local_download }}"
+  with_items: 
+    - "{{ packages_file }} "
+  when: 
+    - "{% for result in packages_file.results%}{{ result.matched }}{% endfor%} != 111"
+
+- name: Unarchive packages
+  unarchive:
+    src: "{{ local_download }}/{{ item.name }}-{{ item.version }}.{{ item.subversion }}.tar.gz"
+    dest: "{{ source_service }}"
+  with_items:
+    - "{{ packages }}"
+  when:
+    - binary_file.matched == 0
+
+- include: install_packages.yml
+  with_items:
+    - "{{ packages }}"

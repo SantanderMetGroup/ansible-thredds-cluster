@@ -1,0 +1,63 @@
+- name: Check if source .tar.gz exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ service_name }}-{{ version }}.{{ subversion }}.tar.gz"
+  register: tar_file
+
+- name: Download checksum source
+  local_action: get_url
+  args:
+    url: "{{ checksum }}" 
+    dest: "{{ local_download }}"
+  run_once: true
+  when:
+    - tar_file.matched == 0
+
+- name: Download {{ service_name }} source
+  local_action: get_url 
+  args:
+    url: "{{ source }}" 
+    dest: "{{ local_download }}"
+  run_once: true
+  when:
+    - tar_file.matched == 0
+
+- name: Create {{ source_service }}
+  file:
+    dest: "{{ source_service }}"
+    state: directory
+
+- name: Unarchive {{ service_name }}
+  unarchive:
+    src: "{{ local_download }}/{{ service_name }}-{{ version }}.{{ subversion }}.tar.gz"
+    dest: "{{ source_service }}"
+
+- name: install packages dependencies
+  become: true
+  become_method: sudo
+  yum: 
+    name: "{{ item }}"
+  with_items:
+    - "{{ dependencies }}"
+
+- include: packages.yml
+  when: packages is defined
+
+- name: Install {{ service_name }}
+  command: "{{ item }}"
+  args:
+    chdir: "{{ source_service }}/{{ service_name }}-{{ version }}.{{ subversion }}"
+  with_items:
+    - ./configure --prefix={{ opt_service }} {{ configure }}
+    - /usr/bin/make
+    - /usr/bin/make install
+
+- name: Create directories if they don't exist
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ directories }}"
+  when: 
+    - directories is defined

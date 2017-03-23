@@ -1,0 +1,31 @@
+---
+# tasks file for roles/common
+- name: Create {{ home }}
+  file:
+    dest: "{{ home }}"
+    state: directory
+
+- name: Create folder local host
+  local_action: file
+  args:
+    dest: "{{ local_download }}" 
+    state: directory
+
+- name: Check if {{ service_name }} is installed
+  find: 
+    path: "{{ home }}"
+    patterns: "{{ service_name }}"
+    file_type: directory
+  register: service_installed
+
+- include: binary.yml
+  when:
+    - service_installed.matched == 0
+
+- name: Unarchive binary
+  unarchive:
+    src: "{{ local_download }}/{{ binary }}"
+    dest: "{{ opt_service }}"
+  when:
+    - service_installed.matched == 0 
+    - binary_file.matched == 1

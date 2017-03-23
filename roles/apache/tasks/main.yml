@@ -1,11 +1,26 @@
-- include: installcentOS6.yml 
-  when:
-    - ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "6"
+- name: Create modules directories
+  file:
+    dest: "{{ opt_service }}/{{ conf_modules }}"
+    state: directory
 
-- include: installcentOS7.yml
-  when:
-    - ansible_distribution == "CentOS"
-    - ansible_distribution_major_version == "7"
+- name: Copy httpd.conf in host
+  template: 
+    src: httpd.conf.j2
+    dest: "{{ opt_service }}/conf/httpd.conf"
+  notify:
+    - restart {{ service_name }}
 
-- include: configure.yml
+- name: Copy service.sh in host
+  template: 
+    src: service.sh.j2
+    dest: "{{ opt_service }}/service.sh"
+    mode: 0775
+  notify:
+    - restart {{ service_name }}
+
+- name: Create index page
+  template:
+    src: index.html.j2
+    dest: "{{ opt_service }}/htdocs/index.html"
+  notify:
+    - restart {{ service_name }}
