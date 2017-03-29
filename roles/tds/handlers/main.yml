@@ -1,0 +1,11 @@
+---
+# handlers file for roles/tomcat
+- name: start tomcat_instance
+  shell: sh {{ tomcat_catalina_home }}/service.sh start {{ item.base_port }}
+  with_items:
+    - "{{ tomcat_instances }}"
+
+- name: stop tomcat_instance
+  shell: sh {{ tomcat_catalina_home }}/service.sh stop {{ item.base_port }}
+  with_items:
+    - "{{ tomcat_instances }}"

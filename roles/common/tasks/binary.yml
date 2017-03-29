@@ -18,16 +18,18 @@
     - binary_file.matched == 0 
 
 - name: Archive binary
-  command: tar -czvf {{ home }}/{{ service_name }}-{{ version }}.{{ subversion }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz .
+  command: tar -czvf {{ home }}/{{ service_name }}-{{ version }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz .
   args:
     chdir: "{{ opt_service }}"
   when: 
-    - binary_file.matched == 0 
+    - binary_file.matched == 0
+    - configure is defined 
 
 - name: Copy binary to local
   fetch:
-    src: "{{ home }}/{{ service_name }}-{{ version }}.{{ subversion }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz"
+    src: "{{ home }}/{{ service_name }}-{{ version }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz"
     dest: "{{ local_download }}"
     flat: yes
   when: 
     - binary_file.matched == 0 
+    - configure is defined 

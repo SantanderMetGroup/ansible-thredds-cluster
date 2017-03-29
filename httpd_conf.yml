@@ -1,0 +1,43 @@
+service_name: httpd
+version: 2.4.25
+service_name_version: "{{ service_name }}-{{ version }}"
+dependencies: 
+    - gcc
+    - gcc-c++
+
+unarchive: true
+compile: true
+
+archive_file_name: "{{ service_name_version }}.tar.gz"
+archive_file_url: "http://apache.mirrors.tds.net/httpd/{{ archive_file_name }}"
+unarchive_dir_name: "{{ service_name_version }}"
+
+checksum: "https://www.apache.org/dist/httpd/{{ service_name_version }}.tar.gz.md5"
+configure: --prefix={{ opt_service }} --enable-mpms-shared=all --with-pcre={{ opt_service }}/{{ packages.2.name }} --with-apr={{ opt_service }}/{{ packages.0.name }} --with-apr-util={{ opt_service }}/{{ packages.1.name }}
+packages:
+  - name: apr
+    version: 1.5.2
+    configure:
+    header:
+    archive_file_url: http://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
+    archive_file_name: apr-1.5.2.tar.gz
+    unarchive_dir_name: apr-1.5.2
+    compile: true
+
+  - name: apr-util
+    version: 1.5.4
+    configure: --with-apr={{ opt_service }}/apr
+    header:
+    archive_file_url: http://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+    archive_file_name: apr-util-1.5.4.tar.gz
+    unarchive_dir_name: apr-util-1.5.4
+    compile: true
+  
+  - name: pcre
+    version: 8.40
+    configure:
+    header:
+    archive_file_url: http://ftp.cs.stanford.edu/pub/exim/pcre/pcre-8.40.tar.gz
+    archive_file_name: pcre-8.40.tar.gz
+    unarchive_dir_name: pcre-8.40
+    compile: true

@@ -1,9 +1,9 @@
-- name: Check if source .tar.gz exists
+- name: Check if {{ archive_file_name }} exists
   local_action: find 
   args:
     path: "{{ local_download }}" 
-    patterns: "{{ service_name }}-{{ version }}.{{ subversion }}.tar.gz"
-  register: tar_file
+    patterns: "{{ archive_file_name }}"
+  register: archive_file
 
 - name: Download checksum source
   local_action: get_url
@@ -12,27 +12,23 @@
     dest: "{{ local_download }}"
   run_once: true
   when:
-    - tar_file.matched == 0
+    - archive_file.matched == 0
+    - checksum is defined
 
-- name: Download {{ service_name }} source
+- name: Download {{ service_name }} archive file 
   local_action: get_url 
   args:
-    url: "{{ source }}" 
+    url: "{{ archive_file_url }}" 
     dest: "{{ local_download }}"
   run_once: true
   when:
-    - tar_file.matched == 0
+    - archive_file.matched == 0
 
 - name: Create {{ source_service }}
   file:
     dest: "{{ source_service }}"
     state: directory
-
-- name: Unarchive {{ service_name }}
-  unarchive:
-    src: "{{ local_download }}/{{ service_name }}-{{ version }}.{{ subversion }}.tar.gz"
-    dest: "{{ source_service }}"
-
+    
 - name: install packages dependencies
   become: true
   become_method: sudo
@@ -40,18 +36,37 @@
     name: "{{ item }}"
   with_items:
     - "{{ dependencies }}"
+  when:
+    - dependencies is defined
+
+- name: Unarchive {{ service_name }}
+  unarchive:
+    src: "{{ local_download }}/{{ archive_file_name }}"
+    dest: "{{ source_service }}"
+  when:
+    - unarchive == true
+
+- name: Copy {{ service_name }}
+  copy:
+    src: "{{ local_download }}/{{ archive_file_name }}"
+    dest: "{{ source_service }}"
+  when:
+    - unarchive == false
 
 - include: packages.yml
+  with_items: "{{ packages }}"
   when: packages is defined
 
 - name: Install {{ service_name }}
   command: "{{ item }}"
   args:
-    chdir: "{{ source_service }}/{{ service_name }}-{{ version }}.{{ subversion }}"
+    chdir: "{{ source_service }}/{{ unarchive_dir_name }}"
   with_items:
-    - ./configure --prefix={{ opt_service }} {{ configure }}
+    - ./configure {{ configure }}
     - /usr/bin/make
     - /usr/bin/make install
+  when:
+    - configure is defined
 
 - name: Create directories if they don't exist
   file:

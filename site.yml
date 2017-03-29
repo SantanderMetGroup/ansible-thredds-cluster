@@ -1,10 +1,39 @@
-- name: Install apache
+- name: Deploy httpd
   hosts: httpd
   serial: 1
   vars_files: 
-    - all.yml
-    - httpd.yml
+    - httpd_conf.yml
   roles:
-    - { role: common, tags: install}
-    - { role: apache, tags: apache}
+    - { role: common, tags: httpd}
+    - { role: httpd, tags: httpd}
 
+- name: Deploy jk module httpd
+  hosts: httpd
+  vars_files:
+    - mod_jk_conf.yml
+  roles:
+    - { role: common, httpd_path: "{{ home }}/httpd/opt"}
+
+- name: Deploy tds instances
+  hosts: workers
+  serial: 1
+  vars_files: 
+    - tds_conf.yml
+    - tds_instances_conf.yml
+  roles:
+    - role: common
+      tags: tds
+
+    - role: tds
+      tags: tds
+
+- name: Update load-balanced workers
+  hosts: workers
+  vars_files:
+    - tds_instances_conf.yml
+  roles:
+    - role: mod_jk
+      tags: jk
+      instances: "{{ tds_instances }}"
+      httpd_path: "{{ home }}/httpd/opt"
+      delegate_to: centos6

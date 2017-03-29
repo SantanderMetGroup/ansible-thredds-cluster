@@ -1,0 +1,29 @@
+---
+# tasks file for roles/jk
+- name: Configure jk module
+  template:
+    src: jk.conf.j2
+    dest: "{{ httpd_path }}/conf.d/jk.conf"
+
+- name: Configure general worker properties
+  template:
+    src: workers.properties.j2
+    dest: "{{ httpd_path }}/conf/workers.properties"
+
+- name: Configure instances in workers.properties
+  blockinfile:
+    dest: "{{httpd_path}}/conf/workers.properties"
+    marker: "# {mark} {{ inventory_hostname }}"
+    block: |
+      worker.lb.balance_workers= {% for instance in instances %}{{ instance.name }} {% endfor %}
+
+      {% for instance in instances %}
+
+      worker.{{ instance.name }}.type=ajp13
+      worker.{{ instance.name }}.host={{ instance.ip_address }}
+      worker.{{ instance.name }}.port={{ instance.ajp_port }}
+
+      {% endfor %}
+
+- name: restart httpd
+  command: sh {{httpd_path}}/service.sh restart

@@ -1,14 +1,14 @@
 - name: Configure package {{ item.name }}
   command: ./configure --prefix={{ opt_service }}/{{ item.name }} {{ item.configure }}
   args:
-    chdir: "{{ source_service }}/{{ item.name }}-{{ item.version }}.{{ item.subversion }}"
+    chdir: "{{ source_service }}/{{ item.unarchive_dir_name }}"
 
 - name: Make package {{ item.name }}
   command: /usr/bin/make
   args:
-    chdir: "{{ source_service }}/{{ item.name }}-{{ item.version }}.{{ item.subversion }}"
+    chdir: "{{ source_service }}/{{ item.unarchive_dir_name }}"
 
 - name: Install package {{ item.name }}
   command: /usr/bin/make install
   args:
-    chdir: "{{ source_service }}/{{ item.name }}-{{ item.version }}.{{ item.subversion }}"
+    chdir: "{{ source_service }}/{{ item.unarchive_dir_name }}"

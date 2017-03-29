@@ -1,0 +1,64 @@
+---
+# tasks file for roles/tds
+- name: Create {{ jre_path }}
+  file: 
+    dest: "{{ jre_path }}" 
+    state: directory
+
+- name: Move jre files to {{ jre_path }}
+  shell: cp -arf {{ source_service }}/{{ packages.0.unarchive_dir_name }}/* {{ jre_path }}/
+
+- name: Move tomcat files to {{ tomcat_catalina_home }}
+  shell: cp -arf {{ source_service }}/{{ packages.1.unarchive_dir_name }}/* {{ tomcat_catalina_home }}/
+
+- name: Create service.sh script
+  template:
+    src: service.sh.j2
+    dest: "{{ tomcat_catalina_home }}/service.sh"
+    mode: 0775
+
+- name: Create server.xml file
+  copy:
+    src: server.xml
+    dest: "{{ tomcat_catalina_home }}/conf/"
+    force: yes
+
+- name: Create {{ var_path }}
+  file: 
+    dest: "{{ var_path }}"
+    state: directory
+
+- name: Create thredds directory in {{ source_service }}
+  file:
+    dest: "{{ source_service }}/thredds"
+    state: directory
+
+- name: Unarchive war
+  unarchive:
+    src: "{{ source_service }}/{{ archive_file_name }}"
+    dest: "{{ source_service }}/thredds"
+    remote_src: true
+
+- name: Create thredds directory in {{ opt_service }}/webapps
+  file:
+    dest: "{{ opt_service }}/webapps/thredds"
+    state: directory
+
+- name: Copy thredds.war in {{ opt_service }}/webapps/thredds
+  shell: cp -arf {{ source_service }}/thredds/* {{ opt_service }}/webapps/thredds/
+
+- name: Create content/thredds directory in {{ opt_service }}
+  file:
+    dest: "{{ opt_service }}/content/thredds"
+    state: directory
+
+- name: Copy WEB-INF/altContent/startup/* to {{ opt_service }}/content/thredds
+  shell: cp -arf {{ source_service }}/thredds/WEB-INF/altContent/startup/* {{ opt_service }}/content/thredds/
+
+- name: start tds_instance
+  shell: ./service.sh start {{ item.base_port }}
+  with_items:
+    - "{{ tds_instances }}"
+  args:
+    chdir: "{{ tomcat_catalina_home }}"
+  tags: run_tds
