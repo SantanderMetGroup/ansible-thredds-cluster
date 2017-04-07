@@ -1,0 +1,33 @@
+- name: Check if virtualenv package exists 
+  local_action: find
+  args:
+    path: "{{ local_download }}"
+    patterns: "{{ virtualenv_file_name }}"
+  register: virtualenv_file
+
+- name: Download virtualenv package
+  local_action: shell curl -O {{ virtualenv_file_url }}
+  args:
+    chdir: "{{ local_download }}"
+  when:
+    - virtualenv_file.matched == 0 
+
+- name: Create {{ virtualenv_home }}
+  file:
+    dest: "{{ virtualenv_home }}"
+    state: directory
+
+# Unarchive virtual enviroment package from local host to remote host
+- name: Unarchive virtualenv
+  unarchive: 
+    src: "{{ local_download }}/{{ virtualenv_file_name }}"
+    dest: "{{ virtualenv_home }}"
+  register: unarchive_virtualenv
+
+# Create virtual enviroment in remote host only if it isn't created before
+- name: Create virtualenv
+  shell: python virtualenv.py {{ virtualenv_home }}
+  args:
+    chdir: "{{ virtualenv_home }}/{{ unarchive_virtualenv_name }}"
+  when: 
+    - unarchive_virtualenv.changed

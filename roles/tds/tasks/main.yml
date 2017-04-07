@@ -5,60 +5,99 @@
     dest: "{{ jre_path }}" 
     state: directory
 
+# Move jre files from source directory to jre directory in opt
 - name: Move jre files to {{ jre_path }}
   shell: cp -arf {{ source_service }}/{{ packages.0.unarchive_dir_name }}/* {{ jre_path }}/
 
+# Move tomcat files from source directory to tomcat_catalina_home
 - name: Move tomcat files to {{ tomcat_catalina_home }}
   shell: cp -arf {{ source_service }}/{{ packages.1.unarchive_dir_name }}/* {{ tomcat_catalina_home }}/
 
-- name: Create service.sh script
+# Create supervisord_wrapper.sh in tomcat_catalina_home 
+- name: Create supervisord_wrapper.sh script
   template:
-    src: service.sh.j2
-    dest: "{{ tomcat_catalina_home }}/service.sh"
+    src: supervisord_wrapper.sh.j2
+    dest: "{{ tomcat_catalina_home }}/supervisord_wrapper.sh"
     mode: 0775
 
+# Create server.xml in tomcat_catalina_home
 - name: Create server.xml file
   copy:
     src: server.xml
     dest: "{{ tomcat_catalina_home }}/conf/"
     force: yes
 
+# Create var directory in service_home
 - name: Create {{ var_path }}
   file: 
     dest: "{{ var_path }}"
     state: directory
 
+# Create tds instances directory (tomcat_pool) in var directory
+- name: Create {{ instances_path }}
+  file: 
+    dest: "{{ instances_path }}"
+    state: directory
+
+# Create thredds directory in source directory for unarchive thredds.war
 - name: Create thredds directory in {{ source_service }}
   file:
     dest: "{{ source_service }}/thredds"
     state: directory
 
+# Unarchive thredds.war
 - name: Unarchive war
   unarchive:
     src: "{{ source_service }}/{{ archive_file_name }}"
     dest: "{{ source_service }}/thredds"
     remote_src: true
 
-- name: Create thredds directory in {{ opt_service }}/webapps
+# Create thredds directory in tomcat_catalina_home/webapps
+- name: Create thredds directory in {{ tomcat_catalina_home }}/webapps
   file:
-    dest: "{{ opt_service }}/webapps/thredds"
+    dest: "{{ tomcat_catalina_home }}/webapps/thredds"
     state: directory
 
-- name: Copy thredds.war in {{ opt_service }}/webapps/thredds
-  shell: cp -arf {{ source_service }}/thredds/* {{ opt_service }}/webapps/thredds/
+# Copy content from thredds directory in source to thredds directory in tomcat_catalina_home/thredds
+- name: Copy thredds in {{ tomcat_catalina_home }}/webapps/thredds
+  shell: cp -arf {{ source_service }}/thredds/* {{ tomcat_catalina_home }}/webapps/thredds/
 
-- name: Create content/thredds directory in {{ opt_service }}
+# Create content/thredss directory in tomcat_catalina_home
+- name: Create content/thredds directory in {{ tomcat_catalina_home }}
   file:
-    dest: "{{ opt_service }}/content/thredds"
+    dest: "{{ tomcat_catalina_home }}/content/thredds"
     state: directory
 
-- name: Copy WEB-INF/altContent/startup/* to {{ opt_service }}/content/thredds
-  shell: cp -arf {{ source_service }}/thredds/WEB-INF/altContent/startup/* {{ opt_service }}/content/thredds/
+# Copy some WEB-INF files from tomcat_catalina_home/webapps/thredds/ to tomcat_catalina_home/content/thredds 
+- name: Copy WEB-INF/altContent/startup/* to {{ tomcat_catalina_home }}/content/thredds
+  shell: cp -arf {{ source_service }}/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home }}/content/thredds/
 
-- name: start tds_instance
-  shell: ./service.sh start {{ item.base_port }}
+# Create a common catalog.xml in tomcat_catalina_home/content/thredds
+- name: Create catalog.xml in {{ tomcat_catalina_home }}/content/thredds/
+  copy: 
+    src: catalog.xml
+    dest: "{{ tomcat_catalina_home }}/content/thredds"
+
+## Control TDS instances with supervisord
+# Create tds configuration file for each instance in supervisord
+- name: Create tds instances configuration to supervisord 
+  template:
+    src: tds.conf.j2
+    dest: "{{ supervisor_programs }}/tds_{{ item.base_port }}.conf"
   with_items:
     - "{{ tds_instances }}"
-  args:
-    chdir: "{{ tomcat_catalina_home }}"
-  tags: run_tds
+  register: tds_conf_supervisord
+
+# Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
+- name: Add tds_instance programmes to supervisord
+  supervisorctl:
+    name: "tds_{{ item.base_port }}"
+    state: present
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+  when: tds_conf_supervisord.changed
+  with_items:
+    - "{{ tds_instances }}"
+  notify:
+    - start tds_instance

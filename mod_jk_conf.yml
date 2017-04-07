@@ -1,10 +1,18 @@
 service_name: mod_jk
 version: 1.2.42
 service_name_version: "{{ service_name }}-{{ version }}"
+
+dependencies: 
+    - gcc
+    - gcc-c++
+
 archive_file_name: "tomcat-connectors-{{ version }}-src.tar.gz"
-configure: --prefix={{ httpd_path }}/modules --with-apxs={{ httpd_path }}/bin/apxs
+prefix: "{{ httpd_path }}/modules"
+configure: --prefix={{ prefix }} --with-apxs={{ httpd_path }}/bin/apxs
 archive_file_url: "http://apache.mirrors.tds.net/tomcat/tomcat-connectors/jk/{{ archive_file_name }}"
 unarchive_dir_name: "tomcat-connectors-{{ version }}-src/native"
 
 unarchive: true
 compile: true
+service: false
+archive: false

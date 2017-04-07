@@ -1,0 +1,25 @@
+---
+# handlers file for roles/httpd
+- name: start httpd
+  supervisorctl:
+    name: httpd
+    state: started
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+
+- name: stop httpd
+  supervisorctl:
+    name: httpd
+    state: stopped
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+
+- name: restart httpd
+  supervisorctl:
+    name: httpd
+    state: restarted
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant

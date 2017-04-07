@@ -1,0 +1,39 @@
+# Install supervisor python package in the virtual enviroment in remote host
+# Register when supervisor package is installed for activate supervisord process
+- name: Install supervisor 
+  pip:
+    name: supervisor
+    virtualenv: "{{ virtualenv_home }}"
+    virtualenv_site_packages: yes
+  register: supervisor_install
+
+## Create directories for supervisor configuration
+- name: Create supervisor directory in {{ home }}
+  file:
+    dest: "{{ supervisor_home }}"
+    state: directory
+
+- name: Create supervisor directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ supervisor_home }}/etc"
+    - "{{ supervisor_home }}/var"
+
+- name: Create directory supervisord.d in {{ supervisor_etc }}
+  file:
+    dest: "{{ supervisor_programs }}"
+    state: directory
+
+- name: Create supervisord.conf
+  template:
+    src: supervisord.conf.j2
+    dest: "{{ supervisor_etc }}/supervisord.conf"
+
+# Activate virtual enviroment for running supervisord process only when supervisord package is installed 
+- name: Run supervisord
+  shell: source {{ virtualenv_home }}/bin/activate && supervisord -c {{ supervisor_etc }}/supervisord.conf
+  args:
+    creates: "{{ supervisor_var }}/supervisord.sock"
+  when: supervisor_install.changed

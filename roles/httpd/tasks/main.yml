@@ -1,26 +1,37 @@
+# Create conf.d directory in httpd_home
 - name: Create modules directories
   file:
     dest: "{{ opt_service }}/{{ conf_modules }}"
     state: directory
 
+# Create httpd configuration
 - name: Copy httpd.conf in host
   template: 
     src: httpd.conf.j2
     dest: "{{ opt_service }}/conf/httpd.conf"
-  notify:
-    - restart {{ service_name }}
 
-- name: Copy service.sh in host
-  template: 
-    src: service.sh.j2
-    dest: "{{ opt_service }}/service.sh"
-    mode: 0775
-  notify:
-    - restart {{ service_name }}
-
+# Create index.html page
 - name: Create index page
   template:
     src: index.html.j2
     dest: "{{ opt_service }}/htdocs/index.html"
+
+## Control httpd with supervisord
+# Create httpd configuration file in supervisord
+- name: Create httpd supervisord configuration
+  template:
+    src: httpd_supervisord.conf.j2
+    dest: "{{ supervisor_programs }}/httpd.conf"
+  register: httpd_conf_supervisord
+
+# Reread supervisord configuration and add httpd program to supervisord
+- name: Add httpd program to supervisord
+  supervisorctl:
+    name: httpd
+    state: present
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+  when: httpd_conf_supervisord.changed
   notify:
-    - restart {{ service_name }}
+    - start httpd

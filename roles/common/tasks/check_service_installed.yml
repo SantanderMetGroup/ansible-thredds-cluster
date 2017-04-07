@@ -1,0 +1,55 @@
+# Check if service is registered in supervisord
+- name: Check if {{ service_name }} is installed
+  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl status
+  register: service_installed
+
+# Check if service directory is created
+- name: Check if {{ service_name }} directory exists
+  find: 
+    path: "{{ home }}"
+    patterns: "{{ service_name }}"
+    file_type: directory
+  register: service_directory
+
+# Delete service directory if it exists and service is not registered in supervisord
+- name: Delete {{ service_name }} directory if it exists
+  file:
+    dest: "{{ service_home }}"
+    state: absent
+  when: 
+    - service_name not in service_installed.stdout 
+    - service_directory.matched == 1
+
+# Check if service file configuration is still in supervisord.d directory if service directory doesn't exist
+- name: Find {{ service_name }} file cofiguration in supervisord
+  find:
+    path: "{{ supervisor_programs }}"
+    patterns: "{{ service_name }}"
+    use_regex: true
+  when: 
+    - service_name in service_installed.stdout
+    - service_directory.matched == 0
+  register: service_supervisord
+
+# Delete service file configuration is still in supervisord.d directory if service directory doesn't exist
+- name: Delete {{ service_name }} file cofiguration in supervisord
+  file:
+    dest: "{{ item.path }}"
+    state: absent
+  with_items:
+    - "{{ service_supervisord.files }}"
+  when: 
+    - service_name in service_installed.stdout
+    - service_directory.matched == 0
+
+# Update supervisord configuration
+- name: Update supervisord configuration
+  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl update
+  when: 
+    - service_name in service_installed.stdout
+    - service_directory.matched == 0
+
+# Check if service is still registered in supervisord
+- name: Check if {{ service_name }} is still installed 
+  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl status
+  register: service_installed

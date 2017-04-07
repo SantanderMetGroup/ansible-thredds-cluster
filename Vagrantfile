@@ -16,6 +16,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     centos6.vm.network "forwarded_port", guest: 80, host: 8080
     centos6.vm.network "forwarded_port", guest: 443, host: 8443
     centos6.vm.network "private_network", ip: "192.168.33.10"
+    centos6.vm.hostname = "centos6"
+    centos6.vm.provision "shell", inline: <<-SHELL
+     sudo yum install -y libselinux-python
+   SHELL
   end
   
   config.vm.define "centos7" do |centos7|
@@ -23,23 +27,30 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     centos7.vm.network "forwarded_port", guest: 80, host: 8081
     centos7.vm.network "forwarded_port", guest: 443, host: 8444
     centos7.vm.network "private_network", ip: "192.168.33.11"
+    centos7.vm.hostname = "centos7"
     centos7.vm.provision :shell, inline: "sudo systemctl restart network"
   end
 
   config.vm.define "worker1" do |worker1|
     worker1.vm.box = "centos/7"
-    worker1.vm.network "forwarded_port", guest: 80, host: 8082
-    worker1.vm.network "forwarded_port", guest: 443, host: 8445
     worker1.vm.network "private_network", ip: "192.168.33.12"
+    worker1.vm.hostname = "worker1"
     worker1.vm.provision :shell, inline: "sudo systemctl restart network"
+    worker1.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 1
+    end
   end 
 
   config.vm.define "worker2" do |worker2|
     worker2.vm.box = "centos/7"
-    worker2.vm.network "forwarded_port", guest: 80, host: 8083
-    worker2.vm.network "forwarded_port", guest: 443, host: 8446
     worker2.vm.network "private_network", ip: "192.168.33.13"
     worker2.vm.provision :shell, inline: "sudo systemctl restart network"
+    worker2.vm.hostname = "worker2"
+    worker2.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 1
+    end
   end 
 
   # The most common configuration options are documented and commented below.

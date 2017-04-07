@@ -1,29 +1,38 @@
 ---
 # tasks file for roles/jk
+# Create jk configuration file in http configuration
 - name: Configure jk module
   template:
     src: jk.conf.j2
     dest: "{{ httpd_path }}/conf.d/jk.conf"
 
+# Create general worker.properties configuration file for mod_jk in httpd configuration
 - name: Configure general worker properties
   template:
     src: workers.properties.j2
     dest: "{{ httpd_path }}/conf/workers.properties"
 
+# Add each instance configuration to worker.properties file   
 - name: Configure instances in workers.properties
   blockinfile:
     dest: "{{httpd_path}}/conf/workers.properties"
-    marker: "# {mark} {{ inventory_hostname }}"
+    marker: "# {mark} {{ inventory_hostname }}_{{ item.base_port }}"
     block: |
-      worker.lb.balance_workers= {% for instance in instances %}{{ instance.name }} {% endfor %}
+      worker.lb.balance_workers= {{ item.name }}
 
-      {% for instance in instances %}
+      worker.{{ item.name }}.type=ajp13
+      worker.{{ item.name }}.host={{ item.ip_address }}
+      worker.{{ item.name }}.port={{ item.ajp_port }}
 
-      worker.{{ instance.name }}.type=ajp13
-      worker.{{ instance.name }}.host={{ instance.ip_address }}
-      worker.{{ instance.name }}.port={{ instance.ajp_port }}
+  with_items:
+    - "{{ instances }}"
 
-      {% endfor %}
-
+# Restart httpd service for upload load balancer configuration
 - name: restart httpd
-  command: sh {{httpd_path}}/service.sh restart
+  supervisorctl:
+    name: httpd
+    state: restarted
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+  run_once: true

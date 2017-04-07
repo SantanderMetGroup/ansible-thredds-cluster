@@ -1,11 +1,32 @@
 ---
-# handlers file for roles/tomcat
-- name: start tomcat_instance
-  shell: sh {{ tomcat_catalina_home }}/service.sh start {{ item.base_port }}
-  with_items:
-    - "{{ tomcat_instances }}"
+# handlers file for roles/tds
 
-- name: stop tomcat_instance
-  shell: sh {{ tomcat_catalina_home }}/service.sh stop {{ item.base_port }}
+- name: start tds_instance
+  supervisorctl:
+    name: "tds_{{ item.base_port }}"
+    state: started
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
   with_items:
-    - "{{ tomcat_instances }}"
+    - "{{ tds_instances }}"
+
+- name: stop tds_instance
+  supervisorctl:
+    name: "tds_{{ item.base_port }}"
+    state: stopped
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+  with_items:
+    - "{{ tds_instances }}"
+
+- name: restart tds_instance
+  supervisorctl:
+    name: "tds_{{ item.base_port }}"
+    state: restarted
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: vagrant
+  with_items:
+    - "{{ tds_instances }}"

@@ -1,3 +1,4 @@
+# Create service directories in remote host
 - name: Create directories
   file:
     dest: "{{ item }}"
@@ -6,6 +7,7 @@
    - "{{ service_home }}"
    - "{{ opt_service }}"
 
+# Check if binary file exists in local machine for each distribution
 - name: Check if binary exists
   local_action: find 
   args:
@@ -13,23 +15,28 @@
     patterns: "{{ binary }}"
   register: binary_file
 
+# Download service source file if binary doesn't exist
 - include: source.yml
   when: 
     - binary_file.matched == 0 
 
+# Create service's binary file if it doesn't exist in local host
 - name: Archive binary
   command: tar -czvf {{ home }}/{{ service_name }}-{{ version }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz .
   args:
     chdir: "{{ opt_service }}"
   when: 
+    - service == true
     - binary_file.matched == 0
-    - configure is defined 
+    - archive == true
 
+# Copy service's binary file in local host 
 - name: Copy binary to local
   fetch:
     src: "{{ home }}/{{ service_name }}-{{ version }}+{{ ansible_distribution }}.{{ ansible_distribution_major_version }}.{{ ansible_architecture }}.tar.gz"
     dest: "{{ local_download }}"
     flat: yes
   when: 
-    - binary_file.matched == 0 
-    - configure is defined 
+    - service == true
+    - binary_file.matched == 0
+    - archive == true
