@@ -31,17 +31,6 @@
   file:
     dest: "{{ source_service }}"
     state: directory
-    
-# Install dependencies are needed for service
-- name: Install packages dependencies
-  become: true
-  become_method: sudo
-  yum: 
-    name: "{{ item }}"
-  with_items:
-    - "{{ dependencies }}"
-  when:
-    - dependencies is defined
 
 # Unarchive service source file from local host to remote host in source directory (e.g .tar.gz)
 - name: Unarchive {{ service_name }}

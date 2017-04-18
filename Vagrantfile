@@ -17,23 +17,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.hostname = host['name']
       node.vm.network :private_network, ip: host['ip']
 
-      ## Uncomment these lines if you aren't in Windows
-      #node.vm.provision 'ansible' do |ansible|
-      #  ansible.playbook = 'provision.yml'
-      #  ansible.limit = host['name']
-      #  ansible.host_vars = {
-      #    host['name'] => {
-      #      ip_address: host['ip']
-      #    }
-      #  }
-      #  ansible.extra_vars = {
-      #    host: host['name']
-      #  }
-      #  ansible.groups = {
-      #    "httpd" => ["hostA"],
-      #    "workers" => ["hostC", "hostD"]
-      #  }
-      #end
+      if not Vagrant::Util::Platform.windows?
+        node.vm.provision 'ansible' do |ansible|
+          ansible.playbook = 'provision.yml'
+          ansible.limit = host['name']
+          ansible.host_vars = {
+            host['name'] => {
+              ip_address: host['ip']
+            }
+          }
+          ansible.extra_vars = {
+            host: host['name']
+          }
+          ansible.groups = {
+            "httpd" => ["hostA"],
+            "workers" => ["hostC", "hostD"]
+          }
+        end
+      end
+
+      if Vagrant::Util::Platform.windows?
+        node.vm.provision :shell, inline:"/vagrant/internal-ansible.sh"
+     
+      end
 
       node.vm.provider :virtualbox do |vb|
         vb.name = host['name']
