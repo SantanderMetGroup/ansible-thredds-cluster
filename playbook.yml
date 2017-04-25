@@ -1,44 +1,32 @@
 ---
-- name: deploy apache and reverse proxy in centos6
-  hosts: centos6
+- name: deploy apache in all hosts
+  hosts: all
   become: true
   become_method: sudo
   vars_files:
     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
   roles: 
     - role: apache
-    - role: load-balancer
-  tags: centos6
 
-- name: deploy apache in centos7
-  become: true
-  become_method: sudo
-  hosts: centos7
-  vars_files:
-    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
-  roles:
-    - role: apache
-  tags: centos7
+# - name: configure reverse_proxy
+#   hosts: centos6
+#   vars_file:
+#     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
+#   include_role:
+#     name: load-balancer
+#     tasks_from: reverse_proxy
 
-- name: deploy apache in worker1
-  become: true
-  become_method: sudo
-  hosts: worker1
-  vars_files:
-    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
-  roles:
-    - role: apache
-  tags: work1
-
-- name: deploy apache in worker2
-  become: true
-  become_method: sudo
-  hosts: worker2
-  vars_files:
-    - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
-  roles:
-    - role: apache
-  tags: work2
+# - name: configure load-balance mod jk
+#   hosts: centos6
+#   vars_file:
+#     - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
+#   tasks:
+#     - name: mod jk file
+#       include_role:
+#         name: load-balancer
+#         tasks_from: jk_module
+        
+#   tags: jkmod
 
 - name: Deploy Java
   hosts: workers
