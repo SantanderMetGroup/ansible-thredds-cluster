@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Server port="${ceda.tomcat.shutdown.port}" shutdown="${ceda.tomcat.shutdown.keyword}">
+<Server port="{{ item.base_port }}5" shutdown="{{ item.name }}">
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
@@ -7,10 +7,10 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <Service name="Catalina">
-    <Connector port="${ceda.tomcat.http.port}" protocol="HTTP/1.1" connectionTimeout="20000" />
-    <Connector port="${ceda.tomcat.ajp.port}"  protocol="AJP/1.3"
-               proxyName="${ceda.tomcat.ajp.proxyName}"
-               proxyPort="${ceda.tomcat.ajp.proxyPort}"
+    <Connector port="{{ item.base_port }}8" protocol="HTTP/1.1" connectionTimeout="20000" />
+    <Connector port="{{ item.ajp.port }}"  protocol="AJP/1.3"
+               proxyName="{{ item.ajp.proxyName }}"
+               proxyPort="{{ item.ajp.proxyPort }}"
     />
     <Engine name="Catalina" defaultHost="localhost">
       <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">

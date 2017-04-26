@@ -3,7 +3,7 @@
 
 - name: start tds_instance
   supervisorctl:
-    name: "tds_{{ item.base_port }}"
+    name: "tds_{{ item.name }}"
     state: started
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
@@ -12,7 +12,7 @@
 
 - name: stop tds_instance
   supervisorctl:
-    name: "tds_{{ item.base_port }}"
+    name: "tds_{{ item.name }}"
     state: stopped
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
@@ -21,7 +21,7 @@
 
 - name: restart tds_instance
   supervisorctl:
-    name: "tds_{{ item.base_port }}"
+    name: "tds_{{ item.name }}"
     state: restarted
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"

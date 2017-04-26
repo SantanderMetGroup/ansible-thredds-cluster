@@ -20,24 +20,12 @@
     dest: "{{ tomcat_catalina_home }}/supervisord_wrapper.sh"
     mode: 0775
 
-# Create server.xml in tomcat_catalina_home
-- name: Create server.xml file
+# Create deploy_tds_instance.sh in tomcat_catalina_home 
+- name: Create deploy_tds_instance.sh script
   copy:
-    src: server.xml
-    dest: "{{ tomcat_catalina_home }}/conf/"
-    force: yes
-
-# Create var directory in service_home
-- name: Create {{ var_path }}
-  file: 
-    dest: "{{ var_path }}"
-    state: directory
-
-# Create tds instances directory (tomcat_pool) in var directory
-- name: Create {{ instances_path }}
-  file: 
-    dest: "{{ instances_path }}"
-    state: directory
+    src: deploy_tds_instance.sh
+    dest: "{{ tomcat_catalina_home }}"
+    mode: 0775
 
 # Create thredds directory in source directory for unarchive thredds.war
 - name: Create thredds directory in {{ source_service }}
@@ -83,20 +71,39 @@
 - name: Create tds instances configuration to supervisord 
   template:
     src: tds.conf.j2
-    dest: "{{ supervisor_programs }}/tds_{{ item.base_port }}.conf"
+    dest: "{{ supervisor_programs }}/tds_{{ item.name }}.conf"
   with_items:
     - "{{ tds_instances }}"
   register: tds_conf_supervisord
 
+# Create tds instances directory (tomcat_pool)
+- name: Create {{ instances_path }}
+  file: 
+    dest: "{{ instances_path }}"
+    state: directory
+
+- name: Deploy TDS instances
+  shell: ./deploy_tds_instance.sh  {{ tomcat_catalina_home }} {{ instances_path }}/tds_{{ item.name }}
+  args:
+    chdir: "{{ tomcat_catalina_home }}"
+  with_items: 
+    - "{{ tds_instances }}"
+
+# Create server.xml in instances_path
+- name: Create server.xml file
+  template:
+    src: server.xml.j2
+    dest: "{{ instances_path }}/tds_{{ item.name }}/conf/server.xml"
+  with_items:
+    - "{{ tds_instances }}"
+
 # Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
 - name: Add tds_instance programmes to supervisord
   supervisorctl:
-    name: "tds_{{ item.base_port }}"
+    name: "tds_{{ item.name }}"
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
   when: tds_conf_supervisord.changed
   with_items:
     - "{{ tds_instances }}"
-  notify:
-    - start tds_instance
