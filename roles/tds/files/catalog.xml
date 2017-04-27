@@ -6,13 +6,18 @@
          xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0
            http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.6.xsd">
 
-  <service name="dap2" serviceType="OpenDAP" base="/thredds/dodsC/" />
+  <service name="all" base="" serviceType="compound">
+    <service name="dap2" serviceType="OpenDAP" base="/thredds/dodsC/" />
+    <service name="dap4" serviceType="DAP4" base="/thredds/dap4/" />
+    <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
+    <!--service name="wcs" serviceType="WCS" base="/thredds/wcs/" /-->
+    <!--service name="wms" serviceType="WMS" base="/thredds/wms/" /-->
+    <!--service name="ncss" serviceType="NetcdfSubset" base="/thredds/ncss/" /-->
+  </service>
 
-  <datasetScan name="Test Dataset on a group workspacet" ID="testDataset"
-      path="mydata/test" location="/mydata/data" restrictAccess="mydataRole">
-    <metadata inherited="true">
-      <serviceName>dap2</serviceName>
-    </metadata>
-  </datasetScan>
-  
+  <service name="dap" base="" serviceType="compound">
+    <service name="dap2" serviceType="OpenDAP" base="/thredds/dodsC/" />
+    <service name="dap4" serviceType="DAP4" base="/thredds/dap4/" />
+  </service>
+
 </catalog>

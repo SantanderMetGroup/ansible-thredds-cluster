@@ -50,10 +50,15 @@
 - name: Copy thredds in {{ tomcat_catalina_home }}/webapps/thredds
   shell: cp -arf {{ source_service }}/thredds/* {{ tomcat_catalina_home }}/webapps/thredds/
 
-# Create content/thredss directory in tomcat_catalina_home
+# Create content/thredds directory in tomcat_catalina_home
 - name: Create content/thredds directory in {{ tomcat_catalina_home }}
   file:
     dest: "{{ tomcat_catalina_home }}/content/thredds"
+    state: directory
+
+- name: Create content/thredds/catalogs directory in {{ tomcat_catalina_home }}
+  file:
+    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs"
     state: directory
 
 # Copy some WEB-INF files from tomcat_catalina_home/webapps/thredds/ to tomcat_catalina_home/content/thredds 
@@ -61,10 +66,45 @@
   shell: cp -arf {{ source_service }}/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home }}/content/thredds/
 
 # Create a common catalog.xml in tomcat_catalina_home/content/thredds
-- name: Create catalog.xml in {{ tomcat_catalina_home }}/content/thredds/
-  copy: 
+- name: Create a common catalog.xml in {{ tomcat_catalina_home }}/content/thredds
+  copy:
     src: catalog.xml
-    dest: "{{ tomcat_catalina_home }}/content/thredds"
+    dest: "{{ tomcat_catalina_home }}/thredds"
+
+- name: Include vars from catalogs.yml
+  include_vars:
+    file: catalogs.yml
+
+# Create directories for each GWS in tomcat_catalina_home/content/thredds/catalogs/
+- name: Create directories for each GWS in {{ tomcat_catalina_home }}/content/thredds/catalogs/
+  file:
+    dest: "{{tomcat_catalina_home}}/content/thredds/catalogs/{{ item.name }}"
+    state: directory
+  with_items:
+    - "{{ catalogs }}"
+
+# Create catalog.xml for each GWS in tomcat_catalina_home/content/thredds/catalogs/
+- name: Create catalog.xml in {{ tomcat_catalina_home }}/content/thredds/
+  template: 
+    src: catalog.xml.j2
+    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs/{{ item.name }}/catalog.xml"
+  with_items:
+    - "{{ catalogs }}"
+  register: create_catalogs
+
+- name: Link catalogs in the common catalog.xml
+  blockinfile:
+    dest: "{{ tomcat_catalina_home }}/content/thredds/catalog.xml"
+    marker: "# {mark} {{ item.0.name }}"
+    insertbefore: "</catalog>"
+    block: |
+      <catalogRef xlink:title="{{ item.0.name }}" xlink:href="catalogs/{{ item.0.name }}/catalog.xml" name=""/>
+  with_nested:
+    - "{{ catalogs }}"
+    - "{{ create_catalogs.results }}"
+  when:
+    - item.1.item.name == item.0.name
+    - item.1._ansible_item_result == true 
 
 ## Control TDS instances with supervisord
 # Create tds configuration file for each instance in supervisord

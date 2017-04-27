@@ -22,4 +22,5 @@ if [ ! -d "$INSTANCE_HOME" ]; then
   ln -s $CATALINA_HOME/content/thredds/threddsConfig.xml $INSTANCE_HOME/content/thredds/threddsConfig.xml
   ln -s $CATALINA_HOME/content/thredds/wmsConfig.xml $INSTANCE_HOME/content/thredds/wmsConfig.xml
   ln -s $CATALINA_HOME/content/thredds/wmsConfig.dtd $INSTANCE_HOME/content/thredds/wmsConfig.dtd
+  ln -s $CATALINA_HOME/content/thredds/catalogs $INSTANCE_HOME/content/thredds/catalogs
 fi
