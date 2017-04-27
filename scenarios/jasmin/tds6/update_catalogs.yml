@@ -1,0 +1,26 @@
+- name: update catalogs
+  hosts: workers
+  vars:
+    svn_repo: "https://meteo.unican.es/svn/repos/sistemas/services/TDS6/tomcat/content/"
+    pool_dir: "{{ home }}/tds/var/tomcat_pool"
+  vars_files: 
+    - tds_conf.yml
+    - tds_instances_conf.yml
+  tasks:
+    - debug:
+        msg: "{{ item }}"
+      with_items:
+        - "{{ tds_instances }}"
+    - name: svn update
+      subversion:
+        repo: "{{ svn_repo }}"
+        dest: "{{ home }}/{{ service_name }}/var/tomcat_pool/{{ service_name }}_{{ item.name }}/content"
+      with_items:
+        - "{{ tds_instances }}"
+    - name: restart tds using supervisord
+      supervisorctl:
+        name: "tds_{{ item.name }}"
+        supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+        state: restarted
+      with_items:
+        - "{{ tds_instances }}"
