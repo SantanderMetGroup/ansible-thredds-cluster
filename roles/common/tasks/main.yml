@@ -2,10 +2,19 @@
 # tasks file for roles/common
 
 # Create home directory in remote host
+- name: Add $HOME enviroment variable
+  set_fact: 
+    env_var: lookup('env', 'HOME')
+
 - name: Create {{ home }}
   file:
     dest: "{{ home }}"
     state: directory
+
+- name: Insert home variable in .bashrc file
+  lineinfile:
+    dest: "~/.bashrc"
+    line: "export {{ work_home_name }}={{ home }}"
 
 # Create downloads directy in local host to download all necessary packages for remote host
 - name: Create folder local host
@@ -19,23 +28,3 @@
 
 # Install supervisord to control applications in remote host
 - include: supervisord.yml
-
-# Check if the service is installed in remote host
-- include: check_service_installed.yml
-  when:
-    - service == true
-
-# Check if the module is installed in remote host (e.g. mod_jk )
-- include: check_module_installed.yml
-  when:
-    - service == false
-
-# Install service if it is not registered in supervisord
-- include: binary.yml
-  when: ( (service==true) and (service_name not in service_installed.stdout) ) or ( (service==false) and (module_installed.matched == 0) )
-
-- name: Unarchive binary
-  unarchive:
-    src: "{{ local_download }}/{{ binary }}"
-    dest: "{{ opt_service }}"
-  when: ( service==true and service_name not in service_installed.stdout and binary_file.matched == 1)

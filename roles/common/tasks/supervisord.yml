@@ -33,7 +33,7 @@
 
 # Activate virtual enviroment for running supervisord process only when supervisord package is installed 
 - name: Run supervisord
-  shell: source {{ virtualenv_home }}/bin/activate && supervisord -c {{ supervisor_etc }}/supervisord.conf
+  shell: supervisord -c {{ supervisor_etc }}/supervisord.conf
   args:
     creates: "{{ supervisor_var }}/supervisord.sock"
   when: supervisor_install.changed

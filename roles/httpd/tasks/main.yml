@@ -1,20 +1,28 @@
+#Check if the service is installed in remote host
+- name: Check if the service is installed
+  include: "{{ httpd_path_to_lib_role }}/lib/tasks/check_service_install.yml"
+
+- name: Start installation if httpd is not installed
+  include: install_httpd.yml
+  when: service_name not in service_installed.stdout
+
 # Create conf.d directory in httpd_home
 - name: Create modules directories
   file:
-    dest: "{{ opt_service }}/{{ conf_modules }}"
+    dest: "{{ httpd_opt }}/{{ conf_modules }}"
     state: directory
 
 # Create httpd configuration
 - name: Copy httpd.conf in host
   template: 
     src: httpd.conf.j2
-    dest: "{{ opt_service }}/conf/httpd.conf"
+    dest: "{{ httpd_opt }}/conf/httpd.conf"
 
 # Create index.html page
 - name: Create index page
   template:
-    src: index.html.j2
-    dest: "{{ opt_service }}/htdocs/index.html"
+    src: "{{ httpd_default_index_html_template }}"
+    dest: "{{ httpd_opt }}/htdocs/index.html"
 
 ## Control httpd with supervisord
 # Create httpd configuration file in supervisord
@@ -34,3 +42,4 @@
   when: httpd_conf_supervisord.changed
   notify:
     - start httpd
+

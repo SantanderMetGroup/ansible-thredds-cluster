@@ -1,0 +1,9 @@
+- name: Include version specific vars
+  with_first_found:
+    - files:
+      - "{{ role_path }}/vars/versions/{{ service_name }}/{{ version }}.yml"
+      skip: true
+  include_vars: "{{ item }}"
+
+# - include: upgrade_version.yml
+#   when: check_version.failed == true

@@ -1,0 +1,102 @@
+# Include httpd version
+- name: Include version specific configuration
+  include: "{{ httpd_path_to_lib_role }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    version: "{{ httpd_redis_version }}"
+
+# Check if service source file exists in local host
+- name: Check if {{ httpd_redis_filename }} exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ httpd_redis_filename }}"
+  register: httpd_file
+
+- name: Include lib get_url task
+  include: "{{ httpd_path_to_lib_role }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ httpd_download_url }}"
+    filename: "{{ httpd_redis_filename }}"
+    checksum: "{{ httpd_redis_checksum }}"
+  when: httpd_file.matched == 0 
+
+# Create httpd source directory in remote host
+- name: Create {{ httpd_src }}
+  file:
+    dest: "{{ httpd_src }}"
+    state: directory
+
+# Unarchive service source file from local host to remote host in source directory (e.g .tar.gz)
+- name: Unarchive {{ httpd_redis_filename }} in {{ httpd_src }}
+  unarchive:
+    src: "{{ local_download }}/{{ httpd_redis_filename }}"
+    dest: "{{ httpd_src }}"
+  register: httpd_unarchive
+
+## Install neccesary dependencies for httpd 
+# Apr
+- name: Install Apr
+  include: dependencies.yml
+  vars:
+    name: apr 
+    redis_version: "{{ apr_redis_version }}"
+    install_base: "{{ apr_install_base }}"
+    redis_filename: "{{ apr_redis_filename }}"
+    redis_filename_unarchive: "{{ apr_redis_filename_unarchive }}"
+    download_url: "{{ apr_download_url }}"
+    redis_checksum: "{{ apr_redis_checksum }}"
+
+# Apr-Util
+- name: Include Apr-Util configuration
+  include: dependencies.yml
+  vars:
+    name: apr-util
+    redis_version: "{{ apr_util_redis_version }}"
+    install_base: "{{ apr_util_install_base }}"
+    redis_filename: "{{ apr_util_redis_filename }}"
+    redis_filename_unarchive: "{{ apr_util_redis_filename_unarchive }}"
+    download_url: "{{ apr_util_download_url }}"
+    redis_checksum: "{{ apr_util_redis_checksum }}"
+    configure: "{{ apr_util_configure }}"
+
+# PCRE
+- name: Include PCRE configuration
+  include: dependencies.yml
+  vars:
+    name: pcre
+    redis_version: "{{ pcre_redis_version }}"
+    install_base: "{{ pcre_install_base }}"
+    redis_filename_unarchive: "{{ pcre_redis_filename_unarchive }}"
+    redis_filename: "{{ pcre_redis_filename }}"
+    download_url: "{{ pcre_download_url }}"
+
+## Install httpd service
+- name: Install httpd
+  command: "{{ item }}"
+  args:
+    chdir: "{{ httpd_src }}/{{ httpd_redis_filename_unarchive }}"
+  with_items:
+    - ./configure --prefix={{ httpd_opt }} --enable-mpms-shared=all --with-apr={{ apr_install_base }} --with-apr-util={{ apr_util_install_base }} --with-pcre={{ pcre_install_base }}
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: httpd_unarchive.changed
+
+## Binary file
+# Create httpd binary file 
+- name: Archive httpd binary
+  command: tar -czvf {{ home }}/{{ httpd_binary }} .
+  args:
+    chdir: "{{ httpd_opt }}"
+
+# Copy httpd binary file in local host 
+- name: Copy httpd binary to local
+  fetch:
+    src: "{{ home }}/{{ httpd_binary }}"
+    dest: "{{ local_download }}"
+    flat: yes
+
+# Delete httpd binary file from remote host
+- name: Delete httpd binary in remote host
+  file: 
+    dest: "{{ home }}/{{ httpd_binary }}"
+    state: absent

@@ -1,0 +1,55 @@
+# httpd version number
+httpd_default_version: '2.4.25'
+httpd_redis_version: "{{ httpd_version if httpd_version is defined else httpd_default_version }}"
+
+# Mirror where to dowload httpd redistributable package from
+httpd_mirror: http://apache.mirrors.tds.net/httpd
+httpd_redis_filename_unarchive: "httpd-{{ httpd_redis_version }}"
+httpd_redis_filename: "{{ httpd_redis_filename_unarchive }}.tar.gz"
+httpd_download_url: "{{ httpd_mirror }}/{{ httpd_redis_filename }}"
+httpd_mirror_checksum: https://www.apache.org/dist/httpd
+
+# httpd installation directories
+#   base directory for httpd installations
+httpd_install_base: "{{ home }}/{{ service_name }}"
+httpd_opt: "{{ httpd_install_base }}/opt"
+httpd_src: "{{ httpd_install_base }}/src"
+
+# httpd configuration
+#   Default template for configuration file server.xml
+httpd_default_index_html_template: index.html.j2
+#   Default port
+httpd_default_port: 8000
+
+httpd_binary: "httpd-{{ httpd_redis_version }}+{{ ansible_distribution}}.{{ ansible_distribution_major_version}}.{{ ansible_architecture }}.tar.gz"
+httpd_path_to_lib_role: "~/ansible-opendap-cluster/roles"
+
+
+## Dependencies for installation
+# APR configuration
+apr_default_version: "1.5.2"
+apr_redis_version: "{{ apr_version if apr_version is defined else apr_default_version }}"
+apr_redis_filename_unarchive: "apr-{{ apr_redis_version }}"
+apr_redis_filename: "{{ apr_redis_filename_unarchive }}.tar.gz"
+apr_mirror: http://archive.apache.org/dist/apr
+apr_download_url: "{{ apr_mirror }}/{{ apr_redis_filename }}"
+apr_install_base: "{{ httpd_opt }}/apr"
+
+# APR-Util configuration
+apr_util_default_version: "1.5.4"
+apr_util_redis_version: "{{ apr_util_version if apr_util_version is defined else apr_util_default_version }}"
+apr_util_redis_filename_unarchive: "apr-util-{{ apr_util_redis_version }}"
+apr_util_redis_filename: "{{ apr_util_redis_filename_unarchive }}.tar.gz"
+apr_util_mirror: http://archive.apache.org/dist/apr
+apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_redis_filename }}"
+apr_util_install_base: "{{ httpd_opt }}/apr_util"
+apr_util_configure: --with-apr={{ apr_install_base }}
+
+# PCRE configuration
+pcre_default_version: "8.40"
+pcre_redis_version: "{{ pcre_version if pcre_version is defined else pcre_default_version }}"
+pcre_redis_filename_unarchive: "pcre-{{ pcre_redis_version }}"
+pcre_redis_filename: "{{ pcre_redis_filename_unarchive }}.tar.gz"
+pcre_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
+pcre_download_url: "{{ pcre_mirror }}/{{ pcre_redis_filename }}"
+pcre_install_base: "{{ httpd_opt }}/pcre"

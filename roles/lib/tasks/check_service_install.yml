@@ -1,6 +1,6 @@
 # Check if service is registered in supervisord
 - name: Check if {{ service_name }} is installed
-  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl status
+  shell: supervisorctl status
   register: service_installed
 
 # Check if service directory is created
@@ -44,12 +44,12 @@
 
 # Update supervisord configuration
 - name: Update supervisord configuration
-  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl update
+  shell: supervisorctl update
   when: 
     - service_name in service_installed.stdout
     - service_directory.matched == 0
 
 # Check if service is still registered in supervisord
-- name: Check if {{ service_name }} is still installed 
-  shell: source {{ virtualenv_home }}/bin/activate && supervisorctl status
+- name: Check if {{ service_name }} is still installed
+  shell: supervisorctl status
   register: service_installed
