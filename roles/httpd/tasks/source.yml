@@ -81,22 +81,62 @@
     - /usr/bin/make install
   when: httpd_unarchive.changed
 
+
+## Install mod_jk
+- name: Include version specific configuration
+  include: "{{ httpd_path_to_lib_role }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    service_name: mod_jk
+    version: "{{ mod_jk_redis_version }}"
+
+- name: Check if dependency_redis_filename exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ mod_jk_redis_filename }}"
+  register: mod_jk_file
+
+- name: Include lib get_url task
+  include: "{{ httpd_path_to_lib_role }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ mod_jk_download_url }}"
+    filename: "{{ mod_jk_redis_filename }}"
+    checksum: "{{ mod_jk_redis_checksum | default(None)}}"
+  when: mod_jk_file.matched == 0 
+
+# Unarchive mod_jk source file from local host to remote host in source directory
+- name: Unarchive mod_jk in remote host
+  unarchive:
+    src: "{{ local_download }}/{{ mod_jk_redis_filename }}"
+    dest: "{{ httpd_src }}"
+  register: mod_jk
+
+- name: Configure mod_jk
+  command: "{{ item }}"
+  args:
+    chdir: "{{ httpd_src }}/{{ mod_jk_redis_filename_unarchive }}/native"
+  with_items:
+    - ./configure --prefix={{ mod_jk_install_base }} {{ mod_jk_configure | default(None)}}
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: mod_jk.changed
+
 ## Binary file
 # Create httpd binary file 
 - name: Archive httpd binary
-  command: tar -czvf {{ home }}/{{ httpd_binary }} .
+  command: tar -czvf {{ services_prefix }}/{{ httpd_binary }} .
   args:
     chdir: "{{ httpd_opt }}"
 
 # Copy httpd binary file in local host 
 - name: Copy httpd binary to local
   fetch:
-    src: "{{ home }}/{{ httpd_binary }}"
+    src: "{{ services_prefix }}/{{ httpd_binary }}"
     dest: "{{ local_download }}"
     flat: yes
 
 # Delete httpd binary file from remote host
 - name: Delete httpd binary in remote host
   file: 
-    dest: "{{ home }}/{{ httpd_binary }}"
+    dest: "{{ services_prefix }}/{{ httpd_binary }}"
     state: absent

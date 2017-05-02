@@ -11,7 +11,7 @@ httpd_mirror_checksum: https://www.apache.org/dist/httpd
 
 # httpd installation directories
 #   base directory for httpd installations
-httpd_install_base: "{{ home }}/{{ service_name }}"
+httpd_install_base: "{{ services_prefix }}/{{ service_name }}"
 httpd_opt: "{{ httpd_install_base }}/opt"
 httpd_src: "{{ httpd_install_base }}/src"
 
@@ -53,3 +53,13 @@ pcre_redis_filename: "{{ pcre_redis_filename_unarchive }}.tar.gz"
 pcre_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
 pcre_download_url: "{{ pcre_mirror }}/{{ pcre_redis_filename }}"
 pcre_install_base: "{{ httpd_opt }}/pcre"
+
+# mod_jk configuration
+mod_jk_default_version: "1.2.42"
+mod_jk_redis_version: "{{ mod_jk_version if mod_jk_version is defined else mod_jk_default_version }}"
+mod_jk_redis_filename_unarchive: "tomcat-connectors-{{ mod_jk_redis_version }}-src"
+mod_jk_redis_filename: "{{ mod_jk_redis_filename_unarchive }}.tar.gz"
+mod_jk_mirror: http://archive.apache.org/dist/tomcat/tomcat-connectors/jk
+mod_jk_download_url: "{{ mod_jk_mirror }}/{{ mod_jk_redis_filename }}"
+mod_jk_install_base: "{{ httpd_opt }}/modules"
+mod_jk_configure: --with-apxs={{ httpd_opt }}/bin/apxs

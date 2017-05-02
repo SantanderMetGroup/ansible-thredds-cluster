@@ -6,15 +6,15 @@
   set_fact: 
     env_var: lookup('env', 'HOME')
 
-- name: Create {{ home }}
+- name: Create {{ services_prefix }}
   file:
-    dest: "{{ home }}"
+    dest: "{{ services_prefix }}"
     state: directory
 
 - name: Insert home variable in .bashrc file
   lineinfile:
     dest: "~/.bashrc"
-    line: "export {{ work_home_name }}={{ home }}"
+    line: "export {{ work_home_name }}={{ services_prefix }}"
 
 # Create downloads directy in local host to download all necessary packages for remote host
 - name: Create folder local host

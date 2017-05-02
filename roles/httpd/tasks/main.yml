@@ -1,6 +1,8 @@
 #Check if the service is installed in remote host
 - name: Check if the service is installed
   include: "{{ httpd_path_to_lib_role }}/lib/tasks/check_service_install.yml"
+  vars:
+    service_home: "{{ httpd_install_base }}"
 
 - name: Start installation if httpd is not installed
   include: install_httpd.yml
@@ -11,6 +13,24 @@
   file:
     dest: "{{ httpd_opt }}/{{ conf_modules }}"
     state: directory
+
+# Create jk configuration file in http configuration
+- name: Configure jk module
+  template:
+    src: mod_jk.conf.j2
+    dest: "{{ httpd_opt }}/conf.d/mod_jk.conf"
+
+# Create general worker.properties configuration file for mod_jk in httpd configuration
+- name: Configure general worker properties
+  template:
+    src: mod_jk.workers.j2
+    dest: "{{ httpd_opt }}/conf.d/mod_jk.workers"
+
+# Create general worker.properties configuration file for mod_jk in httpd configuration
+- name: Configure mod_jk urimaps
+  template:
+    src: mod_jk.urimaps.j2
+    dest: "{{ httpd_opt }}/conf.d/mod_jk.urimaps"
 
 # Create httpd configuration
 - name: Copy httpd.conf in host
@@ -40,6 +60,3 @@
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
   when: httpd_conf_supervisord.changed
-  notify:
-    - start httpd
-

@@ -17,10 +17,12 @@
 
 - name: Include source.yml if binary doesn't exist
   include: source.yml
-  when: binary_file.matched == 0
+  when: 
+   - (binary_file is defined and binary_file.matched == 0)
 
 - name: Unarchive httpd binary
   unarchive:
     src: "{{ local_download }}/{{ httpd_binary }}"
     dest: "{{ httpd_opt }}"
-  when: binary_file.matched == 1
+  when: 
+    - (binary_file is defined and binary_file.matched == 1)
