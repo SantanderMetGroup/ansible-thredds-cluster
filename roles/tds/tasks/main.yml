@@ -1,17 +1,16 @@
 ---
 # tasks file for roles/tds
-- name: Create {{ jre_path }}
-  file: 
-    dest: "{{ jre_path }}" 
-    state: directory
 
-# Move jre files from source directory to jre directory in opt
-- name: Move jre files to {{ jre_path }}
-  shell: cp -arf {{ source_service }}/{{ packages.0.unarchive_dir_name }}/* {{ jre_path }}/
+#Check if the service is installed in remote host
+- name: Check if the service is installed
+  include: "{{ tds_path_to_lib_role }}/lib/tasks/check_service_install.yml"
+  vars:
+    service_home: "{{ tds_install_base }}"
 
-# Move tomcat files from source directory to tomcat_catalina_home
-- name: Move tomcat files to {{ tomcat_catalina_home }}
-  shell: cp -arf {{ source_service }}/{{ packages.1.unarchive_dir_name }}/* {{ tomcat_catalina_home }}/
+- name: Start installation if httpd is not installed
+  include: install_tds.yml
+  when: service_name not in service_installed.stdout
+
 
 # Create supervisord_wrapper.sh in tomcat_catalina_home 
 - name: Create supervisord_wrapper.sh script
@@ -27,122 +26,16 @@
     dest: "{{ tomcat_catalina_home }}"
     mode: 0775
 
-# Create thredds directory in source directory for unarchive thredds.war
-- name: Create thredds directory in {{ source_service }}
-  file:
-    dest: "{{ source_service }}/thredds"
-    state: directory
-
-# Unarchive thredds.war
-- name: Unarchive war
-  unarchive:
-    src: "{{ source_service }}/{{ archive_file_name }}"
-    dest: "{{ source_service }}/thredds"
-    remote_src: true
-
-# Create thredds directory in tomcat_catalina_home/webapps
-- name: Create thredds directory in {{ tomcat_catalina_home }}/webapps
-  file:
-    dest: "{{ tomcat_catalina_home }}/webapps/thredds"
-    state: directory
-
-# Copy content from thredds directory in source to thredds directory in tomcat_catalina_home/thredds
-- name: Copy thredds in {{ tomcat_catalina_home }}/webapps/thredds
-  shell: cp -arf {{ source_service }}/thredds/* {{ tomcat_catalina_home }}/webapps/thredds/
-
-# Create content/thredds directory in tomcat_catalina_home
-- name: Create content/thredds directory in {{ tomcat_catalina_home }}
-  file:
-    dest: "{{ tomcat_catalina_home }}/content/thredds"
-    state: directory
-
-- name: Create content/thredds/catalogs directory in {{ tomcat_catalina_home }}
-  file:
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs"
-    state: directory
-
-# Copy some WEB-INF files from tomcat_catalina_home/webapps/thredds/ to tomcat_catalina_home/content/thredds 
-- name: Copy WEB-INF/altContent/startup/* to {{ tomcat_catalina_home }}/content/thredds
-  shell: cp -arf {{ source_service }}/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home }}/content/thredds/
-
 # Create a common catalog.xml in tomcat_catalina_home/content/thredds
 - name: Create a common catalog.xml in {{ tomcat_catalina_home }}/content/thredds
   copy:
     src: catalog.xml
     dest: "{{ tomcat_catalina_home }}/content/thredds"
 
-- name: Include vars from catalogs.yml
-  include_vars:
-    file: catalogs.yml
 
-# Create directories for each GWS in tomcat_catalina_home/content/thredds/catalogs/
-- name: Create directories for each GWS in {{ tomcat_catalina_home }}/content/thredds/catalogs/
-  file:
-    dest: "{{tomcat_catalina_home}}/content/thredds/catalogs/{{ item.name }}"
-    state: directory
-  with_items:
-    - "{{ catalogs }}"
+- include: deploy_tds_instances.yml
+  when: tds_instances is defined 
 
-# Create catalog.xml for each GWS in tomcat_catalina_home/content/thredds/catalogs/
-- name: Create catalog.xml in {{ tomcat_catalina_home }}/content/thredds/
-  template: 
-    src: catalog.xml.j2
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs/{{ item.name }}/catalog.xml"
-  with_items:
-    - "{{ catalogs }}"
-  register: create_catalogs
+- include: deploy_GWS.yml
+  when: catalogs is defined
 
-- name: Link catalogs in the common catalog.xml
-  blockinfile:
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalog.xml"
-    marker: "# {mark} {{ item.0.name }}"
-    insertbefore: "</catalog>"
-    block: |
-      <catalogRef xlink:title="{{ item.0.name }}" xlink:href="catalogs/{{ item.0.name }}/catalog.xml" name=""/>
-  with_together:
-    - "{{ catalogs }}"
-    - "{{ create_catalogs.results }}"
-  when:
-    - item.1._ansible_item_result == true 
-
-## Control TDS instances with supervisord
-# Create tds configuration file for each instance in supervisord
-- name: Create tds instances configuration to supervisord 
-  template:
-    src: tds.conf.j2
-    dest: "{{ supervisor_programs }}/tds_{{ item.name }}.conf"
-  with_items:
-    - "{{ tds_instances }}"
-  register: tds_conf_supervisord
-
-# Create tds instances directory (tomcat_pool)
-- name: Create {{ instances_path }}
-  file: 
-    dest: "{{ instances_path }}"
-    state: directory
-
-- name: Deploy TDS instances
-  shell: ./deploy_tds_instance.sh  {{ tomcat_catalina_home }} {{ instances_path }}/tds_{{ item.name }}
-  args:
-    chdir: "{{ tomcat_catalina_home }}"
-  with_items: 
-    - "{{ tds_instances }}"
-
-# Create server.xml in instances_path
-- name: Create server.xml file
-  template:
-    src: server.xml.j2
-    dest: "{{ instances_path }}/tds_{{ item.name }}/conf/server.xml"
-  with_items:
-    - "{{ tds_instances }}"
-
-# Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
-- name: Add tds_instance programmes to supervisord
-  supervisorctl:
-    name: "tds_{{ item.name }}"
-    state: present
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-  when: tds_conf_supervisord.changed
-  with_items:
-    - "{{ tds_instances }}"

@@ -1,0 +1,44 @@
+---
+# Tomcat version number
+tds_default_version: '4.6.8'
+tds_redis_version: "{{ tds_version if tds_version is defined else tds_default_version }}"
+
+# filename of Tomcat redistributable package
+tds_redis_filename_unarchive: "tds-{{ tds_redis_version }}"
+tds_redis_filename: "{{ tds_redis_filename_unarchive }}.war"
+
+# Mirror where to dowload Tomcat redistributable package from
+tds_mirror: http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/
+# Allow to override where to download Tomcat from
+tds_download_url: "{{ tds_mirror }}/{{ tds_redis_version }}/{{ tds_redis_filename }}"
+
+# TDS installation directories
+#   base directory for Tomcat installations
+tds_install_base: "{{ services_prefix }}/{{ service_name }}"
+tds_opt: "{{ tds_install_base }}/opt"
+tds_src: "{{ tds_install_base }}/src"
+tds_var: "{{ tds_install_base }}/var"
+tds_instance_path: "{{ tds_var }}/tomcat_pool"
+
+tds_path_to_lib_role: "../../roles"
+
+## Dependencies for installation
+# JRE
+jre_default_version: '8u121'
+jre_redis_version: "{{ jre_version if jre_version is defined else jre_default_version }}"
+jre_redis_filename_unarchive: "jre-{{ jre_redis_version }}-linux-x64"
+jre_redis_filename: "{{ jre_redis_filename_unarchive }}.tar.gz"
+jre_mirror: http://download.oracle.com/otn-pub/java/jdk/
+jre_download_url: "{{ jre_mirror }}/{{ jre_redis_version }}-{{ jre_subversion }}/{{ jre_number }}/{{ jre_redis_filename }}"
+jre_header: "Cookie: oraclelicense=accept-securebackup-cookie"
+jre_install_base: "{{ tds_opt }}/jre"
+
+# Tomcat
+tomcat_default_version: '8.0.42'
+tomcat_redis_version: "{{ tomcat_version if tomcat_version is defined else tomcat_default_version }}"
+tomcat_version_major: "{{ tomcat_redis_version|truncate(1, True, '') }}"
+tomcat_redis_filename_unarchive: "apache-tomcat-{{ tomcat_redis_version }}"
+tomcat_redis_filename: "{{ tomcat_redis_filename_unarchive }}.tar.gz"
+tomcat_mirror: http://archive.apache.org/dist/tomcat
+tomcat_download_url: "{{ tomcat_mirror }}/tomcat-{{ tomcat_version_major }}/v{{ tomcat_redis_version }}/bin/{{ tomcat_redis_filename }}"
+tomcat_catalina_home: "{{ tds_opt }}"

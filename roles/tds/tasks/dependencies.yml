@@ -1,0 +1,39 @@
+- name: Include version specific configuration
+  include: "{{ tds_path_to_lib_role }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    service_name: "{{ name }}"
+    version: "{{ redis_version }}"
+
+- name: Create dependency_install_base directory
+  file:
+    dest: "{{ install_base }}"
+    state: directory
+  when: install_base is defined
+
+- name: Check if dependency_redis_filename exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ redis_filename }}"
+  register: file
+
+- name: Include lib get_url task
+  include: "{{ tds_path_to_lib_role }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ download_url }}"
+    filename: "{{ redis_filename }}"
+    checksum: "{{ redis_checksum | default(None)}}"
+    header: "{{ file_header | default(None)}}"
+  when: file.matched == 0
+
+# Unarchive package source file from local host to remote host in source directory (e.g .tar.gz)
+- name: Unarchive file in remote host
+  unarchive:
+    src: "{{ local_download }}/{{ redis_filename }}"
+    dest: "{{ tds_src }}"
+  register: dependency
+
+# Move dependencies files from source directory to jre directory in opt
+- name: Move jre files to dependency_install_base
+  shell: cp -arf {{ tds_src }}/{{ unarchive_name }}/* {{ install_base }}/
+  when: dependency.changed

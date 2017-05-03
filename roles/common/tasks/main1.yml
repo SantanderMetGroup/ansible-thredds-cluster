@@ -1,9 +1,0 @@
-# Install service if it is not registered in supervisord
-- include: binary.yml
-  when: ( (service==true) and (service_name not in service_installed.stdout) ) or ( (service==false) and (module_installed.matched == 0) )
-
-- name: Unarchive binary
-  unarchive:
-    src: "{{ local_download }}/{{ binary }}"
-    dest: "{{ opt_service }}"
-  when: ( service==true and service_name not in service_installed.stdout and binary_file.matched == 1)
