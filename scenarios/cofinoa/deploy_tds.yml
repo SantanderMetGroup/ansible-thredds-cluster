@@ -7,16 +7,24 @@
         ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
         ajp: 
           port: 18009
-          proxyName: localhost
+          proxyName: 192.168.33.12
           proxyPort: 8000
+        catalog: "{{ catalogs.0.name }}"
 
       - name: "{{ inventory_hostname }}_2800"
         base_port: 2800
         ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
         ajp: 
           port: 28009 
-          proxyName: localhost
+          proxyName: 192.168.33.12
           proxyPort: 8000
+        catalog: "{{ catalogs.1.name }}"
+    catalogs:
+      - name: cedaproc
+        path: cedaproc/test
+        location: /home/vagrant/ansible/gws/cedaproc
+      - name: hiresgw
+        path: hiresgw/test
+        location: /home/vagrant/ansible/gws/hiresgw/antonio
   roles:
-    - {role: common}
-    - {role: tds, tags: tds}
+    - role: tds

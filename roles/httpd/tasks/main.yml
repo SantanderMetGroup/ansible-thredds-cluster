@@ -8,6 +8,11 @@
   include: install_httpd.yml
   when: service_name not in service_installed.stdout
 
+- name: Insert HTTPD_HOME in .bashrc file
+  lineinfile:
+    dest: "~/.bashrc"
+    line: "export HTTPD_HOME={{ httpd_opt }}"
+
 # Create conf.d directory in httpd_home
 - name: Create modules directories
   file:

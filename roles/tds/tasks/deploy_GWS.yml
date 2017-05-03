@@ -27,3 +27,53 @@
     - "{{ create_catalogs.results }}"
   when:
     - item.1._ansible_item_result == true
+
+# Add GWS load balancer configuration to mod_jk.workers file   
+- name: Configure GWS in mod_jk.workers
+  blockinfile:
+    dest: "$HTTPD_HOME/conf.d/mod_jk.workers"
+    marker: "# {mark} GWS_{{ item.catalog }}"
+    block: |
+      worker.list=GWS_{{ item.catalog }}
+      worker.GWS_{{ item.catalog }}.type=lb
+  with_items:
+    - "{{ tds_instances }}"
+  delegate_to: hostC
+  tags: lb
+
+# Add each instance configuration for GWS to mod_jk.workers file   
+- name: Configure instances for GWS in mod_jk.workers
+  blockinfile:
+    dest: "$HTTPD_HOME/conf.d/mod_jk.workers"
+    marker: "# {mark} GWS_{{ item.catalog }}_{{ inventory_hostname }}_{{ item.base_port }}"
+    block: |
+      worker.GWS_{{ item.catalog }}.balance_workers= {{ item.name }}
+
+      worker.{{ item.name }}.type=ajp13
+      worker.{{ item.name }}.host={{ item.ip_address }}
+      worker.{{ item.name }}.port={{ item.ajp.port }}
+  with_items:
+    - "{{ tds_instances }}"
+  delegate_to: hostC
+  tags: lb
+
+# Add urimap for GWS in mod_jk.urimaps file   
+- name: Configure urimap for GWS in mod_jk.urimaps
+  blockinfile:
+    dest: "$HTTPD_HOME/conf.d/mod_jk.urimaps"
+    marker: "# {mark} GWS_{{ item.catalog }}"
+    block: |
+      /thredds/*/{{ item.catalog }}=GWS_{{ item.catalog }}
+      /thredds/*/{{ item.catalog }}/*=GWS_{{ item.catalog }}
+  with_items:
+    - "{{ tds_instances }}"
+  delegate_to: hostC
+  tags: lb
+
+- name: restart httpd
+  supervisorctl:
+    name: httpd
+    state: restarted
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+  delegate_to: hostC
