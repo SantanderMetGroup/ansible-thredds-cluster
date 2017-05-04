@@ -1,32 +1,44 @@
-# Create directories for each GWS in tomcat_catalina_home/content/thredds/catalogs/
-- name: Create directories for each GWS in {{ tomcat_catalina_home }}/content/thredds/catalogs/
+# Create directories for each GWS in tds_instance_path/tds_instance/content/thredds/gws/
+- name: Create directories for each GWS in {{ tds_instance_path }}
   file:
-    dest: "{{tomcat_catalina_home}}/content/thredds/catalogs/{{ item.name }}"
+    dest: "{{ tds_instance_path }}/tds_{{ item.name }}/content/thredds/gws/{{ item.catalog }}"
     state: directory
   with_items:
-    - "{{ catalogs }}"
+    - "{{ tds_instances }}"
 
-# Create catalog.xml for each GWS in tomcat_catalina_home/content/thredds/catalogs/
-- name: Create catalog.xml in {{ tomcat_catalina_home }}/content/thredds/
+# Create a generic catalog.xml for each TDS instance
+- name: Create generic catalog.xml for each TDS instance
+  copy:
+    src: catalog.xml
+    dest: "{{ tds_instance_path }}/tds_{{ item.name }}/content/thredds"
+  with_items:
+    - "{{ tds_instances }}"
+
+# Create catalog.xml for each GWS
+- name: Create catalog.xml in each GWS
   template: 
     src: catalog.xml.j2
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs/{{ item.name }}/catalog.xml"
-  with_items:
+    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}/catalog.xml"
+  with_nested:
+    - "{{ tds_instances }}"
     - "{{ catalogs }}"
+  when:
+    - item.0.catalog == item.1.name
   register: create_catalogs
 
 - name: Link catalogs in the common catalog.xml
   blockinfile:
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalog.xml"
+    dest: "{{ tds_instance_path }}/tds_{{ item.1.item.0.name }}/content/thredds/catalog.xml"
     marker: "# {mark} {{ item.0.name }}"
     insertbefore: "</catalog>"
     block: |
-      <catalogRef xlink:title="{{ item.0.name }}" xlink:href="catalogs/{{ item.0.name }}/catalog.xml" name=""/>
-  with_together:
+      <catalogRef xlink:title="{{ item.0.name }}" xlink:href="gws/{{ item.0.name }}/catalog.xml" name=""/>
+  with_nested:
     - "{{ catalogs }}"
     - "{{ create_catalogs.results }}"
   when:
-    - item.1._ansible_item_result == true
+    - (item.1.skipped is not defined) and (item.0.name == item.1.item.1.name)
+  notify: restart tds_instance
 
 # Add GWS load balancer configuration to mod_jk.workers file   
 - name: Configure GWS in mod_jk.workers
@@ -39,7 +51,6 @@
   with_items:
     - "{{ tds_instances }}"
   delegate_to: hostC
-  tags: lb
 
 # Add each instance configuration for GWS to mod_jk.workers file   
 - name: Configure instances for GWS in mod_jk.workers
@@ -55,7 +66,6 @@
   with_items:
     - "{{ tds_instances }}"
   delegate_to: hostC
-  tags: lb
 
 # Add urimap for GWS in mod_jk.urimaps file   
 - name: Configure urimap for GWS in mod_jk.urimaps
@@ -68,7 +78,6 @@
   with_items:
     - "{{ tds_instances }}"
   delegate_to: hostC
-  tags: lb
 
 - name: restart httpd
   supervisorctl:
