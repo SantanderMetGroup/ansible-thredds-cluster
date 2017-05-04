@@ -1,17 +1,17 @@
 ---
 # tasks file for roles/common
-
-# Create home directory in remote host
+# Add enviroment variable to ansible
 - name: Add $HOME enviroment variable
   set_fact: 
     env_var: lookup('env', 'HOME')
 
+# Create home directory in remote host
 - name: Create {{ services_prefix }}
   file:
     dest: "{{ services_prefix }}"
     state: directory
 
-- name: Insert home variable in .bashrc file
+- name: Insert WORK_HOME variable in .bashrc file
   lineinfile:
     dest: "~/.bashrc"
     line: "export {{ work_home_name }}={{ services_prefix }}"

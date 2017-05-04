@@ -9,7 +9,6 @@ if [ ! -d "$INSTANCE_HOME" ]; then
   mkdir -p $INSTANCE_HOME/work
   mkdir -p $INSTANCE_HOME/logs
   ln -s $CATALINA_HOME/bin $INSTANCE_HOME/bin
-#  ln -s $CATALINA_HOME/conf $INSTANCE_HOME/conf
   cp -a $CATALINA_HOME/conf $INSTANCE_HOME/
   ln -s $CATALINA_HOME/lib $INSTANCE_HOME/lib
   ln -s $CATALINA_HOME/webapps $INSTANCE_HOME/webapps
