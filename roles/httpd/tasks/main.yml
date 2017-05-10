@@ -19,6 +19,13 @@
     dest: "{{ httpd_opt }}/{{ conf_modules }}"
     state: directory
 
+# Create password for admin user
+- name: Create password for mod_jk status web page
+  htpasswd:
+    path: "{{ httpd_opt }}/.htpasswd"
+    name: "{{ user }}"
+    password: "{{ password }}"
+
 # Create jk configuration file in http configuration
 - name: Configure jk module
   template:
@@ -64,4 +71,6 @@
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ user }}"
+    password: "{{ password }}"
   when: httpd_conf_supervisord.changed

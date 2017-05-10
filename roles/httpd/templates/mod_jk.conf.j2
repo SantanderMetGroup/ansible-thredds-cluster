@@ -6,3 +6,11 @@ JkShmFile     {{ httpd_opt }}/logs/mod_jk.shm
 JkLogFile     {{ httpd_opt }}/logs/mod_jk.log
 JkLogLevel    info
 JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+
+<Location "/status">
+	Allow from all
+	AuthType Basic
+	AuthName "Restricted Content"
+	AuthUserFile {{ httpd_opt }}/.htpasswd
+	Require valid-user
+</Location>

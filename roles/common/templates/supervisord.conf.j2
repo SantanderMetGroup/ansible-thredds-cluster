@@ -3,6 +3,10 @@ file={{ supervisor_var }}/supervisor.sock   ; (the path to the socket file)
 
 [inet_http_server]          ; inet (TCP) server disabled by default
 port=*:9001        			; (ip_address:port specifier, *:port for all iface)
+{% if username is defined %}
+username={{ username }}
+password={SHA}{{ passwd |hash('sha1') }}
+{% endif %}
 
 [supervisord]
 logfile={{ supervisor_var }}/supervisord.log ; (main log file;default $CWD/supervisord.log)

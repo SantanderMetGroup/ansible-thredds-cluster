@@ -1,6 +1,6 @@
 # Check if service is registered in supervisord
 - name: Check if {{ service_name }} is installed
-  shell: supervisorctl status
+  shell: supervisorctl --username={{ user }} --password={{ password }} status
   register: service_installed
 
 # Check if service directory is created
@@ -51,5 +51,5 @@
 
 # Check if service is still registered in supervisord
 - name: Check if {{ service_name }} is still installed
-  shell: supervisorctl status
+  shell: supervisorctl --username={{ user }} --password={{ password }} status
   register: service_installed
