@@ -1,18 +1,39 @@
 - name: Deploy tds
   hosts: hostD
   vars:
+    user: gws-manager
+    password: gws-manager
     tds_instances:
       - name: "{{ inventory_hostname }}_1800"
         base_port: 1800
         ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
+        ip_internal_address: 192.168.3.5
         ajp: 
           port: 18009
-          proxyName: 192.168.33.12
+          proxyName: 192.168.3.2
           proxyPort: 8000
-        catalog: "{{ catalogs.0.name }}"
+        catalog: 
+          - "{{ catalogs.0.name }}"
+          - "{{ catalogs.1.name }}"
+
+      - name: "{{ inventory_hostname }}_2800"
+        base_port: 2800
+        ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
+        ip_internal_address: 192.168.3.5
+        ajp: 
+          port: 28009
+          proxyName: 192.168.3.2
+          proxyPort: 8000
+        catalog: 
+          - "{{ catalogs.0.name }}"
+          - "{{ catalogs.1.name }}"
+
     catalogs:
       - name: cedaproc
         path: cedaproc/test
-        location: $HOME/ansible/gws/cedaproc
+        location: "{{ services_prefix }}/gws/cedaproc"
+      - name: hiresgw
+        path: hiresgw/test
+        location: "{{ services_prefix }}/gws/hiresgw/antonio"
   roles:
     - role: tds

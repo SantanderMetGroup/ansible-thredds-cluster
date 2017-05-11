@@ -9,7 +9,11 @@
   <service name="dap2" serviceType="OpenDAP" base="/thredds/dodsC/" />
 
   <datasetScan name="Test Dataset on a group workspacet" ID="testDataset"
-      path="{{ item.1.path }}" location="{{ item.1.location }}">
+  {% for ctlg in catalogs %}
+    {% if ctlg.name == item.1 %}
+      path="{{ ctlg.path }}" location="{{ ctlg.location }}">
+    {% endif %}
+  {% endfor %}
     <metadata inherited="true">
       <serviceName>dap2</serviceName>
     </metadata>
