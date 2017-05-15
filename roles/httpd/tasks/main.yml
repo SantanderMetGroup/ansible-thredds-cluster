@@ -74,3 +74,50 @@
     username: "{{ user }}"
     password: "{{ password }}"
   when: httpd_conf_supervisord.changed
+
+- name: Create script to detect changes in httpd configuration
+  template:
+    src: detect_changes.py.j2
+    dest: "{{ supervisor_programs }}/detect_changes.py"
+    mode: 0775
+
+- name: Create event listener for detect changes in httpd/opt/conf/ directory
+  template:
+     src: detect_httpd_conf.conf.j2
+     dest: "{{ supervisor_programs }}/httpd_conf.conf"
+  vars: 
+    event_name: httpd_conf
+    md5_filename: httpd_conf
+    control_directory: "{{ httpd_opt }}/conf/"
+  register: httpd_conf_listener
+
+- name: Add event listener to supervisord
+  supervisorctl:
+    name: httpd_conf
+    state: present
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ user }}"
+    password: "{{ password }}"
+  when: httpd_conf_listener.changed
+
+- name: Create event listener for detect changes in httpd/opt/conf.d/ directory
+  template:
+     src: detect_httpd_conf.conf.j2
+     dest: "{{ supervisor_programs }}/httpd_conf_modules.conf"
+  vars: 
+    event_name: httpd_conf_modules
+    md5_filename: httpd_conf_modules
+    control_directory: "{{ httpd_opt }}/conf.d/"
+  register: httpd_conf_modules_listener
+
+- name: Add event listener to supervisord
+  supervisorctl:
+    name: httpd_conf_modules
+    state: present
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ user }}"
+    password: "{{ password }}"
+  when: httpd_conf_modules_listener.changed
+
