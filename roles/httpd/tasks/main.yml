@@ -56,6 +56,36 @@
     src: "{{ httpd_default_index_html_template }}"
     dest: "{{ httpd_opt }}/htdocs/index.html"
 
+## Thredds's configuration
+- name: Create thredds directory in htdocs directory
+  file:
+    dest: "{{ httpd_opt }}/htdocs/thredds"
+    state: directory
+
+- name: Create thredds static configuration files (images, css)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ httpd_opt }}/htdocs/thredds/{{ item }}"
+  with_items:
+    - folder.gif
+    - tdsCat.css
+    - threddsIcon.gif
+
+- name: Create thredds static configuration - catalog.html
+  template:
+     src: catalog.html.j2
+     dest: "{{ httpd_opt }}/htdocs/thredds/catalog.html"
+
+- name: Create thredds static configuration - catalog.xml
+  template:
+    src: catalog.xml.j2
+    dest: "{{ httpd_opt }}/htdocs/thredds/catalog.xml"
+
+- name: Create configuration module for thredds
+  template:
+    src: thredds.conf.j2
+    dest: "{{ httpd_opt }}/{{ conf_modules }}/thredds.conf"
+
 ## Control httpd with supervisord
 # Create httpd configuration file in supervisord
 - name: Create httpd supervisord configuration

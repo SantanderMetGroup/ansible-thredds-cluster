@@ -74,4 +74,30 @@
       /thredds/*/{{ item.name }}/*=GWS_{{ item.name }}
   with_items:
     - "{{ catalogs }}"
+
+- name: Include GWS in /thredds/catalog.html in the proxy
+  blockinfile:
+    dest: "$HTTPD_HOME/htdocs/thredds/catalog.html"
+    marker: "<!-- {mark} GWS_{{ item.name }} -->"
+    insertbefore: "</table>"
+    block: |
+      <tr>
+        <td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;
+        <img src='/thredds/folder.gif' alt='Folder'> &nbsp;<a href='gws/{{ item.name }}/catalog.html'><tt>{{ item.name }}/</tt></a></td>
+        <td align='right'><tt>&nbsp;</tt></td>
+        <td align='right'><tt>--</tt></td>
+      </tr>
+  with_items:
+    - "{{ catalogs }}"
+  delegate_to: hostC
+
+- name: Include GWS in /thredds/catalog.xml in the proxy
+  blockinfile:
+    dest: "$HTTPD_HOME/htdocs/thredds/catalog.xml"
+    marker: "<!-- {mark} GWS_{{ item.name }} -->"
+    insertbefore: "</catalog>"
+    block: |
+        <catalogRef xlink:href="gws/{{ item.name }}/catalog.xml" xlink:title="{{ item.name }}" name="" />
+  with_items:
+    - "{{ catalogs }}"
   delegate_to: hostC
