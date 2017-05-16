@@ -93,3 +93,13 @@ LogLevel warn
     AddType application/x-compress .Z
     AddType application/x-gzip .gz .tgz
 </IfModule>
+
+ExtendedStatus On
+<Location "/status-httpd">
+    SetHandler server-status
+    Allow from all
+    AuthType Basic
+    AuthName "Restricted Content"
+    AuthUserFile {{ httpd_opt }}/.htpasswd
+    Require valid-user
+</Location>
