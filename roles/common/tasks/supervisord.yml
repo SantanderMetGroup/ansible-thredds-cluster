@@ -3,14 +3,14 @@
 - name: Install supervisor 
   pip:
     name: supervisor
-    virtualenv: "{{ virtualenv_home }}"
+    virtualenv: "{{ venv_home }}"
     virtualenv_site_packages: yes
   register: supervisor_install
 
 ## Create directories for supervisor configuration
 - name: Create supervisor directory in {{ services_prefix }}
   file:
-    dest: "{{ supervisor_home }}"
+    dest: "{{ supervisord_home }}"
     state: directory
 
 - name: Create supervisor directories
@@ -18,22 +18,22 @@
     dest: "{{ item }}"
     state: directory
   with_items:
-    - "{{ supervisor_home }}/etc"
-    - "{{ supervisor_home }}/var"
+    - "{{ supervisord_etc }}"
+    - "{{ supervisord_var }}"
 
-- name: Create directory supervisord.d in {{ supervisor_etc }}
+- name: Create directory supervisord.d in {{ supervisord_etc }}
   file:
-    dest: "{{ supervisor_programs }}"
+    dest: "{{ supervisord_programs }}"
     state: directory
 
 - name: Create supervisord.conf
   template:
     src: supervisord.conf.j2
-    dest: "{{ supervisor_etc }}/supervisord.conf"
+    dest: "{{ supervisord_etc }}/supervisord.conf"
 
 # Activate virtual enviroment for running supervisord process only when supervisord package is installed 
 - name: Run supervisord
-  shell: supervisord -c {{ supervisor_etc }}/supervisord.conf
+  shell: supervisord -c {{ supervisord_etc }}/supervisord.conf
   args:
-    creates: "{{ supervisor_var }}/supervisord.sock"
+    creates: "{{ supervisord_var }}/supervisord.sock"
   when: supervisor_install.changed

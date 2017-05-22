@@ -1,0 +1,21 @@
+- name: Deploy tds
+  hosts: hostD
+  vars:
+    user: cedaproc-manager
+    password: cedaproc-manager
+    virtualenv_name: TDS4GWS
+    tds_instances:
+      - name: "{{ inventory_hostname }}_1800"
+        base_port: 1800
+        ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
+        ip_internal_address: 192.168.3.5
+        ajp: 
+          port: 18009
+        catalog: 
+          name: "{{ catalogs.0.name }}"
+    catalogs:
+      - name: cedaproc
+        path: cedaproc/test
+        location: "{{ services_prefix }}/gws/cedaproc"
+  roles:
+    - role: tds

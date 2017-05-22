@@ -1,0 +1,66 @@
+#!/home/gws-manager/ansible/TDS4GWS/bin/python2.7
+"""
+Usage:
+  update_proxy.py addWorker --gwsEnforced <name> --gwsName <name> --workerName <name> --workerHost <host> --workerPort <port>
+  update_proxy.py removeWorker --gwsEnforced <name> --gwsName <name> --workerName <name>
+  update_proxy.py -h | --help
+
+Options:
+  --gwsEnforced <name>   Group Workspace allow to edit
+  --gwsName <name>       Group Workspace you want to edit
+  --workerName <name>    Worker's name
+  --workerHost <host>      Worker's IP Address
+  --workerPort <port>    Worker's Port
+"""
+
+from docopt import docopt, DocoptExit
+import subprocess
+
+
+def addWorker(arguments):
+
+  gwsName = arguments['--gwsName']
+  workerName = arguments['--workerName']
+  workerHost = arguments['--workerHost']
+  workerPort = arguments['--workerPort']
+
+  ## Update GWS
+  arguments_GWS=['ansible-playbook', '{{ services_prefix }}/update_GWS_proxy.yml', '--extra-vars', '''action=present''' ,'--extra-vars', '''gwsName=%s''' %gwsName]
+  update_GWS = subprocess.call(arguments_GWS)
+
+  ## Update TDS instance
+  arguments_TDS_instance=['ansible-playbook', '{{ services_prefix }}/update_TDS_instances.yml', '--extra-vars', '''action=present''' ,'--extra-vars', '''gwsName=%s''' %gwsName, '--extra-vars', '''workerName=%s''' %workerName, '--extra-vars', '''workerHost=%s''' %workerHost,'--extra-vars', '''workerPort=%s''' %workerPort]
+  update_TDS_instances = subprocess.call(arguments_TDS_instance)
+
+def removeWorker(arguments):
+
+  gwsName = arguments['--gwsName']
+  workerName = arguments['--workerName']
+
+  ## Update TDS instance
+  arguments_TDS_instance=['ansible-playbook', '{{ services_prefix }}/update_TDS_instances.yml', '--extra-vars', '''action=absent''' ,'--extra-vars', '''gwsName=%s''' %gwsName, '--extra-vars', '''workerName=%s''' %workerName]
+  update_TDS_instances = subprocess.call(arguments_TDS_instance)
+
+  ## Update GWS
+  arguments_GWS=['ansible-playbook', '{{ services_prefix }}/update_GWS_proxy.yml', '--extra-vars', '''action=absent''' ,'--extra-vars', '''gwsName=%s''' %gwsName]
+  update_GWS = subprocess.call(arguments_GWS)
+
+
+
+if __name__ == '__main__':
+
+  try:
+
+    arguments = docopt(__doc__)
+    
+    if arguments['--gwsEnforced'] != arguments['--gwsName']:
+      print('Permission denied')
+    else:
+      if arguments['addWorker'] == True:
+        addWorker(arguments)
+      elif arguments['removeWorker'] == True:
+        removeWorker(arguments)
+
+
+  except DocoptExit as e:
+    print e.message

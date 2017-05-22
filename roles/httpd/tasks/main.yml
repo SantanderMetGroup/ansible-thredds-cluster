@@ -81,10 +81,29 @@
     src: catalog.xml.j2
     dest: "{{ httpd_opt }}/htdocs/thredds/catalog.xml"
 
+- name: Create thredds static configuration - serverInfo.html
+  template:
+    src: serverInfo.html.j2
+    dest: "{{ httpd_opt }}/htdocs/thredds/serverInfo.html"
+
 - name: Create configuration module for thredds
   template:
     src: thredds.conf.j2
     dest: "{{ httpd_opt }}/{{ conf_modules }}/thredds.conf"
+
+## Add scripts for adding/removing GWS and TDS instances automatically
+- name: Add scripts for adding/removing GWS and TDS instances automatically
+  copy:
+    src: "{{ item }}"
+    dest: "{{ services_prefix }}/{{ item }}"
+  with_items:
+    - update_GWS_proxy.yml
+    - update_TDS_instances.yml
+
+- name: Add update_proxy.py script
+  template:
+    src: update_proxy.py.j2
+    dest: "{{ services_prefix }}/update_proxy.py"
 
 ## Control httpd with supervisord
 # Create httpd configuration file in supervisord
@@ -103,6 +122,7 @@
     config: "{{ supervisor_etc }}/supervisord.conf"
     username: "{{ user }}"
     password: "{{ password }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_supervisord.changed
 
 - name: Create script to detect changes in httpd configuration
@@ -129,6 +149,7 @@
     config: "{{ supervisor_etc }}/supervisord.conf"
     username: "{{ user }}"
     password: "{{ password }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_listener.changed
 
 - name: Create event listener for detect changes in httpd/opt/conf.d/ directory
@@ -149,5 +170,19 @@
     config: "{{ supervisor_etc }}/supervisord.conf"
     username: "{{ user }}"
     password: "{{ password }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_modules_listener.changed
 
+- name: Install ansible in proxy 
+  pip:
+    name: ansible
+    version: 2.2.1.0
+    virtualenv: "{{ virtualenv_home }}"
+    virtualenv_site_packages: yes
+
+- name: Install docopt in proxy 
+  pip:
+    name: docopt
+    version: 0.6.2
+    virtualenv: "{{ virtualenv_home }}"
+    virtualenv_site_packages: yes
