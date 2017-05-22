@@ -97,13 +97,14 @@
     src: "{{ item }}"
     dest: "{{ services_prefix }}/{{ item }}"
   with_items:
-    - update_GWS_proxy.yml
-    - update_TDS_instances.yml
+    - update_proxy_GWS.yml
+    - update_proxy_TDS.yml
 
 - name: Add update_proxy.py script
   template:
     src: update_proxy.py.j2
     dest: "{{ services_prefix }}/update_proxy.py"
+    mode: "u+rwx"
 
 ## Control httpd with supervisord
 # Create httpd configuration file in supervisord

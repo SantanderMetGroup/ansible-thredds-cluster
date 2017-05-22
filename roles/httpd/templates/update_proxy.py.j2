@@ -1,4 +1,4 @@
-#!/home/gws-manager/ansible/TDS4GWS/bin/python2.7
+#!{{ virtualenv_home }}/bin/python2.7
 """
 Usage:
   update_proxy.py addWorker --gwsEnforced <name> --gwsName <name> --workerName <name> --workerHost <host> --workerPort <port>
@@ -16,6 +16,8 @@ Options:
 from docopt import docopt, DocoptExit
 import subprocess
 
+ansible_args=['ansible-playbook']
+ansible_args= ansible_args + ['-i', 'localhost,', '-c', 'local']
 
 def addWorker(arguments):
 
@@ -25,11 +27,18 @@ def addWorker(arguments):
   workerPort = arguments['--workerPort']
 
   ## Update GWS
-  arguments_GWS=['ansible-playbook', '{{ services_prefix }}/update_GWS_proxy.yml', '--extra-vars', '''action=present''' ,'--extra-vars', '''gwsName=%s''' %gwsName]
+  arguments_GWS=ansible_args + ['{{ services_prefix }}/update_proxy_GWS.yml']
+  arguments_GWS=arguments_GWS + ['--extra-vars', '''action=present''']
+  arguments_GWS=arguments_GWS + ['--extra-vars', '''gwsName=%s''' %gwsName]
   update_GWS = subprocess.call(arguments_GWS)
 
   ## Update TDS instance
-  arguments_TDS_instance=['ansible-playbook', '{{ services_prefix }}/update_TDS_instances.yml', '--extra-vars', '''action=present''' ,'--extra-vars', '''gwsName=%s''' %gwsName, '--extra-vars', '''workerName=%s''' %workerName, '--extra-vars', '''workerHost=%s''' %workerHost,'--extra-vars', '''workerPort=%s''' %workerPort]
+  arguments_TDS_instance=ansible_args + ['{{ services_prefix }}/update_proxy_TDS.yml']
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''action=present''']
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''gwsName=%s''' %gwsName]
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerName=%s''' %workerName]
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerHost=%s''' %workerHost]
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerPort=%s''' %workerPort]
   update_TDS_instances = subprocess.call(arguments_TDS_instance)
 
 def removeWorker(arguments):
@@ -38,11 +47,16 @@ def removeWorker(arguments):
   workerName = arguments['--workerName']
 
   ## Update TDS instance
-  arguments_TDS_instance=['ansible-playbook', '{{ services_prefix }}/update_TDS_instances.yml', '--extra-vars', '''action=absent''' ,'--extra-vars', '''gwsName=%s''' %gwsName, '--extra-vars', '''workerName=%s''' %workerName]
+  arguments_TDS_instance=ansible_args + ['{{ services_prefix }}/update_proxy_TDS.yml']
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''action=absent''']
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''gwsName=%s''' %gwsName]
+  arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerName=%s''' %workerName]
   update_TDS_instances = subprocess.call(arguments_TDS_instance)
 
   ## Update GWS
-  arguments_GWS=['ansible-playbook', '{{ services_prefix }}/update_GWS_proxy.yml', '--extra-vars', '''action=absent''' ,'--extra-vars', '''gwsName=%s''' %gwsName]
+  arguments_GWS=ansible_args + ['{{ services_prefix }}/update_proxy_GWS.yml']
+  arguments_GWS=arguments_GWS + ['--extra-vars', '''action=absent''']
+  arguments_GWS=arguments_GWS + ['--extra-vars', '''gwsName=%s''' %gwsName]
   update_GWS = subprocess.call(arguments_GWS)
 
 
@@ -50,8 +64,13 @@ def removeWorker(arguments):
 if __name__ == '__main__':
 
   try:
-
-    arguments = docopt(__doc__)
+    ssh_string=os.getenv('SSH_ORIGINAL_COMMAND')
+    args=sys.argv;
+    if ssh_string is not None:
+      args_ssh = ssh_string.split(" ")
+      args =  args + args_ssh
+    args.pop(0)
+    arguments = docopt(doc=__doc__, argv=args)
     
     if arguments['--gwsEnforced'] != arguments['--gwsName']:
       print('Permission denied')
