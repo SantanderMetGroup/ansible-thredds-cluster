@@ -20,11 +20,11 @@
     state: directory
 
 # Create password for admin user
-- name: Create password for mod_jk status web page
+- name: Create password for proxy status web pages
   htpasswd:
     path: "{{ httpd_opt }}/.htpasswd"
-    name: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.proxy-status.user }}"
+    passwd: "{{ applications.proxy-status.password}}"
 
 # Create jk configuration file in http configuration
 - name: Configure jk module
@@ -121,8 +121,8 @@
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_supervisord.changed
 
@@ -148,8 +148,8 @@
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_listener.changed
 
@@ -169,8 +169,8 @@
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
   when: httpd_conf_modules_listener.changed
 

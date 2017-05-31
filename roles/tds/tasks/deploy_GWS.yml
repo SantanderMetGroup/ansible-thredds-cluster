@@ -1,7 +1,7 @@
 # Create directories for each GWS in tds_instance_path/tds_instance/content/thredds/gws/
 - name: Create directories for each GWS in {{ tds_instance_path }}
   file:
-    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1 }}"
+    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}"
     state: directory
   with_subelements:
     - "{{ tds_instances }}"
@@ -19,18 +19,19 @@
 - name: Create catalog.xml in each GWS
   template: 
     src: catalog.xml.j2
-    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1 }}/catalog.xml"
+    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}/catalog.xml"
   with_subelements:
     - "{{ tds_instances }}"
     - catalog
+  tags: test
 
 - name: Link catalogs in the common catalog.xml
   blockinfile:
     dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/catalog.xml"
-    marker: "# {mark} {{ item.1 }}"
+    marker: "# {mark} {{ item.1.name }}"
     insertbefore: "</catalog>"
     block: |
-      <catalogRef xlink:title="{{ item.1 }}" xlink:href="gws/{{ item.1 }}/catalog.xml" name=""/>
+      <catalogRef xlink:title="{{ item.1.name }}" xlink:href="gws/{{ item.1.name }}/catalog.xml" name=""/>
   with_subelements:
     - "{{ tds_instances }}"
     - catalog

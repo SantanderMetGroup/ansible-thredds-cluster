@@ -21,11 +21,41 @@
   with_items: 
     - "{{ tds_instances }}"
 
+- name: Insert TDS_INSTANCES_HOME variable in .bashrc file
+  lineinfile:
+    dest: "~/.bashrc"
+    line: "export TDS_INSTANCE_{{ item.name | upper }}_HOME={{ tds_instance_path }}/tds_{{ item.name }}"
+  with_items:
+    - "{{ tds_instances }}"
+
+- name: Secure tomcat passwords
+  shell: "{{ tds_instance_path }}/tds_{{ item.0.name }}/bin/digest.sh -a 'PBKDF2WithHmacSHA256' -i 100000 -s 16 -k 256 -h 'org.apache.catalina.realm.SecretKeyCredentialHandler' {{applications.tds[item.1.name].password}}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - catalog
+  register: "tomcat_passwords"
+
+# Create server.xml in instances_path
+- name: Create tomcat-users.xml file
+  template:
+    src: tomcat-users.xml.j2
+    dest: "{{ tds_instance_path }}/tds_{{ item.name }}/conf/tomcat-users.xml"
+  with_items:
+    - "{{ tds_instances }}"
+
 # Create server.xml in instances_path
 - name: Create server.xml file
   template:
     src: server.xml.j2
     dest: "{{ tds_instance_path }}/tds_{{ item.name }}/conf/server.xml"
+  with_items:
+    - "{{ tds_instances }}"
+
+# Create a web.xml in instances_path/webapps/thredds/WEB-INF
+- name: Create web.xml in WEB-INF
+  copy:
+    src: web.xml
+    dest: "{{ tds_instance_path }}/tds_{{ item.name }}/webapps/thredds/WEB-INF"
   with_items:
     - "{{ tds_instances }}"
 
@@ -36,8 +66,8 @@
     state: present
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
   when: tds_conf_supervisord.changed
   with_items:

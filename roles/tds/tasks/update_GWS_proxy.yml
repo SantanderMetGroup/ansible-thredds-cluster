@@ -1,4 +1,5 @@
 - name: Update proxy configuration
-  shell: ssh gws-sysadmin@192.168.3.2 addWorker --gwsName={{  item.catalog.name }} --workerName={{ item.name }} --workerHost={{ item.ip_internal_address | default(item.ip_address)}} --workerPort={{ item.ajp.port }}
-  with_items:
+  shell: ssh gws-sysadmin@192.168.3.2 addWorker --gwsName={{  item.1.name }} --workerName={{ item.0.name }} --workerHost={{ item.0.ip_internal_address | default(item.0.ip_address)}} --workerPort={{ item.0.ajp.port }}
+  with_subelements:
     - "{{ tds_instances }}"
+    - catalog

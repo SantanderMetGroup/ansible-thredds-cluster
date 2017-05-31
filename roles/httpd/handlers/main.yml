@@ -6,8 +6,8 @@
     state: started
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
 
 - name: stop httpd
@@ -16,8 +16,8 @@
     state: stopped
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"
 
 - name: restart httpd
@@ -26,6 +26,6 @@
     state: restarted
     supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
     config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ user }}"
-    password: "{{ password }}"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisor_port }}"

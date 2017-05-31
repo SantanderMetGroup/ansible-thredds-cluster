@@ -1,8 +1,8 @@
 - name: Deploy tds
   hosts: hostD
+  vars_files: 
+    - hiresgw-secret.yml
   vars:
-    user: hiresgw-manager
-    password: hiresgw-manager
     supervisor_port: 9002
     virtualenv_name: TDS4GWS
     tds_instances:
@@ -13,7 +13,7 @@
         ajp: 
           port: 28009
         catalog: 
-          name: "{{ catalogs.0.name }}"
+          - name: "{{ catalogs.0.name }}"
     catalogs:
       - name: hiresgw
         path: hiresgw/test

@@ -52,6 +52,11 @@
     file_header: "{{ jre_header }}"
     unarchive_name: "{{ jre_unarchive_name }}"
 
+- name: Insert JRE_HOME variable in .bashrc file
+  lineinfile:
+    dest: "~/.bashrc"
+    line: "export JRE_HOME={{ jre_install_base }}"
+
 # Tomcat
 - name: Install Tomcat
   include: dependencies.yml
@@ -63,6 +68,11 @@
     download_url: "{{ tomcat_download_url }}"
     redis_checksum: "{{ tomcat_redis_checksum }}"
     unarchive_name: "{{ tomcat_redis_filename_unarchive }}"
+
+- name: Insert TOMCAT_CATALINA_HOME variable in .bashrc file
+  lineinfile:
+    dest: "~/.bashrc"
+    line: "export TOMCAT_CATALINA_HOME={{ tomcat_catalina_home }}"
 
 # Create thredds directory in source directory for unarchive thredds.war
 - name: Create thredds directory in {{ tds_src }}
