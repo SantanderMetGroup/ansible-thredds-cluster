@@ -1,0 +1,23 @@
+## Control Tomcat instances with supervisord
+#Create tomcat configuration file for each instance in supervisord
+- name: Create tomcat instances configuration to supervisord 
+  template:
+    src: tds.conf.j2
+    dest: "{{ supervisor_programs }}/tomcat_{{ item.name }}.conf"
+  with_items:
+    - "{{ tomcat_instances }}"
+  register: tomcat_conf_supervisord
+
+# Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
+- name: Add tds_instance programmes to supervisord
+  supervisorctl:
+    name: "tomcat_{{ item.name }}"
+    state: present
+    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
+  when: tomcat_conf_supervisord.changed
+  with_items:
+    - "{{ tomcat_instances }}"

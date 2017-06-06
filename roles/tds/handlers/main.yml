@@ -1,38 +1,5 @@
----
-# handlers file for roles/tds
+- include: service.yml
+  when: tomcat_system ==true
 
-- name: start tds_instance
-  supervisorctl:
-    name: "tds_{{ item.name }}"
-    state: started
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  with_items:
-    - "{{ tds_instances }}"
-
-- name: stop tds_instance
-  supervisorctl:
-    name: "tds_{{ item.name }}"
-    state: stopped
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  with_items:
-    - "{{ tds_instances }}"
-
-- name: restart tds_instance
-  supervisorctl:
-    name: "tds_{{ item.name }}"
-    state: restarted
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  with_items:
-    - "{{ tds_instances }}"
+- include: supervisord.yml
+  when: tomcat_system == false

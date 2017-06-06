@@ -1,17 +1,6 @@
-# Create tds directories in remote host
-- name: Create directories
-  file:
-    dest: "{{ item }}"
-    state: directory
-  with_items:
-   - "{{ tds_install_base }}"
-   - "{{ tds_opt }}"
-   - "{{ tds_src }}"
-   - "{{ tds_var }}"
-
 # Include tds version
 - name: Include version specific configuration
-  include: "{{ tds_path_to_lib_role }}/lib/tasks/version-specific-vars.yml"
+  include: "{{ tds_path_to_roles }}/lib/tasks/version-specific-vars.yml"
   vars:
     version: "{{ tds_redis_version }}"
 
@@ -24,7 +13,7 @@
   register: tds_file
 
 - name: Include lib get_url task
-  include: "{{ tds_path_to_lib_role }}/lib/tasks/get_url.yml"
+  include: "{{ tds_path_to_roles }}/lib/tasks/get_url.yml"
   vars:
     url: "{{ tds_download_url }}"
     filename: "{{ tds_redis_filename }}"
@@ -32,82 +21,68 @@
   when: tds_file.matched == 0
 
 # Copy tds source file from local host to remote host in source directory
-- name: Copy {{ tds_redis_filename }} in {{ tds_src }}
+- name: Copy {{ tds_redis_filename }} in tomcat_catalina_home
+  become: true
   copy:
     src: "{{ local_download }}/{{ tds_redis_filename }}"
-    dest: "{{ tds_src }}"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
   register: tds_copy
 
-## Install neccesary dependencies for tds
-# JRE
-- name: Install JRE
-  include: dependencies.yml
-  vars:
-    name: jre
-    redis_version: "{{ jre_redis_version }}"
-    install_base: "{{ jre_install_base }}"
-    redis_filename: "{{ jre_redis_filename }}"
-    download_url: "{{ jre_download_url }}"
-    redis_checksum: "{{ jre_redis_checksum }}"
-    file_header: "{{ jre_header }}"
-    unarchive_name: "{{ jre_unarchive_name }}"
-
-- name: Insert JRE_HOME variable in .bashrc file
-  lineinfile:
-    dest: "~/.bashrc"
-    line: "export JRE_HOME={{ jre_install_base }}"
-
-# Tomcat
-- name: Install Tomcat
-  include: dependencies.yml
-  vars:
-    name: tomcat
-    redis_version: "{{ tomcat_redis_version }}"
-    install_base: "{{ tomcat_catalina_home }}"
-    redis_filename: "{{ tomcat_redis_filename }}"
-    download_url: "{{ tomcat_download_url }}"
-    redis_checksum: "{{ tomcat_redis_checksum }}"
-    unarchive_name: "{{ tomcat_redis_filename_unarchive }}"
-
-- name: Insert TOMCAT_CATALINA_HOME variable in .bashrc file
-  lineinfile:
-    dest: "~/.bashrc"
-    line: "export TOMCAT_CATALINA_HOME={{ tomcat_catalina_home }}"
-
-# Create thredds directory in source directory for unarchive thredds.war
-- name: Create thredds directory in {{ tds_src }}
+# Create thredds directory in tomcat_catalina_home/webapps
+- name: Create thredds directory in tomcat_catalina_home/webapps
+  become: true
   file:
-    dest: "{{ tds_src }}/thredds"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds"
     state: directory
+    # mode: "u+rw, g+r"
+    group: "{{ tomcat_default_user_group }}"
 
 # Unarchive tds.war
 - name: Unarchive {{ tds_redis_filename }}
+  become: true
   unarchive:
-    src: "{{ tds_src }}/{{ tds_redis_filename }}"
-    dest: "{{ tds_src }}/thredds"
+    src: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/{{ tds_redis_filename }}"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds"
     remote_src: true
+    # mode: '"u+rw" "g+r"'
+    group: "{{ tomcat_default_user_group }}"
 
-# Create thredds directory in tomcat_catalina_home/webapps
-- name: Create thredds directory in {{ tomcat_catalina_home }}/webapps
+- name: Delete thredds.war
+  become: true
   file:
-    dest: "{{ tomcat_catalina_home }}/webapps/thredds"
-    state: directory
-
-# Copy content from thredds directory in source to thredds directory in tomcat_catalina_home/thredds
-- name: Copy thredds in {{ tomcat_catalina_home }}/webapps/thredds
-  shell: cp -arf {{ tds_src }}/thredds/* {{ tomcat_catalina_home }}/webapps/thredds/
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/{{ tds_redis_filename }}"
+    state: absent
+    # mode: '"g+rwx"'
+    group: "{{ tomcat_default_user_group }}"
 
 # Create content/thredds directory in tomcat_catalina_home
-- name: Create content/thredds directory in {{ tomcat_catalina_home }}
+- name: Create content/thredds directory in tomcat_catalina_home
+  become: true
   file:
-    dest: "{{ tomcat_catalina_home }}/content/thredds"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds"
     state: directory
+    # mode: '"u+rw" "g+r"'
+    group: "{{ tomcat_default_user_group }}"
 
-- name: Create content/thredds/catalogs directory in {{ tomcat_catalina_home }}
+- name: Create content/thredds/gws directory in tomcat_catalina_home
+  become: true
   file:
-    dest: "{{ tomcat_catalina_home }}/content/thredds/catalogs"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws"
     state: directory
+    # mode: '"u+rw" "g+r"'
+    group: "{{ tomcat_default_user_group }}"
+  when: gws is defined
 
 # Copy some WEB-INF files from tomcat_catalina_home/webapps/thredds/ to tomcat_catalina_home/content/thredds 
-- name: Copy WEB-INF/altContent/startup/* to {{ tomcat_catalina_home }}/content/thredds
-  shell: cp -arf {{ tds_src }}/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home }}/content/thredds/
+- name: Copy WEB-INF/altContent/startup/* to tomcat_catalina_home/content/thredds
+  become: true
+  shell: cp -arf {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/
+
+ # Create a common catalog.xml in tomcat_catalina_home/content/thredds
+- name: Create a common catalog.xml in tomcat_catalina_home/content/thredds
+  become: true
+  copy:
+    src: catalog.xml
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds"
+    # mode: '"u+rw" "g+r"'
+    group: "{{ tomcat_default_user_group }}"

@@ -1,0 +1,25 @@
+## Control Tomcat instances with system service
+- name: Create tomcat script in init.d 
+  become: true
+  copy:
+    src: tomcat.j2
+    dest: "{{ tomcat_run_path_default }}/tomcat"
+    mode: "u+rwx,g+rx,o+rx"
+  when: tomcat_install_from_source == true
+
+- name: Create tomcat instances configuration file
+  become: true
+  template:
+    src: "{{ tomcat_service_template }}"
+    dest: "{{ tomcat_config_path_default }}/tomcat_{{ item.name }}"
+  with_items:
+    - "{{ tomcat_instances }}"
+
+- name: Link run script 
+  become: true
+  file:
+    src: "{{ tomcat_run_path_default }}/tomcat"
+    dest: "{{ tomcat_run_path_default }}/tomcat_{{ item.name }}"
+    state: link
+  with_items:
+    - "{{ tomcat_instances }}"

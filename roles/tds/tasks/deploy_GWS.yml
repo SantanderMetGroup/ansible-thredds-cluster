@@ -1,38 +1,47 @@
-# Create directories for each GWS in tds_instance_path/tds_instance/content/thredds/gws/
-- name: Create directories for each GWS in {{ tds_instance_path }}
+# Create directories for each GWS in tomcat_catalina_home/content/thredds/gws/
+- name: Create directories for each GWS in tomcat_catalina_home
+  become: true
   file:
-    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.name }}"
     state: directory
-  with_subelements:
-    - "{{ tds_instances }}"
-    - catalog
-
-# Create a generic catalog.xml for each TDS instance
-- name: Create generic catalog.xml for each TDS instance
-  copy:
-    src: catalog.xml
-    dest: "{{ tds_instance_path }}/tds_{{ item.name }}/content/thredds"
+    # mode: "u+rw,g+r,o-rwx"
+    group: "{{ tomcat_default_user_group }}"
   with_items:
-    - "{{ tds_instances }}"
+    - "{{ gws }}"
 
 # Create catalog.xml for each GWS
 - name: Create catalog.xml in each GWS
+  become: true
   template: 
     src: catalog.xml.j2
-    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}/catalog.xml"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - catalog
-  tags: test
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.name }}/catalog.xml"
+    # mode: "u+rw,g+rwx,o-rwx"
+    group: "{{ tomcat_default_user_group }}"
+  with_items:
+    - "{{ gws }}"
 
-- name: Link catalogs in the common catalog.xml
+- name: Link GWS directory with each Tomcat instance
+  become: true
+  file:
+    src: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.1.name }}"
+    dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}"
+    state: link
+    force: yes
+  with_subelements:
+    - "{{ tomcat_instances }}"
+    - gws_instance
+
+- name: Link gws in the common catalog.xml
+  become: true
   blockinfile:
-    dest: "{{ tds_instance_path }}/tds_{{ item.0.name }}/content/thredds/catalog.xml"
+    dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.0.name }}/content/thredds/catalog.xml"
     marker: "# {mark} {{ item.1.name }}"
     insertbefore: "</catalog>"
+    # mode: "u+rw,g+r,o-rwx"
+    group: "{{ tomcat_default_user_group }}"
     block: |
       <catalogRef xlink:title="{{ item.1.name }}" xlink:href="gws/{{ item.1.name }}/catalog.xml" name=""/>
   with_subelements:
-    - "{{ tds_instances }}"
-    - catalog
-  notify: restart tds_instance
+    - "{{ tomcat_instances }}"
+    - gws_instance
+  notify: restart tomcat_instance

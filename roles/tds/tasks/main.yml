@@ -1,41 +1,38 @@
 ---
 # tasks file for roles/tds
 
-#Check if the service is installed in remote host
-- name: Check if the service is installed
-  include: "{{ tds_path_to_lib_role }}/lib/tasks/check_service_install.yml"
-  vars:
-    service_home: "{{ tds_install_base }}"
+- name: Create Tomcat group
+  become: true
+  group:
+    state: present
+    name: "{{ tomcat_default_user_group }}"
 
-- name: Start installation if httpd is not installed
+- name: Create Tomcat user
+  become: true
+  user:
+    state: present
+    name: "{{ tomcat_default_user_name }}"
+    group: "{{ tomcat_default_user_group }}"
+    createhome: yes
+
+## Install TDS
+# Install TDS dependencies (JRE, Tomcat) from RedHat repository
+- include: install_tomcat_RedHat.yml
+  when: tomcat_install_from_source == false
+
+# Install TDS dependencies (JRE, Tomcat) from source
+- include: install_tomcat_from_source.yml
+  when: tomcat_install_from_source == true
+
+# Install TDS from source (.war)
+- name: Install TDS 
   include: install_tds.yml
-  when: service_name not in service_installed.stdout
 
-
-# Create supervisord_wrapper.sh in tomcat_catalina_home 
-- name: Create supervisord_wrapper.sh script
-  template:
-    src: supervisord_wrapper.sh.j2
-    dest: "{{ tomcat_catalina_home }}/supervisord_wrapper.sh"
-    mode: 0775
-
-# Create deploy_tds_instance.sh in tomcat_catalina_home 
-- name: Create deploy_tds_instance.sh script
-  copy:
-    src: deploy_tds_instance.sh
-    dest: "{{ tomcat_catalina_home }}"
-    mode: 0775
-
-# Create a common catalog.xml in tomcat_catalina_home/content/thredds
-- name: Create a common catalog.xml in {{ tomcat_catalina_home }}/content/thredds
-  copy:
-    src: catalog.xml
-    dest: "{{ tomcat_catalina_home }}/content/thredds"
-
-- include: deploy_tds_instances.yml
-  when: tds_instances is defined
+- include: deploy_tomcat_instances.yml
+  when: tomcat_instances is defined
 
 - include: deploy_GWS.yml
-  when: catalogs is defined
+  when: gws is defined
 
 - include: update_GWS_proxy.yml
+  when: gws is defined

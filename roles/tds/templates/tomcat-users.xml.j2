@@ -41,14 +41,14 @@
   <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
   <user username="role1" password="<must-be-changed>" roles="role1"/>
 -->
-{% for ctlg in item.catalog %}
-<!-- BEGIN {{ ctlg.name }}-->
+{% for gws in item.gws_instance %}
+<!-- BEGIN {{ gws.name }}-->
 <role rolename="tdsConfig"/>
 {% for user_password in tomcat_passwords.results %}
-{% if user_password.item.0.name == item.name and user_password.item.1.name == ctlg.name %}
-<user username="{{ applications.tds[ctlg.name].user }}" password="{{ user_password.stdout.split(':')[1] }}" roles="tdsConfig"/>
+{% if user_password.item.0.name == item.name and user_password.item.1.name == gws.name %}
+<user username="{{ applications.tds[gws.name].user }}" password="{{ user_password.stdout.split(':')[1] }}" roles="tdsConfig"/>
 {% endif %}
 {% endfor %}
-<!-- END {{ ctlg.name }}-->
+<!-- END {{ gws.name }}-->
 {% endfor %}
 </tomcat-users>

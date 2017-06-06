@@ -1,0 +1,25 @@
+- name: Provisioning host with TDS dependencies
+  become: true
+  become_method: sudo
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - java-1.8.0-openjdk
+    - tomcat-native
+    - log4j
+    - tomcat
+
+- name: Include Tomcat variables for installation from RedHat
+  include_vars: "{{ tds_path_to_roles }}/tds/defaults/services/system.yml"
+
+- name: Copy neccesary files to run digest.sh script
+  become: true
+  copy:
+    src: "{{ item }}"
+    dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/bin"
+    mode: "g+rx"
+    group: "{{ tomcat_default_user_group }}"
+  with_items:
+    - setclasspath.sh
+    - tool-wrapper.sh
+    - digest.sh

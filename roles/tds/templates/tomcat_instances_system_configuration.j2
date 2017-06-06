@@ -1,0 +1,52 @@
+# Where your java installation lives
+JAVA_HOME="{{ jre_install_base | default(jre_install_base_default) }}"
+
+# Where your tomcat installation lives
+CATALINA_BASE="{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}"
+CATALINA_HOME="{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
+JASPER_HOME="{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
+CATALINA_TMPDIR="{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
+
+# What user should run tomcat
+TOMCAT_USER="tomcat"
+
+# You can change your tomcat locale here
+#LANG="en_US"
+
+# Run tomcat under the Java Security Manager
+SECURITY_MANAGER="false"
+
+# Time to wait in seconds, before killing process
+SHUTDOWN_WAIT="30"
+
+# Whether to annoy the user with "attempting to shut down" messages or not
+SHUTDOWN_VERBOSE="true"
+
+# Set the TOMCAT_PID location
+CATALINA_PID="{{ catalina_pid_path | default(catalina_pid_path_default) }}/{{ item.name }}"
+
+# Connector port is 8080 for this tomcat instance
+CONNECTOR_PORT="{{ item.base_port }}8"
+
+# TDS specific ENVARS
+#
+# Define where the TDS content directory will live
+#   THIS IS CRITICAL and there is NO DEFAULT - the
+#   TDS will not start without this.
+#
+CONTENT_ROOT=-Dtds.content.root.path=$CATALINA_BASE/content
+#
+# # set java prefs related variables (used by the wms service, for example)
+JAVA_PREFS_ROOTS="-Djava.util.prefs.systemRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs -Djava.util.prefs.userRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs"
+
+#
+# Some commonly used JAVA_OPTS settings:
+#
+NORMAL="-d64 -Xmx4096m -Xms512m -server -ea"
+HEAP_DUMP="-XX:+HeapDumpOnOutOfMemoryError"
+HEADLESS="-Djava.awt.headless=true"
+
+#
+# Standard setup.
+#
+JAVA_OPTS="$CONTENT_ROOT $NORMAL $HEAP_DUMP $HEADLESS $JAVA_PREFS_ROOTS"

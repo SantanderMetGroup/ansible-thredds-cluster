@@ -1,0 +1,33 @@
+- name: Install libselinux-python
+  become: true
+  become_method: sudo
+  yum: 
+    name: libselinux-python
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '6'
+
+- name: Install dependencies
+  become: true
+  become_method: sudo
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - unzip
+    - psmisc
+    - python27
+    - openssl-devel
+    - python-passlib
+
+- name: Create publisher group
+  become: true
+  become_method: sudo  
+  group:
+    name: "{{ item.name }}-publisher"
+
+- name: Create user for GWS
+  become: true
+  become_method: sudo  
+  user:
+    name: "{{ item.name }}-publisher"
+    group: "{{ item.name }}-publisher"

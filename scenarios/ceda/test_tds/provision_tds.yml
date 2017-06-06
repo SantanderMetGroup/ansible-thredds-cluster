@@ -1,0 +1,32 @@
+- name: Configure machines
+  hosts: tds-hosts
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Provisioning workers with TDS dependencies
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - unzip
+        - java-1.8.0-openjdk
+        - tomcat
+
+    # - name: Activate port for Tomcat HTTP connector
+    #   iptables:
+    #     action: insert
+    #     chain: INPUT
+    #     policy: ACCEPT
+    #     jump: ACCEPT
+    #     match: tcp
+    #     protocol: tcp
+    #     destination: 0.0.0.0/0
+    #     destination_port: 8080
+
+    - name: Start tomcat
+      service:
+        name: tomcat
+        state: started
+
+    - wait_for:
+        port: 8080
+        

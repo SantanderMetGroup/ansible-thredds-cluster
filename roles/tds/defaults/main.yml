@@ -13,16 +13,11 @@ tds_mirror: http://artifacts.unidata.ucar.edu/content/repositories/unidata-relea
 tds_download_url: "{{ tds_mirror }}/{{ tds_redis_version }}/{{ tds_redis_filename }}"
 
 # TDS installation directories
-#   base directory for Tomcat installations
-tds_install_base: "{{ services_prefix }}/{{ service_name }}"
-tds_opt: "{{ tds_install_base }}/opt"
-tds_src: "{{ tds_install_base }}/src"
-tds_var: "{{ tds_install_base }}/var"
-tds_instance_path: "{{ tds_var }}/tomcat_pool"
+#   base directory for TDS installations
+tds_install_base: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds"
+tds_path_to_roles: "../../roles"
 
-tds_path_to_lib_role: "../../roles"
-
-## Dependencies for installation
+## Dependencies for TDS installation (from source)
 # JRE
 jre_default_version: '8u121'
 jre_redis_version: "{{ jre_version if jre_version is defined else jre_default_version }}"
@@ -31,7 +26,6 @@ jre_redis_filename: "{{ jre_redis_filename_unarchive }}.tar.gz"
 jre_mirror: http://download.oracle.com/otn-pub/java/jdk/
 jre_download_url: "{{ jre_mirror }}/{{ jre_redis_version }}-{{ jre_subversion }}/{{ jre_number }}/{{ jre_redis_filename }}"
 jre_header: "Cookie: oraclelicense=accept-securebackup-cookie"
-jre_install_base: "{{ tds_opt }}/jre"
 
 # Tomcat
 tomcat_default_version: '8.0.42'
@@ -41,7 +35,28 @@ tomcat_redis_filename_unarchive: "apache-tomcat-{{ tomcat_redis_version }}"
 tomcat_redis_filename: "{{ tomcat_redis_filename_unarchive }}.tar.gz"
 tomcat_mirror: http://archive.apache.org/dist/tomcat
 tomcat_download_url: "{{ tomcat_mirror }}/tomcat-{{ tomcat_version_major }}/v{{ tomcat_redis_version }}/bin/{{ tomcat_redis_filename }}"
-tomcat_catalina_home: "{{ tds_opt }}"
+
+# Default tomcat user when not configured per instance
+tomcat_default_user_name: tomcat
+tomcat_default_user_group: tomcat
+#   per instance name: item.system
+tomcat_default_user_system: true
+#   Default shutdown port
+tomcat_default_port_shutdown: 8005
+#   Default connector port
+tomcat_default_port_connector: 8080
+#   Default redirect port
+tomcat_default_port_redirect: 8443
+#   Default AJP port
+tomcat_default_port_ajp: 8009
+
+tomcat_install_from_source: false
+tomcat_system: true
+
+# tomcat instance(s)
+tomcat_instances:
+  - name: tomcat
+
 
 # TDS instances
 proxyName_default: "{{ hostvars['hostC']['ansible_ssh_host'] }}"
