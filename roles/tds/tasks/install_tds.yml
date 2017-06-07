@@ -22,7 +22,7 @@
 
 # Copy tds source file from local host to remote host in source directory
 - name: Copy {{ tds_redis_filename }} in tomcat_catalina_home
-  become: true
+  become: "{{ become_method }}"
   copy:
     src: "{{ local_download }}/{{ tds_redis_filename }}"
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
@@ -30,59 +30,53 @@
 
 # Create thredds directory in tomcat_catalina_home/webapps
 - name: Create thredds directory in tomcat_catalina_home/webapps
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds"
     state: directory
-    # mode: "u+rw, g+r"
     group: "{{ tomcat_default_user_group }}"
-
+    
 # Unarchive tds.war
 - name: Unarchive {{ tds_redis_filename }}
-  become: true
+  become: "{{ become_method }}"
   unarchive:
     src: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/{{ tds_redis_filename }}"
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds"
     remote_src: true
-    # mode: '"u+rw" "g+r"'
-    group: "{{ tomcat_default_user_group }}"
-
+    
 - name: Delete thredds.war
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/{{ tds_redis_filename }}"
     state: absent
-    # mode: '"g+rwx"'
-    group: "{{ tomcat_default_user_group }}"
-
+    
 # Create content/thredds directory in tomcat_catalina_home
 - name: Create content/thredds directory in tomcat_catalina_home
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds"
     state: directory
-    # mode: '"u+rw" "g+r"'
-    group: "{{ tomcat_default_user_group }}"
-
+    mode: "g+rwx"
+    group: "{% if tomcat_system == true %}{{ tomcat_default_group_edit }}{% else %}{{ tomcat_default_user_group }}{% endif %}"
+    
 - name: Create content/thredds/gws directory in tomcat_catalina_home
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws"
     state: directory
-    # mode: '"u+rw" "g+r"'
-    group: "{{ tomcat_default_user_group }}"
+    mode: "g+rwx"
+    group: "{% if tomcat_system == true %}{{ tomcat_default_group_edit }}{% else %}{{ tomcat_default_user_group }}{% endif %}"
   when: gws is defined
 
 # Copy some WEB-INF files from tomcat_catalina_home/webapps/thredds/ to tomcat_catalina_home/content/thredds 
 - name: Copy WEB-INF/altContent/startup/* to tomcat_catalina_home/content/thredds
-  become: true
+  become: "{{ become_method }}"
   shell: cp -arf {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/webapps/thredds/WEB-INF/altContent/startup/* {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/
 
  # Create a common catalog.xml in tomcat_catalina_home/content/thredds
 - name: Create a common catalog.xml in tomcat_catalina_home/content/thredds
-  become: true
+  become: "{{ become_method }}"
   copy:
     src: catalog.xml
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds"
-    # mode: '"u+rw" "g+r"'
     group: "{{ tomcat_default_user_group }}"

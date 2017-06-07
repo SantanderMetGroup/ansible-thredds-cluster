@@ -12,10 +12,8 @@ function shutdown()
     . $CATALINA_HOME/bin/catalina.sh stop
 }
 
-date
 echo "Starting Tomcat"
-BASEPORT=$1
-WORKER=tds_{{ inventory_hostname }}_${BASEPORT}
+WORKER=tomcat_{{ item.name }}
 export CATALINA_HOME={{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}
 export CATALINA_BASE={{ tomcat_instances_path | default(tomcat_instances_path_default) }}/${WORKER}
 export JRE_HOME={{ jre_install_base | default(jre_install_base_default) }}

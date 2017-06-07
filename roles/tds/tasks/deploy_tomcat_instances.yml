@@ -1,11 +1,9 @@
 # Create tomcat instances directory (tomcat_pool)
 - name: Create tomcat_instances_path
-  become: true
+  become: "{{ become_method }}"
   file: 
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}"
     state: directory
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
 
 - name: Check if tomcat_instances_path directory exists
   find: 
@@ -17,17 +15,15 @@
   register: tomcat_instances_directory
 
 - name: Create directory for each tomcat instance
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}"
     state: directory
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
   with_items:
     - "{{ tomcat_instances }}"
 
 - name: Copy directories from CATALINA_HOME to CATALINA_BASE
-  become: true
+  become: "{{ become_method }}"
   shell: cp -r {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/{{ item.0 }}/ {{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.1.name }}/
   with_nested:
     - "{{ tomcat_instance_dirs }}"
@@ -35,33 +31,25 @@
     - "{{ tomcat_instances_directory.results }}"
   when: (item.2.item.name == item.1.name) and (item.2.matched == 0 )
 
-- name: Change group and mode for tomcat instace directories
-  become: true
-  shell: chown -R :{{ tomcat_default_user_group }} {{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.1.name }}/{{ item.0 }}
-  with_nested:
-    - "{{ tomcat_instance_dirs }}"
-    - "{{ tomcat_instances }}"
-
-- name: Change user for logs directory
-  become: true
-  shell: "chown -R {{ tomcat_default_user_name }}: {{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/logs"
+- name: Remove all content in logs directory for each tomcat instance
+  become: "{{ become_method }}"
+  shell: rm -rf {{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/logs/*
   with_items:
     - "{{ tomcat_instances }}"
 
 - name: Create logs directory in content/thredds for each tomcat instance
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/content/thredds/logs"
     state: directory
-    # mode: "u+rw,g+r,o-rwx"
     owner: "{{ tomcat_default_user_name }}"
     group: "{{ tomcat_default_user_group }}"
   with_items:
     - "{{ tomcat_instances }}"
 
 - name: Secure tomcat passwords
-  become: true
-  shell: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/bin/digest.sh -a 'PBKDF2WithHmacSHA256' -i 100000 -s 16 -k 256 -h 'org.apache.catalina.realm.SecretKeyCredentialHandler' {{applications.tds[item.1.name].password}}"
+  become: "{{ become_method }}"
+  shell: "{% if tomcat_install_from_source == false %}tomcat-digest{% else  %} {{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/bin/digest.sh{% endif %} -a 'SHA' {{applications.tds[item.1.name].password}}"
   with_subelements:
     - "{{ tomcat_instances }}"
     - gws_instance
@@ -69,33 +57,47 @@
 
 # Create server.xml in instances_path
 - name: Create tomcat-users.xml file
-  become: true
+  become: "{{ become_method }}"
   template:
     src: tomcat-users.xml.j2
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/conf/tomcat-users.xml"
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
   with_items:
     - "{{ tomcat_instances }}"
 
 # Create server.xml in instances_path
 - name: Create server.xml file
-  become: true
+  become: "{{ become_method }}"
   template:
     src: server.xml.j2
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/conf/server.xml"
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
   with_items:
     - "{{ tomcat_instances }}"
 
 # Create a web.xml in instances_path/webapps/thredds/WEB-INF
 - name: Create web.xml in WEB-INF
-  become: true
+  become: "{{ become_method }}"
   copy:
     src: web.xml
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/webapps/thredds/WEB-INF"
-    # mode: "u+rw,g+r,o-rwx"
+  with_items:
+    - "{{ tomcat_instances }}"
+
+- name: Change mode for all directories for each tomcat instance
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}"
+    state: directory
+    recurse: yes
+    mode: "u=rwx,g=rwx"
+    group: "{{ tomcat_default_user_group }}"
+
+- name: Change owner and group for logs directory for each tomcat instance
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.name }}/logs"
+    state: directory
+    recurse: yes
+    mode: "u=rwx,g=rwx"
     group: "{{ tomcat_default_user_group }}"
   with_items:
     - "{{ tomcat_instances }}"

@@ -1,21 +1,32 @@
 - name: Deploy tds
-  hosts: hostA
+  hosts: tds-hosts
   vars_files: 
     - cedaproc-secret.yml
   vars:
     virtualenv_name: TDS4GWS
+    # tomcat_install_from_source: true
+    # tomcat_system: false
     tomcat_instances:
       - name: "{{ inventory_hostname }}_1800"
         base_port: 1800
-        ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
+        ip_address: 130.246.130.12
         ip_internal_address: 192.168.3.5
         ajp: 
           port: 18009
         gws_instance: 
           - name: "{{ gws.0.name }}"
+
+      - name: "{{ inventory_hostname }}_2800"
+        base_port: 2800
+        ip_address: 130.246.130.12
+        ip_internal_address: 192.168.3.5
+        ajp: 
+          port: 28009
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
     gws:
       - name: cedaproc
         path: cedaproc/test
-        location: "/gws/cedaproc"
+        location: "/group_workspaces/jasmin/cedaproc"
   roles:
     - role: tds

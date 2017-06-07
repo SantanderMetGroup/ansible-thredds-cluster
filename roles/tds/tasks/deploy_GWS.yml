@@ -1,27 +1,27 @@
 # Create directories for each GWS in tomcat_catalina_home/content/thredds/gws/
 - name: Create directories for each GWS in tomcat_catalina_home
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.name }}"
     state: directory
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
+    mode: "g=rwx"
+    group: "{% if tomcat_system == true %}{{ item.name }}-publisher{% else %}{{ tomcat_default_user_group }}{% endif %}"
   with_items:
     - "{{ gws }}"
 
 # Create catalog.xml for each GWS
 - name: Create catalog.xml in each GWS
-  become: true
+  become: "{{ become_method }}"
   template: 
     src: catalog.xml.j2
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.name }}/catalog.xml"
-    # mode: "u+rw,g+rwx,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
+    mode: "g=rwx"
+    group: "{% if tomcat_system == true %}{{ item.name }}-publisher{% else %}{{ tomcat_default_user_group }}{% endif %}"
   with_items:
     - "{{ gws }}"
 
 - name: Link GWS directory with each Tomcat instance
-  become: true
+  become: "{{ become_method }}"
   file:
     src: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}/content/thredds/gws/{{ item.1.name }}"
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}"
@@ -32,16 +32,14 @@
     - gws_instance
 
 - name: Link gws in the common catalog.xml
-  become: true
+  become: "{{ become_method }}"
   blockinfile:
     dest: "{{ tomcat_instances_path | default(tomcat_instances_path_default) }}/tomcat_{{ item.0.name }}/content/thredds/catalog.xml"
     marker: "# {mark} {{ item.1.name }}"
     insertbefore: "</catalog>"
-    # mode: "u+rw,g+r,o-rwx"
-    group: "{{ tomcat_default_user_group }}"
     block: |
       <catalogRef xlink:title="{{ item.1.name }}" xlink:href="gws/{{ item.1.name }}/catalog.xml" name=""/>
   with_subelements:
     - "{{ tomcat_instances }}"
     - gws_instance
-  notify: restart tomcat_instance
+  notify: start tomcat_instance

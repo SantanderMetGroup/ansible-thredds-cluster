@@ -13,10 +13,12 @@
   when: tomcat_system == false
 
 - name: Create directories
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ tomcat_catalina_home | default(tomcat_catalina_home_default) }}"
     state: directory
+    mode: "g+rwx"
+    group: "{% if tomcat_system == true %}{{ tomcat_default_group_edit }}{% else %}{{ tomcat_default_user_group }}{% endif %}"
 
 ## Install neccesary dependencies for tds
 # JRE
@@ -33,7 +35,7 @@
     unarchive_name: "{{ jre_unarchive_name }}"
 
 - name: Insert JRE_HOME variable in .bashrc file
-  become: true
+  become: "{{ become_method }}"
   lineinfile:
     dest: "~/.bashrc"
     line: "export JRE_HOME={{ jre_install_base | default(jre_install_base_default)}}"

@@ -5,7 +5,7 @@
     version: "{{ redis_version }}"
 
 - name: Create dependency_install_base directory
-  become: true
+  become: "{{ become_method }}"
   file:
     dest: "{{ install_base }}"
     state: directory
@@ -30,7 +30,7 @@
 # Unarchive package source file from local host to remote host in source directory (e.g .tar.gz)
 
 - name: Unarchive file in remote host
-  become: true
+  become: "{{ become_method }}"
   unarchive:
     src: "{{ local_download }}/{{ redis_filename }}"
     dest: "{{ install_base }}"
