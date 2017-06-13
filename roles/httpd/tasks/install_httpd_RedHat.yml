@@ -1,0 +1,16 @@
+- name: Include HTTPD variables for installation from RedHat
+  include_vars: "{{ httpd_path_to_roles }}/httpd/defaults/services/system.yml"
+
+- name: Provisioning host with HTTPD
+  become: "{{ become_method }}"
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - httpd
+    - httpd-devel
+
+- name: Create src directory
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ httpd_src }}"
+    state: directory

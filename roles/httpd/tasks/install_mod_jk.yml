@@ -1,0 +1,61 @@
+## Install mod_jk
+- name: Include version specific configuration
+  include: "{{ httpd_path_to_roles }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    service_name: mod_jk
+    version: "{{ mod_jk_redis_version }}"
+
+- name: Check if dependency_redis_filename exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ mod_jk_redis_filename }}"
+  register: mod_jk_file
+
+- name: Include lib get_url task
+  include: "{{ httpd_path_to_roles }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ mod_jk_download_url }}"
+    filename: "{{ mod_jk_redis_filename }}"
+    checksum: "{{ mod_jk_redis_checksum | default(None)}}"
+  when: mod_jk_file.matched == 0 
+
+# Unarchive mod_jk source file from local host to remote host in source directory
+- name: Unarchive mod_jk in remote host
+  become: "{{ become_method }}"
+  unarchive:
+    src: "{{ local_download }}/{{ mod_jk_redis_filename }}"
+    dest: "{{ httpd_src }}"
+  register: mod_jk
+
+- name: Configure mod_jk
+  become: "{{ become_method }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ httpd_src }}/{{ mod_jk_redis_filename_unarchive }}/native"
+  with_items:
+    - ./configure --prefix={{ mod_jk_install_base }} {{ mod_jk_configure | default(None)}}
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: mod_jk.changed
+
+# Create jk configuration file in http configuration
+- name: Configure jk module
+  become: "{{ become_method }}"
+  template:
+    src: mod_jk.conf.j2
+    dest: "{{ httpd_home | default(httpd_home_default) }}/conf.d/mod_jk.conf"
+
+# Create general worker.properties configuration file for mod_jk in httpd configuration
+- name: Configure general worker properties
+  become: "{{ become_method }}"
+  copy:
+    src: mod_jk.workers
+    dest: "{{ httpd_home | default(httpd_home_default) }}/conf.d/mod_jk.workers"
+
+# Create general worker.properties configuration file for mod_jk in httpd configuration
+- name: Configure mod_jk urimaps
+  become: "{{ become_method }}"
+  copy:
+    src: mod_jk.urimaps
+    dest: "{{ httpd_home | default(httpd_home_default) }}/conf.d/mod_jk.urimaps"

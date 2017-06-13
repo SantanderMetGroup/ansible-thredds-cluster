@@ -1,5 +1,5 @@
 - name: Update proxy configuration
-  shell: ssh gws-sysadmin@192.168.3.2 addWorker --gwsName={{  item.1.name }} --workerName={{ item.0.name }} --workerHost={{ item.0.ip_internal_address | default(item.0.ip_address)}} --workerPort={{ item.0.ajp.port }}
+  shell: ssh root@192.168.33.10 addWorker --gwsName={{  item.1.name }} --workerName={{ item.0.name }} --workerHost={{ item.0.ip_internal_address | default(item.0.ip_address)}} --workerPort={{ item.0.ajp.port }}
   with_subelements:
     - "{{ tomcat_instances }}"
     - gws_instance

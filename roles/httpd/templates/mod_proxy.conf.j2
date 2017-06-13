@@ -1,0 +1,16 @@
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_ajp_module modules/mod_proxy_ajp.so
+LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
+LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+
+<Location /status-proxy>
+    SetHandler balancer-manager
+   	Allow from all
+	AuthType Basic
+	AuthName "Restricted Content"
+	AuthUserFile {{ httpd_home | default(httpd_home_default) }}/.htpasswd
+	Require valid-user
+</Location>
+
+ProxyPass /status-proxy !

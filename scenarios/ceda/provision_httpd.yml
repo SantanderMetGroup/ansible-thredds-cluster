@@ -1,0 +1,21 @@
+- name: Configure proxy machines
+  hosts: proxy
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Install repositories
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - epel-release
+        
+    - name: Install dependencies
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - gcc
+        - gcc-c++
+        - libselinux-python
+        - libffi-devel
+        - openssl-devel
+        - python-passlib

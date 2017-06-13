@@ -1,4 +1,6 @@
-#!{{ virtualenv_home }}/bin/python2.7
+#!{% if httpd_system ==true %}/usr/bin/python{% else %}{{ virtualenv_home }}/bin/python2.7{% endif %}
+
+
 """
 Usage:
   update_proxy.py addWorker --gwsEnforced <name> --gwsName <name> --workerName <name> --workerHost <host> --workerPort <port>
@@ -28,13 +30,13 @@ def addWorker(arguments):
   workerPort = arguments['--workerPort']
 
   ## Update GWS
-  arguments_GWS=ansible_args + ['{{ services_prefix }}/update_proxy_GWS.yml']
+  arguments_GWS=ansible_args + ['{{ ansible_env.HOME }}/update_proxy_GWS.yml']
   arguments_GWS=arguments_GWS + ['--extra-vars', '''action=present''']
   arguments_GWS=arguments_GWS + ['--extra-vars', '''gwsName=%s''' %gwsName]
   update_GWS = subprocess.call(arguments_GWS)
 
   ## Update TDS instance
-  arguments_TDS_instance=ansible_args + ['{{ services_prefix }}/update_proxy_TDS.yml']
+  arguments_TDS_instance=ansible_args + ['{{ ansible_env.HOME }}/update_proxy_TDS.yml']
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''action=present''']
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''gwsName=%s''' %gwsName]
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerName=%s''' %workerName]
@@ -48,14 +50,14 @@ def removeWorker(arguments):
   workerName = arguments['--workerName']
 
   ## Update TDS instance
-  arguments_TDS_instance=ansible_args + ['{{ services_prefix }}/update_proxy_TDS.yml']
+  arguments_TDS_instance=ansible_args + ['{{ ansible_env.HOME }}/update_proxy_TDS.yml']
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''action=absent''']
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''gwsName=%s''' %gwsName]
   arguments_TDS_instance=arguments_TDS_instance + ['--extra-vars', '''workerName=%s''' %workerName]
   update_TDS_instances = subprocess.call(arguments_TDS_instance)
 
   ## Update GWS
-  arguments_GWS=ansible_args + ['{{ services_prefix }}/update_proxy_GWS.yml']
+  arguments_GWS=ansible_args + ['{{ ansible_env.HOME }}/update_proxy_GWS.yml']
   arguments_GWS=arguments_GWS + ['--extra-vars', '''action=absent''']
   arguments_GWS=arguments_GWS + ['--extra-vars', '''gwsName=%s''' %gwsName]
   update_GWS = subprocess.call(arguments_GWS)
@@ -80,6 +82,7 @@ if __name__ == '__main__':
         addWorker(arguments)
       elif arguments['removeWorker'] == True:
         removeWorker(arguments)
+      subprocess.check_call("sudo service httpd reload".split())
 
 
   except DocoptExit as e:

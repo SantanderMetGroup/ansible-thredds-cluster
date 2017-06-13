@@ -67,7 +67,7 @@ def main():
 
     check_hash = define_hash(sys.argv[1])
     if check_hash == True:
-            os.system("{{ httpd_opt }}/bin/apachectl -k graceful")
+            os.system("{{ httpd_home | default(httpd_home_default) }}/bin/apachectl -k graceful")
 
     write_stdout('RESULT 2\nOK')
 

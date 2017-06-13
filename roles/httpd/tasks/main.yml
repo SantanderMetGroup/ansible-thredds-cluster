@@ -1,189 +1,122 @@
 #Check if the service is installed in remote host
-- name: Check if the service is installed
-  include: "{{ httpd_path_to_lib_role }}/lib/tasks/check_service_install.yml"
-  vars:
-    service_home: "{{ httpd_install_base }}"
+## Install HTTPD
+# From RedHat repository
+- include: install_httpd_RedHat.yml
+  when: httpd_install_from_source == false
 
-- name: Start installation if httpd is not installed
-  include: install_httpd.yml
-  when: service_name not in service_installed.stdout
+# From source
+- include: install_httpd_from_source.yml
+  when: httpd_install_from_source == true
 
-- name: Insert HTTPD_HOME in .bashrc file
+- name: Insert HTTPD_HOME in .bashrc 
   lineinfile:
     dest: "~/.bashrc"
-    line: "export HTTPD_HOME={{ httpd_opt }}"
+    line: "export $HTTPD_HOME={{ httpd_home | default(httpd_home_default) }}"
 
 # Create conf.d directory in httpd_home
 - name: Create modules directories
+  become: "{{ become_method }}"
   file:
-    dest: "{{ httpd_opt }}/{{ conf_modules }}"
+    dest: "{{ item }}"
     state: directory
+  with_items:
+    - "{{ httpd_home | default(httpd_home_default) }}/conf.d"
+    - "{{ httpd_home | default(httpd_home_default) }}/htdocs"
 
 # Create password for admin user
 - name: Create password for proxy status web pages
+  become: "{{ become_method }}"
   htpasswd:
-    path: "{{ httpd_opt }}/.htpasswd"
-    username: "{{ applications.proxy-status.user }}"
-    passwd: "{{ applications.proxy-status.password}}"
+    path: "{{ httpd_home | default(httpd_home_default) }}/.htpasswd"
+    username: "{{ applications.proxy.status.user }}"
+    password: "{{ applications.proxy.status.password }}"
 
-# Create jk configuration file in http configuration
-- name: Configure jk module
-  template:
-    src: mod_jk.conf.j2
-    dest: "{{ httpd_opt }}/conf.d/mod_jk.conf"
+- include: "install_{{ load_balancer_module | default(load_balancer_module_default) }}.yml"
 
-# Create general worker.properties configuration file for mod_jk in httpd configuration
-- name: Configure general worker properties
-  template:
-    src: mod_jk.workers.j2
-    dest: "{{ httpd_opt }}/conf.d/mod_jk.workers"
-
-# Create general worker.properties configuration file for mod_jk in httpd configuration
-- name: Configure mod_jk urimaps
-  template:
-    src: mod_jk.urimaps.j2
-    dest: "{{ httpd_opt }}/conf.d/mod_jk.urimaps"
+- name: Delete httpd_src directory
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ httpd_src }}"
+    state: absent
 
 # Create httpd configuration
 - name: Copy httpd.conf in host
+  become: "{{ become_method }}"
   template: 
     src: httpd.conf.j2
-    dest: "{{ httpd_opt }}/conf/httpd.conf"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/conf/httpd.conf"
+  notify: start httpd
 
 # Create index.html page
 - name: Create index page
+  become: "{{ become_method }}"
   template:
     src: "{{ httpd_default_index_html_template }}"
-    dest: "{{ httpd_opt }}/htdocs/index.html"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/index.html"
 
 ## Thredds's configuration
 - name: Create thredds directory in htdocs directory
+  become: "{{ become_method }}"
   file:
-    dest: "{{ httpd_opt }}/htdocs/thredds"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/thredds"
     state: directory
 
 - name: Create thredds static configuration files (images, css)
+  become: "{{ become_method }}"
   copy:
     src: "{{ item }}"
-    dest: "{{ httpd_opt }}/htdocs/thredds/{{ item }}"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/thredds/{{ item }}"
   with_items:
     - folder.gif
     - tdsCat.css
     - threddsIcon.gif
 
 - name: Create thredds static configuration - catalog.html
+  become: "{{ become_method }}"
   template:
      src: catalog.html.j2
-     dest: "{{ httpd_opt }}/htdocs/thredds/catalog.html"
+     dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/thredds/catalog.html"
 
 - name: Create thredds static configuration - catalog.xml
+  become: "{{ become_method }}"
   template:
     src: catalog.xml.j2
-    dest: "{{ httpd_opt }}/htdocs/thredds/catalog.xml"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/thredds/catalog.xml"
 
 - name: Create thredds static configuration - serverInfo.html
+  become: "{{ become_method }}"
   template:
     src: serverInfo.html.j2
-    dest: "{{ httpd_opt }}/htdocs/thredds/serverInfo.html"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/htdocs/thredds/serverInfo.html"
 
 - name: Create configuration module for thredds
+  become: "{{ become_method }}"
   template:
     src: thredds.conf.j2
-    dest: "{{ httpd_opt }}/{{ conf_modules }}/thredds.conf"
+    dest: "{{ httpd_home | default(httpd_home_default) }}/conf.d/thredds.conf"
+  notify: reload httpd
 
 ## Add scripts for adding/removing GWS and TDS instances automatically
 - name: Add scripts for adding/removing GWS and TDS instances automatically
+  become: "{{ become_method }}"
   copy:
-    src: "{{ item }}"
-    dest: "{{ services_prefix }}/{{ item }}"
+    src: "{{ item.local }}"
+    dest: "{{ ansible_env.HOME }}/{{ item.remote }}"
   with_items:
-    - update_proxy_GWS.yml
-    - update_proxy_TDS.yml
+    - { local: "update_proxy_{{ load_balancer_module | default(load_balancer_module_default) }}_GWS.yml", remote: "update_proxy_GWS.yml"} 
+    - { local: "update_proxy_{{ load_balancer_module | default(load_balancer_module_default) }}_TDS.yml", remote: "update_proxy_TDS.yml"}
 
 - name: Add update_proxy.py script
+  become: "{{ become_method }}"
   template:
     src: update_proxy.py.j2
-    dest: "{{ services_prefix }}/update_proxy.py"
+    dest: "{{ ansible_env.HOME }}/update_proxy.py"
     mode: "u+rwx"
 
-## Control httpd with supervisord
-# Create httpd configuration file in supervisord
-- name: Create httpd supervisord configuration
-  template:
-    src: httpd_supervisord.conf.j2
-    dest: "{{ supervisor_programs }}/httpd.conf"
-  register: httpd_conf_supervisord
+- name: Create HTTPD configuration in the system
+  include: system_configuration.yml
+  when: httpd_system == true
 
-# Reread supervisord configuration and add httpd program to supervisord
-- name: Add httpd program to supervisord
-  supervisorctl:
-    name: httpd
-    state: present
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  when: httpd_conf_supervisord.changed
-
-- name: Create script to detect changes in httpd configuration
-  template:
-    src: detect_changes.py.j2
-    dest: "{{ supervisor_programs }}/detect_changes.py"
-    mode: 0775
-
-- name: Create event listener for detect changes in httpd/opt/conf/ directory
-  template:
-     src: detect_httpd_conf.conf.j2
-     dest: "{{ supervisor_programs }}/httpd_conf.conf"
-  vars: 
-    event_name: httpd_conf
-    md5_filename: httpd_conf
-    control_directory: "{{ httpd_opt }}/conf/"
-  register: httpd_conf_listener
-
-- name: Add event listener to supervisord
-  supervisorctl:
-    name: httpd_conf
-    state: present
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  when: httpd_conf_listener.changed
-
-- name: Create event listener for detect changes in httpd/opt/conf.d/ directory
-  template:
-     src: detect_httpd_conf.conf.j2
-     dest: "{{ supervisor_programs }}/httpd_conf_modules.conf"
-  vars: 
-    event_name: httpd_conf_modules
-    md5_filename: httpd_conf_modules
-    control_directory: "{{ httpd_opt }}/conf.d/"
-  register: httpd_conf_modules_listener
-
-- name: Add event listener to supervisord
-  supervisorctl:
-    name: httpd_conf_modules
-    state: present
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-  when: httpd_conf_modules_listener.changed
-
-- name: Install ansible in proxy 
-  pip:
-    name: ansible
-    version: 2.2.1.0
-    virtualenv: "{{ virtualenv_home }}"
-    virtualenv_site_packages: yes
-
-- name: Install docopt in proxy 
-  pip:
-    name: docopt
-    version: 0.6.2
-    virtualenv: "{{ virtualenv_home }}"
-    virtualenv_site_packages: yes
+- name: Create HTTPD configuration in the supervisord
+  include: supervisord_configuration.yml
+  when: httpd_system == false

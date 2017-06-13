@@ -1,0 +1,94 @@
+- name: Include HTTPD variables for installation from source as root user
+  include_vars: "{{ httpd_path_to_roles }}/httpd/defaults/services/system.yml"
+  when: httpd_system == true 
+
+- name: Include HTTPD variables for installation from source as non-root user
+  include_vars: "{{ httpd_path_to_roles }}/httpd/defaults/services/supervisord.yml"
+  when: httpd_system == false
+  
+- name: Create directories
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ httpd_home | default(httpd_home_default) }}"
+    - "{{ httpd_src }}"
+
+## Install neccesary dependencies for httpd 
+# Apr
+- name: Install Apr
+  include: dependencies.yml
+  vars:
+    name: apr 
+    redis_version: "{{ apr_redis_version }}"
+    install_base: "{{ apr_install_base }}"
+    redis_filename: "{{ apr_redis_filename }}"
+    redis_filename_unarchive: "{{ apr_redis_filename_unarchive }}"
+    download_url: "{{ apr_download_url }}"
+    redis_checksum: "{{ apr_redis_checksum }}"
+
+# Apr-Util
+- name: Include Apr-Util configuration
+  include: dependencies.yml
+  vars:
+    name: apr-util
+    redis_version: "{{ apr_util_redis_version }}"
+    install_base: "{{ apr_util_install_base }}"
+    redis_filename: "{{ apr_util_redis_filename }}"
+    redis_filename_unarchive: "{{ apr_util_redis_filename_unarchive }}"
+    download_url: "{{ apr_util_download_url }}"
+    redis_checksum: "{{ apr_util_redis_checksum }}"
+    configure: "{{ apr_util_configure }}"
+
+# PCRE
+- name: Include PCRE configuration
+  include: dependencies.yml
+  vars:
+    name: pcre
+    redis_version: "{{ pcre_redis_version }}"
+    install_base: "{{ pcre_install_base }}"
+    redis_filename_unarchive: "{{ pcre_redis_filename_unarchive }}"
+    redis_filename: "{{ pcre_redis_filename }}"
+    download_url: "{{ pcre_download_url }}"
+
+## Install httpd service
+# Include httpd version
+- name: Include version specific configuration
+  include: "{{ httpd_path_to_roles }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    version: "{{ httpd_redis_version }}"
+
+# Check if service source file exists in local host
+- name: Check if {{ httpd_redis_filename }} exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ httpd_redis_filename }}"
+  register: httpd_file
+
+- name: Include lib get_url task
+  include: "{{ httpd_path_to_roles }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ httpd_download_url }}"
+    filename: "{{ httpd_redis_filename }}"
+    checksum: "{{ httpd_redis_checksum }}"
+  when: httpd_file.matched == 0
+
+- name: Unarchive {{ httpd_redis_filename }} in httpd_src
+  become: "{{ become_method }}"
+  unarchive:
+    src: "{{ local_download }}/{{ httpd_redis_filename }}"
+    dest: "{{ httpd_src }}"
+  register: httpd_unarchive
+
+- name: Install httpd
+  become: "{{ become_method }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ httpd_src }}/{{ httpd_redis_filename_unarchive }}"
+  with_items:
+    - ./configure --prefix={{ httpd_home | default(httpd_home_default) }} --enable-mpms-shared=all --with-apr={{ apr_install_base }} --with-apr-util={{ apr_util_install_base }} --with-pcre={{ pcre_install_base }}
+    - /usr/bin/make
+    - /usr/bin/make install
+  when: httpd_unarchive.changed

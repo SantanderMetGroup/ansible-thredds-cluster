@@ -1,6 +1,46 @@
-- name: Include {{ name }} configuration
-  include: check_dependencies.yml
+- name: Include version specific configuration
+  include: "{{ httpd_path_to_roles }}/lib/tasks/version-specific-vars.yml"
+  vars:
+    service_name: "{{ name }}"
+    version: "{{ redis_version }}"
 
+- name: Create dependency_install_base directory
+  become: "{{ become_method }}"
+  file:
+    dest: "{{ install_base }}"
+    state: directory
+
+- name: Check if dependency_redis_filename exists
+  local_action: find 
+  args:
+    path: "{{ local_download }}" 
+    patterns: "{{ redis_filename }}"
+  register: file
+
+- name: Include lib get_url task
+  include: "{{ httpd_path_to_roles }}/lib/tasks/get_url.yml"
+  vars:
+    url: "{{ download_url }}"
+    filename: "{{ redis_filename }}"
+    checksum: "{{ redis_checksum | default(None)}}"
+  when: file.matched == 0 
+
+# Unarchive package source file from local host to remote host in source directory (e.g .tar.gz)
+- name: Unarchive {{ name }} in remote host
+  become: "{{ become_method }}"
+  unarchive:
+    src: "{{ local_download }}/{{ redis_filename }}"
+    dest: "{{ httpd_src }}"
+  register: dependency
+
+# Install package
 - name: Install {{ name }}
-  include: install_dependencies.yml
+  become: "{{ become_method }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ httpd_src }}/{{ redis_filename_unarchive }}"
+  with_items:
+    - "./configure --prefix={{ install_base }} {{ configure | default(None)}}"
+    - /usr/bin/make
+    - /usr/bin/make install
   when: dependency.changed

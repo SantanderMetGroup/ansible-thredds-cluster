@@ -1,0 +1,109 @@
+#!/bin/bash
+#
+# httpd        Startup script for the Apache HTTP Server
+#
+# chkconfig: - 85 15
+# description: The Apache HTTP Server is an efficient and extensible  \
+#	       server implementing the current HTTP standards.
+# processname: httpd
+# config: /etc/httpd/conf/httpd.conf
+# config: /etc/sysconfig/httpd
+# pidfile: /var/run/httpd/httpd.pid
+#
+### BEGIN INIT INFO
+# Provides: httpd
+# Required-Start: $local_fs $remote_fs $network $named
+# Required-Stop: $local_fs $remote_fs $network
+# Should-Start: distcache
+# Short-Description: start and stop Apache HTTP Server
+# Description: The Apache HTTP Server is an extensible server 
+#  implementing the current HTTP standards.
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Path to the apachectl script, server binary, and short-form for messages.
+httpd={{ httpd_home | default(httpd_home_default) }}/bin/apachectl
+pidfile=${PIDFILE-{{ httpd_home | default(httpd_home_default) }}/logs/httpd.pid}
+prog=httpd
+RETVAL=0
+STOP_TIMEOUT=${STOP_TIMEOUT-10}
+
+# The semantics of these two functions differ from the way apachectl does
+# things -- attempting to start while running is a failure, and shutdown
+# when not running is also a failure.  So we just do it the way init scripts
+# are expected to behave here.
+start() {
+        echo -n $"Starting $prog: "
+        sudo $httpd -k start -f {{ httpd_home | default(httpd_home_default) }}/conf/httpd.conf
+        success
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ]
+        return $RETVAL
+}
+
+# When stopping httpd, a delay (of default 10 second) is required
+# before SIGKILLing the httpd parent; this gives enough time for the
+# httpd parent to SIGKILL any errant children.
+stop() {
+	status -p ${pidfile} $apachectl > /dev/null
+
+	echo -n $"Stopping $prog: "
+	sudo $httpd -k stop
+	success
+	
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f  ${pidfile}
+}
+
+reload() {
+    echo -n $"Reloading $prog: "
+    
+    # Force LSB behaviour from killproc
+    sudo $httpd -k graceful
+    RETVAL=$?
+    if [ $RETVAL -eq 7 ]; then
+        failure $"httpd shutdown"
+    fi
+    
+    echo
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status -p ${pidfile} $httpd
+	RETVAL=$?
+	;;
+  restart)
+	stop
+	start
+	;;
+  condrestart|try-restart)
+	if status -p ${pidfile} $httpd >&/dev/null; then
+		stop
+		start
+	fi
+	;;
+  force-reload|reload)
+        reload
+	;;
+  graceful|help|configtest|fullstatus)
+	$httpd $@
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|condrestart|try-restart|force-reload|reload|status|fullstatus|graceful|help|configtest}"
+	RETVAL=2
+esac
+
+exit $RETVAL

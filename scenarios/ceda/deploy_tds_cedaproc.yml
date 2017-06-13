@@ -1,27 +1,27 @@
 - name: Deploy tds
-  hosts: tds-hosts
+  hosts: cedaproc-tds4gws
   vars_files: 
     - cedaproc-secret.yml
   vars:
-    virtualenv_name: TDS4GWS
+    #virtualenv_name: TDS4GWS
     # tomcat_install_from_source: true
     # tomcat_system: false
     tomcat_instances:
-      - name: "{{ inventory_hostname }}_1800"
+      - name: tds4gws_1800
         base_port: 1800
-        ip_address: 130.246.130.12
-        ip_internal_address: 192.168.3.5
+        ip_address: 192.168.33.12
         ajp: 
           port: 18009
+          proxyPort: 8008
         gws_instance: 
           - name: "{{ gws.0.name }}"
 
-      - name: "{{ inventory_hostname }}_2800"
+      - name: tds4gws_2800
         base_port: 2800
-        ip_address: 130.246.130.12
-        ip_internal_address: 192.168.3.5
+        ip_address: 192.168.33.12
         ajp: 
           port: 28009
+          proxyPort: 8008
         gws_instance: 
           - name: "{{ gws.0.name }}"
     gws:

@@ -1,6 +1,7 @@
 # httpd version number
 httpd_default_version: '2.4.25'
 httpd_redis_version: "{{ httpd_version if httpd_version is defined else httpd_default_version }}"
+httpd_version_major: "{{ httpd_redis_version|truncate(3, True, '') }}"
 
 # Mirror where to dowload httpd redistributable package from
 httpd_mirror: http://apache.mirrors.tds.net/httpd
@@ -9,12 +10,6 @@ httpd_redis_filename: "{{ httpd_redis_filename_unarchive }}.tar.gz"
 httpd_download_url: "{{ httpd_mirror }}/{{ httpd_redis_filename }}"
 httpd_mirror_checksum: https://www.apache.org/dist/httpd
 
-# httpd installation directories
-#   base directory for httpd installations
-httpd_install_base: "{{ services_prefix }}/{{ service_name }}"
-httpd_opt: "{{ httpd_install_base }}/opt"
-httpd_src: "{{ httpd_install_base }}/src"
-
 # httpd configuration
 #   Default template for configuration file server.xml
 httpd_default_index_html_template: index.html.j2
@@ -22,8 +17,12 @@ httpd_default_index_html_template: index.html.j2
 httpd_default_port: 8000
 
 httpd_binary: "httpd-{{ httpd_redis_version }}+{{ ansible_distribution}}.{{ ansible_distribution_major_version}}.{{ ansible_architecture }}.tar.gz"
-httpd_path_to_lib_role: "../../roles"
+httpd_path_to_roles: "../../roles"
 
+httpd_src: "{{ httpd_home | default(httpd_home_default)}}/src"
+
+httpd_install_from_source: false
+httpd_system: true
 
 ## Dependencies for installation
 # APR configuration
@@ -33,7 +32,7 @@ apr_redis_filename_unarchive: "apr-{{ apr_redis_version }}"
 apr_redis_filename: "{{ apr_redis_filename_unarchive }}.tar.gz"
 apr_mirror: http://archive.apache.org/dist/apr
 apr_download_url: "{{ apr_mirror }}/{{ apr_redis_filename }}"
-apr_install_base: "{{ httpd_opt }}/apr"
+apr_install_base: "{{ httpd_home | default(httpd_home_default) }}/apr"
 
 # APR-Util configuration
 apr_util_default_version: "1.5.4"
@@ -42,7 +41,7 @@ apr_util_redis_filename_unarchive: "apr-util-{{ apr_util_redis_version }}"
 apr_util_redis_filename: "{{ apr_util_redis_filename_unarchive }}.tar.gz"
 apr_util_mirror: http://archive.apache.org/dist/apr
 apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_redis_filename }}"
-apr_util_install_base: "{{ httpd_opt }}/apr_util"
+apr_util_install_base: "{{ httpd_home | default(httpd_home_default) }}/apr_util"
 apr_util_configure: --with-apr={{ apr_install_base }}
 
 # PCRE configuration
@@ -52,7 +51,9 @@ pcre_redis_filename_unarchive: "pcre-{{ pcre_redis_version }}"
 pcre_redis_filename: "{{ pcre_redis_filename_unarchive }}.tar.gz"
 pcre_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
 pcre_download_url: "{{ pcre_mirror }}/{{ pcre_redis_filename }}"
-pcre_install_base: "{{ httpd_opt }}/pcre"
+pcre_install_base: "{{ httpd_home | default(httpd_home_default) }}/pcre"
+
+load_balancer_module_default: mod_jk
 
 # mod_jk configuration
 mod_jk_default_version: "1.2.42"
@@ -61,5 +62,5 @@ mod_jk_redis_filename_unarchive: "tomcat-connectors-{{ mod_jk_redis_version }}-s
 mod_jk_redis_filename: "{{ mod_jk_redis_filename_unarchive }}.tar.gz"
 mod_jk_mirror: http://archive.apache.org/dist/tomcat/tomcat-connectors/jk
 mod_jk_download_url: "{{ mod_jk_mirror }}/{{ mod_jk_redis_filename }}"
-mod_jk_install_base: "{{ httpd_opt }}/modules"
-mod_jk_configure: --with-apxs={{ httpd_opt }}/bin/apxs
+mod_jk_install_base: "{{ httpd_home | default(httpd_home_default) }}/modules"
+mod_jk_configure: --with-apxs={% if httpd_install_from_source == false %}/usr/sbin/apxs{% else %}{{ httpd_home | default(httpd_home_default) }}/bin/apxs{% endif %}

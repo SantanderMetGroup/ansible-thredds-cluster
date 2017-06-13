@@ -1,22 +1,30 @@
 - name: Deploy tds
-  hosts: hostD
+  hosts: hiresgw-tds4gws
   vars_files: 
     - hiresgw-secret.yml
   vars:
-    supervisor_port: 9002
-    virtualenv_name: TDS4GWS
-    tds_instances:
-      - name: "{{ inventory_hostname }}_2800"
+    #virtualenv_name: TDS4GWS
+    tomcat_instances:
+      - name: tds4gws_1800
+        base_port: 1800
+        ip_address: 192.168.33.13
+        ajp: 
+          port: 18009
+          proxyPort: 8008
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
+
+      - name: tds4gws_2800
         base_port: 2800
-        ip_address: "{{ hostvars[ inventory_hostname ]['ansible_ssh_host'] }}"
-        ip_internal_address: 192.168.3.5
+        ip_address: 192.168.33.13
         ajp: 
           port: 28009
+          proxyPort: 8008
         gws_instance: 
-          - name: "{{ catalogs.0.name }}"
+          - name: "{{ gws.0.name }}"
     gws:
       - name: hiresgw
         path: hiresgw/test
-        location: "{{ services_prefix }}/gws/hiresgw"
+        location: "/group_workspaces/jasmin/hiresgw"
   roles:
     - role: tds

@@ -1,31 +1,7 @@
 ---
 # handlers file for roles/httpd
-- name: start httpd
-  supervisorctl:
-    name: httpd
-    state: started
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
+- include: service.yml
+  when: httpd_system ==true
 
-- name: stop httpd
-  supervisorctl:
-    name: httpd
-    state: stopped
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
-
-- name: restart httpd
-  supervisorctl:
-    name: httpd
-    state: restarted
-    supervisorctl_path: "{{ virtualenv_home }}/bin/supervisorctl"
-    config: "{{ supervisor_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
-    server_url: "http://localhost:{{ supervisor_port }}"
+- include: supervisord.yml
+  when: httpd_system == false
