@@ -1,33 +1,27 @@
-- name: Install libselinux-python
+- name: Configure tds-hosts machines
+  hosts: tds-hosts
   become: true
   become_method: sudo
-  yum: 
-    name: libselinux-python
-  when:
-    - ansible_distribution == 'CentOS'
-    - ansible_distribution_major_version == '6'
+  tasks:
+    - name: Install libselinux-python
+      yum: 
+        name: libselinux-python
 
-- name: Install dependencies
-  become: true
-  become_method: sudo
-  yum:
-    name: "{{ item }}"
-  with_items:
-    - unzip
-    - psmisc
-    - python27
-    - openssl-devel
-    - python-passlib
+    - name: Install unzip for thredds.war
+      yum:
+        name: unzip
 
-- name: Create publisher group
-  become: true
-  become_method: sudo  
-  group:
-    name: "{{ item.name }}-publisher"
+    - name: Install repository (tomcat-v7)
+      yum:
+        name: epel-release
 
-- name: Create user for GWS
-  become: true
-  become_method: sudo  
-  user:
-    name: "{{ item.name }}-publisher"
-    group: "{{ item.name }}-publisher"
+    - name: Install packages for pyyaml and python-paramiko
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - python-paramiko
+        - python-pip
+
+    - name: Install pyyaml
+      pip:
+        name: pyyaml

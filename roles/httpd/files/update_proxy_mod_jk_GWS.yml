@@ -18,7 +18,7 @@
       blockinfile:
         dest: "$HTTPD_HOME/conf.d/mod_jk.workers"
         marker: "# {mark} GWS_{{ gwsName }}"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
           worker.list=GWS_{{ gwsName }}
           worker.GWS_{{ gwsName }}.type=lb
@@ -30,7 +30,7 @@
       blockinfile:
         dest: "$HTTPD_HOME/conf.d/mod_jk.urimaps"
         marker: "# {mark} GWS_{{ gwsName }}"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
           /thredds/*/{{ gwsName }}=GWS_{{ gwsName }}
           /thredds/*/{{ gwsName }}/*=GWS_{{ gwsName }}
@@ -42,7 +42,7 @@
         dest: "$HTTPD_HOME/htdocs/thredds/catalog.html"
         marker: "<!-- {mark} GWS_{{ gwsName }} -->"
         insertbefore: "</table>"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
           <tr>
             <td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -58,7 +58,7 @@
         dest: "$HTTPD_HOME/htdocs/thredds/catalog.xml"
         marker: "<!-- {mark} GWS_{{ gwsName }} -->"
         insertbefore: "</catalog>"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
             <catalogRef xlink:href="gws/{{ gwsName }}/catalog.xml" xlink:title="{{ gwsName }}" name="" />
       when:

@@ -1,0 +1,14 @@
+- name: Add $HOME enviroment variable
+  set_fact: 
+    env_var: lookup('env', 'HOME')
+
+- name: Copy tomcat_instances variable to a file
+  copy:
+    content: "{{ tomcat_instances | to_nice_yaml }}"
+    dest: "{{ ansible_env.HOME }}/tomcat_instances.yaml"
+
+- name: Create update_proxy.py script to update host-proxy configuration
+  copy:
+    src: update_proxy.py
+    dest: "{{ ansible_env.HOME }}/update_proxy.py"
+    mode: "u+x"

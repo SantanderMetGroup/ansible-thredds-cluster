@@ -13,17 +13,17 @@
         contains: '# BEGIN GWS_{{ gwsName }}'
       register: GWS
 
-    # Add each instance configuration for GWS to mod_jk.workers file   
-    - name: Configure TDS instances for GWS in mod_jk.workers
+    # Add each instance configuration for GWS to mod_proxy.conf file   
+    - name: Configure TDS instances for GWS in mod_proxy.conf
       blockinfile:
         dest: "$HTTPD_HOME/conf.d/mod_proxy.conf"
         marker: "# {mark} GWS_{{ gwsName }}_{{ workerName }}"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         insertafter: "# {{ gwsName }} cluster configuration"
         block: |
-          {% if action == "present" %}
+          {% if operation == "present" %}
               BalancerMember ajp://{{ workerHost }}:{{ workerPort }}
-          {% elif action == "absent" %}
+          {% elif operation == "absent" %}
           {% endif %}
       when:
         - GWS.matched == 1

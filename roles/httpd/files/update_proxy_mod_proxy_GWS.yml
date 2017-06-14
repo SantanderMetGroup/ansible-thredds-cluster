@@ -13,15 +13,15 @@
         contains: '# BEGIN GWS_{{ gwsName }}_.+'
       register: TDS_instances
 
-    # Add GWS load balancer configuration to mod_jk.workers file   
+    # Add GWS load balancer configuration to mod_proxy.conf file   
     - name: Configure GWS in mod_proxy.workers
       blockinfile:
         dest: "$HTTPD_HOME/conf.d/mod_proxy.conf"
         marker: "# {mark} GWS_{{ gwsName }}"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
           <Proxy balancer://tomcat_gws_{{ gwsName }}_cluster>
-              ProxySet lbmethod=bybusyness
+              ProxySet lbmethod=byrequests
               # {{ gwsName }} cluster configuration 
           </Proxy>
           ProxyPassMatch "^/thredds/(.*)/{{ gwsName }}/(.*)$" "balancer://tomcat_gws_{{ gwsName }}_cluster/thredds/$1/{{ gwsName }}/$2"
@@ -33,7 +33,7 @@
         dest: "$HTTPD_HOME/htdocs/thredds/catalog.html"
         marker: "<!-- {mark} GWS_{{ gwsName }} -->"
         insertbefore: "</table>"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
           <tr>
             <td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -49,7 +49,7 @@
         dest: "$HTTPD_HOME/htdocs/thredds/catalog.xml"
         marker: "<!-- {mark} GWS_{{ gwsName }} -->"
         insertbefore: "</catalog>"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
             <catalogRef xlink:href="gws/{{ gwsName }}/catalog.xml" xlink:title="{{ gwsName }}" name="" />
       when:

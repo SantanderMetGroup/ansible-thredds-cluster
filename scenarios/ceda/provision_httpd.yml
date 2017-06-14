@@ -3,19 +3,28 @@
   become: true
   become_method: sudo
   tasks:
-    - name: Install repositories
+    - name: Install libselinux-python
       yum:
-        name: "{{ item }}"
-      with_items:
-        - epel-release
-        
-    - name: Install dependencies
+        name: libselinux-python
+
+    - name: Install repository (htpsswd, ansible)
+      yum:
+        name: epel-release
+
+    - name: Install python-passlib
+      yum:
+        name: python-passlib
+
+    - name: Install gcc/gcc-c++
       yum:
         name: "{{ item }}"
       with_items:
         - gcc
         - gcc-c++
-        - libselinux-python
-        - libffi-devel
+
+    - name: Install package for cryptography
+      yum:
+        name: "{{ item }}"
+      with_items:
         - openssl-devel
-        - python-passlib
+        - python-devel

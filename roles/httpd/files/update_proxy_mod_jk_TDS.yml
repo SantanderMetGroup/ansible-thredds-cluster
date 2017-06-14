@@ -18,15 +18,15 @@
       blockinfile:
         dest: "$HTTPD_HOME/conf.d/mod_jk.workers"
         marker: "# {mark} GWS_{{ gwsName }}_{{ workerName }}"
-        state: "{{ action }}"
+        state: "{{ operation }}"
         block: |
-          {% if action == "present" %}
+          {% if operation == "present" %}
           worker.GWS_{{ gwsName }}.balance_workers= {{ workerName }}
 
           worker.{{ workerName }}.type=ajp13
           worker.{{ workerName }}.host={{ workerHost }}
           worker.{{ workerName }}.port={{ workerPort }}
-          {% elif action == "absent" %}
+          {% elif operation == "absent" %}
 
           {% endif %}
       when:
