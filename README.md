@@ -151,9 +151,9 @@ The following variables can be modified by the user depends on which case of use
     - `gws_instance`: Configuration for all GWS that this instance owns to.
          - `name`: Name of the gws served by the Tomcat instance. It must be the same as one of the `gws.name` variable (e.g. `cedaproc`)
   - `gws`: GWS configuration variables. The following variables are compulsory to configure per gws.
-    - `name`: Name of the gws. This variable must be copy in the `tomcat_instances.gws_instance.name` (e.g. `cedaproc`)
-    - `path`: URI for the publish dataset. (e.g. `cedaproc/test`)
-    - `location`: Absolute path of the directory been published
+     - `name`: Name of the gws. This variable must be copy in the `tomcat_instances.gws_instance.name` (e.g. `cedaproc`)
+     - `path`: URI for the publish dataset. (e.g. `cedaproc/test`)
+     - `location`: Absolute path of the directory been published
 
 - ##### Case 1: RedHat and System control
 
