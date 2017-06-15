@@ -78,7 +78,6 @@ applications:
   supervisord:
     user: abcd1234
     password: abcd1234
-
   proxy:
     status:
       user: efgh5678
@@ -194,7 +193,6 @@ applications:
   supervisord:
     user: abcd1234
     password: abcd1234
-
   tds:
     cedaproc:
       user: efgh5678
