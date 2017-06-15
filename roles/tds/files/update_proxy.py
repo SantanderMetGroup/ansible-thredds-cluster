@@ -43,10 +43,10 @@ def get_content():
           workerName = (" --workerName " + tomcat_instance["name"] + " ")
           workerPort = ("--workerPort " + str(tomcat_instance["ajp"]["port"]) + " ")
           
-          if hasattr(tomcat_instance, 'ip_internal_address'):
+          if "ip_internal_address" in tomcat_instance:
             workerHost = ("--workerHost " + tomcat_instance["ip_internal_address"] + " ")
             ip_address = tomcat_instance["ip_internal_address"]
-          else:
+          elif "ip_address" in tomcat_instance:
             workerHost = ("--workerHost " + tomcat_instance["ip_address"] + " ") 
             ip_address = tomcat_instance["ip_address"]
     
