@@ -25,6 +25,7 @@
               # {{ gwsName }} cluster configuration 
           </Proxy>
           ProxyPassMatch "^/thredds/(.*)/{{ gwsName }}/(.*)$" "balancer://tomcat_gws_{{ gwsName }}_cluster/thredds/$1/{{ gwsName }}/$2"
+          ProxyPassReverse "/thredds" "balancer://tomcat_gws_{{ gwsName }}_cluster/thredds"
       when:
         - TDS_instances.matched == 0 
 
