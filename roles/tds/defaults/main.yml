@@ -42,20 +42,14 @@ tomcat_default_user_group: tomcat
 #   per instance name: item.system
 tomcat_default_user_system: true
 #   Default shutdown port
-tomcat_default_port_shutdown: 8005
+tomcat_default_port_shutdown: "{{ item.base_port }}5"
 #   Default connector port
-tomcat_default_port_connector: 8080
-#   Default redirect port
-tomcat_default_port_redirect: 8443
+tomcat_default_port_connector: "{{ item.base_port }}8"
 #   Default AJP port
-tomcat_default_port_ajp: 8009
+tomcat_default_port_ajp: "{{ item.base_port }}9"
 
 tomcat_install_from_source: false
 tomcat_system: true
-
-# tomcat instance(s)
-tomcat_instances:
-  - name: tomcat
 
 # Default user for edit GWS's catalogs
 tomcat_default_group_edit: publisher
@@ -63,3 +57,6 @@ tomcat_default_group_edit: publisher
 # TDS instances
 proxyName_default: "{{ hostvars['host-proxy']['ansible_ssh_host'] }}"
 proxyPort_default: 8000
+
+proxyName_general: "{{ proxyName | default(proxyName_default) }}"
+proxyPort_general: "{{ proxyPort | default(proxyPort_default) }}"

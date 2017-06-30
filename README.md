@@ -123,6 +123,8 @@ applications:
           roles:
             - role: httpd
       ```
+> The TDS hosts must access into the host proxy in order to update the information about their Tomcat instances configuration and thus be able to perform the load balancing system. To restric this access, the host proxy administrator must manually configure the **authorized_keys** file as follows:
+no-agent-forwarding,no-user-rc,no-port-forwarding,no-pty,command="/path/to/update_proxy.py --gwsEnforced [GWS name]", ssh-rsa [id_rsa.pub]
 
 ### Deploying a machine with [THREDDS Data Server]
 
@@ -138,14 +140,20 @@ The following variables can be modified by the user depends on which case of use
   - `tomcat_system`: Variable to indicate whether you want to control Tomcat with system service or supervisord service (bool, default: true [System])
   - `tds_version`: Configure TDS version (string, default: `4.6.8`)
   - `tds_mirror`: Configure TDS mirror site (string, default: `http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/`)
+  - `proxyName`: frontend/proxy's name for *ALL* tomcat instances (default: `ansible_ssh_host` for your `host-proxy` host)
+  - `proxyPort`: frontend/proxy's port for *ALL* tomcat instances (default: `8000`)
   - `tomcat_instances`: Configure tomcat instance values. The following variables are **compulsory** to configure per instance.
     - `name`: Name for the Tomcat instance. It should be unique. (e.g. `tds4gws_1800`)
     - `base_port`: Base port for Tomcat instance. It must be different if you have more than one Tomcat instances. (e.g. `1800`)
     - `ip_address`: External IP address for that Tomcat instance. (e.g. `192.168.33.13`) 
     - `ip_internal_address`: Internal IP address for that Tomcat instance. It should be noticed that IP address is used for doing the load balancing system.
       **Internal IP address is _not neccesary_ if you haven't problems with the firewall**
+    - `http`: Configuration for HTTP Tomcat connector
+      - `port`: Port for HTTP connector (default: `base_port`8)
+    - `shutdown`: Configuration for Shutdown port
+      - `port`: Port for shutdown port (default: `base_port`5)  
     - `ajp`: Configuration for ajp Tomcat connector and `mod_proxy`/`mod_jk` HTTPD module
-      - `port`: AJP port. It must contain the `base_port` (e.g. `18009`)
+      - `port`: AJP port. (default: `base_port`9)
       - `proxyName`: frontend/proxy's name (e.g. `192.168.33.12`)
       - `proxyPort`: frontend/proxy's port (e.g. `8000`)
     - `gws_instance`: Configuration for all GWS that this instance owns to.
@@ -154,6 +162,8 @@ The following variables can be modified by the user depends on which case of use
      - `name`: Name of the gws. This variable must be copy in the `tomcat_instances.gws_instance.name` (e.g. `cedaproc`)
      - `path`: URI for the publish dataset. (e.g. `cedaproc/test`)
      - `location`: Absolute path of the directory been published
+
+> It should be notice that the shutdown, http and ajp connectors are *not* compulsory to be configured because there is a default configuration for all of these variables.
 
 - ##### Case 1: RedHat and System control
 
@@ -351,6 +361,7 @@ applications:
           roles:
             - role: tds
       ```
+> If you want to push the Tomcat instances configuration into the host proxy, you should execute the `update_proxy.py` script that is in your home directory. 
 
 [Ansible]: <http://docs.ansible.com/ansible/>
 [Apache HTTPD Server]: <https://httpd.apache.org/>

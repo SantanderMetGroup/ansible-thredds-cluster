@@ -26,7 +26,7 @@ SHUTDOWN_VERBOSE="true"
 CATALINA_PID="{{ catalina_pid_path | default(catalina_pid_path_default) }}/tomcat_{{ item.name }}"
 
 # Connector port is 8080 for this tomcat instance
-CONNECTOR_PORT="{{ item.base_port }}8"
+CONNECTOR_PORT={% if item.http is defined %}"{{ item.http.port }}" {% else %}"{{ tomcat_default_port_connector }}"{% endif %}
 
 # TDS specific ENVARS
 #

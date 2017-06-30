@@ -3,14 +3,14 @@ import yaml
 import sys
 import paramiko
 
-def update_proxy(options):
+def update_proxy(proxyName, options):
   
   paramiko.util.log_to_file('paramiko.log')
   try:
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname = '192.168.33.10', username='root')
+    ssh.connect(hostname = proxyName, username='root')
     try:
       stdin,stdout,stderr = ssh.exec_command(command="%s" %options)
       
@@ -19,16 +19,16 @@ def update_proxy(options):
       print(resp)
 
     except paramiko.SSHException:
-      print "SSH Exception failed when executing the command in 192.168.33.10"
+      print ("SSH Exception failed when executing the command in %s" %proxyName)
       sys.exit(1)
   except paramiko.AuthenticationException:
-    print "Authentication failed when connecting to 192.168.33.10"
+    print ("Authentication failed when connecting to %s" %proxyName)
     sys.exit(1)
   except paramiko.SSHException:
-    print "SSH Exception failed when connecting to 192.168.33.10"
+    print ("SSH Exception failed when connecting to %s" %proxyName)
     sys.exit(1)
   except paramiko.BadHostKeyException:
-    print "BadHost Key Exception failed when connecting to 192.168.33.10"
+    print ("BadHost Key Exception failed when connecting to %s" %proxyName)
     sys.exit(1)
  
 
@@ -42,6 +42,7 @@ def get_content():
           tomcat_instance = instance
           workerName = (" --workerName " + tomcat_instance["name"] + " ")
           workerPort = ("--workerPort " + str(tomcat_instance["ajp"]["port"]) + " ")
+          proxyName = tomcat_instance["ajp"]["proxyName"]
           
           if "ip_internal_address" in tomcat_instance:
             workerHost = ("--workerHost " + tomcat_instance["ip_internal_address"] + " ")
@@ -61,7 +62,7 @@ def get_content():
               options = action + workerName + gwsName
             else:
               break
-            update_proxy(options)
+            update_proxy(proxyName,options)
                          
     except yaml.YAMLError as exc:
         print(exc)

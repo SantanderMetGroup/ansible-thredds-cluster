@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Server port="{{ item.base_port }}5" shutdown="{{ item.name }}">
+<Server port={% if item.shutdown is defined %}"{{item.shutdown.port}}" {% else %}"{{tomcat_default_port_shutdown}}" {% endif %} shutdown="{{ item.name }}">
   <GlobalNamingResources>
     <Resource name="UserDatabase" auth="Container"
               type="org.apache.catalina.UserDatabase"
@@ -15,10 +15,10 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <Service name="Catalina">
-    <Connector port="{{ item.base_port }}8" protocol="HTTP/1.1" connectionTimeout="20000" />
-    <Connector port="{{ item.ajp.port }}"  protocol="AJP/1.3"
-               proxyName="{{ item.ajp.proxyName | default( proxyName_default ) }}"
-               proxyPort="{{ item.ajp.proxyPort | default( proxyPort_default )}}"
+    <Connector port={% if item.http is defined %}"{{ item.http.port }}" {% else %}"{{ tomcat_default_port_connector }}"{% endif %} protocol="HTTP/1.1" connectionTimeout="20000" />
+    <Connector port={% if item.ajp is defined  and item.ajp.port is defined %}"{{ item.ajp.port}}" {% else %}"{{tomcat_default_port_ajp}}"{% endif %} protocol="AJP/1.3"
+               proxyName={% if item.ajp is defined and item.ajp.proxyName is defined %}"{{ item.ajp.proxyName }}" {% else %}"{{ proxyName_general }}" {% endif %}
+               proxyPort={% if item.ajp is defined and item.ajp.proxyPort is defined %}"{{ item.ajp.proxyPort }}" {% else %}"{{ proxyPort_general }}" {% endif %}
     />
     <Engine name="Catalina" defaultHost="localhost">
       <Realm className="org.apache.catalina.realm.LockOutRealm">
