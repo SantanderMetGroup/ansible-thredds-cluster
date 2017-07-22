@@ -2,7 +2,7 @@
 
 ## Overview
 
-[Ansible] repository for deploying a load balancing system with a cluster of [Tomcat] server instances as backend and an [Apache HTTPD Server] as frontend.
+[Ansible] repository of roles and playbooks for deploying a load balancing system with a cluster of [Tomcat] server instances as backend and an [Apache HTTPD Server] as frontend.
 
 This repository provides two different Ansible playbooks:
  1. Deploy a proxy-host using Apache HTTPD Server
@@ -10,15 +10,15 @@ This repository provides two different Ansible playbooks:
 
 ## Usage
 
-In both cases, there are **three** different type of uses:
+In both cases, there are **three** different type of deployments:
 
- 1. Install service (HTTPD/Tomcat) from RedHat repository and control them with System service (as root user)
- 2. Install service (HTTPD/Tomcat) from source and control them with System service (as root user)
- 3. Install service (HTTPD/Tomcat) from source and control them with [Supervisord] (as non-root user)
+ 1. Deploy service (HTTPD/Tomcat) from RedHat/CentOS repository and control them with OS init system service (as root user)
+ 2. Deploy service (HTTPD/Tomcat) from source and control them with OS init system service (as root user)
+ 3. Deploy service (HTTPD/Tomcat) from source and control them with [supervisord] init system (as non-root user)
 
-### Deploying a machine with [Apache HTTPD Server]
+### Deploying [Apache HTTPD Server] in a host
 
-This Ansible playbook deploys an Apache HTTPD Server as a load balancer with Tomcat instances as backend.
+This Ansible playbook deploys an Apache HTTPD Server as a load balancer with Tomcat instances as backends.
 
 #### Role variables
 
@@ -34,11 +34,11 @@ The following variables can be modified by the user depends on which case of use
   - `mod_jk_mirror`: Configure mod_jk mirror site (string, default: `http://archive.apache.org/dist/tomcat/tomcat-connectors/jk`)
 
 
-- ##### Case 1: RedHat and System control
+- ##### Case 1: From RedHat/CentOS repo and OS init system service
 
   - `httpd_port`: Configure HTTPD port (int, default: `8008`)
 
-- ##### Case 2: Source and System control
+- ##### Case 2: From source and OS init system service
   
   - `httpd_version`: Configure HTTPD version (string, default: `2.4.25`)
   - `httpd_mirror`: Configure HTTPD mirror site (string, default: `http://apache.mirrors.tds.net/httpd`)
@@ -51,7 +51,7 @@ The following variables can be modified by the user depends on which case of use
   - `pcre_version`: Configure PCRE version (string, default: `8.40`)
   - `pcre_mirror`: Configure PCRE mirror site (string, default: `http://ftp.cs.stanford.edu/pub/exim/pcre`)
 
-- ##### Case 3: Source and Supervisord control 
+- ##### Case 3: From source and supervisord init system
 
   - `services_home`: Configure path for install virtual enviroment and supervisord (string, default: `$HOME/ansible`)
   - `supervisor_port`: Configure Supervisord port (int, default: `9001`)
@@ -72,7 +72,7 @@ The following variables can be modified by the user depends on which case of use
 
 The following codes are ansible playbook examples, that you should create, for deploying Apache HTTPD Server. You can find an example of that in `scenarios/ceda/deploy_httpd.yml`
 **Before running `deploy_httpd.yml` script you must run `provision_httpd.yml` to ensure all requirements are installed.**
-> `proxy-secret.yml` contains the username and the password for the HTTPD status websites (server-status, balancer-status[mod-proxy/mod-jk]). If you use the Case 3 (Source and Supervisord control), this file also contains the username and the password for Supervisord application. The structure of this file is the following one:
+> `proxy-secret.yml` contains the username and the password for the HTTPD status websites (server-status, balancer-status[mod-proxy/mod-jk]). If you use the Case 3 (From source and supervisord init system), this file also contains the username and the password for Supervisord application. The structure of this file is the following one:
 ```
 applications:
   supervisord:
@@ -84,7 +84,7 @@ applications:
       password: efgh5678
 ```
 
-  - ##### Case 1: RedHat and System control (with proxy module)
+  - ##### Case 1: RedHat/CentOS and System control (with proxy module)
       ```
         - name: Deploy httpd 
           hosts: host-proxy
@@ -126,7 +126,7 @@ applications:
 > The TDS hosts must access into the host proxy in order to update the information about their Tomcat instances configuration and thus be able to perform the load balancing system. To restric this access, the host proxy administrator must manually configure the **authorized_keys** file as follows:
 no-agent-forwarding,no-user-rc,no-port-forwarding,no-pty,command="/path/to/update_proxy.py --gwsEnforced [GWS name]", ssh-rsa [id_rsa.pub]
 
-### Deploying a machine with [THREDDS Data Server]
+### Deploying [THREDDS Data Server]
 
 The THREDDS Data Server needs a servlet container, such as Tomcat web server, to be installed. For this reason, this Ansible playbook deploys a THREDDS Data Server in a Tomcat instance for the load balancing system.
 
@@ -165,11 +165,11 @@ The following variables can be modified by the user depends on which case of use
 
 > It should be notice that the shutdown, http and ajp connectors are *not* compulsory to be configured because there is a default configuration for all of these variables.
 
-- ##### Case 1: RedHat and System control
+- ##### Case 1: From RedHat/CentOS repository and OS init system service
 
   - `tomcat_instances_path`: Configure base directory for Tomcat instances (string, default: `/var/tomcat`). It's the base for `CATALINA_BASE` for each Tomcat instance. `CATALINA_HOME` is on `/usr/share/tomcat`.
 
-- ##### Case 2: Source and System control
+- ##### Case 2: From source and OS init system service
   
   - `tomcat_catalina_home`: Configure base/installation for Tomcat. (string, default: `/usr/share/tomcat`)
   - `tomcat_instances_path`: Configure base directory for Tomcat instances (string, default: `/var/tomcat`). It's the base for `CATALINA_BASE` for each Tomcat instance.
@@ -179,7 +179,7 @@ The following variables can be modified by the user depends on which case of use
   - `tomcat_mirror`: Configure Tomcat mirror site (string, default: `http://archive.apache.org/dist/tomcat`)
 
 
-- ##### Case 3: Source and Supervisord control 
+- ##### Case 3: From source and supervisord init system
 
   - `services_home`: Configure path for install virtual enviroment and supervisord (string, default: `$HOME/ansible`)
   - `supervisor_port`: Configure Supervisord port (int, default: `9001`)
@@ -212,7 +212,7 @@ applications:
       password: 1234abcd
 ```
 
-  - ##### Case 1: RedHat and System control (with **one** Tomcat instance)
+  - ##### Case 1: From RedHat/CentOS repository and OS init system service (with **one** Tomcat instance)
       ```
         - name: Deploy tds
           hosts: cedaproc-tds4gws
@@ -237,7 +237,7 @@ applications:
             - role: tds
       ```
 
-  - ##### Case 2: Source and System control (with **two** Tomcat instances)
+  - ##### Case 2: From source and OS init system service (with **two** Tomcat instances)
       ```
         - name: Deploy tds
           hosts: cedaproc-tds4gws
@@ -273,7 +273,7 @@ applications:
             - role: tds
       ```
 
-  - ##### Case 3: Source and Supervisord control (with **two** Tomcat instances)
+  - ##### Case 3: From source and supervisord init system (with **two** Tomcat instances)
       ```
         - name: Deploy tds
           hosts: cedaproc-tds4gws
