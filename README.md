@@ -73,7 +73,7 @@ The following variables can be modified by the user depends on which case of use
 The following codes are ansible playbook examples, that you should create, for deploying Apache HTTPD Server. You can find an example of that in `scenarios/ceda/deploy_httpd.yml`
 **Before running `deploy_httpd.yml` script you must run `provision_httpd.yml` to ensure all requirements are installed.**
 > `proxy-secret.yml` contains the username and the password for the HTTPD status websites (server-status, balancer-status[mod-proxy/mod-jk]). If you use the Case 3 (From source and supervisord init system), this file also contains the username and the password for Supervisord application. The structure of this file is the following one:
-```
+```YAML
 applications:
   supervisord:
     user: abcd1234
@@ -85,7 +85,7 @@ applications:
 ```
 
   - ##### Case 1: RedHat/CentOS and System control (with proxy module)
-      ```
+      ```YAML
         - name: Deploy httpd 
           hosts: host-proxy
           vars_files: 
@@ -97,7 +97,7 @@ applications:
       ```
 
   - ##### Case 2: Source and System control (with jk module)
-      ```
+      ```YAML
         - name: Deploy httpd 
           hosts: host-proxy
           vars_files: 
@@ -110,7 +110,7 @@ applications:
       ```
 
   - ##### Case 3: Source and Supervisord control (with proxy module)
-      ```
+      ```YAML
         - name: Deploy httpd 
           hosts: host-proxy
           vars_files: 
@@ -198,7 +198,7 @@ The following variables can be modified by the user depends on which case of use
 The following codes are ansible playbook examples, that you should create, for deploying THREDDS Data Server. You can find an example of that in `scenarios/ceda/deploy_tds_[gws-name].yml`
 **Before running `deploy_tds_[gws-name].yml` script you must run `provision_tds.yml` to ensure all requirements are installed.**
 > `[gws-name]-secret.yml` contains the username and the password for the Tomcat Reload Catalog website for **each** GWS. **You must have one username/password per GWS that you deploy in your ansible playbook**. If you use the Case 3 (Source and Supervisord control), this file also contains the username and the password for Supervisord application. The structure of this file is the following one:
-```
+```YAML
 applications:
   supervisord:
     user: abcd1234
@@ -213,7 +213,7 @@ applications:
 ```
 
   - ##### Case 1: From RedHat/CentOS repository and OS init system service (with **one** Tomcat instance)
-      ```
+      ```YAML
         - name: Deploy tds
           hosts: cedaproc-tds4gws
           vars_files: 
@@ -238,7 +238,7 @@ applications:
       ```
 
   - ##### Case 2: From source and OS init system service (with **two** Tomcat instances)
-      ```
+      ```YAML
         - name: Deploy tds
           hosts: cedaproc-tds4gws
           vars_files: 
@@ -274,7 +274,7 @@ applications:
       ```
 
   - ##### Case 3: From source and supervisord init system (with **two** Tomcat instances)
-      ```
+      ```YAML
         - name: Deploy tds
           hosts: cedaproc-tds4gws
           vars_files: 
@@ -312,7 +312,7 @@ applications:
   - ##### Case 4: Any previous case  with more than *one* GWS (with **three** Tomcat instances)
     This is a very generic example.
 
-      ```
+      ```YAML
         - name: Deploy tds
           hosts: tds4gws
           vars_files: 
