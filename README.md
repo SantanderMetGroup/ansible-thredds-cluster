@@ -1,4 +1,4 @@
-# ansible-opendap-cluster 
+# ansible-thredds-cluster 
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.834675.svg)](https://doi.org/10.5281/zenodo.834675)
 
