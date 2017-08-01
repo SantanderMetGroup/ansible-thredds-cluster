@@ -67,6 +67,9 @@
     patterns: "{{ httpd_redis_filename }}"
   register: httpd_file
 
+- name: Include checksum vars
+  include_vars: "{{ httpd_path_to_roles}}/httpd/vars/versions/httpd/{{ httpd_default_version }}.yml"
+
 - name: Include lib get_url task
   include: "{{ httpd_path_to_roles }}/lib/tasks/get_url.yml"
   vars:

@@ -1,0 +1,79 @@
+- name: Provision tds
+  hosts: workers
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Install repository (tomcat-v7)
+      yum:
+        name: epel-release
+
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - libselinux-python
+        - unzip
+        - python-paramiko
+        - python-pip
+        - PyYAML.x86_64
+
+- name: Deploy worker1
+  hosts: worker1
+  vars_files: 
+    - workers-secret.yml
+  vars:
+    proxyPort: 8008
+    tomcat_instances:
+      - name: worker1_1800
+        base_port: 1800
+        ip_address: 192.168.50.12
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
+          - name: "{{ gws.1.name }}"
+    gws:
+      - name: gws1
+        path: gws1/test
+        location: "/group_workspaces/jasmin/gws1"
+      - name: gws2
+        path: gws2/test
+        location: "/group_workspaces/jasmin/gws2"
+
+  roles:
+    - role: tds
+
+- name: Deploy worker2
+  hosts: worker2
+  vars_files:
+    - workers-secret.yml
+  vars:
+    proxyPort: 8008
+    tomcat_instances:
+      - name: worker2_1800
+        base_port: 1800
+        ip_address: 192.168.50.13
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
+          - name: "{{ gws.1.name }}"
+    gws:
+      - name: gws1
+        path: gws1/test
+        location: "/group_workspaces/jasmin/gws1"
+      - name: gws2
+        path: gws2/test
+        location: "/group_workspaces/jasmin/gws2"
+  roles:
+    - role: tds
+
+- name: Copy public keys from workers into proxy
+  hosts: host-proxy
+  tasks:
+    - name: Copy public keys from workers into proxy
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ item }}"
+        key_options: 'no-agent-forwarding,no-port-forwarding,no-user-rc,no-pty,command="/root/update_proxy.py --gwsEnforced gws1"'
+      with_file:
+        - files/worker1_id.pub
+        - files/worker2_id.pub
+

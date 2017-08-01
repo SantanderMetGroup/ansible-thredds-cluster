@@ -1,0 +1,29 @@
+- name: Provision httpd
+  hosts: host-proxy
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Install repository
+      yum:
+        name: epel-release
+
+    - name: Install packages
+      yum:
+        name: '{{ item }}'
+      with_items:
+        - libselinux-python
+        - gcc
+        - gcc-c++
+        - openssl-devel
+        - python-devel
+        - python-passlib
+
+- name: Deploy httpd
+  hosts: host-proxy
+  vars_files:
+    - proxy-secret.yml
+  vars:
+    httpd_install_from_source: true
+    httpd_system: false
+  roles:
+    - role: httpd

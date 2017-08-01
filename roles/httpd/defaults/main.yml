@@ -1,10 +1,10 @@
 # httpd version number
 httpd_default_version: '2.4.25'
 httpd_redis_version: "{{ httpd_version if httpd_version is defined else httpd_default_version }}"
-httpd_version_major: "{{ httpd_redis_version|truncate(3, True, '') }}"
+httpd_version_major: "{{ httpd_redis_version|truncate(3, False, '', 0) }}"
 
 # Mirror where to dowload httpd redistributable package from
-httpd_mirror: http://apache.mirrors.tds.net/httpd
+httpd_mirror: https://archive.apache.org/dist/httpd/
 httpd_redis_filename_unarchive: "httpd-{{ httpd_redis_version }}"
 httpd_redis_filename: "{{ httpd_redis_filename_unarchive }}.tar.gz"
 httpd_download_url: "{{ httpd_mirror }}/{{ httpd_redis_filename }}"
