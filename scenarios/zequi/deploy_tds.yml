@@ -1,0 +1,64 @@
+- name: Provision tds
+  hosts: workers
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Install repository (tomcat-v7)
+      yum:
+        name: epel-release
+
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - libselinux-python
+        - unzip
+        - python-paramiko
+        - python-pip
+        - PyYAML.x86_64
+
+- name: Deploy worker1
+  hosts: worker1
+  vars_files: 
+    - workers-secret.yml
+  vars:
+    #virtualenv_name: TDS4GWS
+    # tomcat_install_from_source: true
+    # tomcat_system: false
+    tomcat_install_from_source: true
+    tomcat_system: false
+    proxyPort: 8008
+    tomcat_instances:
+      - name: worker1_1800
+        base_port: 1800
+        ip_address: 192.168.50.12
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
+    gws:
+      - name: gws1
+        path: gws1/test
+        location: "/group_workspaces/jasmin/gws1"
+
+  roles:
+    - role: tds
+
+- name: Deploy worker2
+  hosts: worker2
+  vars_files:
+    - workers-secret.yml
+  vars:
+    tomcat_install_from_source: true
+    tomcat_system: false
+    proxyPort: 8008
+    tomcat_instances:
+      - name: worker2_1800
+        base_port: 1800
+        ip_address: 192.168.50.13
+        gws_instance: 
+          - name: "{{ gws.0.name }}"
+    gws:
+      - name: gws1
+        path: gws1/test
+        location: "/group_workspaces/jasmin/gws1"
+  roles:
+    - role: tds
