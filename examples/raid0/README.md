@@ -1,4 +1,4 @@
-# Scenario for SMG
+# Scenario for testing
 
 ![Deployment diagram](doc/raid0.png)
 

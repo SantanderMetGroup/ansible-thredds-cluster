@@ -1,11 +1,11 @@
-# Scenario for SMG
+# Scenario for testing
 
-![Deployment diagram](doc/raid10.png)
+![Deployment diagram](doc/raid1.png)
 
 ## Usage
 
 1. git clone
-2. cd scenarios/examples/raid10
+2. cd scenarios/examples/raid1
 3. mkdir downloads
 4. vagrant up && vagrant reload
 5. ansible-playbook deploy_httpd.yml --ask-vault-pass (pass is 'proxy')
