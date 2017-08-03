@@ -1,6 +1,6 @@
 # Scenario for SMG
 
-![Deployment diagram](doc/raid0.png)
+![Deployment diagram](doc/raid10.png)
 
 ## Usage
 
