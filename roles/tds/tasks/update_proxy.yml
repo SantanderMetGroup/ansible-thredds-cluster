@@ -9,7 +9,7 @@
     block: |
       - name: {{ item.name }}
         base_port: {{ item.base_port }}
-        ip_address: {{ item.ip_address }}
+        ip_address: {{ ansible_all_ipv4_addresses[1] }}
         ajp:
           port: {% if item.ajp is defined  and item.ajp.port is defined %}{{ item.ajp.port }} {% else %}{{tomcat_default_port_ajp }}{% endif %}
           
