@@ -1,0 +1,44 @@
+# These facts are required by slaves to reference their proxies
+- set_fact:
+    proxy_name: "{{ ansible_nodename }}"
+    proxy_port: "{{ httpd_port }}"
+  tags: always
+
+- include_tasks: "install_mod_jk.yml"
+  when: httpd_source
+
+# Thredds's configuration
+- name: Create thredds directory in htdocs directory
+  file:
+    dest: "{{ httpd_document_root }}/thredds"
+    state: directory
+
+- name: Create thredds static configuration files (images, css)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ httpd_document_root }}/thredds/{{ item }}"
+  with_items:
+    - folder.gif
+    - tdsCat.css
+    - threddsIcon.gif
+    - tds.css
+
+- name: Create thredds static configuration - catalog.html
+  template:
+     src: catalog.html.j2
+     dest: "{{ httpd_document_root }}/thredds/catalog.html"
+
+- name: Create thredds static configuration - catalog.xml
+  template:
+    src: catalog.xml.j2
+    dest: "{{ httpd_document_root }}/thredds/catalog.xml"
+
+- name: Create thredds static configuration - serverInfo.html
+  template:
+    src: serverInfo.html.j2
+    dest: "{{ httpd_document_root }}/thredds/serverInfo.html"
+
+- name: Create configuration module for thredds
+  template:
+    src: thredds.conf.j2
+    dest: "{{ httpd_server_root }}/conf.d/thredds.conf"

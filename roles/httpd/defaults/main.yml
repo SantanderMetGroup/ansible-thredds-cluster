@@ -1,66 +1,39 @@
-# httpd version number
-httpd_default_version: '2.4.25'
-httpd_redis_version: "{{ httpd_version if httpd_version is defined else httpd_default_version }}"
-httpd_version_major: "{{ httpd_redis_version|truncate(3, False, '', 0) }}"
-
-# Mirror where to dowload httpd redistributable package from
+# httpd defaults
+httpd_version: '2.4.25'
+httpd_version_major: "{{ httpd_version|truncate(3, False, '', 0) }}"
 httpd_mirror: https://archive.apache.org/dist/httpd/
-httpd_redis_filename_unarchive: "httpd-{{ httpd_redis_version }}"
-httpd_redis_filename: "{{ httpd_redis_filename_unarchive }}.tar.gz"
-httpd_download_url: "{{ httpd_mirror }}/{{ httpd_redis_filename }}"
+httpd_filename_unarchive: "httpd-{{ httpd_version }}"
+httpd_filename: "{{ httpd_filename_unarchive }}.tar.gz"
+httpd_download_url: "{{ httpd_mirror }}/{{ httpd_filename }}"
 httpd_mirror_checksum: https://www.apache.org/dist/httpd
-
-# httpd configuration
-#   Default template for configuration file server.xml
-httpd_default_index_html_template: index.html.j2
-#   Default port
-httpd_default_port: 8000
-
-httpd_binary: "httpd-{{ httpd_redis_version }}+{{ ansible_distribution}}.{{ ansible_distribution_major_version}}.{{ ansible_architecture }}.tar.gz"
-httpd_path_to_roles: "{{ role_path }}/.."
-
-httpd_src: "{{ httpd_home | default(httpd_home_default)}}/src"
-
-httpd_install_from_source: false
-httpd_system: true
+httpd_port: 8000
+httpd_binary: "httpd-{{ httpd_version }}+{{ ansible_distribution}}.{{ ansible_distribution_major_version}}.{{ ansible_architecture }}.tar.gz"
+httpd_src: "{{ httpd_server_root }}/src"
+httpd_owner: "{{ ansible_user }}"
+httpd_group: "{{ httpd_owner }}"
 
 ## Dependencies for installation
 # APR configuration
-apr_default_version: "1.5.2"
-apr_redis_version: "{{ apr_version if apr_version is defined else apr_default_version }}"
-apr_redis_filename_unarchive: "apr-{{ apr_redis_version }}"
-apr_redis_filename: "{{ apr_redis_filename_unarchive }}.tar.gz"
+apr_version: "1.5.2"
+apr_filename_unarchive: "apr-{{ apr_version }}"
+apr_filename: "{{ apr_filename_unarchive }}.tar.gz"
 apr_mirror: http://archive.apache.org/dist/apr
-apr_download_url: "{{ apr_mirror }}/{{ apr_redis_filename }}"
-apr_install_base: "{{ httpd_home | default(httpd_home_default) }}/apr"
+apr_download_url: "{{ apr_mirror }}/{{ apr_filename }}"
+apr_install_base: "{{ httpd_server_root }}"
 
 # APR-Util configuration
-apr_util_default_version: "1.5.4"
-apr_util_redis_version: "{{ apr_util_version if apr_util_version is defined else apr_util_default_version }}"
-apr_util_redis_filename_unarchive: "apr-util-{{ apr_util_redis_version }}"
-apr_util_redis_filename: "{{ apr_util_redis_filename_unarchive }}.tar.gz"
+apr_util_version: "1.5.4"
+apr_util_filename_unarchive: "apr-util-{{ apr_util_version }}"
+apr_util_filename: "{{ apr_util_filename_unarchive }}.tar.gz"
 apr_util_mirror: http://archive.apache.org/dist/apr
-apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_redis_filename }}"
-apr_util_install_base: "{{ httpd_home | default(httpd_home_default) }}/apr_util"
-apr_util_configure: --with-apr={{ apr_install_base }}
+apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_filename }}"
+apr_util_install_base: "{{ httpd_server_root }}"
 
 # PCRE configuration
-pcre_default_version: "8.40"
-pcre_redis_version: "{{ pcre_version if pcre_version is defined else pcre_default_version }}"
-pcre_redis_filename_unarchive: "pcre-{{ pcre_redis_version }}"
-pcre_redis_filename: "{{ pcre_redis_filename_unarchive }}.tar.gz"
+pcre_version: "8.40"
+pcre_filename_unarchive: "pcre-{{ pcre_version }}"
+pcre_filename: "{{ pcre_filename_unarchive }}.tar.gz"
 pcre_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
-pcre_download_url: "{{ pcre_mirror }}/{{ pcre_redis_filename }}"
-pcre_install_base: "{{ httpd_home | default(httpd_home_default) }}/pcre"
+pcre_download_url: "{{ pcre_mirror }}/{{ pcre_filename }}"
+pcre_install_base: "{{ httpd_server_root }}"
 
-load_balancer_module_default: mod_jk
-
-# mod_jk configuration
-mod_jk_default_version: "1.2.42"
-mod_jk_redis_version: "{{ mod_jk_version if mod_jk_version is defined else mod_jk_default_version }}"
-mod_jk_redis_filename_unarchive: "tomcat-connectors-{{ mod_jk_redis_version }}-src"
-mod_jk_redis_filename: "{{ mod_jk_redis_filename_unarchive }}.tar.gz"
-mod_jk_mirror: http://archive.apache.org/dist/tomcat/tomcat-connectors/jk
-mod_jk_download_url: "{{ mod_jk_mirror }}/{{ mod_jk_redis_filename }}"
-mod_jk_install_base: "{{ httpd_home | default(httpd_home_default) }}/modules"
-mod_jk_configure: --with-apxs={% if httpd_install_from_source == false %}/usr/sbin/apxs{% else %}{{ httpd_home | default(httpd_home_default) }}/bin/apxs{% endif %}

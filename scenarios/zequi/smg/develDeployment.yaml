@@ -1,0 +1,53 @@
+---
+deployment:
+  tap_instances: 
+  - name: tap1
+    shutdown: 20000
+    files:
+      server_j2: server.xml.j2
+      context: context.xml
+    connectors:
+    - type: ajp
+      port: 20009
+      proxy: proxy
+    - type: http
+      port: 20005
+      proxy: proxy
+    gws:
+    - name: tap
+  tds_instances:
+  - name: instance1
+    shutdown: 18000
+    files:
+      server_j2: server.xml.j2
+      context: context.xml
+    connectors:
+    - type: ajp
+      port: '18009'
+      proxy: proxy
+    - type: http
+      port: '18005'
+      proxy: proxy
+    gws:
+    - name: gws1
+    - name: gws2
+  - name: instance2
+    shutdown: 19000
+    files:
+      server_j2: server.xml.j2
+      context: context.xml
+    connectors:
+    - type: ajp
+      port: '19009'
+      proxy: proxy
+    - type: http
+      port: '19005'
+      proxy: proxy
+    gws:
+    - name: gws1
+  gws:
+  - name: gws1
+    mode: '2775'
+    _owner: zequi
+    _group: zequi
+  - name: gws2

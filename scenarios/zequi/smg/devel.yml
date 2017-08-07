@@ -1,0 +1,14 @@
+- hosts: proxies
+  vars_files:
+    - secret.yml
+    - develDeployment.yaml
+  roles:
+    - role: httpd_source_supervisor
+
+- hosts: slaves
+  vars_files:
+    - secret.yml
+    - develDeployment.yaml
+    - develCatalogs.yaml
+  roles:
+    - role: tds_source_supervisor

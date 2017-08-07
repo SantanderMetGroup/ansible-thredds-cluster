@@ -1,0 +1,21 @@
+- name: Provision proxy
+  hosts:
+    - proxy
+    - hostA
+  become: True
+  become_method: sudo
+  tasks:
+    - user:
+        name: apache
+
+    - yum:
+        name: epel-release
+
+    - yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "@Development tools"
+        - "python-passlib"
+
+    - lineinfile: dest=/etc/hosts line="192.168.50.11 proxy"

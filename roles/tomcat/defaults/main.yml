@@ -1,0 +1,34 @@
+# JRE
+jre_version: '8u141'
+jre_filename_unarchive: "jre-{{ jre_version }}-linux-x64"
+jre_filename: "{{ jre_filename_unarchive }}.tar.gz"
+jre_mirror: http://download.oracle.com/otn-pub/java/jdk/
+#jre_download_url: "http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jre-8u144-linux-x64.tar.gz"
+jre_download_url: "http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jre-8u151-linux-x64.tar.gz"
+jre_header: "Cookie: oraclelicense=accept-securebackup-cookie"
+jre_install_base: "{{ tomcat_catalina_home }}/jre"
+
+# Tomcat
+tomcat_catalina_home: "{{ ansible_env.HOME }}/tomcat"
+tomcat_version: '8.0.42'
+tomcat_version_major: "{{ tomcat_version|truncate(1, True, '', 0) }}"
+tomcat_filename_unarchive: "apache-tomcat-{{ tomcat_version }}"
+tomcat_filename: "{{ tomcat_filename_unarchive }}.tar.gz"
+tomcat_mirror: http://archive.apache.org/dist/tomcat
+tomcat_download_url: "{{ tomcat_mirror }}/tomcat-{{ tomcat_version_major }}/v{{ tomcat_version }}/bin/{{ tomcat_filename }}"
+tomcat_user_name: tomcat
+tomcat_user_group: tomcat
+tomcat_user_system: true
+tomcat_instances_path: "{{ tomcat_catalina_home }}/tomcat_pool"
+
+# THREDDS Data Server
+tds_version: '4.6.8'
+tds_filename_unarchive: "tds-{{ tds_version }}"
+tds_filename: "{{ tds_filename_unarchive }}.war"
+tds_mirror: http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/
+tds_download_url: "{{ tds_mirror }}/{{ tds_version }}/{{ tds_filename }}"
+tds_install_base: "{{ tomcat_catalina_home }}/webapps/thredds"
+
+# Apache derby db
+derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
+derby_db_filename: db-derby-10.12.1.1-lib.tar.gz

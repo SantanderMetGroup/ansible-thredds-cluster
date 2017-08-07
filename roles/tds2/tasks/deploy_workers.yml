@@ -1,0 +1,25 @@
+- name: Register lb in proxy
+  blockinfile:
+    dest: "{{ hostvars[item.1.proxy].httpd_confd }}/mod_jk.workers"
+    marker: "# {mark} worker GWS_{{ agws.1.name }}"
+    block: |
+      worker.list=GWS_{{ agws.1.name }}
+      worker.GWS_{{ agws.1.name }}.type=lb
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ deployment.tomcat_instances }}"
+    - connectors
+
+- name: Add connectors to balance workers
+  lineinfile:
+    dest: "{{ hostvars[item.1.proxy].httpd_confd }}/mod_jk.workers"
+    state: present
+    line: 'worker.GWS_{{ agws.1.name }}.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ deployment.tomcat_instances }}"
+    - connectors
+  when: 
+    - item.1.type == "ajp"
+    - agws.0.name == item.0.name
+  notify: restart httpd

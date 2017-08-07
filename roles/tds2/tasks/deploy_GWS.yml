@@ -1,0 +1,54 @@
+- name: Create directories for each GWS in tomcat_catalina_home
+  #become: True
+  file:
+    dest: "{{ tomcat_catalina_home }}/content/thredds/gws/{{ item.name }}"
+    state: directory
+    #mode: "{{ item.mode | default('2775') }}"
+    #owner: "{{ item.owner | default(ansible_user) }}"
+    #group: "{{ item.group | default(ansible_user) }}"
+  with_items: "{{ deployment.gws }}"
+
+- name: Create directories for each GWS in tomcat instances
+  file:
+    dest: "{{ tomcat_instances_path }}/tomcat_{{ item.name }}/content/thredds/gws"
+    state: directory
+    mode: "g=rwx"
+  with_items: "{{ deployment.tomcat_instances }}"
+
+# Create catalog.xml for each GWS
+#- name: Create catalog.xml in each GWS
+  #become: True
+  #template: 
+    #src: catalog.xml.j2
+    #dest: "{{ tomcat_catalina_home }}/content/thredds/gws/{{ item.name }}/catalog.xml"
+    #owner: "{{ item.owner | default(ansible_user) }}"
+    #group: "{{ item.group | default(ansible_user) }}"
+  #with_items: "{{ deployment.gws }}"
+
+- name: Link GWS directory with each Tomcat instance
+  file:
+    src: "{{ tomcat_catalina_home }}/content/thredds/gws/{{ item.1.name }}"
+    dest: "{{ tomcat_instances_path }}/tomcat_{{ item.0.name }}/content/thredds/gws/{{ item.1.name }}"
+    state: link
+  with_subelements:
+    - "{{ deployment.tomcat_instances }}"
+    - gws
+
+- name: Create a common catalog.xml in tomcat_catalina_home/content/thredds
+  copy:
+    src: catalog.xml
+    dest: "{{ tomcat_instances_path }}/tomcat_{{ item.name }}/content/thredds/catalog.xml"
+  with_items: "{{ deployment.tomcat_instances }}"
+
+- name: Link gws in the common catalog.xml
+  blockinfile:
+    dest: "{{ tomcat_instances_path }}/tomcat_{{ item.0.name }}/content/thredds/catalog.xml"
+    marker: "<!-- {mark} {{ item.1.name }} -->"
+    insertbefore: "</catalog>"
+    block: |
+      <catalogRef xlink:title="{{ item.1.name }}" xlink:href="gws/{{ item.1.name }}/catalog.xml" name=""/>
+  with_subelements:
+    - "{{ deployment.tomcat_instances }}"
+    - gws
+  notify: start tomcat_instance
+

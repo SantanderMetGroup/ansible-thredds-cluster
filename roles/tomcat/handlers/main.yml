@@ -1,0 +1,50 @@
+---
+- name: start tomcat_instance
+  supervisorctl:
+    name: "{{ item.name }}"
+    state: started
+    supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+    config: "{{ supervisord_etc }}/supervisord.conf"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
+    server_url: "http://localhost:{{ supervisord_port }}"
+  with_items:
+    - "{{ deployment.tds_instances }}"
+    - "{{ deployment.tap_instances }}"
+
+- name: stop tomcat_instance
+  supervisorctl:
+    name: "{{ item.name }}"
+    state: stopped
+    supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+    config: "{{ supervisord_etc }}/supervisord.conf"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
+    server_url: "http://localhost:{{ supervisord_port }}"
+  with_items:
+    - "{{ deployment.tap_instances }}"
+    - "{{ deployment.tds_instances }}"
+
+- name: restart tomcat_instance
+  supervisorctl:
+    name: "{{ item.name }}"
+    state: restarted
+    supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+    config: "{{ supervisord_etc }}/supervisord.conf"
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
+    server_url: "http://localhost:{{ supervisord_port }}"
+  ignore_errors: True
+  with_items:
+    - "{{ deployment.tap_instances }}"
+    - "{{ deployment.tds_instances }}"
+
+- name: restart httpd
+  supervisorctl:
+    name: httpd
+    state: restarted
+    username: "{{ applications.supervisord.user }}"
+    password: "{{ applications.supervisord.password }}"
+    server_url: "http://{{ hostvars[item].ansible_nodename }}:{{ supervisord_port }}"
+  run_once: True
+  with_items: "{{ groups.proxies }}"

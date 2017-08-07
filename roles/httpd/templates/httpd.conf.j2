@@ -1,6 +1,6 @@
-ServerRoot "{{ httpd_home | default(httpd_home_default) }}"
+ServerRoot "{{ httpd_server_root }}"
 
-Listen {{ httpd_port | default(httpd_default_port) }}
+Listen {{ httpd_port }}
 
 # LoadModules
 LoadModule rewrite_module modules/mod_rewrite.so
@@ -61,9 +61,9 @@ LoadModule unixd_module modules/mod_unixd.so
 
 # Configure modules
 {% if httpd_version_major == '2.2' %}
-Include {{ httpd_home | default(httpd_home_default) }}/conf.d/*conf
+Include {{ httpd_confd }}/*conf
 {% elif  httpd_version_major == '2.4' %}
-IncludeOptional {{ httpd_home | default(httpd_home_default) }}/conf.d/*conf
+IncludeOptional {{ httpd_confd }}/*conf
 {% endif %}
 
 
@@ -83,9 +83,9 @@ Require all denied
     {% endif %}
 </Directory>
 
-DocumentRoot "{{ httpd_home | default(httpd_home_default) }}/htdocs"
+DocumentRoot "{{ httpd_document_root }}"
 
-<Directory "{{ httpd_home | default(httpd_home_default) }}/htdocs" >
+<Directory "{{ httpd_document_root }}" >
     Options Indexes FollowSymLinks
     {% if httpd_version_major == '2.2'%}
 AllowOverride all
@@ -119,13 +119,13 @@ LogLevel warn
 </IfModule>
 
 <IfModule alias_module>
-    ScriptAlias /cgi-bin/ "{{ httpd_home | default(httpd_home_default) }}/cgi-bin/"
+    ScriptAlias /cgi-bin/ "{{ httpd_server_www }}/cgi-bin/"
 </IfModule>
 
 <IfModule cgid_module>
 </IfModule>
 
-<Directory "{{ httpd_home | default(httpd_home_default) }}/cgi-bin">
+<Directory "{{ httpd_server_www }}/cgi-bin">
     AllowOverride None
     Options None
     Require all granted
@@ -137,11 +137,7 @@ LogLevel warn
 
 
 <IfModule mime_module>
-    {% if httpd_install_from_source == false %}
-    TypesConfig /etc/mime.types
-    {% else %}
-    TypesConfig conf/mime.types
-    {% endif %}
+    TypesConfig "{{ httpd_mime_types_dir }}"
     DefaultType text/html
     AddType application/x-compress .Z
     AddType application/x-gzip .gz .tgz
@@ -154,6 +150,6 @@ ExtendedStatus On
     Allow from all
     AuthType Basic
     AuthName "Restricted Content"
-    AuthUserFile {{ httpd_home | default(httpd_home_default) }}/.htpasswd
+    AuthUserFile {{ httpd_server_root }}/.htpasswd
     Require valid-user
 </Location>

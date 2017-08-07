@@ -1,0 +1,21 @@
+---
+dependencies:
+- role: supervisord
+  venv_home: "{{ httpd_server_root }}/virtualenv"
+
+- role: httpd
+  venv_home: "{{ httpd_server_root }}/virtualenv"
+  httpd_server_www: "{{ httpd_server_root }}"
+  httpd_document_root: "{{ httpd_server_root }}/htdocs"
+  httpd_conf_dir: "{{ httpd_server_root }}/conf"
+  httpd_confd_dir: "{{ httpd_server_root }}/conf.d"
+  httpd_mime_types_dir: "{{ httpd_conf_dir }}/mime.types"
+  httpd_become_enabled: False
+  httpd_source: True
+
+- role: tds-gateway
+  venv_home: "{{ httpd_server_root }}/virtualenv"
+  httpd_server_www: "{{ httpd_server_root }}"
+  httpd_document_root: "{{ httpd_server_root }}/htdocs"
+  httpd_become_enabled: False
+  httpd_source: True

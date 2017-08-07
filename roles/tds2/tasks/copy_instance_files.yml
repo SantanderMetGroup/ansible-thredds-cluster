@@ -1,0 +1,17 @@
+- template:
+    src: "{{ item }}"
+    dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/server.xml"
+  with_first_found:
+    - "{{ instance.files.server_j2 }}"
+    - "{{ role_path }}/server.xml.j2"
+
+- copy:
+    src: "{{ item }}"
+    dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/context.xml"
+  with_first_found:
+    - "{{ instance.files.context }}"
+    - "{{ role_path }}/context.xml"
+
+- template:
+    src: tomcat-users.xml.j2
+    dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/tomcat-users.xml"
