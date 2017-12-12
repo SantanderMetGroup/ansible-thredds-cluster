@@ -38,8 +38,11 @@
 
 - name: Create web.xml in WEB-INF
   copy:
-    src: web.xml
+    src: "{{ item }}"
     dest: "{{ tomcat_instances_path }}/{{ instance.name }}/webapps/thredds/WEB-INF/web.xml"
+  with_first_found:
+    - "{{ playbook_dir }}/{{ instance.files.web }}"
+    - "{{ role_path }}/files/thredds_web.xml"
   notify: restart tomcat_instance
 
 - copy:
