@@ -7,6 +7,7 @@
       worker.GWS_{{ agws.1.name }}.type=lb
       worker.GWS_{{ agws.1.name }}.sticky_session=false
   delegate_to: "{{ item.1.proxy }}"
+  when: item.1.proxy is defined
   with_subelements:
     - "{{ deployment.tds_instances }}"
     - connectors
@@ -21,6 +22,7 @@
     - "{{ deployment.tds_instances }}"
     - connectors
   when: 
+    - item.1.proxy is defined
     - item.1.type == "ajp"
     - agws.0.name == item.0.name
   notify: restart httpd

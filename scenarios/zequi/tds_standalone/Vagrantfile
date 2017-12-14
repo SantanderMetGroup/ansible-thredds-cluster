@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant nodeuration is done below. The "2" in Vagrant.configure
+# nodeures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+require 'yaml'
+hosts = YAML.load_file('vagrant_hosts.yaml')
+
+PROJECT_NAME = File.basename(Dir.getwd)
+
+Vagrant.configure("2") do |config|
+
+	`{ echo $(ssh-keygen -y -f ~/.vagrant.d/insecure_private_key); echo $(cat ~/.ssh/id_rsa.pub); } > authorized_keys`
+
+	hosts.each do |host|
+		config.vm.define host['name'] do |node|
+			node.vm.hostname = host['name']
+			node.vm.box = "centos/6"
+			node.vm.network "private_network", ip: host["ip"]
+			node.ssh.insert_key = false
+
+			node.vm.provision "file", source: "selinux", destination: "/tmp/selinux"
+			node.vm.provision "shell", inline: "cp -f /tmp/selinux /etc/sysconfig/selinux"
+
+			node.vm.provision "file", source: "authorized_keys", destination: "/tmp/authorized_keys"
+			node.vm.provision "shell", inline: "cp -f /tmp/authorized_keys /home/vagrant/.ssh/authorized_keys"
+			node.vm.provision "shell", inline: "mkdir -p /root/.ssh && cp -f /tmp/authorized_keys /root/.ssh/authorized_keys"
+
+			node.vm.provider :virtualbox do |vb|
+				vb.linked_clone = true
+				vb.customize ['modifyvm', :id,'--groups', '/'+PROJECT_NAME,"--memory", "1024"]
+			end
+		end
+	end
+end
