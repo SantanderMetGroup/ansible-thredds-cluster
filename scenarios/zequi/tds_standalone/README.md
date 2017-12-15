@@ -10,7 +10,7 @@
 4. source ansible/bin/activate
 5. pip install ansible
 6. vagrant up hostA && vagrant reload
-7. ansible-playbook provision.yml standalone.yml -u vagrant -i inventory --ask-vault-pass
+7. ansible-playbook provision.yml standalone.yml -u vagrant -i inventory 
 8. (in web browser) 192.168.50.12:8080/thredds
 9. vagrant ssh hostA (to see how the deployment is performed, 'supervisorctl' command is available)
 10. edit catalogs in scenarios/zequi/tds_standalone/gws1/ and datasets in scenarios/zequi/tds_standalone/datasets/
