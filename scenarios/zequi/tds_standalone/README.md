@@ -1,5 +1,9 @@
 # Scenario of a standalone THREDDS Data Server
 
+## Description
+
+The bootstrap/ directory contains a vagrant virtual machine to test the scenario without polluting your system. Use vagrant up and vagrant ssh to build and connect to it.
+
 ## Usage
 
 1. git clone
@@ -10,6 +14,7 @@
 5. pip install --upgrade pip setuptools
 5. pip install ansible
 7. ansible-playbook standalone.yml
+7. In a new terminal (~/.bashrc was modified by the playbook) 'supervisorctl' should be available
 8. (in web browser) localhost:8080/thredds
 10. edit catalogs in data/catalogs and datasets in data/datasets
 11. ansible-playbook standalone.yml --tags update_catalogs (catalogs should be updated in the browser)
