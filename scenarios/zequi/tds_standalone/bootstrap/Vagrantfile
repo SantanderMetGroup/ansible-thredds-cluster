@@ -18,20 +18,15 @@ Vagrant.configure("2") do |config|
 	hosts.each do |host|
 		config.vm.define host['name'] do |node|
 			node.vm.hostname = host['name']
-			node.vm.box = "centos/6"
+			node.vm.box = "ubuntu/trusty64"
 			node.vm.network "private_network", ip: host["ip"]
 			node.ssh.insert_key = false
-
-			node.vm.provision "file", source: "selinux", destination: "/tmp/selinux"
-			node.vm.provision "shell", inline: "cp -f /tmp/selinux /etc/sysconfig/selinux"
 
 			node.vm.provision "file", source: "authorized_keys", destination: "/tmp/authorized_keys"
 			node.vm.provision "shell", inline: "cp -f /tmp/authorized_keys /home/vagrant/.ssh/authorized_keys"
 			node.vm.provision "shell", inline: "mkdir -p /root/.ssh && cp -f /tmp/authorized_keys /root/.ssh/authorized_keys"
 
-			node.vm.provision "shell", inline: "sudo yum -y install epel-release"
-			node.vm.provision "shell", inline: "sudo yum -y groupinstall \"Development tools\""
-			node.vm.provision "shell", inline: "sudo yum -y install python-passlib python-virtualenv"
+			node.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install git python-virtualenv unzip -y"
 
 			node.vm.provider :virtualbox do |vb|
 				vb.linked_clone = true

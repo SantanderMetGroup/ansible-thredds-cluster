@@ -7,6 +7,7 @@
 2. cd scenarios/zequi/tds_standalone
 3. virtualenv virtualenv --no-site-packages
 4. source virtualenv/bin/activate
+5. pip install --upgrade pip setuptools
 5. pip install ansible
 7. ansible-playbook standalone.yml
 8. (in web browser) localhost:8080/thredds
