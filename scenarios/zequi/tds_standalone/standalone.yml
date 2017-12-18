@@ -1,9 +1,39 @@
-- hosts: hostA
+- hosts: localhost
   vars:
-    tomcat_catalina_home: "/home/vagrant/test"
-  vars_files:
-    - secret.yml
-    - deployment.yaml
-    - catalogs.yaml
+    tomcat_catalina_home: "/home/{{ ansible_env.USER }}/test/tomcat_test"
+    
+    # secret.yml
+    applications:
+      supervisord:
+        user: supervisor    
+        password: supervisor   
+          #      tds:
+          #        gws1:
+          #          user: gws1
+          #          password: gws1
+
+    # deployment.yaml
+    deployment:
+      tap_instances: []
+      tds_instances:
+      - name: instance1
+        shutdown: 8089
+        connectors:
+        - type: http
+          port: '8080'
+        gws:
+        - name: gws1
+      gws:
+      - name: gws1
+
+    # catalogs.yaml (catalogs and datasets)
+    data:
+      catalogs:
+      - src: data/catalogs
+        gws: gws1
+      datasets:
+      - src: data/datasets
+        dest: '' # If empty, destination is content/thredds/public
+    
   roles:
     - role: tds_source_supervisor
