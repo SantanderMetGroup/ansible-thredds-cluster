@@ -12,11 +12,13 @@
   file:
     dest: "{{ httpd_document_root }}/thredds"
     state: directory
+  when: httpd_document_root is defined
 
 - name: Create thredds static configuration files (images, css)
   copy:
     src: "{{ item }}"
     dest: "{{ httpd_document_root }}/thredds/{{ item }}"
+  when: httpd_document_root is defined
   with_items:
     - folder.gif
     - tdsCat.css
@@ -27,18 +29,22 @@
   template:
      src: catalog.html.j2
      dest: "{{ httpd_document_root }}/thredds/catalog.html"
+  when: httpd_document_root is defined
 
 - name: Create thredds static configuration - catalog.xml
   template:
     src: catalog.xml.j2
     dest: "{{ httpd_document_root }}/thredds/catalog.xml"
+  when: httpd_document_root is defined
 
 - name: Create thredds static configuration - serverInfo.html
   template:
     src: serverInfo.html.j2
     dest: "{{ httpd_document_root }}/thredds/serverInfo.html"
+  when: httpd_document_root is defined
 
 - name: Create configuration module for thredds
   template:
     src: thredds.conf.j2
     dest: "{{ httpd_server_root }}/conf.d/thredds.conf"
+  when: httpd_document_root is defined

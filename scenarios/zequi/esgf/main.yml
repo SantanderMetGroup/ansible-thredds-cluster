@@ -1,0 +1,91 @@
+- hosts: spock
+  vars:
+    httpd_confd: "/etc/httpd/conf.d" # role also needs this var, it seems that it works here
+  vars_files:
+    - secret.yml
+    - deployment.yaml
+  roles:
+    - role: tds-gateway
+      httpd_source: True # tds-gateway/tasks/main.yml line 8
+      httpd_port: 80
+      httpd_confd: /etc/httpd/conf.d
+      httpd_src: /opt/mod_jk
+      httpd_logs: /etc/httpd/logs
+      jk_configure: --with-apxs=/usr/sbin/apxs
+  tasks:
+    - set_fact: httpd_confd="{{ httpd_confd }}"
+
+#    - file: path="/var/run/mod_jk" state=directory
+
+# Include cluster conf into esgf-httpd.conf
+    - blockinfile:
+        path: "/etc/httpd/conf/esgf-httpd.conf"
+        insertbefore: 'VirtualHost \*:80'
+        marker: "# {mark} Include jk"
+        block: |
+          Include /etc/httpd/conf.d/mod_jk.conf
+          JkMountCopy All
+
+# Indicate resources served by esgf's tds
+    - lineinfile:
+        path: "/etc/httpd/conf/esgf-httpd.conf"
+        state: absent
+        regexp: "ProxyPass /thredds"
+
+    - blockinfile:
+        path: "/etc/httpd/conf/esgf-httpd.conf"
+        insertafter: '{{ item.string }}'
+        marker: "# {mark} ProxyPassMatch {{ item.mark }}"
+        block: |
+          ProxyPassMatch ^/thredds/([^/]*)/esgf/(.*) ajp://localhost:8223/thredds/$1/esgf/$2
+          ProxyPassMatch ^/thredds/catalog/([^/]*)$ ajp://localhost:8223/thredds/catalog/$1
+          ProxyPassMatch ^/thredds/([^/]*)$ ajp://localhost:8223/thredds/$1
+          ProxyPassMatch ^/thredds/js/(.*)$ ajp://localhost:8223/thredds/js/$1
+          ProxyPassMatch ^/thredds/style/(.*)$ ajp://localhost:8223/thredds/style/$1
+      with_items:
+        - { string: 'VirtualHost \*:80', mark: 80 }
+        - { string: 'VirtualHost \*:443', mark: 443 }
+
+# Do not use static html, reference cluster from esgf's main catalog
+    - lineinfile:
+        path: "/esg/content/thredds/catalog.xml"
+        insertbefore: "</catalog>"
+        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="gws/udg-tds/catalog.xml"/>'
+
+# Allow insecure ncss js resources
+    - lineinfile:
+        path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
+        line: '<param-value>"[^?]*/thredds/$","[^?]*catalog\.html;jsessionid=.*","[^?]*((/admin/)(.*)|(/remoteCatalogService\?.*)|(?&lt;=\.(html|xml|css|gif|png|jpg|pdf|asp))(\?.*)?)"</param-value>'
+        state: absent
+
+    - lineinfile:
+        path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
+        line: '<param-value>"[^?]*/thredds/$","[^?]*catalog\.html;jsessionid=.*","[^?]*((/admin/)(.*)|(/remoteCatalogService\?.*)|(?&lt;=\.(html|xml|css|gif|png|jpg|pdf|asp|js))(\?.*)?)"</param-value>'
+        state: present
+        insertafter: '<param-name>authenticationNotRequiredPatterns</param-name>'
+
+- hosts: wn020
+  vars:
+    # Miniconda variables
+    miniconda_python: 2
+    miniconda_prefix: "{{ tomcat_catalina_home }}/miniconda2"
+    miniconda_env:
+      name: udg
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor=3.1.3
+
+    # TDS variables
+    tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
+    tds_version: "ESGF-5.0.1"
+    tds_filename: "tds-esgf.war"
+  vars_files:
+    - secret.yml
+    - deployment.yaml
+    - catalogs.yaml
+  roles:
+    - role: ansible-miniconda-role
+    - role: supervisord-conda
+      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+    - role: tomcat
+      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"

@@ -6,18 +6,21 @@
     dest: "/tmp"
   tags: install
 
+- name: Create httpd_src directory
+  file: path="{{ httpd_src }}" state=directory
+  
 - name: Unarchive mod_jk
   unarchive:
     src: "/tmp/{{ mod_jk_filename }}"
     dest: "{{ httpd_src }}"
   tags: install
 
-- name: Configure mod_jk
+- name: Configure and install mod_jk
   command: "{{ item }}"
   args:
     chdir: "{{ httpd_src }}/{{ mod_jk_filename_unarchive }}/native"
   with_items:
-    - ./configure --prefix={{ mod_jk_install_base }} --with-apxs={{ httpd_server_root }}/bin/apxs
+    - ./configure {{ jk_configure }}
     - /usr/bin/make
     - /usr/bin/make install
 
@@ -25,16 +28,16 @@
 - name: Configure jk module
   template:
     src: mod_jk.conf.j2
-    dest: "{{ httpd_server_root }}/conf.d/mod_jk.conf"
+    dest: "{{ httpd_confd }}/mod_jk.conf"
 
 # Create general worker.properties configuration file for mod_jk in httpd configuration
 - name: Configure general worker properties
   template:
     src: mod_jk.workers.j2
-    dest: "{{ httpd_server_root }}/conf.d/mod_jk.workers"
+    dest: "{{ httpd_confd }}/mod_jk.workers"
 
 # Create general worker.properties configuration file for mod_jk in httpd configuration
 - name: Configure mod_jk urimaps
   template:
     src: mod_jk.urimaps.j2
-    dest: "{{ httpd_server_root }}/conf.d/mod_jk.urimaps"
+    dest: "{{ httpd_confd }}/mod_jk.urimaps"

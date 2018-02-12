@@ -45,6 +45,8 @@
     state: restarted
     username: "{{ applications.supervisord.user }}"
     password: "{{ applications.supervisord.password }}"
-    server_url: "http://{{ hostvars[item].ansible_nodename }}:{{ supervisord_port }}"
+#    server_url: "http://{{ hostvars[item].ansible_nodename }}:{{ supervisord_port }}"
+    server_url: "http://localhost:{{ supervisord_port }}"
   run_once: True
+  delegate_to: "{{ item }}"
   with_items: "{{ groups.proxies }}"

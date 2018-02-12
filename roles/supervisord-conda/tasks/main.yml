@@ -1,0 +1,35 @@
+- name: Create supervisor directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ supervisord_etc }}"
+    - "{{ supervisord_var }}"
+
+- name: Create directory supervisord.d 
+  file:
+    dest: "{{ supervisord_programs }}"
+    state: directory
+
+- name: Create supervisord.conf
+  template:
+    src: supervisord.conf.j2
+    dest: "{{ supervisord_etc }}/supervisord.conf"
+
+- name: Check if supervisord is activated
+  stat:
+    path: "{{ supervisord_var }}/supervisor.sock"
+  tags: start
+
+- name: Check if supervisord is already running
+  shell: netstat -tunlp | grep ":{{ supervisord_port }}"
+  register: supervisor_sock
+  failed_when: "'FAILED' in supervisor_sock.stderr"
+
+# LISTENER???
+# Activate virtual enviroment for running supervisord process only when supervisord package is installed 
+- name: Run supervisord
+  shell: "{{ venv_home }}/bin/supervisord -c {{ supervisord_etc }}/supervisord.conf"
+  tags: start
+  when: supervisor_sock.stdout == ""
+

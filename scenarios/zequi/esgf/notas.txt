@@ -1,0 +1,9 @@
+export WGET_OPTS="--load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies"
+wget $WGET_OPTS -d --http-user=zequi --ask-password http://spock.meteo.unican.es/thredds/dodsC/gws/udg-tds/singleDataset.nc.html -O /dev/null --no-check-certificate &> log.out
+
+- libnetcdf not found: Creo q ocurrió al activar el ncss
+  solución: añadir -Djna.library.path=/usr/local/conda/envs/esgf-pub/lib/ \ en esg-functions tomcat_start()
+
+- libnetcdf js resources: Añadir       <param-value>"[^?]*/thredds/$","[^?]*catalog\.html;jsessionid=.*","[^?]*((/admin/)(.*)|(/remoteCatalogService\?.*)|(?&lt;=\.(html|xml|css|gif|png|jpg|pdf|asp|js))(\?.*)?)"</param-value> en el web.xml de thredds (notar que tiene un js al final de los tipos de recursos)
+
+
