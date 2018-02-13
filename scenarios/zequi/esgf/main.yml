@@ -13,7 +13,7 @@
       httpd_logs: /etc/httpd/logs
       jk_configure: --with-apxs=/usr/sbin/apxs
   tasks:
-    - set_fact: httpd_confd="{{ httpd_confd }}"
+#    - set_fact: httpd_confd="{{ httpd_confd }}"
 
 #    - file: path="/var/run/mod_jk" state=directory
 
@@ -64,6 +64,29 @@
         state: present
         insertafter: '<param-name>authenticationNotRequiredPatterns</param-name>'
 
+# Add dataset_root esgf/cordex
+    - file:
+        state: directory
+        path: "/esg/cordex"
+        
+    - lineinfile:
+        path: "/esg/config/esgcet/esg.ini"
+        line: "\tesgf/cordex | /esg/cordex"
+        insertafter: "\tesg_dataroot | /esg/data"
+
+    # udg-tds should be dynamic? - maybe a var/group-var in this playbook
+    - lineinfile:
+        path: "/esg/content/thredds/catalog.xml"
+        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="gws/udg-tds/catalog.xml"/>'
+        insertbefore: "</catalog>"
+
+    - replace:
+        regexp: 'xlink:href="esgcet/catalog.xml"'
+        replace: 'xlink:href="esgf/cordex/catalog.xml"'
+        path: "/esg/content/thredds/catalog.xml"
+
+# Authorizer (applicationContext.xml, TdsClusterAuthorizer.class, proxyPort del Connector de la instancia tomcat) ESTO VA EN LOS SLAVES
+      
 - hosts: wn020
   vars:
     # Miniconda variables
@@ -89,3 +112,31 @@
       venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
     - role: tomcat
       venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+  tasks:
+
+# Set SSL in applicationContext.xml
+    - replace:
+        regexp: '<property name="useSSL" value="false"/>'
+        replace: '<property name="useSSL" value="true"/>'
+        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+      with_items: "{{ deployment.tds_instances }}"
+
+    - replace:
+        regexp: '<property name="sslPort" value="8443"/>'
+        replace: '<property name="sslPort" value="443"/>'
+        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+      with_items: "{{ deployment.tds_instances }}"
+
+# Use custom thredds authorizer
+    - copy:
+        src: TdsClusterAuthorizer.class
+        dest: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
+      with_items: "{{ deployment.tds_instances }}"
+
+    - replace:
+        regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
+        replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
+        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+      with_items: "{{ deployment.tds_instances }}"
+
+# It is necessary to remove the proxyPort added by the role from the tomcat connector
