@@ -1,6 +1,7 @@
 - hosts: spock
   vars:
-    httpd_confd: "/etc/httpd/conf.d" # role also needs this var, it seems that it works here
+    esg_root: "esgcet"
+    httpd_confd: "/etc/httpd/conf.d" # duplicated in roles
   vars_files:
     - secret.yml
     - deployment.yaml
@@ -8,14 +9,13 @@
     - role: tds-gateway
       httpd_source: True # tds-gateway/tasks/main.yml line 8
       httpd_port: 80
-      httpd_confd: /etc/httpd/conf.d
+      httpd_confd: "/etc/httpd/conf.d"
       httpd_src: /opt/mod_jk
       httpd_logs: /etc/httpd/logs
       jk_configure: --with-apxs=/usr/sbin/apxs
   tasks:
-#    - set_fact: httpd_confd="{{ httpd_confd }}"
-
-#    - file: path="/var/run/mod_jk" state=directory
+    # It should be removed but used in tomcat role instance.yml:46
+    - set_fact: httpd_confd="{{ httpd_confd }}"
 
 # Include cluster conf into esgf-httpd.conf
     - blockinfile:
@@ -25,6 +25,14 @@
         block: |
           Include /etc/httpd/conf.d/mod_jk.conf
           JkMountCopy All
+
+# Change directory of mod_jk.shm
+    - file: path="/var/run/mod_jk" state=directory
+
+    - replace:
+        path: "{{ httpd_confd }}/mod_jk.conf"
+        regexp: "JkShmFile .*"
+        replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
 
 # Indicate resources served by esgf's tds
     - lineinfile:
@@ -37,7 +45,7 @@
         insertafter: '{{ item.string }}'
         marker: "# {mark} ProxyPassMatch {{ item.mark }}"
         block: |
-          ProxyPassMatch ^/thredds/([^/]*)/esgf/(.*) ajp://localhost:8223/thredds/$1/esgf/$2
+          ProxyPassMatch ^/thredds/([^/]*)/{{ esg_root }}/(.*) ajp://localhost:8223/thredds/$1/{{ esg_root }}/$2
           ProxyPassMatch ^/thredds/catalog/([^/]*)$ ajp://localhost:8223/thredds/catalog/$1
           ProxyPassMatch ^/thredds/([^/]*)$ ajp://localhost:8223/thredds/$1
           ProxyPassMatch ^/thredds/js/(.*)$ ajp://localhost:8223/thredds/js/$1
@@ -46,16 +54,10 @@
         - { string: 'VirtualHost \*:80', mark: 80 }
         - { string: 'VirtualHost \*:443', mark: 443 }
 
-# Do not use static html, reference cluster from esgf's main catalog
-    - lineinfile:
-        path: "/esg/content/thredds/catalog.xml"
-        insertbefore: "</catalog>"
-        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="gws/udg-tds/catalog.xml"/>'
-
 # Allow insecure ncss js resources
     - lineinfile:
         path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
-        line: '<param-value>"[^?]*/thredds/$","[^?]*catalog\.html;jsessionid=.*","[^?]*((/admin/)(.*)|(/remoteCatalogService\?.*)|(?&lt;=\.(html|xml|css|gif|png|jpg|pdf|asp))(\?.*)?)"</param-value>'
+        regexp: '<param-value>.*\(html\|xml\|css\|gif\|png\|jpg\|pdf\|asp\).*</param-value>'
         state: absent
 
     - lineinfile:
@@ -64,15 +66,33 @@
         state: present
         insertafter: '<param-name>authenticationNotRequiredPatterns</param-name>'
 
-# Add dataset_root esgf/cordex
+# Add dataset_root
     - file:
         state: directory
-        path: "/esg/cordex"
+        path: "{{ item }}"
+      with_items:
+        - /esg/cordex
+        - /esg/content/thredds/{{ esg_root }}
         
     - lineinfile:
         path: "/esg/config/esgcet/esg.ini"
-        line: "\tesgf/cordex | /esg/cordex"
+        line: "\t{{ esg_root }} | /esg/cordex"
         insertafter: "\tesg_dataroot | /esg/data"
+
+    - lineinfile:
+        path: "/esg/config/esgcet/esg.ini"
+        line: "\tcordex | CORDEX Project | 4"
+        insertafter: "\ttest | Test Project | 3"
+
+    - replace:
+        path: "/esg/config/esgcet/esg.ini"
+        regexp: "thredds_root = /esg/content/thredds/esgcet"
+        replace: "thredds_root = /esg/content/thredds/{{ esg_root }}"
+
+    - replace:
+        path: "/esg/config/esgcet/esg.ini"
+        regexp: "thredds_url = http://{{ ansible_nodename }}/thredds/catalog/esgcet"
+        replace: "thredds_url = http://{{ ansible_nodename }}/thredds/catalog/{{ esg_root }}"
 
     # udg-tds should be dynamic? - maybe a var/group-var in this playbook
     - lineinfile:
@@ -82,13 +102,29 @@
 
     - replace:
         regexp: 'xlink:href="esgcet/catalog.xml"'
-        replace: 'xlink:href="esgf/cordex/catalog.xml"'
+        replace: 'xlink:href="{{ esg_root }}/catalog.xml"'
         path: "/esg/content/thredds/catalog.xml"
 
-# Authorizer (applicationContext.xml, TdsClusterAuthorizer.class, proxyPort del Connector de la instancia tomcat) ESTO VA EN LOS SLAVES
-      
+    # copy esg.cordex.ini
+    - copy:
+        src: esg.cordex.ini
+        dest: /esg/config/esgcet/esg.cordex.ini
+
+    # add jna_path to esg_functions
+    - lineinfile:
+        path: "/usr/local/bin/esg-functions"
+        line: -Djna.library.path=/usr/local/conda/envs/esgf-pub/lib/ \
+        insertbefore: '        -Djava.awt.headless=true \\'
+        
+    - shell: /usr/local/conda/envs/esgf-pub/bin/esginitialize -c
+      args:
+        executable: /bin/bash
+      environment:
+        UVCDAT_ANONYMOUS_LOG: "False"
+        
 - hosts: wn020
   vars:
+    proxy_name: "spock.meteo.unican.es"
     # Miniconda variables
     miniconda_python: 2
     miniconda_prefix: "{{ tomcat_catalina_home }}/miniconda2"
@@ -140,3 +176,9 @@
       with_items: "{{ deployment.tds_instances }}"
 
 # It is necessary to remove the proxyPort added by the role from the tomcat connector
+    - replace:
+        path: '{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/conf/server.xml'
+        regexp: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" proxyPort="80" />'
+        replace: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" />'
+      with_items: "{{ deployment.tds_instances }}"
+    

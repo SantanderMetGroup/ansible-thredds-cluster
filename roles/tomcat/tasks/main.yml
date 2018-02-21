@@ -30,10 +30,10 @@
     - { filename: "{{ jre_filename }}", dest: "{{ jre_install_base }}" }
     - { filename: "{{ derby_db_filename }}", dest: "{{ tomcat_catalina_home }}/" }
 
-- name: Insert JRE_HOME variable in .bashrc file
-  lineinfile:
-    dest: "~/.bashrc"
-    line: "export JRE_HOME={{ jre_install_base }}"
+#- name: Insert JRE_HOME variable in .bashrc file
+#  lineinfile:
+#    dest: "~/.bashrc"
+#    line: "export JRE_HOME={{ jre_install_base }}"
 
 #- name: Secure tomcat passwords
 #  shell: "{{ tomcat_catalina_home }}/bin/digest.sh -a 'SHA' {{ applications.tds[item.1.name].password }}"
@@ -57,14 +57,6 @@
     - "{{ deployment.tds_instances }}"
     - "{{ deployment.tap_instances }}"
 
-- name: Configure each instance
-  include_tasks: instance.yml
-  loop_control:
-    loop_var: instance
-  with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
-
 - name: Create directories for each GWS in tomcat_catalina_home
   #become: True
   file:
@@ -74,6 +66,14 @@
     #owner: "{{ item.owner | default(ansible_user) }}"
     #group: "{{ item.group | default(ansible_user) }}"
   with_items: "{{ deployment.gws }}"
+
+- name: Configure each instance
+  include_tasks: instance.yml
+  loop_control:
+    loop_var: instance
+  with_items:
+    - "{{ deployment.tds_instances }}"
+    - "{{ deployment.tap_instances }}"
 
 - include_tasks: tds_instance.yml
   with_items: "{{ deployment.tds_instances }}"
@@ -86,7 +86,7 @@
     loop_var: instance
 
 - name: Register tds workers in proxy
-  include: deploy_tds_workers.yml
+  include_tasks: deploy_tds_workers.yml
   with_subelements:
     - "{{ deployment.tds_instances }}"
     - gws
@@ -94,7 +94,7 @@
     loop_var: agws
 
 - name: Register tap workers in proxy
-  include: deploy_tap_workers.yml
+  include_tasks: deploy_tap_workers.yml
   with_subelements:
     - "{{ deployment.tap_instances }}"
     - gws
