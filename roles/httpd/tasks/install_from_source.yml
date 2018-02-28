@@ -5,7 +5,6 @@
   with_items:
     - "{{ httpd_server_root }}"
     - "{{ httpd_src }}"
-    - "{{ httpd_server_root }}/conf.d"
 
 - name: Download httpd dependencies
   run_once: true
@@ -13,7 +12,6 @@
   args:
     url: "{{ item }}"
     dest: "/tmp"
-  tags: build
   with_items:
     - "{{ apr_download_url }}"
     - "{{ apr_util_download_url }}"
@@ -24,7 +22,6 @@
   unarchive:
     src: "/tmp/{{ item }}"
     dest: "{{ httpd_src }}"
-  tags: build
   with_items:
     - "{{ apr_filename }}"
     - "{{ apr_util_filename }}"
@@ -35,7 +32,6 @@
   command: "{{ item }}"
   args:
     chdir: "{{ httpd_src }}/{{ apr_filename_unarchive }}"
-  tags: build
   async: 600
   poll: 10
   with_items:
@@ -48,7 +44,6 @@
   command: "{{ item }}"
   args:
     chdir: "{{ httpd_src }}/{{ apr_util_filename_unarchive }}"
-  tags: build
   async: 600
   poll: 10
   with_items:
@@ -61,7 +56,6 @@
   command: "{{ item }}"
   args:
     chdir: "{{ httpd_src }}/{{ pcre_filename_unarchive }}"
-  tags: build
   async: 600
   poll: 10
   with_items:
@@ -74,7 +68,6 @@
   command: "{{ item }}"
   args:
     chdir: "{{ httpd_src }}/{{ httpd_filename_unarchive }}"
-  tags: build
   async: 600
   poll: 10
   with_items:
@@ -82,25 +75,3 @@
     - /usr/bin/make
     - /usr/bin/make install
     - /usr/bin/make clean
-
-- name: Insert HTTPD_HOME in .bashrc 
-  lineinfile:
-    dest: "~/.bashrc"
-    line: "export HTTPD_HOME={{ httpd_server_root }}"
-
-# Create conf.d directory in httpd_home
-- name: Create modules directories
-  file:
-    dest: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ httpd_confd }}"
-    - "{{ httpd_document_root }}"
-
-- name: Create password for proxy status web pages
-  command: "{{ httpd_server_root }}/bin/htpasswd -b -c {{ httpd_server_root }}/.htpasswd {{ applications.proxy.status.user }} {{ applications.proxy.status.password }}"
-
-#- name: Delete httpd_src directory
-  #file:
-    #dest: "{{ httpd_src }}"
-    #state: absent

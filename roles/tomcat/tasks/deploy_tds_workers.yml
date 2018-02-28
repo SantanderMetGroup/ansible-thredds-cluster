@@ -1,6 +1,6 @@
 - name: Register lb in proxy
   blockinfile:
-    dest: "{{ hostvars[item.1.proxy].httpd_confd }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     marker: "# {mark} worker GWS_{{ agws.1.name }}"
     block: |
       worker.list=GWS_{{ agws.1.name }}
@@ -14,7 +14,7 @@
 
 - name: Add connectors to balance workers
   lineinfile:
-    dest: "{{ hostvars[item.1.proxy].httpd_confd }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     state: present
     line: 'worker.GWS_{{ agws.1.name }}.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
   delegate_to: "{{ item.1.proxy }}"
@@ -29,7 +29,7 @@
 
 - name: Add connector to authenticator worker
   lineinfile:
-    dest: "{{ hostvars[item.1.proxy].httpd_confd }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     state: present
     line: 'worker.authenticator.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
   delegate_to: "{{ item.1.proxy }}"

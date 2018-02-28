@@ -1,37 +1,33 @@
-# This fact is required by slaves to update proxy's workers
 - set_fact:
-    httpd_confd: "{{ httpd_confd_dir }}"
-  tags: always
+    httpd_conf_path: "{{ httpd_conf_path }}"
+    httpd_document_root: "{{ httpd_document_root }}"
 
 - include_tasks: install_from_source.yml
   when: httpd_source
+  tags: install
 
 - include_tasks: install_from_binary.yml
   when: not httpd_source
+  tags: install
 
-# Create httpd configuration
-- name: Copy httpd.conf in host
-  become: "{{ httpd_become_enabled }}"
+- name: Copy httpd.conf
   template: 
     src: httpd.conf.j2
-    dest: "{{ httpd_conf_dir }}/httpd.conf"
+    dest: "{{ httpd_conf_path }}/httpd.conf"
 
-# Create index.html page
-- name: Create index page
-  become: "{{ httpd_become_enabled }}"
-  template:
-    src: index.html.j2
-    dest: "{{ httpd_document_root }}/index.html"
-
-# Create httpd configuration file in supervisord
 - name: Create httpd supervisord configuration
-  become: "{{ httpd_become_enabled }}"
   template:
     src: httpd_supervisord.conf.j2
     dest: "{{ supervisord_programs }}/httpd.conf"
   when: httpd_source
   notify: 
     - start httpd
+
+- name: Create password for proxy status web pages
+  htpasswd:
+    path: "{{ httpd_document_root }}/.htpasswd"
+    username: "{{ applications.proxy.status.user }}"
+    password: "{{ applications.proxy.status.password }}"
 
 # Reread supervisord configuration and add httpd program to supervisord
 - name: supervisor httpd

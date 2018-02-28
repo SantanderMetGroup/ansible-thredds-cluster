@@ -1,17 +1,18 @@
 # httpd defaults
 httpd_version: '2.4.25'
+httpd_port: 8000
+httpd_src: "{{ httpd_server_root }}/src"
+httpd_source: True
+httpd_server_root: "{{ ansible_env.HOME + '/httpd' if httpd_source else '/etc/httpd' }}"
+httpd_conf_path: "{{ httpd_server_root }}/conf"
+httpd_document_root: "{{ httpd_server_root+'/htdocs' if httpd_source else '/var/www/html' }}"
+
 httpd_version_major: "{{ httpd_version|truncate(3, False, '', 0) }}"
 httpd_mirror: https://archive.apache.org/dist/httpd/
 httpd_filename_unarchive: "httpd-{{ httpd_version }}"
 httpd_filename: "{{ httpd_filename_unarchive }}.tar.gz"
 httpd_download_url: "{{ httpd_mirror }}/{{ httpd_filename }}"
-httpd_mirror_checksum: https://www.apache.org/dist/httpd
-httpd_port: 8000
-httpd_binary: "httpd-{{ httpd_version }}+{{ ansible_distribution}}.{{ ansible_distribution_major_version}}.{{ ansible_architecture }}.tar.gz"
-httpd_src: "{{ httpd_server_root }}/src"
-httpd_owner: "{{ ansible_user }}"
-httpd_group: "{{ httpd_owner }}"
-
+  
 ## Dependencies for installation
 # APR configuration
 apr_version: "1.5.2"

@@ -1,9 +1,9 @@
 LoadModule jk_module modules/mod_jk.so
 
-JkWorkersFile {{ httpd_confd }}/mod_jk.workers
-JkMountFile   {{ httpd_confd }}/mod_jk.urimaps
-JkShmFile     {{ httpd_logs }}/mod_jk.shm
-JkLogFile     {{ httpd_logs }}/mod_jk.log
+JkWorkersFile {{ mod_jk_conf_dir }}/mod_jk.workers
+JkMountFile   {{ mod_jk_conf_dir }}/mod_jk.urimaps
+JkShmFile     {{ mod_jk_shm }}
+JkLogFile     {{ mod_jk_log }}
 JkLogLevel    info
 JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
 
@@ -11,6 +11,6 @@ JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
 	Allow from all
 	AuthType Basic
 	AuthName "Restricted Content"
-	AuthUserFile {{ httpd_server_root | default('') }}/.htpasswd
+	AuthUserFile {{ mod_jk_status_passwd }}/.htpasswd
 	Require valid-user
 </Location>

@@ -16,7 +16,7 @@
     headers: "{{ item.header }}"
   with_items:
     - { url: "{{ jre_download_url }}", filename: "{{ jre_filename }}", header: "{{ jre_header }}" }
-    - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
+#    - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
     - { url: "{{ derby_db_download_url }}", filename: "{{ derby_db_filename }}", header: "" }
 
 - name: Unarchive file in remote host
@@ -58,7 +58,6 @@
     - "{{ deployment.tap_instances }}"
 
 - name: Create directories for each GWS in tomcat_catalina_home
-  #become: True
   file:
     dest: "{{ tomcat_catalina_home }}/content/thredds/gws/{{ item.name }}"
     state: directory
@@ -117,7 +116,6 @@
 
 # This task could be done above with --owner, but rsync does not support it until version 3.1
 - name: Set owner of every catalog in the gws
-  #become: True
   file: 
     path: "{{ tomcat_catalina_home }}/content/thredds/gws/{{ item.gws }}"
     #owner: "{{ item.owner }}"

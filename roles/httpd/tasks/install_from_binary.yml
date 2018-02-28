@@ -1,26 +1,21 @@
 - name: Add epel-release repository
-  become: True
   yum:
     name: epel-release
 
 - name: Install python-passlib and httpd
-  become: True
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-    - "httpd"
-    - "python-passlib"
-
-- name: Install httpd
-  become: True
-  yum:
-    name: httpd
-    state: latest
-
-- name: Create password for proxy status web pages
-  become: True
-  htpasswd:
-    path: "{{ httpd_server_root }}/.htpasswd"
-    username: "{{ applications.proxy.status.user }}"
-    password: "{{ applications.proxy.status.password }}"
+    - httpd
+    - python-passlib
+    - httpd-devel
+    - apr
+    - apr-devel
+    - apr-util
+    - apr-util-devel
+    - gcc
+    - gcc-c++
+    - make
+    - autoconf
+    - libtool
