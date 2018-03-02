@@ -1,21 +1,29 @@
+- name: Provision proxy
+  hosts: spock
+  tasks:
+    - yum:
+        name: python-passlib
+        
 - hosts: spock
   vars:
     esg_root: "esgcet"
-    httpd_confd: "/etc/httpd/conf.d" # duplicated in roles
+    
+    httpd_server_root: /etc/httpd
+    mod_jk_configure: --with-apxs=/usr/sbin/apxs
+    mod_jk_conf_dir: "/etc/httpd/conf.d" # Mandatory
+    mod_jk_shm: "/etc/httpd/logs/mod_jk.shm" # Mandatory
+    mod_jk_log: "/etc/httpd/logs/mod_jk.log" # Mandatory
+    httpd_conf: "{{ httpd_server_root }}/conf/httpd.conf" # Mandatory
+    mod_jk_src: /opt/mod_jk
   vars_files:
     - secret.yml
     - deployment.yaml
   roles:
     - role: tds-gateway
-      httpd_source: True # tds-gateway/tasks/main.yml line 8
-      httpd_port: 80
-      httpd_confd: "/etc/httpd/conf.d"
-      httpd_src: /opt/mod_jk
-      httpd_logs: /etc/httpd/logs
-      mod_jk_configure: --with-apxs=/usr/sbin/apxs
+#      httpd_port: 80
   tasks:
     # It should be removed but used in tomcat role instance.yml:46
-    - set_fact: httpd_confd="{{ httpd_confd }}"
+#    - set_fact: httpd_confd="{{ httpd_confd }}"
 
 # Include cluster conf into esgf-httpd.conf
     - blockinfile:
@@ -30,7 +38,7 @@
     - file: path="/var/run/mod_jk" state=directory
 
     - replace:
-        path: "{{ httpd_confd }}/mod_jk.conf"
+        path: "{{ mod_jk_conf_dir }}/mod_jk.conf"
         regexp: "JkShmFile .*"
         replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
 
@@ -124,7 +132,10 @@
         
 - hosts: slaves
   vars:
-    proxy_name: "spock.meteo.unican.es"
+    proxy_name: "spock.meteo.unican.es" # where is this used?
+    derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
+    derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
+    
     # Miniconda variables
     miniconda_python: 2
     miniconda_prefix: "{{ tomcat_catalina_home }}/miniconda2"
@@ -154,31 +165,58 @@
     - replace:
         regexp: '<property name="useSSL" value="false"/>'
         replace: '<property name="useSSL" value="true"/>'
-        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+        path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ deployment.tds_instances }}"
 
     - replace:
         regexp: '<property name="sslPort" value="8443"/>'
         replace: '<property name="sslPort" value="443"/>'
-        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+        path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ deployment.tds_instances }}"
 
 # Use custom thredds authorizer
     - copy:
         src: TdsClusterAuthorizer.class
-        dest: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
+        dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
       with_items: "{{ deployment.tds_instances }}"
 
     - replace:
         regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
-        path: "{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+        path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ deployment.tds_instances }}"
 
 # It is necessary to remove the proxyPort added by the role from the tomcat connector
     - replace:
-        path: '{{ tomcat_catalina_home }}/tomcat_pool/{{ item.name }}/conf/server.xml'
+        path: '{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml'
         regexp: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" proxyPort="80" />'
         replace: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" />'
       with_items: "{{ deployment.tds_instances }}"
-    
+
+# Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
+    - template:
+        src: server.xml.j2
+        dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/server.xml"
+      with_items: "{{ deployment.tds_instances }}"
+      loop_control:
+        loop_var: instance
+
+    - copy:
+        src: context.xml
+        dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
+      with_items: "{{ deployment.tds_instances }}"
+
+# Copy derby-db client jar
+    - name: Download dependencies
+      run_once: True
+      local_action: get_url
+      args:
+        url: "{{ derby_db_download_url }}"
+        dest: "/tmp/{{ derby_db_filename }}"
+
+    - name: Unarchive file in remote host
+      unarchive:
+        src: "/tmp/{{ derby_db_filename }}"
+        dest: "{{ tomcat_catalina_home }}"
+        extra_opts:
+          --strip-components=1

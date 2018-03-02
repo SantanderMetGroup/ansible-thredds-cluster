@@ -16,8 +16,7 @@
     headers: "{{ item.header }}"
   with_items:
     - { url: "{{ jre_download_url }}", filename: "{{ jre_filename }}", header: "{{ jre_header }}" }
-#    - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
-    - { url: "{{ derby_db_download_url }}", filename: "{{ derby_db_filename }}", header: "" }
+    - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
 
 - name: Unarchive file in remote host
   unarchive:
@@ -28,7 +27,6 @@
   with_items:
     - { filename: "{{ tomcat_filename }}", dest: "{{ tomcat_catalina_home }}" }
     - { filename: "{{ jre_filename }}", dest: "{{ jre_install_base }}" }
-    - { filename: "{{ derby_db_filename }}", dest: "{{ tomcat_catalina_home }}/" }
 
 #- name: Insert JRE_HOME variable in .bashrc file
 #  lineinfile:
