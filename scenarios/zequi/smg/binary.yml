@@ -11,7 +11,7 @@
     httpd_conf: "{{ httpd_server_root }}/conf/httpd.conf" # Mandatory
   vars_files:
     - secret.yml
-    - simpleDeployment.yaml
+    - deployment-subcollections.yaml
   roles:
     - role: supervisord-virtualenv
     - role: httpd
@@ -27,13 +27,18 @@
       dependencies:
         - libnetcdf=4.4.1
         - supervisor=3.1.3
+
+    derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
+    derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
   vars_files:
     - secret.yml
-    - simpleDeployment.yaml
-    - catalogs.yaml
+    - deployment-subcollections.yaml
   roles:
     - role: ansible-miniconda-role
     - role: supervisord-conda
       venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
     - role: tomcat
       venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+
+  tasks:
+    - include_tasks: derby-authentication.yml

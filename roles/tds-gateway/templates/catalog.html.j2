@@ -13,13 +13,15 @@
 				<th align='center'><font size='+1'>Size</font></th>
 				<th align='right'><font size='+1'>Last Modified</font></th>
 			</tr>
-			{% for agws in deployment.gws -%}
+			{% for collection in deployment.collections -%}
+			{% if collection.top -%}
 			<tr {{ 'bgcolor="#eee"' if loop.index0 % 2 == 1 else '' }}>
 				<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src='/thredds/folder.gif' alt='Folder'> &nbsp;<a href='gws/{{ agws.name }}/catalog.html'><tt>{{ agws.name }}</tt></a></td>
+				<img src='/thredds/folder.gif' alt='Folder'> &nbsp;<a href='catalog/{{ collection.path }}/catalog.html'><tt>{{ collection.path }}</tt></a></td>
 				<td align='right'><tt>&nbsp;</tt></td>
 				<td align='right'><tt>--</tt></td>
 			</tr>
+			{% endif %}
 			{% endfor %}
 		</table>
 		<HR size='1' noshade='noshade'><h3><a href='/thredds/catalog.html'>Initial TDS Installation</a> at <a href='http://www.my.site/'>My Group</a> see <a href='/thredds/serverInfo.html'> Info </a><br>

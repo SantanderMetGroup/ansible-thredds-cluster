@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Server port="{{ instance.shutdown }}" shutdown="{{ instance.name }}">
+<Server port="{{ item.shutdown }}" shutdown="{{ item.name }}">
   <GlobalNamingResources>
     <Resource name="UserDatabase" auth="Container"
               type="org.apache.catalina.UserDatabase"
@@ -15,7 +15,7 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <Service name="Catalina">
-    {% for connector in instance.connectors -%}
+    {% for connector in item.connectors -%}
       {% if connector.type == "http" and 'proxy' in connector -%}
 	<Connector
 	    port="{{ connector.port }}"

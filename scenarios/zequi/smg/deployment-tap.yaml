@@ -1,0 +1,40 @@
+---
+deployment:
+  collections:
+  - path: gws1 # default is value of 'name' property, required for subpaths in <datasetRoot>
+    top: True
+    references: []
+    catalogs:
+    - src: gws1
+
+# ============================== DATASETS ==============================          
+  datasets:
+  - src: datasets
+    dest: ''
+
+# ============================== TAP INSTANCES ==============================      
+  tap_instances:
+  - name: tap1
+    shutdown: 20005
+    connectors:
+    - type: ajp
+      port: 20009
+      proxy: proxy
+    - type: http
+      port: 20008
+      proxy: proxy
+    lb:
+    - name: tap
+
+  tds_instances:
+  - name: instance1
+    shutdown: 18000
+    connectors:
+    - type: ajp
+      port: 18009
+      proxy: proxy
+    - type: http
+      port: 18005
+      proxy: proxy
+    replicas:
+    - name: gws1

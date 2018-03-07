@@ -4,17 +4,11 @@
     src: supervisord_wrapper.sh.j2
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/supervisord_wrapper.sh"
     mode: "u=rwx,g=rx,o=rx"
-  with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
 
 - name: Create tomcat instances configuration to supervisord 
   template:
     src: tomcat.conf.j2
     dest: "{{ supervisord_programs }}/{{ item.name }}.conf"
-  with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
   register: tomcat_conf_supervisord
 
 # Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
@@ -28,6 +22,3 @@
     password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisord_port }}"
   when: tomcat_conf_supervisord.changed
-  with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"

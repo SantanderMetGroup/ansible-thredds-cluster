@@ -7,7 +7,8 @@
 - hosts: spock
   vars:
     esg_root: "esgcet"
-    
+
+    # Vars for tds-gateway
     httpd_server_root: /etc/httpd
     mod_jk_configure: --with-apxs=/usr/sbin/apxs
     mod_jk_conf_dir: "/etc/httpd/conf.d" # Mandatory
@@ -105,7 +106,7 @@
     # udg-tds should be dynamic? - maybe a var/group-var in this playbook
     - lineinfile:
         path: "/esg/content/thredds/catalog.xml"
-        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="gws/udg-tds/catalog.xml"/>'
+        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="udg-tds/interim/catalog.xml"/>'
         insertbefore: "</catalog>"
 
     - replace:
@@ -149,16 +150,13 @@
     tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
     tds_version: "ESGF-5.0.1"
     tds_filename: "tds-esgf.war"
+    venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   vars_files:
     - secret.yml
     - deployment.yaml
-    - catalogs.yaml
   roles:
-    - role: ansible-miniconda-role
     - role: supervisord-conda
-      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
-    - role: tomcat
-      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+    - role: tds
   tasks:
 
 # Set SSL in applicationContext.xml

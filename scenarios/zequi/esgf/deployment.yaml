@@ -1,9 +1,26 @@
 ---
 deployment:
+  collections:
+    - path: udg-tds/interim
+      top: False # top is irrelevant for esgf
+      references:
+        - udg-tds/interim/predictors
+      catalogs:
+        - src: catalogs/interim
+    - path: udg-tds/interim/predictors
+      top: False # top is irrelevant for esgf
+      references: []
+      catalogs:
+        - src: catalogs/interim-predictors
+
+  datasets:
+    - src: datasets
+      dest: ''
+      
   tap_instances: []
   tds_instances:
   - name: instance1
-    shutdown: 18000
+    shutdown: 18005
     files:
       server_j2: server.xml.j2
       context: context.xml
@@ -13,9 +30,8 @@ deployment:
       port: '18009'
       proxy: spock
     - type: http
-      port: '18005'
+      port: '18008'
       proxy: spock
-    gws:
-    - name: udg-tds
-  gws:
-  - name: udg-tds
+    replicas:
+    - name: udg-tds/interim
+    - name: udg-tds/interim/predictors

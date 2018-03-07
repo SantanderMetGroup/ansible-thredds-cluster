@@ -1,0 +1,45 @@
+---
+deployment:
+# ============================== COLLECTIONS ==============================          
+  collections:
+  - path: interim # Path also refers to the name or id of the collection
+    mode: '2775'
+    _owner: zequi
+    _group: zequi
+    top: True # this adds a reference in the tds gateway to the collection
+    references: # I have to reference paths, because of catalogRef xlink:href
+      - interim/predictors # this would add a catalog ref to main catalog of interim-predictors
+    catalogs:
+      - src: interim
+        _owner: zequi
+
+  - path: interim/predictors
+    top: False
+    # tener un catalog.xml.j2 q sea el raiz de la coleccion
+    # en ese iran los datasetRoots, por lo q el usuario no tendra q ponerlos
+    # pero si tiene q hacerlo en los urlPath del dataset...
+    references: [] # this should be optional
+    catalogs:
+      - src: interim-predictors
+
+# ============================== DATASETS ==============================          
+  datasets:
+  - src: datasets
+    dest: ''
+    _owner: zequi
+      
+# ============================== INSTANCES ==============================          
+  tap_instances: []
+  tds_instances:
+    - name: instance1
+      shutdown: 18005
+      connectors:
+        - type: ajp
+          port: 18009
+          proxy: proxy
+        - type: http
+          port: 18008
+          proxy: proxy
+      replicas:
+        - name: interim
+        - name: interim/predictors

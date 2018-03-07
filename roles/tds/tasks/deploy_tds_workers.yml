@@ -1,22 +1,22 @@
-- name: Register lb in proxy
+- name: Register collection in tds gateway
   blockinfile:
     dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
-    marker: "# {mark} worker GWS_{{ agws.1.name }}"
+    marker: "# {mark} worker COLLECTION_{{ replica.1.name }}"
     block: |
-      worker.list=GWS_{{ agws.1.name }}
-      worker.GWS_{{ agws.1.name }}.type=lb
-      worker.GWS_{{ agws.1.name }}.sticky_session=false
+      worker.list=COLLECTION_{{ replica.1.name | replace("/", "-") }}
+      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.type=lb
+      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.sticky_session=false
   delegate_to: "{{ item.1.proxy }}"
   when: item.1.proxy is defined
   with_subelements:
     - "{{ deployment.tds_instances }}"
     - connectors
 
-- name: Add connectors to balance workers
+- name: Add replicas to the collection
   lineinfile:
     dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     state: present
-    line: 'worker.GWS_{{ agws.1.name }}.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
+    line: 'worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
     - "{{ deployment.tds_instances }}"
@@ -24,10 +24,10 @@
   when: 
     - item.1.proxy is defined
     - item.1.type == "ajp"
-    - agws.0.name == item.0.name
+    - replica.0.name == item.0.name
   notify: restart httpd
 
-- name: Add connector to authenticator worker
+- name: Set the authenticator worker
   lineinfile:
     dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     state: present
@@ -38,5 +38,5 @@
     - connectors
   when: 
     - item.1.type == "ajp"
-    - agws.0.name == item.0.name
+    - replica.0.name == item.0.name
   notify: restart httpd

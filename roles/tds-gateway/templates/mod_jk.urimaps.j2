@@ -1,14 +1,9 @@
 /status-jk=jk-manager
 /status-jk/*=jk-manager
 
-{% if deployment.tap_instances|length > 0 %}
-/udg-tap=tap
-/udg-tap/*=tap
-{% endif %}
-
 /thredds/restrictedAccess/*=authenticator
 
-{% for agws in deployment.gws %}
-/thredds/*/{{ agws.name }}=GWS_{{ agws.name }}
-/thredds/*/{{ agws.name }}/*=GWS_{{ agws.name }}
+{% for collection in deployment.collections %}
+/thredds/*/{{ collection.path }}=COLLECTION_{{ collection.path | replace("/", "-") }}
+/thredds/*/{{ collection.path }}/*=COLLECTION_{{ collection.path | replace("/", "-") }}
 {% endfor %}
