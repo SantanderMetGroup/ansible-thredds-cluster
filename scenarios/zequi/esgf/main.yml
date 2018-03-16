@@ -44,10 +44,10 @@
         replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
 
 # Indicate resources served by esgf's tds
-    - lineinfile:
+    - replace:
         path: "/etc/httpd/conf/esgf-httpd.conf"
-        state: absent
-        regexp: "ProxyPass /thredds"
+        regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
+        replace: '#\1'
 
     - blockinfile:
         path: "/etc/httpd/conf/esgf-httpd.conf"
@@ -131,7 +131,7 @@
       environment:
         UVCDAT_ANONYMOUS_LOG: "False"
         
-- hosts: slaves
+- hosts: backend
   vars:
     proxy_name: "spock.meteo.unican.es" # where is this used?
     derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"

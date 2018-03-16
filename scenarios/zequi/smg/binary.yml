@@ -17,7 +17,7 @@
     - role: httpd
     - role: tds-gateway
 
-- hosts: slaves
+- hosts: backend
   become: True # requires ansible_become false in inventory for localhost
   vars:
     miniconda_python: 2
@@ -30,15 +30,14 @@
 
     derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
     derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
+    venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   vars_files:
     - secret.yml
     - deployment-subcollections.yaml
   roles:
     - role: ansible-miniconda-role
     - role: supervisord-conda
-      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
-    - role: tomcat
-      venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+    - role: tds
 
   tasks:
     - include_tasks: derby-authentication.yml
