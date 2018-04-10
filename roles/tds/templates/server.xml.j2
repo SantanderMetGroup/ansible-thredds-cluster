@@ -21,7 +21,7 @@
 	    port="{{ connector.port }}"
 	    protocol="{{ connector.protocol | default('HTTP/1.1') }}"
 	    connectionTimeout="{{ connector.connectionTimeout | default('20000') }}" 
-	    proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}" />
+	    proxyName="{{ hostvars[connector.proxy].tdscc.mod_jk_hostname }}" />
       {% elif connector.type == "http" -%}
 	<Connector 
 	    port="{{ connector.port }}" 
@@ -31,7 +31,7 @@
 	<Connector
 	    port="{{ connector.port }}" 
 	    protocol="{{ connector.protocol | default('AJP/1.3') }}" 
-	    proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}" />
+	    proxyName="{{ hostvars[connector.proxy].tdscc.mod_jk_hostname }}" />
       {% endif %}
     {% endfor %}
 

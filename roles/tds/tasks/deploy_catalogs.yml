@@ -1,9 +1,8 @@
 - name: Copy catalogs
   synchronize:
-    src: "{{ item.1.src }}/"
-    dest: "{{ tomcat_instances_path }}/{{ instance.name }}/content/thredds/{{ item.0.path }}"
+    src: "{{ item.catalogs.src }}/"
+    dest: "{{ tomcat_instances_path }}/{{ instance.name }}/content/thredds/{{ item.path }}"
     archive: False
     recursive: True
-  with_subelements:
-    - "{{ deployment.collections }}"
-    - catalogs
+  with_items: "{{ collections }}"
+  tags: update_catalogs

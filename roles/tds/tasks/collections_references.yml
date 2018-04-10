@@ -1,7 +1,0 @@
-- lineinfile:
-    path: "{{ tomcat_instances_path }}/{{ instance.name }}/content/thredds/{{ item.0.path | default(item.0.name) }}/catalog.xml"
-    line: '<catalogRef xlink:title="{{ item.1  | replace("/", " ")}}" xlink:href="/thredds/catalog/{{ item.1 }}/catalog.xml" name="" />'
-    insertbefore: '</catalog>'
-  with_subelements:
-    - "{{ deployment.collections }}"
-    - references

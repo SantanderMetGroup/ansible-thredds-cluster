@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant nodeuration is done below. The "2" in Vagrant.configure
+# nodeures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+PROJECT_NAME = File.basename(Dir.getwd)
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.network "private_network", ip: "192.168.50.10"
+  config.vm.hostname = "test"
+  config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install git python-virtualenv unzip -y"
+
+  # provision vagrant machine with personal public key
+  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
+  config.vm.provision "shell", inline: "cat /tmp/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.linked_clone = true
+    vb.customize ['modifyvm', :id,'--groups', '/'+PROJECT_NAME,"--memory", "1024"]
+  end
+end

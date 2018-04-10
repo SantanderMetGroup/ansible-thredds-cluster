@@ -1,8 +1,11 @@
-# These facts are required by slaves to reference their proxies
+# These facts are required by the backend to reference their proxies
 - set_fact:
-    mod_jk_hostname: "{{ ansible_nodename }}" # equals hostname
+  args:
+    tdscc:
+      mod_jk_hostname: "{{ ansible_nodename }}" # hostname
 #    proxy_port: "{{ httpd_port }}"
-    mod_jk_conf_path: "{{ mod_jk_conf_dir }}"
+      mod_jk_conf_path: "{{ mod_jk_conf_dir }}"
+#      venv_home: "{{ venv_home }}" # tuve q comentarlo xq me daba error el escenario del esgf
   tags: always
 
 - include_tasks: "install_mod_jk.yml"

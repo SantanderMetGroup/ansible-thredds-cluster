@@ -1,27 +1,33 @@
 <catalog
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="CFSv2 Datasets">
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="CFSv2 Datasets">
+  
   <service name="all" base="" serviceType="compound">
-    <!-- <service name="odap" serviceType="OpenDAP" base="/tds6/dodsC/"/>
-       <service name="wcs" serviceType="WCS" base="/tds6/wcs/" />
-    <service name="wms" serviceType="WMS" base="/tds6/wms/" />
-    <service name="ncss" serviceType="NetcdfSubset" base="/tds6/ncss/grid/"/> -->
-	<service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
-	<service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/"/>
-        <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
+    <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
+    <service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/"/>
+    <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
   </service>
-  <datasetRoot path="udg-tds/interim" location="content" />
+  
+  <datasetRoot path="udg-tds/interim" location="content/interim" />
+
+  <dataset name="Interim daily"
+	   ID="Interim daily"
+	   urlPath="udg-tds/interim/daily/interim20_daily.ncml"
+	   retrictAccess="interim20_sd">
+    <serviceName>subsetServer</serviceName>
+  </dataset>
+  
   <dataset name="Dataset 1" ID="Dataset 1" restrictAccess="wfdei">
     <metadata inherited="true">
       <serviceName>all</serviceName>
     </metadata>
     <dataset name="Dataset 1.1" ID="Dataset 1.1" urlPath="udg-tds/interim/singleDataset.nc">
-        <dataSize units="Mbytes">21702317</dataSize>
-        <date type="modified">2015-02-12T11:53:09Z</date>
+      <dataSize units="Mbytes">21702317</dataSize>
+      <date type="modified">2015-02-12T11:53:09Z</date>
     </dataset>
     <dataset name="Dataset 1.2" ID="Dataset.1.2" urlPath="udg-tds/interim/singleDataset.nc">
-        <dataSize units="Mbytes">21702317</dataSize>
-        <date type="modified">2015-02-12T11:53:09Z</date>
+      <dataSize units="Mbytes">21702317</dataSize>
+      <date type="modified">2015-02-12T11:53:09Z</date>
     </dataset>
   </dataset>
 

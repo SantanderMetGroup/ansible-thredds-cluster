@@ -4,14 +4,14 @@
     dest: "{{ tomcat_instances_path }}/{{ item.name }}"
     state: directory
   with_items:
-    - "{{ deployment.tds_instances }}"
+    - "{{ tds_instances }}"
 
 - name: Create dirs for instances
   file:
     path: "{{ tomcat_instances_path }}/{{ item.0.name }}/{{ item.1 }}"
     state: directory
   with_nested:
-    - "{{ deployment.tds_instances }}"
+    - "{{ tds_instances }}"
     - ['logs', 'conf', 'webapps/thredds', 'temp']
 
 - name: Create soft links from instances to tomcat
@@ -20,32 +20,32 @@
     src: "{{ tomcat_catalina_home }}/{{ item.1 }}"
     state: link
   with_nested:
-    - "{{ deployment.tds_instances }}"
+    - "{{ tds_instances }}"
     - ['lib', 'jre']
     
 - name: Copy web.xml
   copy:
     src: web.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/web.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Copy server.xml 
   template:
     src: server.xml.j2
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Copy context.xml
   copy:
     src: context.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Copy tomcat-users.xml
   template:
     src: tomcat-users.xml.j2
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/tomcat-users.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 #################### TDS ####################
 - name: Download tds
@@ -59,19 +59,19 @@
   unarchive:
     src: "/tmp/{{ tds_filename }}"
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create web.xml in WEB-INF
   copy:
     src: thredds_web.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create web.xml in WEB-INF for TDS5-ESGF
   copy:
     src: thredds5_web.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
   when: tds_version == "ESGF-5.0.1"
 
 #################### content/thredds ####################
@@ -88,7 +88,7 @@
   file:
     path: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds"
     state: directory
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create soft link from instance content/thredds/public to tomcat
   file:
@@ -96,27 +96,27 @@
     src: "{{ tomcat_catalina_home }}/content/thredds/public"
     force: yes
     state: link
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Copy threddsConfig.xml
   copy:
     src: threddsConfig.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds/threddsConfig.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create a common catalog.xml in every instance
   copy:
     src: catalog.xml
     dest: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds/catalog.xml"
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create collection directory in instance
   file:
     dest: "{{ tomcat_instances_path }}/{{ item.0.name }}/content/thredds/{{ item.1.path }}"
     state: directory
   with_nested:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.collections }}"
+    - "{{ tds_instances }}"
+    - "{{ collections }}"
 
 - name: Link collection in the instance root catalog
   blockinfile:
@@ -126,35 +126,35 @@
     block: |
       <catalogRef xlink:title="{{ item.1.path }}" xlink:href="{{ item.1.path }}/catalog.xml" name=""/>
   with_nested:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.collections }}"
+    - "{{ tds_instances }}"
+    - "{{ collections }}"
 
 #################### TDS Gateway ####################
 - name: Register balance workers in proxy
   blockinfile:
     marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
-    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].tdscc.mod_jk_conf_path }}/mod_jk.workers"
     block: |
       worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
       worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ ansible_host }}
       worker.{{ ansible_hostname }}_{{ item.1.port }}.port={{ item.1.port }}
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
-    - "{{ deployment.tds_instances }}"
+    - "{{ tds_instances }}"
     - connectors
   when: item.1.type == "ajp"
 
 - name: Register replicas in proxy
   include_tasks: deploy_tds_workers.yml
   with_subelements:
-    - "{{ deployment.tds_instances }}"
+    - "{{ tds_instances }}"
     - replicas
   loop_control:
     loop_var: replica
 
 #################### Deploy catalogs and datasets ####################
 - include_tasks: deploy_catalogs.yml
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"
   loop_control:
     loop_var: instance
   tags: update_catalogs
@@ -165,18 +165,9 @@
     dest: "{{ tomcat_catalina_home }}/content/thredds/public/{{ item.dest | default('') }}/"
     archive: False
     recursive: True
-  with_items: "{{ deployment.datasets }}"
+  with_items: "{{ datasets }}"
   tags: update_catalogs
-  notify: restart tomcat_instance
-
-#################### Collections ####################
-- name: Create references between collections
-  include_tasks: collections_references.yml
-  with_items: "{{ deployment.tds_instances }}"
-  tags: update_catalogs
-  loop_control:
-    loop_var: instance
 
 #################### Supervisord ####################
 - include_tasks: supervisord_configuration.yml
-  with_items: "{{ deployment.tds_instances }}"
+  with_items: "{{ tds_instances }}"

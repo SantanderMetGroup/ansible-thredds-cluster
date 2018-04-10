@@ -7,7 +7,7 @@
     mod_jk_log: "{{ httpd_server_root }}/logs/mod_jk.log" # Mandatory
     httpd_conf: "{{ httpd_server_root }}/conf/httpd.conf" # Mandatory
   vars_files:
-    - deployment-tap.yaml
+    - deployment-subcollections.yaml
     - secret.yml
   roles:
     - role: supervisord-virtualenv
@@ -29,12 +29,11 @@
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   vars_files:
     - secret.yml
-    - deployment-tap.yaml
+    - deployment-subcollections.yaml
   roles:
     - role: supervisord-conda
     - role: tds
-    - role: tap
+#    - role: tap
 
   tasks:
     - include_tasks: derby-authentication.yml
-      tags: hola
