@@ -18,3 +18,8 @@ The inventory file defines two hosts, localhost and vagrant. localhost will depl
 1. (to manage the tds process) `source tds_test/miniconda2/bin/activate udg` and `supervisorctl`
 1. edit catalogs in data/catalogs and datasets in data/datasets
 1. `ansible-playbook standalone.yml --tags update_catalogs` (manual restart is required to take effect)
+
+## Scenario's variables
+
+- catalogs_path: Default is "data/catalogs"
+- datasets_path: Default is "data/datasets"
