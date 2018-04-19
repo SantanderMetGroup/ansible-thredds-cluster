@@ -18,7 +18,7 @@
     mod_jk_src: /opt/mod_jk
   vars_files:
     - secret.yml
-    - deployment.yaml
+    - deployment.yml
   roles:
     - role: tds-gateway
 #      httpd_port: 80
@@ -27,7 +27,8 @@
 #    - set_fact: httpd_confd="{{ httpd_confd }}"
 
 # Include cluster conf into esgf-httpd.conf
-    - blockinfile:
+    - name: Include mod_jk.conf in esgf-httpd.conf
+      blockinfile:
         path: "/etc/httpd/conf/esgf-httpd.conf"
         insertbefore: 'VirtualHost \*:80'
         marker: "# {mark} Include jk"
@@ -36,20 +37,24 @@
           JkMountCopy All
 
 # Change directory of mod_jk.shm
-    - file: path="/var/run/mod_jk" state=directory
+    - name: Create directory for mod_jk.shm
+      file: path="/var/run/mod_jk" state=directory
 
-    - replace:
+    - name: Change directory of JkShmFile in mod_jk.conf
+      replace:
         path: "{{ mod_jk_conf_dir }}/mod_jk.conf"
         regexp: "JkShmFile .*"
         replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
 
 # Indicate resources served by esgf's tds
-    - replace:
+    - name: Comment ProxyPass /thredds in esgf-httpd.conf
+      replace:
         path: "/etc/httpd/conf/esgf-httpd.conf"
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
 
-    - blockinfile:
+    - name: Add ProxyPassMatch directives to esgf-httpd.conf
+      blockinfile:
         path: "/etc/httpd/conf/esgf-httpd.conf"
         insertafter: '{{ item.string }}'
         marker: "# {mark} ProxyPassMatch {{ item.mark }}"
@@ -64,7 +69,8 @@
         - { string: 'VirtualHost \*:443', mark: 443 }
 
 # Allow insecure ncss js resources
-    - lineinfile:
+    - name: Allow insecure ncss js resources in esgf tomcat
+      lineinfile:
         path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
         regexp: '<param-value>.*\(html\|xml\|css\|gif\|png\|jpg\|pdf\|asp\).*</param-value>'
         state: absent
@@ -76,7 +82,8 @@
         insertafter: '<param-name>authenticationNotRequiredPatterns</param-name>'
 
 # Add dataset_root
-    - file:
+    - name: Create esgf directories dataset_roots
+      file:
         state: directory
         path: "{{ item }}"
       with_items:
@@ -106,7 +113,7 @@
     # udg-tds should be dynamic? - maybe a var/group-var in this playbook
     - lineinfile:
         path: "/esg/content/thredds/catalog.xml"
-        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="udg-tds/interim/catalog.xml"/>'
+        line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="udg-tds/catalog.xml"/>'
         insertbefore: "</catalog>"
 
     - replace:
@@ -153,7 +160,7 @@
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   vars_files:
     - secret.yml
-    - deployment.yaml
+    - deployment.yml
   roles:
     - role: supervisord-conda
     - role: tds
@@ -164,57 +171,71 @@
         regexp: '<property name="useSSL" value="false"/>'
         replace: '<property name="useSSL" value="true"/>'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
     - replace:
         regexp: '<property name="sslPort" value="8443"/>'
         replace: '<property name="sslPort" value="443"/>'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
 # Use custom thredds authorizer
     - copy:
         src: TdsClusterAuthorizer.class
         dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
     - replace:
         regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
 # It is necessary to remove the proxyPort added by the role from the tomcat connector
     - replace:
         path: '{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml'
         regexp: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" proxyPort="80" />'
         replace: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" />'
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
 # Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
     - template:
         src: server.xml.j2
         dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/server.xml"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
       loop_control:
         loop_var: instance
 
     - copy:
         src: context.xml
         dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
-      with_items: "{{ deployment.tds_instances }}"
+      with_items: "{{ tds_instances }}"
 
 # Copy derby-db client jar
-    - name: Download dependencies
+    - name: Download derby db
       run_once: True
       local_action: get_url
       args:
         url: "{{ derby_db_download_url }}"
         dest: "/tmp/{{ derby_db_filename }}"
 
-    - name: Unarchive file in remote host
+    - name: Unarchive derby db in remote host
       unarchive:
         src: "/tmp/{{ derby_db_filename }}"
         dest: "{{ tomcat_catalina_home }}"
         extra_opts:
           --strip-components=1
+
+# TDS Services management
+    - name: restart TDS instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        username: "{{ applications.supervisord.user }}"
+        password: "{{ applications.supervisord.password }}"
+      with_items:
+          - "{{ tds_instances }}"
+      tags:
+        - restart
+        - update_catalogs
