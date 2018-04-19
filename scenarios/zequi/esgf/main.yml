@@ -90,33 +90,39 @@
         - /esg/cordex
         - /esg/content/thredds/{{ esg_root }}
         
-    - lineinfile:
+    - name: Add dataset_roots to esg.ini
+      lineinfile:
         path: "/esg/config/esgcet/esg.ini"
         line: "\t{{ esg_root }} | /esg/cordex"
         insertafter: "\tesg_dataroot | /esg/data"
 
-    - lineinfile:
+    - name: Add projects to esg.ini
+      lineinfile:
         path: "/esg/config/esgcet/esg.ini"
         line: "\tcordex | CORDEX Project | 4"
         insertafter: "\ttest | Test Project | 3"
 
-    - replace:
+    - name: Modify esgf thredds_root in esg.ini
+      replace:
         path: "/esg/config/esgcet/esg.ini"
         regexp: "thredds_root = /esg/content/thredds/esgcet"
         replace: "thredds_root = /esg/content/thredds/{{ esg_root }}"
 
-    - replace:
+    - name: Modify thredds_url in esg.ini
+      replace:
         path: "/esg/config/esgcet/esg.ini"
         regexp: "thredds_url = http://{{ ansible_nodename }}/thredds/catalog/esgcet"
         replace: "thredds_url = http://{{ ansible_nodename }}/thredds/catalog/{{ esg_root }}"
 
     # udg-tds should be dynamic? - maybe a var/group-var in this playbook
-    - lineinfile:
+    - name: Add catalog-ref to esgf node main catalog to point to udg tds instances
+      lineinfile:
         path: "/esg/content/thredds/catalog.xml"
         line: '<catalogRef name="User Data Gateway Root Catalog" xlink:title="User Data Gateway catalog" xlink:href="udg-tds/catalog.xml"/>'
         insertbefore: "</catalog>"
 
-    - replace:
+    - name: Modify esg_root if needed
+      replace:
         regexp: 'xlink:href="esgcet/catalog.xml"'
         replace: 'xlink:href="{{ esg_root }}/catalog.xml"'
         path: "/esg/content/thredds/catalog.xml"
@@ -127,12 +133,14 @@
         dest: /esg/config/esgcet/esg.cordex.ini
 
     # add jna_path to esg_functions
-    - lineinfile:
+    - name: Add jna.library.path to esg-functions
+      lineinfile:
         path: "/usr/local/bin/esg-functions"
         line: -Djna.library.path=/usr/local/conda/envs/esgf-pub/lib/ \
         insertbefore: '        -Djava.awt.headless=true \\'
         
-    - shell: /usr/local/conda/envs/esgf-pub/bin/esginitialize -c
+    - name: Apply changes to esgf configuration ini files
+      shell: /usr/local/conda/envs/esgf-pub/bin/esginitialize -c
       args:
         executable: /bin/bash
       environment:
@@ -167,46 +175,53 @@
   tasks:
 
 # Set SSL in applicationContext.xml
-    - replace:
+    - name: Set useSSL true in tds applicationContext.xml
+      replace:
         regexp: '<property name="useSSL" value="false"/>'
         replace: '<property name="useSSL" value="true"/>'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
-    - replace:
+    - name: Use port 8443 instead of 443 in tds applicationContext.xml
+      replace:
         regexp: '<property name="sslPort" value="8443"/>'
         replace: '<property name="sslPort" value="443"/>'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
 # Use custom thredds authorizer
-    - copy:
+    - name: Copy TdsClusterAuthorizer.class in tds applicationContext.xml
+      copy:
         src: TdsClusterAuthorizer.class
         dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
       with_items: "{{ tds_instances }}"
 
-    - replace:
+    - name: Use TdsClusterAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
+      replace:
         regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
         path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
 # It is necessary to remove the proxyPort added by the role from the tomcat connector
-    - replace:
+    - name: Remove proxyPort from tds AJP Connector
+      replace:
         path: '{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml'
         regexp: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" proxyPort="80" />'
         replace: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" />'
       with_items: "{{ tds_instances }}"
 
 # Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
-    - template:
+    - name: Copy server.xml for tds instances
+      template:
         src: server.xml.j2
         dest: "{{ tomcat_instances_path }}/{{ instance.name }}/conf/server.xml"
       with_items: "{{ tds_instances }}"
       loop_control:
         loop_var: instance
 
-    - copy:
+    - name: Copy context.xml for tds instances
+      copy:
         src: context.xml
         dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
       with_items: "{{ tds_instances }}"
