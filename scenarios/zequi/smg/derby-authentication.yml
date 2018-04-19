@@ -19,8 +19,8 @@
     insertbefore: </Context>
     line: '\t<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
   with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
+    - "{{ tds_instances }}"
+    - "{{ tap_instances }}"
 
 - name: Add Resource for derby db authentication
   blockinfile:
@@ -42,8 +42,8 @@
       url="{{ applications.derby.url }}" 
       readOnly="false"/>
   with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
+    - "{{ tds_instances }}"
+    - "{{ tap_instances }}"
     
 - name: Add Realm for derby db authentication
   blockinfile:
@@ -62,5 +62,5 @@
       userRoleTable="V_USERS_ROLES"
       roleNameCol="ROLENAME"/>
   with_items:
-    - "{{ deployment.tds_instances }}"
-    - "{{ deployment.tap_instances }}"
+    - "{{ tds_instances }}"
+    - "{{ tap_instances }}"

@@ -21,7 +21,7 @@
     collections:
       - path: test-collection
         catalogs:
-          src: data/catalogs
+          src: "{{ catalogs_path | default('data/catalogs') }}"
 
     # tds instances
     tds_instances:
@@ -31,12 +31,26 @@
           - type: http
             port: '8080'
         replicas:
-          - name: test-collections
+          - name: test-collection
 
     datasets:
-      - src: data/datasets
+      - src: "{{ datasets_path | default('data/datasets') }}"
         dest: '' # If empty, destination is content/thredds/public
     
   roles:
     - role: supervisord-conda
     - role: tds
+
+  tasks:
+    - name: Restart TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        username: "{{ applications.supervisord.user }}"
+        password: "{{ applications.supervisord.password }}"
+      with_items:
+        - "{{ tds_instances }}"
+      tags:
+        - restart
+        - update_catalogs
