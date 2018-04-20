@@ -20,12 +20,13 @@
 
     ## collections
     collections:
-      - path: test
+      - path: udg-tds
         catalogs:
           src: "{{ catalogs_path | default('data/catalogs') }}"
 
     ## tds instances
     tds_debug: True
+    tds_version: ESGF-5.0.1
     tds_instances:
       - name: instance1
         shutdown: 8089
@@ -34,7 +35,7 @@
           - type: http
             port: '8080'
         replicas:
-          - name: test
+          - name: udg-tds
 
     ## datasets
     datasets:
@@ -67,6 +68,20 @@
       with_items:
         - { template: ncjdump.j2, dest: ncjdump }
         - { template: toolsUI, dest: toolsUI }
+
+    # FakeAuthorizer
+    - name: Copy FakeAuthorizer.class in tds applicationContext.xml
+      copy:
+        src: FakeAuthorizer.class
+        dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/FakeAuthorizer.class"
+      with_items: "{{ tds_instances }}"
+
+    - name: Use FakeAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
+      replace:
+        regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
+        replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.FakeAuthorizer">'
+        path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+      with_items: "{{ tds_instances }}"
 
     # management
     - name: Restart TDS

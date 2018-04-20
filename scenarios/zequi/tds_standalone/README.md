@@ -10,16 +10,15 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 
 ## Usage in localhost
 
-This example will deploy the sandbox in your home directory, in the path tds-sandbox. You can change the directory where the sandbox is deployed by setting a different value to the `-e` param of the `ansible-playbook` command.
-
 1. `git clone`
 1. `cd scenarios/zequi/tds_standalone`
 1. `virtualenv virtualenv --no-site-packages`
 1. `source virtualenv/bin/activate`
 1. `pip install ansible`
-1. `ansible-playbook standalone.yml --limit localhost -e root=~/tds-sandbox`
+1. `./run.sh -h`
+1. Example: `./run.sh -r ~/sandbox -c ~/work/TDSSPOCK/catalogs -d ~/work/TDSSPOCK/datasets`
 1. (in web browser) localhost:8080/thredds
-1. After adding new content to the `data` directory: `ansible-playbook standalone.yml --limit localhost -e root=~/tds-sandbox --tags update_catalogs`
+1. After adding new content to the `data` directory: `./run.sh -r ~/sandbox -c ~/work/TDSSPOCK/catalogs -d ~/work/TDSSPOCK/datasets -u`
 
 ## Usage in vagrant
 
