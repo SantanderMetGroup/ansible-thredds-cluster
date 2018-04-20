@@ -1,0 +1,39 @@
+- name: Set default content/thredds variable for instance
+  set_fact:
+    tds_instance_default_content_root: "{{ tomcat_instances_path }}/{{ instance.name }}/content"
+    
+- name: Create content/thredds/ directories in instances
+  file:
+    path: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds"
+    state: directory
+
+- name: Create soft link from instance content/thredds/public to tomcat
+  file:
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/public"
+    src: "{{ tomcat_catalina_home }}/content/thredds/public"
+    state: link
+
+- name: Copy threddsConfig.xml
+  copy:
+    src: threddsConfig.xml
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/threddsConfig.xml"
+
+- name: Create a common catalog.xml in every instance
+  copy:
+    src: catalog.xml
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/catalog.xml"
+
+- name: Create directories for instance replicas
+  file:
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/{{ item.name }}"
+    state: directory
+  with_items: "{{ instance.replicas }}"
+
+- name: Link collection in the instance root catalog
+  blockinfile:
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/catalog.xml"
+    marker: "<!-- {mark} {{ item.name }} -->"
+    insertbefore: "</catalog>"
+    block: |
+      <catalogRef xlink:title="{{ item.name }}" xlink:href="{{ item.name }}/catalog.xml" name=""/>
+  with_items: "{{ instance.replicas }}"

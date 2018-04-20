@@ -17,7 +17,7 @@ WORKER={{ item.name }}
 export CATALINA_HOME={{ tomcat_catalina_home }}
 export CATALINA_BASE={{ tomcat_instances_path }}/${WORKER}
 export JRE_HOME={{ jre_install_base }}
-export CONTENT_ROOT="-Dtds.content.root.path=$CATALINA_BASE/content"
+export CONTENT_ROOT="-Dtds.content.root.path={{ item.tds_content_root | default('$CATALINA_BASE/content') }}"
 export JAVA_PREFS_ROOTS="-Djava.util.prefs.systemRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs -Djava.util.prefs.userRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs"
 #export LD_LIBRARY_PATH=/usr/local/apr/lib
 
@@ -36,7 +36,11 @@ export JAVA_OPTS
 
 export CATALINA_PID=$CATALINA_BASE/logs/catalina.pid
 
+{% if tds_debug %}
+. $CATALINA_HOME/bin/catalina.sh jpda start
+{% else %}
 . $CATALINA_HOME/bin/catalina.sh start
+{% endif %}
 
 
 # Allow any signal which would kill a process to stop Tomcat

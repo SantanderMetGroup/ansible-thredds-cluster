@@ -84,50 +84,11 @@
     - public
     - logs
 
-- name: Create content/thredds/ directories in instances
-  file:
-    path: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds"
-    state: directory
+- name: Deploy content/thredds directory for instances
+  include_tasks: deploy_content_thredds.yml
   with_items: "{{ tds_instances }}"
-
-- name: Create soft link from instance content/thredds/public to tomcat
-  file:
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds/public"
-    src: "{{ tomcat_catalina_home }}/content/thredds/public"
-    force: yes
-    state: link
-  with_items: "{{ tds_instances }}"
-
-- name: Copy threddsConfig.xml
-  copy:
-    src: threddsConfig.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds/threddsConfig.xml"
-  with_items: "{{ tds_instances }}"
-
-- name: Create a common catalog.xml in every instance
-  copy:
-    src: catalog.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/content/thredds/catalog.xml"
-  with_items: "{{ tds_instances }}"
-
-- name: Create collection directory in instance
-  file:
-    dest: "{{ tomcat_instances_path }}/{{ item.0.name }}/content/thredds/{{ item.1.path }}"
-    state: directory
-  with_nested:
-    - "{{ tds_instances }}"
-    - "{{ collections }}"
-
-- name: Link collection in the instance root catalog
-  blockinfile:
-    dest: "{{ tomcat_instances_path }}/{{ item.0.name }}/content/thredds/catalog.xml"
-    marker: "<!-- {mark} {{ item.1.path }} -->"
-    insertbefore: "</catalog>"
-    block: |
-      <catalogRef xlink:title="{{ item.1.path }}" xlink:href="{{ item.1.path }}/catalog.xml" name=""/>
-  with_nested:
-    - "{{ tds_instances }}"
-    - "{{ collections }}"
+  loop_control:
+    loop_var: instance
 
 #################### TDS Gateway ####################
 - name: Register balance workers in proxy
@@ -154,7 +115,9 @@
 
 #################### Deploy catalogs and datasets ####################
 - include_tasks: deploy_catalogs.yml
-  with_items: "{{ tds_instances }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
   loop_control:
     loop_var: instance
   tags: update_catalogs
