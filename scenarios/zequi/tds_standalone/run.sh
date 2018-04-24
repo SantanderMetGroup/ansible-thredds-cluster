@@ -22,7 +22,7 @@ while getopts ":r:c:d:uh" o; do
 done
 
 if [ $u ] ; then
-    ansible-playbook standalone.yml --limit localhost -e root_path=$r -e catalogs_path=$c -e datasets_path=$d --tags update_catalogs
+    ansible-playbook standalone.yml --limit localhost -e root=$r -e catalogs_path=$c -e datasets_path=$d --tags update_catalogs
 else
-    ansible-playbook standalone.yml --limit localhost -e root_path=$r -e catalogs_path=$c -e datasets_path=$d
+    ansible-playbook standalone.yml --limit localhost -e root=$r -e catalogs_path=$c -e datasets_path=$d
 fi
