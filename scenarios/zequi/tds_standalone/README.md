@@ -10,7 +10,7 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 
 ## Usage in localhost
 
-1. `git clone` and `cd ansible-thredds-cluster`
+1. `git clone -b devel` and `cd ansible-thredds-cluster`
 1. `git submodule init && git submodule update`
 1. `cd scenarios/zequi/tds_standalone`
 1. `virtualenv virtualenv --no-site-packages`
