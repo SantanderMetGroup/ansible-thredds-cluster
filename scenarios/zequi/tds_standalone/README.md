@@ -8,6 +8,10 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 - ./toolsUI inits the toolsUI interface in the background
 - ./ncjdump is a shorcut to `java -cp toolsUI.jar ucar.nc2.NCdumpW "$@"`
 
+## Requirements
+
+1. ssh key pair in your ~/.ssh directory and authorized to ssh to localhost
+
 ## Usage in localhost
 
 1. `git clone --recursive -b devel https://github.com/SantanderMetGroup/ansible-thredds-cluster`
@@ -15,7 +19,7 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 1. `virtualenv virtualenv`
 1. `source virtualenv/bin/activate`
 1. `pip install --upgrade pip setuptools`
-1. `pip install ansible==2.5`
+1. `pip install ansible==2.4.*`
 1. `./run.sh -h`
 1. Example: `./run.sh -r ~/sandbox -c ~/work/TDSSPOCK/catalogs -d ~/work/TDSSPOCK/datasets`
 1. (in web browser) localhost:8080/thredds
@@ -23,9 +27,11 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 
 ## Usage in vagrant
 
-Vagrantfile is provided if you want to test the deployment without polluting your system. The default ip for the virtual machine is '192.168.50.10'.
+Vagrantfile is provided if you want to test the deployment without polluting your system. The default ip for the virtual machines are '192.168.50.10' and '192.168.50.11'.
 
-Note that the Vagrant file defines two hosts, ubuntu and centos, using the same IP. They are intended to be used separately.
+1. `vagrant up`
+1. `vagrant ssh ubuntu` or `vagrant ssh centos`
+1. `./test.sh`
 
 ## Scenario's variables
 
