@@ -1,0 +1,16 @@
+LoadModule jk_module modules/mod_jk.so
+
+JkWorkersFile {{ mod_jk_conf_path }}/mod_jk.workers
+JkMountFile   {{ mod_jk_conf_path }}/mod_jk.urimaps
+JkShmFile     {{ mod_jk_shm }}
+JkLogFile     {{ mod_jk_log }}
+JkLogLevel    info
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+
+<Location "/status-jk">
+	Allow from all
+	AuthType Basic
+	AuthName "Restricted Content"
+	AuthUserFile {{ mod_jk_status_passwd }}/.htpasswd
+	Require valid-user
+</Location>

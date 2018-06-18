@@ -1,14 +1,14 @@
 #################### Tomcat BASE ####################
 - name: Create directory for each tds instance
   file:
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}"
+    dest: "{{ tomcat_base }}/{{ item.name }}"
     state: directory
   with_items:
     - "{{ tds_instances }}"
 
 - name: Create dirs for instances
   file:
-    path: "{{ tomcat_instances_path }}/{{ item.0.name }}/{{ item.1 }}"
+    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
     state: directory
   with_nested:
     - "{{ tds_instances }}"
@@ -16,8 +16,8 @@
 
 - name: Create soft links from instances to tomcat
   file:
-    dest: "{{ tomcat_instances_path }}/{{ item.0.name }}/{{ item.1 }}"
-    src: "{{ tomcat_catalina_home }}/{{ item.1 }}"
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
+    src: "{{ tomcat_home }}/{{ item.1 }}"
     state: link
   with_nested:
     - "{{ tds_instances }}"
@@ -26,25 +26,25 @@
 - name: Copy web.xml
   copy:
     src: web.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/web.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/web.xml"
   with_items: "{{ tds_instances }}"
 
 - name: Copy server.xml 
   template:
     src: server.xml.j2
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
   with_items: "{{ tds_instances }}"
 
 - name: Copy context.xml
   copy:
     src: context.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
   with_items: "{{ tds_instances }}"
 
 - name: Copy tomcat-users.xml
   template:
     src: tomcat-users.xml.j2
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/tomcat-users.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
   with_items: "{{ tds_instances }}"
 
 #################### TDS ####################
@@ -54,30 +54,45 @@
   args:
     url: "{{ tds_download_url }}"
     dest: "/tmp/{{ tds_filename }}"
+  vars:
+    ansible_become: False
 
 - name: Unarchive tds in webapps/thredds
   unarchive:
     src: "/tmp/{{ tds_filename }}"
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds"
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
   with_items: "{{ tds_instances }}"
 
 - name: Create web.xml in WEB-INF
   copy:
     src: thredds_web.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
 
 - name: Create web.xml in WEB-INF for TDS5-ESGF
   copy:
     src: thredds5_web.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
   when: tds_version == "ESGF-5.0.1"
 
+- name: Copy TdsClusterAuthorizer in every instance
+  copy:
+    src: TdsClusterAuthorizer.class
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
+  with_items: "{{ tds_instances }}"
+
+- name: Substitute TomcatAuthorizer by TdsClusterAuthorizer in applicationContext.xml
+  replace:
+    regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
+    replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
+    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+  with_items: "{{ tds_instances }}"
+
 #################### content/thredds ####################
-- name: Create content/thredds/ directories in tomcat_catalina_home
+- name: Create content/thredds/ directories in tomcat_home
   file:
-    path: "{{ tomcat_catalina_home }}/content/thredds/{{ item }}"
+    path: "{{ tomcat_home }}/content/thredds/{{ item }}"
     state: directory
     mode: "g+rwx"
   with_items:
@@ -94,12 +109,14 @@
 - name: Register balance workers in proxy
   blockinfile:
     marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
-    dest: "{{ hostvars[item.1.proxy].tdscc.mod_jk_conf_path }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
     block: |
       worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
       worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ ansible_host }}
       worker.{{ ansible_hostname }}_{{ item.1.port }}.port={{ item.1.port }}
   delegate_to: "{{ item.1.proxy }}"
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}" # depends on how httpd was installed
   with_subelements:
     - "{{ tds_instances }}"
     - connectors
@@ -125,7 +142,7 @@
 - name: Copy datasets 
   synchronize:
     src: "{{ item.src }}/"
-    dest: "{{ tomcat_catalina_home }}/content/thredds/public/{{ item.dest | default('') }}/"
+    dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
     archive: False
     recursive: True
   with_items: "{{ datasets }}"

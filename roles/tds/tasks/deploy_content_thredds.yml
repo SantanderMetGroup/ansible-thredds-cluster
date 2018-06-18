@@ -1,6 +1,7 @@
 - name: Set default content/thredds variable for instance
   set_fact:
-    tds_instance_default_content_root: "{{ tomcat_instances_path }}/{{ instance.name }}/content"
+    tds_instance_default_content_root: "{{ tomcat_base }}/{{ instance.name }}/content"
+  tags: update_catalogs
     
 - name: Create content/thredds/ directories in instances
   file:
@@ -10,7 +11,7 @@
 - name: Create soft link from instance content/thredds/public to tomcat
   file:
     dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/public"
-    src: "{{ tomcat_catalina_home }}/content/thredds/public"
+    src: "{{ tomcat_home }}/content/thredds/public"
     state: link
 
 - name: Copy threddsConfig.xml

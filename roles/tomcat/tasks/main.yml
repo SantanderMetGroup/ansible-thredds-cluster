@@ -4,7 +4,7 @@
     dest: "{{ item }}"
     state: directory
   with_items:
-    - "{{ tomcat_catalina_home }}"
+    - "{{ tomcat_home }}"
     - "{{ jre_install_base }}"
 
 - name: Download dependencies
@@ -14,6 +14,8 @@
     url: "{{ item.url }}"
     dest: "/tmp/{{ item.filename }}"
     headers: "{{ item.header }}"
+  vars:
+    ansible_become: False
   with_items:
     - { url: "{{ jre_download_url }}", filename: "{{ jre_filename }}", header: "{{ jre_header }}" }
     - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
@@ -25,10 +27,16 @@
     extra_opts:
       --strip-components=1
   with_items:
-    - { filename: "{{ tomcat_filename }}", dest: "{{ tomcat_catalina_home }}" }
+    - { filename: "{{ tomcat_filename }}", dest: "{{ tomcat_home }}" }
     - { filename: "{{ jre_filename }}", dest: "{{ jre_install_base }}" }
 
-- name: Create tomcat_instances_path
+- name: Create tomcat_base
   file: 
-    dest: "{{ tomcat_instances_path }}"
+    dest: "{{ tomcat_base }}"
     state: directory
+
+- name: Delete unnecessary stuff
+  file:
+    state: absent
+    path: "{{ tomcat_home }}/{{ item }}"
+  with_items: "{{ tomcat_to_be_removed }}"

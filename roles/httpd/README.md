@@ -4,45 +4,52 @@ This role deploys an httpd server, either from source or from system binaries.
 
 ## Variables
 
-### Public vars
+httpd_server_root: "{{ ansible_env.HOME }}/httpd"
+httpd_document_root: "{{ httpd_server_root }}/htdocs"
+httpd_version: '2.4.25'
+httpd_port: 8000
+httpd_src: "{{ httpd_server_root }}/src"
+httpd_conf_path: "{{ httpd_server_root }}/conf"
+httpd_conf_file: "{{ httpd_conf_path }}/httpd.conf"
+httpd_version_major: "{{ httpd_version|truncate(3, False, '', 0) }}"
+httpd_mirror: https://archive.apache.org/dist/httpd/
+httpd_filename_unarchive: "httpd-{{ httpd_version }}"
+httpd_filename: "{{ httpd_filename_unarchive }}.tar.gz"
+httpd_download_url: "{{ httpd_mirror }}/{{ httpd_filename }}"
+httpd_to_be_removed: ['build','build-1','icons','man','manual','src','include']
 
-Vars that must be considered by the user of the role.
+### APR
+  
+apr_version: "1.5.2"
+apr_filename_unarchive: "apr-{{ apr_version }}"
+apr_filename: "{{ apr_filename_unarchive }}.tar.gz"
+apr_mirror: http://archive.apache.org/dist/apr
+apr_download_url: "{{ apr_mirror }}/{{ apr_filename }}"
+apr_install_base: "{{ httpd_server_root }}"
+apr_version: "1.5.2"
+apr_filename_unarchive: "apr-{{ apr_version }}"
+apr_filename: "{{ apr_filename_unarchive }}.tar.gz"
+apr_mirror: http://archive.apache.org/dist/apr
+apr_download_url: "{{ apr_mirror }}/{{ apr_filename }}"
+apr_install_base: "{{ httpd_server_root }}"
 
-- httpd\_server\_root - Optional. Directory under httpd will be deployed. Default (for source): {{ ansible\_env.HOME }}/httpd. Default (for binary): /etc/httpd
-- httpd\_version - Optional. Default: 2.4.25
-- httpd\_port - Optional. Default: 8000
-- httpd\_document\_root: Optional. Default (for source): {{ httpd\_server\_root }}/htdocs. Default (for binary): "/var/www/html"
-- httpd\_conf\_dir: Optional. Default: {{ httpd\_server\_root }}/conf.
-- httpd\_src - Optional. Where to keep src files. Default: {{ httpd\_server\_root }}/src
-- httpd\_source - Optional. If true, install from source else install from binaries. Default: True.
+### APR util
 
-### Private vars
+apr_util_version: "1.5.4"
+apr_util_filename_unarchive: "apr-util-{{ apr_util_version }}"
+apr_util_filename: "{{ apr_util_filename_unarchive }}.tar.gz"
+apr_util_mirror: http://archive.apache.org/dist/apr
+apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_filename }}"
+apr_util_install_base: "{{ httpd_server_root }}"
 
-Vars only interesting for developers of the role.
+### PCRE
 
-- httpd\_version\_major: "{{ httpd\_version|truncate(3, False, '', 0) }}"
-- httpd\_mirror: https://archive.apache.org/dist/httpd/
-- httpd\_filename\_unarchive: "httpd-{{ httpd\_version }}"
-- httpd\_filename: "{{ httpd\_filename\_unarchive }}.tar.gz"
-- httpd\_download\_url: "{{ httpd\_mirror }}/{{ httpd\_filename }}"
-- apr\_version: "1.5.2"
-- apr\_filename\_unarchive: "apr-{{ apr\_version }}"
-- apr\_filename: "{{ apr\_filename\_unarchive }}.tar.gz"
-- apr\_mirror: http://archive.apache.org/dist/apr
-- apr\_download\_url: "{{ apr\_mirror }}/{{ apr\_filename }}"
-- apr\_install\_base: "{{ httpd\_server\_root }}"
-- apr\_util\_version: "1.5.4"
-- apr\_util\_filename\_unarchive: "apr-util-{{ apr\_util\_version }}"
-- apr\_util\_filename: "{{ apr\_util\_filename\_unarchive }}.tar.gz"
-- apr\_util\_mirror: http://archive.apache.org/dist/apr
-- apr\_util\_download\_url: "{{ apr\_util\_mirror }}/{{ apr\_util\_filename }}"
-- apr\_util\_install\_base: "{{ httpd\_server\_root }}"
-- pcre\_version: "8.40"
-- pcre\_filename\_unarchive: "pcre-{{ pcre\_version }}"
-- pcre\_filename: "{{ pcre\_filename\_unarchive }}.tar.gz"
-- pcre\_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
-- pcre\_download\_url: "{{ pcre\_mirror }}/{{ pcre\_filename }}"
-- pcre\_install\_base: "{{ httpd\_server\_root }}"
+pcre_version: "8.40"
+pcre_filename_unarchive: "pcre-{{ pcre_version }}"
+pcre_filename: "{{ pcre_filename_unarchive }}.tar.gz"
+pcre_mirror: http://ftp.cs.stanford.edu/pub/exim/pcre
+pcre_download_url: "{{ pcre_mirror }}/{{ pcre_filename }}"
+pcre_install_base: "{{ httpd_server_root }}"
 
 ## Doc
 

@@ -1,14 +1,14 @@
 #################### Tomcat BASE ####################
 - name: Create directory for each tap instance
   file:
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}"
+    dest: "{{ tomcat_base }}/{{ item.name }}"
     state: directory
   with_items:
     - "{{ tap_instances }}"
 
 - name: Create dirs for instances
   file:
-    path: "{{ tomcat_instances_path }}/{{ item.0.name }}/{{ item.1 }}"
+    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
     state: directory
   with_nested:
     - "{{ tap_instances }}"
@@ -16,8 +16,8 @@
 
 - name: Create soft links from instances to tomcat
   file:
-    dest: "{{ tomcat_instances_path }}/{{ item.0.name }}/{{ item.1 }}"
-    src: "{{ tomcat_catalina_home }}/{{ item.1 }}"
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
+    src: "{{ tomcat_home }}/{{ item.1 }}"
     state: link
   with_nested:
     - "{{ tap_instances }}"
@@ -26,40 +26,44 @@
 - name: Copy web.xml
   copy:
     src: web.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/web.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/web.xml"
   with_items: "{{ tap_instances }}"
 
 - name: Copy server.xml 
   template:
     src: server.xml.j2
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/server.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
   with_items: "{{ tap_instances }}"
 
 - name: Copy context.xml
   copy:
     src: context.xml
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/context.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
   with_items: "{{ tap_instances }}"
 
 - name: Copy tomcat-users.xml
   template:
     src: tomcat-users.xml.j2
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/conf/tomcat-users.xml"
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
   with_items: "{{ tap_instances }}"
 
 #################### TAP ####################
 - name: Clone TAP subversion repository
   local_action: subversion repo=https://meteo.unican.es/svn/repos/meteo/software/tap dest=/tmp/tap/
   run_once: True
+  vars:
+    ansible_become: False
 
 - name: Build TAP
   local_action: command mvn package chdir="/tmp/tap"
   run_once: True
+  vars:
+    ansible_become: False
 
 - name: Copy udg-tap.war in TAP instances
   copy:
     src: /tmp/tap/target/udg-tap.war
-    dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/udg-tap.war"
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/udg-tap.war"
   with_items: "{{ tap_instances }}"
 
 #################### Gateway ####################

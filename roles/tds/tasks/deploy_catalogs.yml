@@ -1,8 +1,7 @@
 - name: Synchronize catalogs
   synchronize:
     src: "{{ item.catalogs.src }}/"
-    # tds_instance_default_content_root is a fact declared in deploy_content_thredds.yml
-    dest: "{{ instance.0.tds_content_root | default(tds_instance_default_content_root) }}/thredds/{{ item.path }}"
+    dest: "{{ instance.0.tds_content_root | default(tomcat_base+'/'+instance.0.name+'/content') }}/thredds/{{ item.path }}"
     archive: False
     recursive: True
   with_items: "{{ collections }}"

@@ -1,25 +1,22 @@
 - set_fact:
+    ansible_become: "{{ ansible_become }}"
+    venv_home: "{{ venv_home }}"
     httpd_conf_path: "{{ httpd_conf_path }}"
     httpd_document_root: "{{ httpd_document_root }}"
+  tags: always
 
 - include_tasks: install_from_source.yml
-  when: httpd_source
-  tags: install
-
-- include_tasks: install_from_binary.yml
-  when: not httpd_source
-  tags: install
+  tags: install,httpd
 
 - name: Copy httpd.conf
   template: 
-    src: httpd.conf.j2
+    src: httpd.conf.2{{ httpd_version_major|last }}.j2
     dest: "{{ httpd_conf_path }}/httpd.conf"
 
 - name: Create httpd supervisord configuration
   template:
     src: httpd_supervisord.conf.j2
     dest: "{{ supervisord_programs }}/httpd.conf"
-  when: httpd_source
 
 - name: Create password for proxy status web pages
   htpasswd:
@@ -37,4 +34,3 @@
     username: "{{ applications.supervisord.user }}"
     password: "{{ applications.supervisord.password }}"
     server_url: "http://localhost:{{ supervisord_port }}"
-  when: httpd_source

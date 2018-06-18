@@ -14,18 +14,26 @@ function shutdown()
 
 echo "Starting Tomcat"
 WORKER={{ item.name }}
-export CATALINA_HOME={{ tomcat_catalina_home }}
-export CATALINA_BASE={{ tomcat_instances_path }}/${WORKER}
+export CATALINA_HOME={{ tomcat_home }}
+export CATALINA_BASE={{ tomcat_base }}/${WORKER}
 export JRE_HOME={{ jre_install_base }}
 export CONTENT_ROOT="-Dtds.content.root.path={{ item.tds_content_root | default('$CATALINA_BASE/content') }}"
 export JAVA_PREFS_ROOTS="-Djava.util.prefs.systemRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs -Djava.util.prefs.userRoot=$CATALINA_BASE/content/thredds/javaUtilPrefs"
 #export LD_LIBRARY_PATH=/usr/local/apr/lib
 
 # Some commonly used JAVA_OPTS settings:
-#
+
+# This if-else is needed because default() filter only works at one level
+# and we want java_opts and its subelements to be optional
+{% if item.java_opts is defined %}
+NORMAL="{{ item.java_opts.normal | default('-d64 -Xmx4096m -Xms512m -server -ea') }}"
+HEAP_DUMP="{{ item.java_opts.head_dump | default('-XX:+HeapDumpOnOutOfMemoryError') }}"
+HEADLESS="{{ item.java_opts.headless | default('-Djava.awt.headless=true') }}"
+{% else %}
 NORMAL="-d64 -Xmx4096m -Xms512m -server -ea"
 HEAP_DUMP="-XX:+HeapDumpOnOutOfMemoryError"
 HEADLESS="-Djava.awt.headless=true"
+{% endif %}
 
 #
 # Standard setup.
@@ -37,6 +45,7 @@ export JAVA_OPTS
 export CATALINA_PID=$CATALINA_BASE/logs/catalina.pid
 
 {% if tds_debug %}
+export JPDA_ADDRESS="192.168.50.11:8000"
 . $CATALINA_HOME/bin/catalina.sh jpda start
 {% else %}
 . $CATALINA_HOME/bin/catalina.sh start

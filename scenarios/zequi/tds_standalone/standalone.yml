@@ -32,6 +32,10 @@
       - name: instance1
         shutdown: 8089
         tds_content_root: "{{ root }}/content"
+        java_opts:
+          normal: "-d64 -Xmx512m -Xms512m -server -ea"
+          head_dump: "-XX:+HeapDumpOnOutOfMemoryError"
+          headless: "-Djava.awt.headless=true"
         connectors:
           - type: http
             port: '8080'
@@ -74,14 +78,14 @@
     - name: Copy FakeAuthorizer.class in tds applicationContext.xml
       copy:
         src: FakeAuthorizer.class
-        dest: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/FakeAuthorizer.class"
+        dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/FakeAuthorizer.class"
       with_items: "{{ tds_instances }}"
 
     - name: Use FakeAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
       replace:
         regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.FakeAuthorizer">'
-        path: "{{ tomcat_instances_path }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
     # management
