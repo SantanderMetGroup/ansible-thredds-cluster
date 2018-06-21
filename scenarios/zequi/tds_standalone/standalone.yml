@@ -103,12 +103,14 @@
             <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
           </service>
       with_items: "{{ tds_instances }}"
+      tags: update_catalogs
 
     - name: Register datasets in catalog
       find:
         paths: "{{ item.tds_content_root }}/thredds/public/"
       with_items: "{{ tds_instances }}"
       register: instances_datasets
+      tags: update_catalogs
 
     - name: Add datasets in content/thredds/public to the main catalog
       lineinfile:
@@ -118,6 +120,7 @@
       with_subelements:
         - "{{ instances_datasets.results }}"
         - files
+      tags: update_catalogs
 
     # management
     - name: Restart TDS
@@ -129,6 +132,4 @@
         password: "{{ applications.supervisord.password }}"
       with_items:
         - "{{ tds_instances }}"
-      tags:
-        - restart
-        - update_catalogs
+      tags: ['restart', 'update_catalogs']
