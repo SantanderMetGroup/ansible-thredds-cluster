@@ -8,6 +8,12 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 - ./toolsUI inits the toolsUI interface in the background
 - ./ncjdump is a shorcut to `java -cp toolsUI.jar ucar.nc2.NCdumpW "$@"`
 
+The THREDDS instance is populated with the following data:
+
+- THREDDS catalogs contained in data/catalogs
+- Datasets contained in data/datasets
+- A <dataset> entry is created in the main catalog for each file found in data/datasets, although this is not recursive
+
 ## Requirements
 
 1. ssh key pair in your ~/.ssh directory and authorized to ssh to localhost
@@ -18,9 +24,9 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 1. `git clone --recursive -b devel https://github.com/SantanderMetGroup/ansible-thredds-cluster`
 1. `cd ansible-thredds-cluster/scenarios/zequi/tds_standalone`
 1. `./run.sh -h`
-1. Example: `./run.sh -r ~/sandbox -c ~/work/TDSSPOCK/catalogs -d ~/work/TDSSPOCK/datasets`
+1. Example: `./run.sh -r /tmp/sandbox`
 1. (in web browser) localhost:8080/thredds
-1. After adding new content to the `data` directory: `./run.sh -r ~/sandbox -c ~/work/TDSSPOCK/catalogs -d ~/work/TDSSPOCK/datasets -u`
+1. After adding new content to the `data` directory: `./run.sh -r ~/sandbox -u`
 
 ## Usage in vagrant
 

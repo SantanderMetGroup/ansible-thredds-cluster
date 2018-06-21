@@ -2,9 +2,10 @@
   vars:
     root: "/tmp/sandbox"
     # roles customization
-    tomcat_catalina_home: "{{ root }}/tomcat"
+    tomcat_home: "{{ root }}/tomcat-home"
+    tomcat_base: "{{ root }}/tomcat-base"
     miniconda_python: 2
-    miniconda_prefix: "{{ tomcat_catalina_home }}/miniconda2"
+    miniconda_prefix: "{{ root }}/miniconda2"
     miniconda_manage_dependencies: False
     miniconda_env:
       name: udg
@@ -21,7 +22,7 @@
 
     ## collections
     collections:
-      - path: udg-tds
+      - path: aCollection
         catalogs:
           src: "{{ catalogs_path | default('data/catalogs') }}"
 
@@ -40,7 +41,7 @@
           - type: http
             port: '8080'
         replicas:
-          - name: udg-tds
+          - name: aCollection
 
     ## datasets
     datasets:
@@ -87,6 +88,36 @@
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.FakeAuthorizer">'
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
+
+    # create datasets in main catalog for datasets in public
+    - name: Add datasetRoot and services to main catalog
+      blockinfile:
+        path: "{{ item.tds_content_root }}/thredds/catalog.xml"
+        insertbefore: aCollection
+        marker: "<!-- {mark} datasetRoot and services-->"
+        block: |
+          <datasetRoot path="public" location="content" />
+          <service name="all" base="" serviceType="compound">
+            <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
+            <service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/"/>
+            <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
+          </service>
+      with_items: "{{ tds_instances }}"
+
+    - name: Register datasets in catalog
+      find:
+        paths: "{{ item.tds_content_root }}/thredds/public/"
+      with_items: "{{ tds_instances }}"
+      register: instances_datasets
+
+    - name: Add datasets in content/thredds/public to the main catalog
+      lineinfile:
+        path: "{{ item.0.item.tds_content_root }}/thredds/catalog.xml"
+        insertbefore: </catalog>
+        line: <dataset name="{{ item.1.path | basename }}" ID="{{ item.1.path | basename }}" urlPath="public/{{ item.1.path | basename }}" serviceName="all" />
+      with_subelements:
+        - "{{ instances_datasets.results }}"
+        - files
 
     # management
     - name: Restart TDS

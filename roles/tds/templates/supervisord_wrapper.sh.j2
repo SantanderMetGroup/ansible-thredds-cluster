@@ -44,8 +44,8 @@ export JAVA_OPTS
 
 export CATALINA_PID=$CATALINA_BASE/logs/catalina.pid
 
-{% if tds_debug %}
-export JPDA_ADDRESS="{{ ansible_eth1.ipv4.address }}:8000"
+{% if tds_debug and ansible_eth0 is defined %}
+export JPDA_ADDRESS="{{ tds_debug_jpda_ip }}:8000"
 . $CATALINA_HOME/bin/catalina.sh jpda start
 {% else %}
 . $CATALINA_HOME/bin/catalina.sh start

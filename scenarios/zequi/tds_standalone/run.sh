@@ -1,16 +1,10 @@
 #!/bin/bash
-usage() { echo "Usage: $0 -r root_path -c catalogs_path -d datasets_path [-u]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -r root_path [-u]" 1>&2; exit 1; }
 
-while getopts ":r:c:d:uh" o; do
+while getopts ":r:uh" o; do
     case $o in
 	r)
 	    r=${OPTARG}
-	    ;;
-	c)
-	    c=${OPTARG}
-	    ;;
-	d)
-	    d=${OPTARG}
 	    ;;
 	u)
 	    u=true
@@ -22,7 +16,7 @@ while getopts ":r:c:d:uh" o; do
 done
 
 if [ $u ] ; then
-    ansible-playbook standalone.yml --limit localhost -e root=$r -e catalogs_path=$c -e datasets_path=$d --tags update_catalogs
+    ansible-playbook standalone.yml --limit localhost -e root=$r --tags update_catalogs
 else
-    ansible-playbook standalone.yml --limit localhost -e root=$r -e catalogs_path=$c -e datasets_path=$d
+    ansible-playbook standalone.yml --limit localhost -e root=$r
 fi
