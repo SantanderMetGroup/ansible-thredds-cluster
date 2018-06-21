@@ -115,7 +115,7 @@
     - name: Add datasets in content/thredds/public to the main catalog
       blockinfile:
         path: "{{ item.0.item.tds_content_root }}/thredds/catalog.xml"
-        marker: "<!-- {mark} {{ item.1.path | basename }}"
+        marker: "<!-- {mark} {{ item.1.path | basename }} -->"
         insertbefore: </catalog>
         block: |
           <dataset name="{{ item.1.path | basename }}" ID="{{ item.1.path | basename }}" urlPath="public/{{ item.1.path | basename }}" serviceName="all" />
