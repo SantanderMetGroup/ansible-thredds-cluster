@@ -10,9 +10,9 @@ This scenario deploys a sandbox, using the framework provided by TDS Collections
 
 The THREDDS instance is populated with the following data:
 
-- THREDDS catalogs contained in data/catalogs
-- Datasets contained in data/datasets
-- A <dataset> entry is created in the main catalog for each file found in data/datasets, although this is not recursive
+- THREDDS catalogs contained in `data/catalogs`
+- Datasets contained in `data/datasets`
+- A \<dataset\> entry is created in the main catalog for each file found in data/datasets, although this is not recursive
 
 ## Requirements
 
@@ -25,12 +25,12 @@ The THREDDS instance is populated with the following data:
 1. `cd ansible-thredds-cluster/scenarios/zequi/tds_standalone`
 1. `./run.sh -h`
 1. Example: `./run.sh -r /tmp/sandbox`
-1. (in web browser) localhost:8080/thredds
+1. (in web browser) `localhost:8080/thredds`
 1. After adding new content to the `data` directory: `./run.sh -r /tmp/sandbox -u`
 
 ## Usage in vagrant
 
-Vagrantfile is provided if you want to test the deployment without polluting your system. The default ip for the virtual machines are '192.168.50.10' and '192.168.50.11'.
+Vagrantfile is provided if you want to test the deployment without polluting your system. The default ip for the virtual machines are `192.168.50.10` and `192.168.50.11`.
 
 1. `vagrant up`
 1. `vagrant ssh ubuntu` or `vagrant ssh centos`
