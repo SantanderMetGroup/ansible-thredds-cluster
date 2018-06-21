@@ -26,7 +26,7 @@ The THREDDS instance is populated with the following data:
 1. `./run.sh -h`
 1. Example: `./run.sh -r /tmp/sandbox`
 1. (in web browser) localhost:8080/thredds
-1. After adding new content to the `data` directory: `./run.sh -r ~/sandbox -u`
+1. After adding new content to the `data` directory: `./run.sh -r /tmp/sandbox -u`
 
 ## Usage in vagrant
 
