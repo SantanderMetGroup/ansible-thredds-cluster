@@ -1,5 +1,5 @@
 #!/bin/bash
-usage() { echo 'Usage: $0 -r root_path [-u] (deploy|boot|stop|restart)' 1>&2; exit 1; }
+usage() { echo 'Usage: ./run.sh -r root_path [-u] (deploy|boot|stop|restart)' 1>&2; exit 1; }
 
 while getopts ":r:uh" o; do
 	case $o in

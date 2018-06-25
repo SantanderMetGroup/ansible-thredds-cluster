@@ -144,8 +144,8 @@
         password: "{{ applications.supervisord.password }}"
       with_items:
         - "{{ tds_instances }}"
-      tags: stop
+      tags: ['stop', 'never']
 
     - name: Stop supervisor 
       shell: kill -9 $(cat {{ venv_home }}/var/supervisord.pid)
-      tags: stop
+      tags: ['stop', 'never']
