@@ -1,4 +1,3 @@
-# Control Tomcat instances with supervisord
 - name: Create tomcat instances configuration file
   template:
     src: supervisord_wrapper.sh.j2
@@ -11,7 +10,6 @@
     dest: "{{ supervisord_programs }}/{{ item.name }}.conf"
   register: tomcat_conf_supervisord
 
-# Reread supervisord configuration and add tds_{{ intance.base_port }} program to supervisord
 - name: Add tds_instance programmes to supervisord
   supervisorctl:
     name: "{{ item.name }}"

@@ -1,6 +1,5 @@
 - hosts: all
   vars:
-    root: "/tmp/sandbox"
     # roles customization
     tomcat_home: "{{ root }}/tomcat-home"
     tomcat_base: "{{ root }}/tomcat-base"
@@ -135,3 +134,18 @@
       with_items:
         - "{{ tds_instances }}"
       tags: ['restart', 'update_catalogs']
+
+    - name: Stop TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: stopped
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        username: "{{ applications.supervisord.user }}"
+        password: "{{ applications.supervisord.password }}"
+      with_items:
+        - "{{ tds_instances }}"
+      tags: stop
+
+    - name: Stop supervisor 
+      shell: kill -9 $(cat {{ venv_home }}/var/supervisord.pid)
+      tags: stop

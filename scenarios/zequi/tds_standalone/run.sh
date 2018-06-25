@@ -1,22 +1,26 @@
 #!/bin/bash
-usage() { echo "Usage: $0 -r root_path [-u]" 1>&2; exit 1; }
+usage() { echo 'Usage: $0 -r root_path [-u] (deploy|boot|stop|restart)' 1>&2; exit 1; }
 
 while getopts ":r:uh" o; do
-    case $o in
+	case $o in
 	r)
-	    r=${OPTARG}
-	    ;;
+		r=${OPTARG}
+		;;
 	u)
-	    u=true
-	    ;;
+		u=true
+		;;
 	h)
-	    usage
-	    ;;
-    esac
+		usage
+		;;
+	esac
 done
 
-if [ $u ] ; then
-    ansible-playbook standalone.yml --limit localhost -e root=$r --tags update_catalogs
+if [ "${@: -1}" = "deploy" ]; then
+	if [ $u ] ; then
+		ansible-playbook standalone.yml --limit localhost -e root=$r --tags update_catalogs
+	else
+		ansible-playbook standalone.yml --limit localhost -e root=$r
+	fi
 else
-    ansible-playbook standalone.yml --limit localhost -e root=$r
+	ansible-playbook standalone.yml --limit localhost -e root=$r --tags "${@: -1}"
 fi

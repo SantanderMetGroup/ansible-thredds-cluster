@@ -5,4 +5,4 @@ virtualenv virtualenv
 source virtualenv/bin/activate
 pip install --upgrade pip setuptools
 pip install ansible==2.5.*
-./run.sh -r ~/tds -c data/catalogs/ -d data/datasets
+./run.sh -r ~/tds deploy

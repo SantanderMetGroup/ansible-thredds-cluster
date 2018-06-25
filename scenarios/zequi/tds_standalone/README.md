@@ -24,9 +24,11 @@ The THREDDS instance is populated with the following data:
 1. `git clone --recursive -b devel https://github.com/SantanderMetGroup/ansible-thredds-cluster`
 1. `cd ansible-thredds-cluster/scenarios/zequi/tds_standalone`
 1. `./run.sh -h`
-1. Example: `./run.sh -r /tmp/sandbox`
+1. Deploy the TDS instance `./run.sh -r /tmp/sandbox deploy`
 1. (in web browser) `localhost:8080/thredds`
-1. After adding new content to the `data` directory: `./run.sh -r /tmp/sandbox -u`
+1. After adding new content to the `data` directory and perform only the update of the catalogs: `./run.sh -r /tmp/sandbox -u deploy`
+1. Stop all the processes: `./run.sh -r /tmp/sandbox stop`
+1. Start all the processes: `./run.sh -r /tmp/sandbox boot`
 
 ## Usage in vagrant
 
