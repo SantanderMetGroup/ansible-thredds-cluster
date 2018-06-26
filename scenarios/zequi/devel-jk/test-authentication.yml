@@ -1,0 +1,35 @@
+- name: Add a dummy role and a dummy user to tomcat instances
+  blockinfile:
+    marker: "<!-- {mark} Test users -->"
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
+    insertbefore: "</tomcat-users>"
+    block: |
+      <role rolename="restricted"/>
+      <user username="alice" password="1234" roles="restringido,restrictedDatasetUser"/>
+  with_items: "{{ tds_instances }}"
+
+- name: Add user realm as a global resource to instances
+  blockinfile:
+    marker: "<!-- {mark} User resource -->"
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    insertbefore: "</GlobalNamingResources>"
+    block: |
+      <Resource name="UserDatabase" 
+                auth="Container"
+                type="org.apache.catalina.UserDatabase"
+                description="User database that can be updated and saved"
+                factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+                pathname="conf/tomcat-users.xml" />
+  with_items: "{{ tds_instances }}"
+
+- name: Add user realm to instances
+  blockinfile:
+    marker: "<!-- {mark} User realm -->"
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    insertbefore: "<Host"
+    block: |
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
+      </Realm>
+  with_items: "{{ tds_instances }}"
+

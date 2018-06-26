@@ -1,0 +1,24 @@
+- name: Register balance workers in proxy
+  blockinfile:
+    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    block: |
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ ansible_host }}
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.port={{ item.1.port }}
+  delegate_to: "{{ item.1.proxy }}"
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}" # depends on how httpd was installed
+  with_subelements:
+    - "{{ tds_instances }}"
+    - connectors
+  when: item.1.type == "ajp"
+
+- name: Register replicas in proxy
+  include_tasks: jk_workers.yml
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  loop_control:
+    loop_var: replica
+
