@@ -2,26 +2,24 @@
 
 This role deploys a tds instance inside the tomcat server deployed by the 'tomcat' role.
 
+## Role dependencies
+
+- tomcat
+
 ## Variables
 
-### Public vars
-
-Vars that must be considered by the user of the role:
-
-- `tds_version`: 4.6.11
+- `tds_version`: `'ESGF-5.0.1'`
+- `tds_filename_unarchive`: `"tds-{{ tds_version }}"`
+- `tds_filename`: `"{{ tds_filename_unarchive }}.war"`
 - `tds_mirror`: `http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/`
-- `tds_download_url`: `{{ tds_mirror }}/{{ tds_version }}/tds-{{ tds_version }}.war`
-- `tds_debug`: `False`. If `True`, tds instances are started as `catalina.sh jpda start`
+- `tds_download_url`: `"{{ tds_mirror }}/{{ tds_version }}/tds-{{ tds_version }}.war"`
+- `tds_debug`: `False`
 
 Vars for **tds_instances**:
 
 - `name`: Identifier for the instance, also used in the path to the instance (appended to `tomcat_base`)
 - `shutdown`: Port for tomcat shutdown
 - `tds_content_root`: Path to the content root of the TDS instance. Default is `$CATALINA_BASE/content`
-- `java_opts`: JVM params
-  - `normal`: e.g. `-d64 -Xmx4096m -Xms512m -server -ea`
-  - `head_dump`: e.g. `-XX:+HeapDumpOnOutOfMemoryError`
-  - `headless`: e.g. `-Djava.awt.headless=true`
 - `connectors`: Connectors for tomcat
   - `type`: (http|ajp)
   - `port`: Port number for the connector
@@ -42,13 +40,6 @@ Vars for **datasets**:
 - `src`: Local path to the datasets directory
 - `dest`: Absolute remote path where datasets will be copied. If empty, datasets are copied to `content/thredds/public`
 
-### Private vars
-
-Vars only interesting for developers of the role.
-
-- `tds_filename_unarchive`: `tds-{{ tds_version }}`
-- `tds_filename`: `{{ tds_filename_unarchive }}.war`
-
-## Doc
+## Documentation
 
 TDS is downloaded from [Unidata Nexus repository](https://artifacts.unidata.ucar.edu/).

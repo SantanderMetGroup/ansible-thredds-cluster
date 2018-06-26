@@ -5,7 +5,7 @@
     block: |
       worker.list=COLLECTION_{{ replica.1.name | replace("/", "-") }}
       worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.type=lb
-      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.sticky_session=false
+      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.sticky_session=true
   delegate_to: "{{ item.1.proxy }}"
   when: item.1.proxy is defined
   with_subelements:
@@ -23,18 +23,5 @@
     - connectors
   when: 
     - item.1.proxy is defined
-    - item.1.type == "ajp"
-    - replica.0.name == item.0.name
-
-- name: Set the authenticator worker
-  lineinfile:
-    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
-    state: present
-    line: 'worker.authenticator.balance_workers={{ ansible_hostname }}_{{ item.1.port}}'
-  delegate_to: "{{ item.1.proxy }}"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - connectors
-  when: 
     - item.1.type == "ajp"
     - replica.0.name == item.0.name

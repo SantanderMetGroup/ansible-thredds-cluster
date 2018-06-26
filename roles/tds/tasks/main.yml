@@ -47,6 +47,12 @@
     dest: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
   with_items: "{{ tds_instances }}"
 
+- name: Template catalina_vars
+  template:
+    src: catalina_vars.j2
+    dest: "{{ tomcat_base }}/{{ item.name }}/catalina_vars"
+  with_items: "{{ tds_instances }}"
+
 #################### TDS ####################
 - name: Download tds
   run_once: True
