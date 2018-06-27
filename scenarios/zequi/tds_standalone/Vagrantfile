@@ -1,13 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant nodeuration is done below. The "2" in Vagrant.configure
-# nodeures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-
-PROJECT_NAME = File.basename(Dir.getwd)
-
 def ssh_key_gen(box)
   $script = <<-SCRIPT
     ssh-keygen -t rsa -b 4096 -f /home/vagrant/.ssh/id_rsa -N ""
@@ -41,7 +34,7 @@ Vagrant.configure("2") do |config|
     
     ubuntu.vm.provider :virtualbox do |vb|
       vb.linked_clone = true
-      vb.customize ['modifyvm', :id,'--groups', '/'+PROJECT_NAME,"--memory", "1024"]
+      vb.customize ['modifyvm', :id, "--memory", "1024"]
     end
   end
 
@@ -65,7 +58,7 @@ Vagrant.configure("2") do |config|
     
     centos.vm.provider :virtualbox do |vb|
       vb.linked_clone = true
-      vb.customize ['modifyvm', :id,'--groups', '/'+PROJECT_NAME,"--memory", "1024"]
+      vb.customize ['modifyvm', :id, "--memory", "1024"]
     end
   end
 end
