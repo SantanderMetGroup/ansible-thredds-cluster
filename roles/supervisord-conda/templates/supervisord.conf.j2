@@ -3,9 +3,9 @@ file={{ supervisord_var }}/supervisor.sock   ; (the path to the socket file)
 
 [inet_http_server]          ; inet (TCP) server disabled by default
 port=*:{{ supervisord_port }}        			; (ip_address:port specifier, *:port for all iface)
-{% if applications.supervisord.username is defined %}
-username={{ application.supervisord.username }}
-password={SHA}{{ applications.supervisord.password |hash('sha1') }}
+{% if supervisord_user is defined %}
+username={{ supervisord_user }}
+password={SHA}{{ supervisord_password |hash('sha1') }}
 {% endif %}
 
 [supervisord]

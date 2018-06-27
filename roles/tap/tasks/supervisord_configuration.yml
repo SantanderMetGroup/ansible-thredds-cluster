@@ -18,7 +18,7 @@
     state: present
     supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
     config: "{{ supervisord_etc }}/supervisord.conf"
-    username: "{{ applications.supervisord.user }}"
-    password: "{{ applications.supervisord.password }}"
+    username: "{{ supervisord_user | default(omit) }}"
+    password: "{{ supervisord_password | default(omit) }}"
     server_url: "http://localhost:{{ supervisord_port }}"
   when: tomcat_conf_supervisord.changed

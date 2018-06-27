@@ -77,6 +77,7 @@
   
 - name: Create password for proxy status web pages
   htpasswd:
-    path: "{{ mod_jk_status_passwd }}/.htpasswd"
-    username: "{{ applications.proxy.status.user }}"
-    password: "{{ applications.proxy.status.password }}"
+    path: "{{ mod_jk_status_path }}/.htpasswd"
+    username: "{{ mod_jk_status_user }}"
+    password: "{{ mod_jk_status_passwd }}"
+  when:  mod_jk_status_user is defined and mod_jk_status_passwd is defined

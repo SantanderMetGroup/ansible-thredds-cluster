@@ -20,8 +20,6 @@
     httpd_port: 8080
     venv_home: "{{ ansible_env.HOME }}/virtualenv"
     mod_jk_configure: --with-apxs=/usr/bin/apxs # /usr/sbin/apxs for CentOS 6
-  vars_files:
-    - secret.yml
   roles:
     - role: httpd-bin
     - role: jk-gateway
@@ -39,10 +37,7 @@
 
     derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
     derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
-  vars_files:
-    - secret.yml
   roles:
-    - role: ansible-miniconda-role
     - role: supervisord-conda
     - role: tds-jk
 
@@ -63,8 +58,8 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        username: "{{ applications.supervisord.user }}"
-        password: "{{ applications.supervisord.password }}"
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: [restart, update_catalogs]

@@ -14,12 +14,6 @@
         - supervisor=3.1.3
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
     
-    ## secrets
-    applications:
-      supervisord:
-        user: supervisor    
-        password: supervisor
-
     ## collections
     collections:
       - path: aCollection
@@ -126,8 +120,6 @@
         name: "{{ item.name }}"
         state: restarted
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
-        username: "{{ applications.supervisord.user }}"
-        password: "{{ applications.supervisord.password }}"
       with_items:
         - "{{ tds_instances }}"
       tags: ['restart', 'update_catalogs']
@@ -137,8 +129,6 @@
         name: "{{ item.name }}"
         state: stopped
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
-        username: "{{ applications.supervisord.user }}"
-        password: "{{ applications.supervisord.password }}"
       with_items:
         - "{{ tds_instances }}"
       tags: ['stop', 'never']

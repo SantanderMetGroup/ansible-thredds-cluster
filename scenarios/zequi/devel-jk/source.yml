@@ -23,8 +23,6 @@
     httpd_port: 8080
     mod_jk_configure: --prefix={{ httpd_server_root }}/modules --with-apxs={{ httpd_server_root }}/bin/apxs
     venv_home: "{{ httpd_server_root }}/virtualenv"
-  vars_files:
-    - secret.yml
   roles:
     - role: supervisord-virtualenv
     - role: httpd
@@ -44,8 +42,6 @@
     derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
 
     tds_debug: True
-  vars_files:
-    - secret.yml
   roles:
     - role: supervisord-conda
     - role: tds
@@ -58,8 +54,8 @@
       supervisorctl:
         name: httpd
         state: restarted
-        username: "{{ applications.supervisord.user }}"
-        password: "{{ applications.supervisord.password }}"
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ hostvars[item].venv_home }}/bin/supervisorctl"
       run_once: True
       delegate_to: "{{ item }}"
@@ -70,8 +66,8 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        username: "{{ applications.supervisord.user }}"
-        password: "{{ applications.supervisord.password }}"
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: ["restart","update_catalogs"]

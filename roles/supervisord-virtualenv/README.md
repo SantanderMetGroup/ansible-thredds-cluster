@@ -6,6 +6,15 @@ The purpose of this role is to deploy a python virtualenv.
 
 None.
 
+## Role usage
+
+If you want the supervisord to be proctected with password, you have to declare the following variables:
+
+- `supervisord_user`: User name
+- `supervisord_password`: User password
+
+If they are not declared, supervisord is not protected.
+
 ## Variables
 
 - `venv_home`: `"{{ ansible_env.HOME }}"` - Path where the virtualenv will be created.
