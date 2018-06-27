@@ -1,0 +1,41 @@
+- name: Configure private network
+  hosts: all
+  become: True
+  tasks:
+          - name: Copy interface configuration files
+            copy: >
+                  src=files/{{ ansible_hostname }}_eth1.cfg
+                  dest=/etc/network/interfaces.d/eth1.cfg
+
+          - name: Enable interface
+            command: "ifup eth1"
+
+
+- name: Deploy HAProxy on load balancer
+  gather_facts: False
+  hosts: load-balancer
+  become: True
+  roles:
+          - role: haproxy-bin
+          
+- name: Configure servers with Tomcat
+  gather_facts: False
+  hosts: servers
+  become: True
+  vars_files:
+          - secret.yml
+  vars:
+          miniconda_python: 2
+          miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
+          miniconda_env:
+                name: udg
+                dependencies:
+                        - libnetcdf=4.4.1
+                        - supervisor
+          venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+  roles:
+          - role: ansible-miniconda-role
+          - role: supervisord-conda
+          - role: tds
+
+
