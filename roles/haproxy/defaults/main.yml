@@ -1,0 +1,30 @@
+---
+# defaults file for haproxy_pablo
+#
+#
+#Installation variables
+haproxy_url: http://www.haproxy.org/download/1.8/src/haproxy-1.8.12.tar.gz
+haproxy_version: haproxy-1.8.12
+haproxy_filename: "{{ haproxy_version }}.tar.gz"
+haproxy_directory: /home/vagrant/haproxy
+
+#Global config variables
+haproxy_user: 'vagrant'
+haproxy_group: 'vagrant'
+haproxy_mode: 'http'
+haproxy_chroot: '/var/lib/haproxy'
+
+
+#Frontend settings
+haproxy_bind_address: '*'
+haproxy_bind_port: '8080'
+
+#Backend settings
+haproxy_balance_mode: 'roundrobin'
+
+#List of backend servers
+haproxy_servers:
+        - name: server1
+          address: 192.168.10.2:8080
+        - name: server2
+          address: 192.168.10.3:8080
