@@ -16,7 +16,7 @@
     dest: "{{ mod_jk_src }}"
 
 - name: Configure and install mod_jk
-  become: "{{ ansible_become }}"
+  become: "{{ ansible_become | default(False) }}"
   command: "{{ item }}"
   args:
     chdir: "{{ mod_jk_src }}/{{ mod_jk_filename_unarchive }}/native"

@@ -23,6 +23,12 @@
     # - set_fact: httpd_confd="{{ httpd_confd }}"
 
 # Include cluster conf into esgf-httpd.conf
+    - name: Delete Include mod_jk.conf from jk-gateway role
+      lineinfile:
+        state: absent
+        path: /etc/httpd/conf/esgf-httpd.conf
+        regexp: Include /etc/httpd/conf.d/mod_jk.conf
+
     - name: Include mod_jk.conf in esgf-httpd.conf
       blockinfile:
         path: "/etc/httpd/conf/esgf-httpd.conf"
@@ -150,7 +156,6 @@
     
     # Miniconda variables
     miniconda_python: 2
-    miniconda_prefix: "{{ tomcat_catalina_home }}/miniconda2"
     miniconda_env:
       name: udg
       dependencies:
@@ -161,13 +166,12 @@
     tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
     tds_version: "ESGF-5.0.1"
     tds_filename: "tds-esgf.war"
-    venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   vars_files:
     - secret.yml
     - deployment.yml
   roles:
     - role: supervisord-conda
-    - role: tds
+    - role: tds-jk
   tasks:
 
 # Set SSL in applicationContext.xml
@@ -234,9 +238,15 @@
     - name: Unarchive derby db in remote host
       unarchive:
         src: "/tmp/{{ derby_db_filename }}"
-        dest: "{{ tomcat_catalina_home }}"
+        dest: "{{ tomcat_home }}"
         extra_opts:
           --strip-components=1
+
+    - name: restart httpd
+      delegate_to: spock
+      run_once: True
+      command: service httpd restart
+      tags: ['restart']
 
 # TDS Services management
     - name: restart TDS instances
@@ -244,8 +254,6 @@
         name: "{{ item.name }}"
         state: restarted
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
-        username: "{{ supervisord_user }}"
-        password: "{{ supervisord_password }}"
       with_items: "{{ tds_instances }}"
       tags:
         - restart

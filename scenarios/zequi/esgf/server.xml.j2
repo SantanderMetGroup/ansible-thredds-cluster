@@ -9,10 +9,10 @@
 	 validationQuery="SELECT count(*) FROM users" 
 	 maxActive="20" 
 	 maxIdle="10" 
-	 username="{{ applications.derby.user }}" 
-	 password="{{ applications.derby.pass }}" 
+	 username="{{ derby.user }}" 
+	 password="{{ derby.pass }}" 
 	 driverClassName="org.apache.derby.jdbc.ClientDriver" 
-	 url="{{ applications.derby.url }}" 
+	 url="{{ derby.url }}" 
 	 readOnly="false"/>
   </GlobalNamingResources>
   
@@ -27,7 +27,7 @@
       {% if connector.type == "http" -%}
 	<Connector port="{{ connector.port }}" protocol="{{ connector.protocol | default('HTTP/1.1') }}" connectionTimeout="{{ connector.connectionTimeout | default('20000') }}" />
       {% elif connector.type == "ajp" -%}
-	<Connector port="{{ connector.port }}" protocol="{{ connector.protocol | default('AJP/1.3') }}" proxyName="{{ hostvars[connector.proxy].tdscc.mod_jk_hostname }}" />
+	<Connector port="{{ connector.port }}" protocol="{{ connector.protocol | default('AJP/1.3') }}" proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}" />
       {% endif %}
     {% endfor %}
     <Engine name="Catalina" defaultHost="localhost">
