@@ -1,4 +1,3 @@
-# Provisioning of the machines
 - name: Provision hosts
   hosts: all
   become: True
@@ -16,11 +15,12 @@
         - unzip
         - vim
 
-# TDS Collections deployment
 - hosts: proxies
   vars:
     httpd_server_root: "{{ ansible_env.HOME }}/httpd"
     httpd_port: 8080
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
     mod_jk_configure: --prefix={{ httpd_server_root }}/modules --with-apxs={{ httpd_server_root }}/bin/apxs
     venv_home: "{{ httpd_server_root }}/virtualenv"
   roles:
@@ -40,11 +40,9 @@
 
     derby_db_download_url: http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz
     derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
-
-    tds_debug: True
   roles:
     - role: supervisord-conda
-    - role: tds
+    - role: tds-jk
 
   tasks:
     # - include_tasks: derby-authentication.yml

@@ -20,6 +20,8 @@ Vars for **tds_instances**:
 - `name`: Identifier for the instance, also used in the path to the instance (appended to `tomcat_base`)
 - `shutdown`: Port for tomcat shutdown
 - `tds_content_root`: Path to the content root of the TDS instance. Default is `$CATALINA_BASE/content`
+- `tds_debug`:
+  - `jpda_address`: Default is `localhost:8000`
 - `connectors`: Connectors for tomcat
   - `type`: (http|ajp)
   - `port`: Port number for the connector

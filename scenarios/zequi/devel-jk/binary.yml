@@ -18,7 +18,8 @@
   vars:
     ansible_become: True
     httpd_port: 8080
-    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
     mod_jk_configure: --with-apxs=/usr/bin/apxs # /usr/sbin/apxs for CentOS 6
   roles:
     - role: httpd-bin
@@ -45,10 +46,9 @@
     # - include_tasks: derby-authentication.yml
     - include_tasks: test-authentication.yml
 
-    # httpd is started by the installation?
     - name: restart httpd
       become: True
-      shell: httpd -k restart
+      command: httpd -k restart
       run_once: True
       delegate_to: "{{ item }}"
       with_items: "{{ groups.proxies }}"

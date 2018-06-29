@@ -15,17 +15,17 @@
     path: "{{ httpd_conf_file }}"
     line: Include {{ mod_jk_conf_path }}/*.conf
   
-- name: Copy mod_jk.conf
+- name: Template mod_jk.conf
   template:
     src: mod_jk.conf.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.conf"
 
-- name: Copy mod_jk.workers
+- name: Template mod_jk.workers
   template:
     src: mod_jk.workers.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.workers"
 
-- name: Copy mod_jk.urimaps
+- name: Template mod_jk.urimaps
   template:
     src: mod_jk.urimaps.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.urimaps"
@@ -80,4 +80,4 @@
     path: "{{ mod_jk_status_path }}/.htpasswd"
     username: "{{ mod_jk_status_user }}"
     password: "{{ mod_jk_status_passwd }}"
-  when:  mod_jk_status_user is defined and mod_jk_status_passwd is defined
+  when:  mod_jk_status_user is defined 

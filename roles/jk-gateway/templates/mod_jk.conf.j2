@@ -7,6 +7,7 @@ JkLogFile     {{ mod_jk_log }}
 JkLogLevel    info
 JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
 
+{% if mod_jk_status_user is defined %}
 <Location "/status-jk">
 	Allow from all
 	AuthType Basic
@@ -14,3 +15,4 @@ JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
 	AuthUserFile {{ mod_jk_status_path }}/.htpasswd
 	Require valid-user
 </Location>
+{% endif %}

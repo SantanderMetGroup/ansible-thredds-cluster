@@ -13,7 +13,7 @@ If you want to deploy the status worker, you have to declare the following varia
 - `mod_jk_status_user`: User to login
 - `mod_jk_status_passwd`: Password to login
 
-If they are not declared, the `.htpasswd` file is not created.
+If they are not declared, the `.htpasswd` file nor the status worker are created.
 
 ## Variables
 

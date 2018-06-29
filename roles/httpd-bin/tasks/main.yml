@@ -32,11 +32,7 @@
     path: /etc/httpd/conf.d/{{ item }}
   with_items: ["autoindex.conf", "userdir.conf", "welcome.conf"]
 
-- name: Install python-passlib and httpd
-  become: True
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - python-passlib
-    - httpd
+- name: Start httpd
+  command: httpd -k start
+  tags: ["never", "boot"]
+
