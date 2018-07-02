@@ -10,11 +10,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #Misma clave para todas las máquinas
 config.ssh.insert_key = false
 
+
+ config.vm.define "client" do |host|
+  host.vm.hostname = "client"
+  host.vm.box = "centos/7"
+  host.ssh.username = "vagrant"
+  host.vm.network "private_network", ip: "192.168.1.2"
+ end
+
+ config.vm.define "gateway" do |host|
+  host.vm.hostname = "gateway"
+  host.vm.box = "centos/7"
+  host.ssh.username = "vagrant"
+  host.vm.network "private_network", ip: "192.168.1.1"
+  host.vm.network "private_network", ip: "192.168.2.1"
+ end
+
  config.vm.define "load-balancer" do |host|
   host.vm.hostname = "load-balancer"
   host.vm.box = "centos/7"
   host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.10.1"
+  host.vm.network "private_network", ip: "192.168.2.2"
   host.vm.network "forwarded_port", guest: 8080, host: 8080 
  end
 
@@ -22,7 +38,7 @@ config.ssh.insert_key = false
  config.vm.define "server1" do |host|
   host.vm.hostname = "server1"
   host.vm.box = "centos/7"
-  host.vm.network "private_network", ip: "192.168.10.2"
+  host.vm.network "private_network", ip: "192.168.2.3"
   host.ssh.username = "vagrant"
  end
 
@@ -30,7 +46,7 @@ config.ssh.insert_key = false
   host.vm.hostname = "server2"
   host.vm.box = "centos/7"
   host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.10.3"
+  host.vm.network "private_network", ip: "192.168.2.4"
   end
  
  
