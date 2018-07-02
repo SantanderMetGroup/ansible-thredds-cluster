@@ -1,13 +1,13 @@
-# Scenario for development and testing
+# Scenario devel-jk
+
+This scenario serves as use case for development and testing of the TDS+`mod_jk` gateway infrastructure. It also serves as an example of different use cases that can be implemented.
 
 ## Requirements
 
 1. vagrant
 1. ansible 2.5
 
-## Intro
-
-This scenario is used for development and testing of the project. It also serves as an example of different use cases that can be implemented.
+## Documentation
 
 The main files in this directory are "source.yml" and "binary.yml". These playbooks deploy a httpd+mod\_jk reverse proxy in the ansible host "proxy", that forward requests to a backend consisting on two hosts, "hostA" and "hostB", each running a tds instance. Configuration of variables can be found in the group\_vars directory (see [Ansible docs](https://docs.ansible.com/ansible/latest/user_guide/playbooks_best_practices.html#group-and-host-variables)).
 
@@ -48,7 +48,3 @@ The following ports are forwarded from the host to the guests:
 
 Tomcat instances are configured to be debugged used JPDA. This is done by setting to True the variable "tds\_debug" in the play for the backend hosts. JPDA listens in the port 8000 in both hostA and hostB.
 
-## ToDo
-
-- [ ] authentication using forwarded port (localhost:9000) does not work (no redirecting properly, unauthorized... why?)
-- [ ] JPDA only works with one instance per host
