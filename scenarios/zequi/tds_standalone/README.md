@@ -1,4 +1,4 @@
-# Scenario of a standalone THREDDS Data Server
+# Scenario tds_standalone
 
 This scenario deploys a sandbox, using the framework provided by TDS Collections, that contains:
 
