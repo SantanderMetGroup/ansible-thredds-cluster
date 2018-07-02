@@ -1,36 +1,3 @@
-- name: Download virtualenv package
-  local_action: get_url
-  args:
-    dest: "{{ tmp_dir }}"
-    url: "{{ venv_file_url }}"
-  vars:
-    ansible_become: False
-  run_once: True
-
-- name: Create vitualenv directories
-  file:
-    dest: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ venv_home }}"
-    - "{{ venv_sw }}"
-    
-- name: Unarchive virtualenv
-  unarchive: 
-    src: "{{ tmp_dir }}/{{ venv_file_name }}"
-    dest: "{{ venv_sw }}"
-
-- name: Check if virtualenv is already created
-  stat:
-    path: "{{ venv_home }}/bin/activate"
-  register: var_virtualenv_exists
-
-- name: Create virtualenv if it has not been created before
-  shell: "python virtualenv.py {{ venv_home }}"
-  args:
-    chdir: "{{ venv_sw }}/virtualenv-{{ venv_version }}"
-  when: var_virtualenv_exists.stat.exists == false
-
 - name: Install supervisord
   pip:
     name: supervisor
@@ -66,4 +33,5 @@
   shell: "{{ venv_home }}/bin/supervisord -c {{ supervisord_etc }}/supervisord.conf"
   tags: boot
   when: supervisor_sock.stdout == ""
+
 

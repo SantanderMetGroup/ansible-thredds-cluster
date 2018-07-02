@@ -8,7 +8,7 @@ ansible-miniconda-role
 
 ## Role usage
 
-This role enforces you to use the following variables in your playbook:
+This role enforces you to use the following variables in your playbook (variables required from the role `ansible-miniconda-role`):
 
 - `miniconda_python` - Set it to `2` or `3`
 - `miniconda_prefix` - Path where miniconda will be deployed, e.g. `"{{ ansible_env.HOME }}/miniconda2"`
@@ -18,12 +18,6 @@ This role enforces you to use the following variables in your playbook:
 ## Variables
 
 - `venv_home`: `"{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"`
-- `supervisord_etc`: `"{{ venv_home }}/etc"`
-- `supervisord_var`: `"{{ venv_home }}/var"`
-- `supervisord_programs`: `"{{ supervisord_etc }}/supervisord.d"`
-- `supervisord_port`: `9001`
-- `tmp_dir`: `"/tmp"`
 
 ## Documentation
 
-The tasks in main.yml are duplicated from the role supervisord-virtualenv. Maybe this need a better design.
