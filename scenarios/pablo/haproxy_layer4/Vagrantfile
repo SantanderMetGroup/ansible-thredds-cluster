@@ -11,42 +11,42 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 config.ssh.insert_key = false
 
 
- config.vm.define "client" do |host|
-  host.vm.hostname = "client"
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.1.2"
+ config.vm.define "client" do |cl|
+  cl.vm.hostname = "client"
+  cl.vm.box = "centos/7"
+  cl.ssh.username = "vagrant"
+  cl.vm.network "private_network", ip: "192.168.1.2"
  end
 
- config.vm.define "gateway" do |host|
-  host.vm.hostname = "gateway"
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.1.1"
-  host.vm.network "private_network", ip: "192.168.2.1"
+ config.vm.define "gateway" do |gw|
+  gw.vm.hostname = "gateway"
+  gw.vm.box = "centos/7"
+  gw.ssh.username = "vagrant"
+  gw.vm.network "private_network", ip: "192.168.1.10"
+  gw.vm.network "private_network", ip: "192.168.2.10"
  end
 
- config.vm.define "load-balancer" do |host|
-  host.vm.hostname = "load-balancer"
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.2.2"
-  host.vm.network "forwarded_port", guest: 8080, host: 8080 
+ config.vm.define "load-balancer" do |lb|
+  lb.vm.hostname = "load-balancer"
+  lb.vm.box = "centos/7"
+  lb.ssh.username = "vagrant"
+  lb.vm.network "private_network", ip: "192.168.2.2"
+  lb.vm.network "forwarded_port", guest: 8080, host: 8080 
  end
 
  
- config.vm.define "server1" do |host|
-  host.vm.hostname = "server1"
-  host.vm.box = "centos/7"
-  host.vm.network "private_network", ip: "192.168.2.3"
-  host.ssh.username = "vagrant"
+ config.vm.define "server1" do |s1|
+  s1.vm.hostname = "server1"
+  s1.vm.box = "centos/7"
+  s1.vm.network "private_network", ip: "192.168.2.3"
+  s1.ssh.username = "vagrant"
  end
 
- config.vm.define "server2" do |host|
-  host.vm.hostname = "server2"
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.2.4"
+ config.vm.define "server2" do |s2|
+  s2.vm.hostname = "server2"
+  s2.vm.box = "centos/7"
+  s2.ssh.username = "vagrant"
+  s2.vm.network "private_network", ip: "192.168.2.4"
   end
  
  
