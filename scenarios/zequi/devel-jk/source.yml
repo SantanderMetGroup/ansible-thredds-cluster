@@ -17,12 +17,12 @@
 
 - hosts: proxies
   vars:
+    venv_home: "{{ httpd_server_root }}/virtualenv"
     httpd_server_root: "{{ ansible_env.HOME }}/httpd"
     httpd_port: 8080
     mod_jk_status_user: proxy
     mod_jk_status_passwd: proxy
     mod_jk_configure: --prefix={{ httpd_server_root }}/modules --with-apxs={{ httpd_server_root }}/bin/apxs
-    venv_home: "{{ httpd_server_root }}/virtualenv"
   roles:
     - role: virtualenv
     - role: supervisord
