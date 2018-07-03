@@ -1,0 +1,143 @@
+## CURL
+curl -X GET -u alice:1234 --referer "http://localhost:9000/thredds/catalog/collection2/subcatalog/subcatalog.html?dataset=Dataset%201.1" http://localhost:9000/thredds/restrictedAccess/restringido
+
+
+
+
+HEADER='Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85'
+URL_GW=http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html
+URL_18=http://192.168.50.12:18005/thredds/dodsC/gws1/singleDataset.nc.html
+URL_19=http://192.168.50.12:19005/thredds/dodsC/gws1/singleDataset.nc.html
+
+wget --debug "--header=$HEADER" $URL_GW -O -
+
+ab -H "$HEADER" -n 1000 -c 100 $URL_GW
+ab -H "$HEADER" -n 1000 -c 100 $URL_18
+ab -H "$HEADER" -n 1000 -c 100 $URL_19
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 1960  sudo apt install apache2
+ 1961  man wget 
+ 1962  header='--header=Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85'
+ 1963  wget $header http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1964  wget --debug $header http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1965  header='--header="Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85"'
+ 1966  wget --debug $header http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1967  wget --debug "$header" http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1968  header='--header=Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85'
+ 1969  wget --debug "$header" http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1970  header='Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85'
+ 1971  wget --debug --header=$header http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1972  wget --debug "--header=$header" http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1973  URL=http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html
+ 1974  HEADER='Cookie: JSESSIONID=DD63173F5A9ABAD17356D4CEB2483C85'
+ 1975  ab -n 100 -c 10 $URL
+ 1976  man ab
+ 1977  ab -H "$HEADER" -n 100 -c 10 $URL
+ 1978  ab -H "$HEADER" -n 1000 -c 100 $URL
+ 1979  URL_18=http://192.168.50.12:18005/thredds/dodsC/gws1/singleDataset.nc.html
+ 1980  ab -H "$HEADER" -n 1000 -c 100 $URL_18
+ 1981  URL_19=http://192.168.50.12:18005/thredds/dodsC/gws1/singleDataset.nc.html
+ 1982  URL_19=http://192.168.50.12:19005/thredds/dodsC/gws1/singleDataset.nc.html
+ 1983  ab -H "$HEADER" -n 1000 -c 100 $URL_19
+ 1984  wget --debug "--header=$HEADER" http://proxy:8000/thredds/dodsC/gws1/singleDataset.nc.html -O -
+ 1985  sudo apt install aria2
+ 1986  man aria2
+ 1987  man aria2c
+
+====================================================================================================
+
+- Cookies en tomcat
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Phillipe,
+
+On 2/14/18 6:50 PM, Philippe Busque wrote:
+> I'm migrating from Tomcat 8.0.X to Tomcat 9.0.5 and I have a issue
+> I've been dragging for too long that I wise to correct. I have been
+> searching for a workaround and so far, I've found nothing so far
+> that work out of the box.
+> 
+> Here is the situation:
+> 
+> We have a single webapp  that can handle multiple domains, some of
+> which are sub-domains. Example: www.example1.com,
+> images.example1.com, assets.example1.com, www.example2.com
+> 
+> As far as I know Tomcat only allows us to set define a domain
+> through a sessionCookieDomain in the context. But this domain is
+> fixed. If I set sessionCookieDomain=".example1.com", this will
+> break www.example2.com and vice-versa.
+> 
+> If I leave sessionCookieDomain empty, I don't get sub-domain
+> support as no domain is set and the browser fallback to the current
+> domain serviced.
+> 
+> All the manipulation of the session cookie  are managed in the 
+> org.apache.catalina.connector.Response class and is not
+> customizable.
+> 
+> So far, when we were using Tomcat 8, we were able to do a
+> workaround by overriding the method addSessionCookieInternal inside
+> the Response class through a facade, but this is a dirty hack and I
+> would rather not alter any of Tomcat's inner classes... And a proxy
+> is out of the question, Response not being an interface.
+> 
+> The other workaround I can think of is  splitting  *.example1.com
+> & example2.com into 2 separate tomcat instance or webapps, but that
+> would only duplicate the resources required (ram + disk space) for
+> as many different domains we decide to support.
+> 
+> 
+> Is there therefor a better way to handle manipulating session
+> cookies, or is it frozen and out of reach for multiple subdomain?
+> 
+> A "SessionCookieProcessor", which would take the context & the
+> cookie, would be most welcome for such  a case
+
+This all comes down to how cookies actually work. The simply trust is
+that the web browser isn't going to let you set a cookie for another
+domain.
+
+I'm not even sure how your "hack" even worked.
+
+You said that you couldn't use a Proxy... I assume you mean
+java.lang.reflect.Proxy, right? Well... what about a reverse-proxy (a
+networking component) that serves all applications under a single
+domain name? (e.g. examples-all.com)? Then all applications can appear
+to be using the same shared domain name?
+
+If you can't do that, and you really need to support multiple
+hostnames, then you'll have to do something like trampolining:
+
+1. Client makes a request to https://www.example1.com/resource
+
+2. Respond with 302 ; Set-Cookie: JSESSIONID=foo ;
+Location:https://www.exmaple2.com/create-session
+
+3. Client follows redirect to https://www.example2.com/create-session
+
+4. Respond with 302 ; Set-Cookie JSESSIONID=bar ; Location:
+https://www.example1.com/back-from-hostname2
+
+5. Do whatever you need to do afterwards.
+
+This is awkward, but it will work.
+
+- -chris
