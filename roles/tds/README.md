@@ -52,3 +52,7 @@ The `datasets` variables allows the user of the role to copy files from the cont
 ## Documentation
 
 TDS is downloaded from [Unidata Nexus repository](https://artifacts.unidata.ucar.edu/).
+
+### TdsClusterAuthorizer
+
+ToDo
