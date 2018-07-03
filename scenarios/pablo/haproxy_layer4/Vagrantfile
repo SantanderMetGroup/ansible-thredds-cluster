@@ -14,14 +14,14 @@ config.ssh.insert_key = false
  config.vm.define "client" do |cl|
   cl.vm.hostname = "client"
   cl.vm.box = "centos/7"
-  cl.ssh.username = "vagrant"
+  cl.vm.network "forwarded_port", guest:22, host:2222, id:'ssh'
   cl.vm.network "private_network", ip: "192.168.1.2"
  end
 
  config.vm.define "gateway" do |gw|
   gw.vm.hostname = "gateway"
   gw.vm.box = "centos/7"
-  gw.ssh.username = "vagrant"
+  gw.vm.network "forwarded_port", guest:22, host:2200, id:'ssh'
   gw.vm.network "private_network", ip: "192.168.1.10"
   gw.vm.network "private_network", ip: "192.168.2.10"
  end
@@ -29,7 +29,7 @@ config.ssh.insert_key = false
  config.vm.define "load-balancer" do |lb|
   lb.vm.hostname = "load-balancer"
   lb.vm.box = "centos/7"
-  lb.ssh.username = "vagrant"
+  lb.vm.network "forwarded_port", guest:22, host:2201, id:'ssh'
   lb.vm.network "private_network", ip: "192.168.2.2"
  end
 
@@ -37,14 +37,15 @@ config.ssh.insert_key = false
  config.vm.define "server1" do |s1|
   s1.vm.hostname = "server1"
   s1.vm.box = "centos/7"
+  s1.vm.network "forwarded_port", guest:22, host:2202, id:'ssh'
   s1.vm.network "private_network", ip: "192.168.2.3"
-  s1.ssh.username = "vagrant"
  end
 
  config.vm.define "server2" do |s2|
   s2.vm.hostname = "server2"
   s2.vm.box = "centos/7"
-  s2.ssh.username = "vagrant"
+  s2.vm.network "forwarded_port", guest:22, host:2203, id:'ssh'
+  s2.ssh.port = "2203"
   s2.vm.network "private_network", ip: "192.168.2.4"
   end
  
