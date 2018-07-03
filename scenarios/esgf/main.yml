@@ -14,13 +14,9 @@
     mod_jk_src: /opt/mod_jk
   vars_files:
     - secret.yml
-    - deployment.yml
   roles:
     - role: jk-gateway
-#      httpd_port: 80
   tasks:
-    # It should be removed but used in tomcat role instance.yml:46
-    # - set_fact: httpd_confd="{{ httpd_confd }}"
 
 # Include cluster conf into esgf-httpd.conf
     - name: Delete Include mod_jk.conf from jk-gateway role
@@ -168,7 +164,6 @@
     tds_filename: "tds-esgf.war"
   vars_files:
     - secret.yml
-    - deployment.yml
   roles:
     - role: virtualenv-conda
     - role: supervisord
@@ -196,22 +191,6 @@
         src: TdsClusterAuthorizer.class
         dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
       with_items: "{{ tds_instances }}"
-
-## This was moved to the role tds
-#    - name: Use TdsClusterAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
-#      replace:
-#        regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
-#        replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
-#        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-#      with_items: "{{ tds_instances }}"
-#
-## It is necessary to remove the proxyPort added by the role from the tomcat connector
-#    - name: Remove proxyPort from tds AJP Connector
-#      replace:
-#        path: '{{ tomcat_base }}/{{ item.name }}/conf/server.xml'
-#        regexp: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" proxyPort="80" />'
-#        replace: '<Connector port="18009" protocol="AJP/1.3" proxyName="{{ proxy_name }}" />'
-#      with_items: "{{ tds_instances }}"
 
 # Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
     - name: Copy server.xml for tds instances
