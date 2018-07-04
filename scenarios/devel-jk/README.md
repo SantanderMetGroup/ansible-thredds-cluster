@@ -46,5 +46,5 @@ The following ports are forwarded from the host to the guests:
 
 ## JPDA debug
 
-Tomcat instances are configured to be debugged used JPDA. This is done by setting to True the variable "tds\_debug" in the play for the backend hosts. JPDA listens in the port 8000 in both hostA and hostB.
+Tomcat instances are configured to be debugged used JPDA. JPDA listens in the port 8000 in both hostA and hostB.
 
