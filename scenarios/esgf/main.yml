@@ -185,13 +185,6 @@
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
-# Use custom thredds authorizer
-    - name: Copy TdsClusterAuthorizer.class in tds applicationContext.xml
-      copy:
-        src: TdsClusterAuthorizer.class
-        dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
-      with_items: "{{ tds_instances }}"
-
 # Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
     - name: Copy server.xml for tds instances
       template:
