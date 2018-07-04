@@ -119,4 +119,48 @@ Any scenario will be composed of:
 \item[-] user variables - Variables defined by the user that are required by the roles or that are defined to customize the deployment of the scenario.
 \end{itemize}
 
+\section{Apache httpd+mod\_jk gateway}
+
+When the gateway is built using the Apache httpd+mod\_jk setup, it relies on the binary Apache JServ protocol to perform the load balancing. For each collection declared by the user through Ansible vars, a mod\_jk worker of type lb is created in the gateway. This worker of type lb is populated with Tomcat workers based on the attribute replicas of the tds\_instances Ansible var defined by the user.
+
+\begin{figure}[h]
+\includegraphics[width=1\textwidth]{images/jk-gateway.png}
+\end{figure}
+
+Additionally to the mod\_jk workers described above, a mod\_jk status worker is also created, which allows the user to check the state of the rest of the workers in a html view. See the role reference for more information.
+
+This is an example of mod\_jk urimaps. It can be observed that all THREDDS services for a collection are forwarded:
+
+\begin{lstlisting}
+/status-jk=jk-manager
+/status-jk/*=jk-manager
+
+/thredds/*/collection1=COLLECTION_collection1
+/thredds/*/collection1/*=COLLECTION_collection1
+\end{lstlisting}
+
+This is an example of a mod\_jk workers configuration file:
+
+\begin{lstlisting}
+worker.list=jk-manager
+worker.jk-manager.type=status
+
+worker.host1_18009.type=ajp13
+worker.host1_18009.host=host1
+worker.host1_18009.port=18009
+
+worker.host2_18009.type=ajp13
+worker.host2_18009.host=host2
+worker.host2_18009.port=18009
+
+worker.list=COLLECTION_collection1
+worker.COLLECTION_collection1.type=lb
+worker.COLLECTION_collection1.mount=/thredds/restrictedAccess/*
+
+worker.COLLECTION_collection1.balance_workers=host1_18009
+worker.COLLECTION_collection1.balance_workers=host2_18009
+\end{lstlisting}
+
+In this configuration, a collection named collection1 is created in the gateway and it is replicated in the backend hosts running THREDDS instances, host1 and host2. Every THREDDS instance provides a Connector listening in the specified port where the gateway can connect in order to forward requests. The worker names for the THREDDS instances are compounded of the hostname of the host where they are running plus the port in which the AJP connector is listening, allowing multiple instances to listen in the same host.
+
 \end{document}
