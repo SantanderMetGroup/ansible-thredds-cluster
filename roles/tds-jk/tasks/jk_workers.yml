@@ -19,7 +19,7 @@
     line: 'worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.balance_workers={{ worker_name }}'
   delegate_to: "{{ item.1.proxy }}"
   vars:
-    worker_name: "{{ tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
+    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
     - connectors

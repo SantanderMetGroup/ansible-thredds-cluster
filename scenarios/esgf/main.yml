@@ -17,7 +17,6 @@
   roles:
     - role: jk-gateway
   tasks:
-
 # Include cluster conf into esgf-httpd.conf
     - name: Delete Include mod_jk.conf from jk-gateway role
       lineinfile:
@@ -144,12 +143,14 @@
       environment:
         UVCDAT_ANONYMOUS_LOG: "False"
         
+# Why Ansible, why? https://github.com/ansible/ansible/issues/12170
+# tds-jk role needs to execute in serial
 - hosts: backend
   vars:
     proxy_name: "spock.meteo.unican.es" # where is this used?
     derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
     derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
-    
+
     # Miniconda variables
     miniconda_python: 2
     miniconda_env:
@@ -168,8 +169,8 @@
     - role: virtualenv-conda
     - role: supervisord
     - role: tds-jk
+  serial: 1
   tasks:
-
 # Set SSL in applicationContext.xml
     - name: Set useSSL true in tds applicationContext.xml
       replace:
@@ -185,14 +186,46 @@
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
-# Esto debería ser lineinfile o blockinfile, lo tengo así por quitar los with_first_found      
-    - name: Copy server.xml for tds instances
-      template:
-        src: server.xml.j2
-        dest: "{{ tomcat_base }}/{{ instance.name }}/conf/server.xml"
+    - name: Insert derbydb resource in server.xml
+      blockinfile:
+        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+        insertbefore: </GlobalNamingResources>
+        marker: "<!-- {mark} derbydb resource -->"
+        block: |
+          <Resource 
+            name="jdbc/adminDB" 
+            auth="Container" 
+            type="javax.sql.DataSource"
+            factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory" 
+            validationQuery="SELECT count(*) FROM users" 
+            maxActive="20" 
+            maxIdle="10" 
+            username="{{ derby.user }}" 
+            password="{{ derby.pass }}" 
+            driverClassName="org.apache.derby.jdbc.ClientDriver" 
+            url="{{ derby.url }}" 
+            readOnly="false"/>
       with_items: "{{ tds_instances }}"
-      loop_control:
-        loop_var: instance
+      tags: hola
+
+    - name: Insert derbydb realm in server.xml
+      blockinfile:
+        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+        insertbefore: <Host.*
+        marker: "<!-- {mark} derbydb realm -->"
+        block: |
+          <Realm
+            className="org.apache.catalina.realm.DataSourceRealm" 
+            digest="MD5"
+            debug="0"
+            dataSourceName="jdbc/adminDB"
+            userTable="USERS"
+            userNameCol="USERNAME"
+            userCredCol="PASSWORD"
+            userRoleTable="V_USERS_ROLES"
+            roleNameCol="ROLENAME"/>
+      with_items: "{{ tds_instances }}"
+      tags: hola
 
     - name: Copy context.xml for tds instances
       copy:
@@ -220,6 +253,7 @@
       run_once: True
       command: service httpd restart
       tags: ['restart']
+      ignore_errors: True
 
 # TDS Services management
     - name: restart TDS instances
@@ -228,6 +262,7 @@
         state: restarted
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
+      ignore_errors: True
       tags:
         - restart
         - update_catalogs

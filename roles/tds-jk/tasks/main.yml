@@ -9,7 +9,7 @@
   delegate_to: "{{ item.1.proxy }}"
   vars:
     ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}" # depends on how httpd was installed
-    worker_name: "{{ tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
+    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
     - connectors
@@ -26,12 +26,13 @@
 - name: Set jvmRoute in tds instances
   replace:
     path: "{{ tomcat_base }}/{{ item.0.name }}/conf/server.xml"
-    regexp: "<Engine(.*)>"
-    replace: <Engine\1 jvmRoute="{{ worker_name }}">
+    regexp: "<Engine(?!(.*)jvmRoute)(.*)>"
+    replace: <Engine\2 jvmRoute="{{ worker_name }}">
   vars:
-    worker_name: "{{ tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
+    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
     - connectors
   when:
     - item.1.type == "ajp"
+  tags: hola
