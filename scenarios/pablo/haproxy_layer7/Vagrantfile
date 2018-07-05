@@ -33,6 +33,12 @@ config.ssh.insert_key = false
   host.vm.network "private_network", ip: "192.168.10.3"
   end
  
- 
+ config.vm.provision "ansible" do |ansible|
+  ansible.playbook = "playbook.yml"
+  ansible.ask_vault_pass = true
+  ansible.groups = {
+   "servers" => ["server1", "server2"]
+  }
+ end
 
 end
