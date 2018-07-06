@@ -24,6 +24,7 @@ config.ssh.insert_key = false
   host.vm.box = "centos/7"
   host.vm.network "private_network", ip: "192.168.10.2"
   host.ssh.username = "vagrant"
+  host.vm.provision "shell", inline: "yum install -y unzip"
  end
 
  config.vm.define "server2" do |host|
@@ -31,14 +32,19 @@ config.ssh.insert_key = false
   host.vm.box = "centos/7"
   host.ssh.username = "vagrant"
   host.vm.network "private_network", ip: "192.168.10.3"
+  host.vm.provision "shell", inline: "yum install -y unzip"
   end
  
- config.vm.provision "ansible" do |ansible|
+ config.vm.provision "ansible", type: "ansible", run: "never" do |ansible|
   ansible.playbook = "playbook.yml"
-  ansible.ask_vault_pass = true
+  ansible.vault_password_file = "pass.txt"
+  ansible.version = "2.5.0"
   ansible.groups = {
    "servers" => ["server1", "server2"]
   }
  end
 
+ #Install net-tools in all hosts
+ config.vm.provision "shell", inline: "yum install -y net-tools"
+ 
 end
