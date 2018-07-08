@@ -1,26 +1,35 @@
-- name: Configure client network
-  hosts: client
+- name: Configure gateway/router
+  hosts: gateway
   become: True
   tasks:
-          - name: Add new gateway for default route
-            lineinfile:
-                    path: /etc/sysconf/network
-                    line: "GATEWAY=192.168.1.1"
-          - name: Restart network service
-            service: name=network state=restarted
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
 
-          - name: Delete other default route
-            command: "ip route del default"
-            
-- name: Configure servers network
+#- name: Deploy LVS on load balancer
+#  gather_facts: False
+#  hosts: load-balancer
+#  roles:
+#          - role: lvs
+        
+- name: Configure servers with Tomcat
   hosts: servers
   become: True
-  tasks:
-          - name: Install net-tools
-            yum: name=net-tools state=present
+  vars_files:
+          - secret.yml
+  vars:
+          miniconda_python: 2
+          miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
+          miniconda_env:
+                name: udg
+                dependencies:
+                        - libnetcdf=4.4.1
+                        - supervisor
+          venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+  roles:
+          - role: ansible-miniconda-role
+          - role: supervisord-conda
+          - role: tds
 
-          - name: Delete default route
-            command: "route del default"
 
-          - name: Add default route through gateway
-            command: "route add default gw 192.168.2.1 dev eth1"
