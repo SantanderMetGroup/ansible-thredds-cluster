@@ -1,0 +1,12 @@
+- name: Get IPs
+  hosts: servers
+  vars:
+    http_port: 80
+  tasks:
+
+    - local_action:
+        module: lineinfile
+        path: ./ipv4.txt
+        state: present
+        create: True
+        line: "{{ ansible_facts.eth1.ipv4.address }}:{{ http_port }}"

@@ -1,0 +1,11 @@
+- name: Gather facts on servers
+  hosts: servers
+  gather_facts: True
+
+- name: Config load-balancer
+  hosts: load-balancer
+  tasks:
+    - name: Template config file
+      src: lvs.cfg
+      dest: /home/vagrant/lvs.cfg
+

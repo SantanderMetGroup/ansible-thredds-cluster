@@ -1,0 +1,31 @@
+VAGRANTFILE_API_VERSION = "2"
+
+CLUSTER = ['load-balancer', 'server1', 'server2', 'client']
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  #better performance with "linked clone" feature from VirtualBox
+  config.vm.provider "virtualbox" do |v|
+    v.linked_clone = true
+    v.memory = 1024
+  end
+
+
+  config.vm.box = "centos/7"
+  #Same key for all machines
+  config.ssh.insert_key = false
+  config.vm.network "private_network", type: "dhcp"
+  #config.vm.network "public_network"
+
+  CLUSTER.each do |node|
+    config.vm.define "#{node}" do |host|
+      host.vm.hostname = "#{node}"
+    end
+  end
+  
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provision_servers.yml"
+    ansible.groups = {
+      "servers" => ["server1", "server2"]
+    }
+  end
+end
