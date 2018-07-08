@@ -1,72 +1,23 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+GRANTFILE_API_VERSION = "2"
 
-VAGRANTFILE_API_VERSION = "2"
-
-
+CLUSTER = ['load-balancer', 'server1', 'server2']
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-#Same key for all machines
-config.ssh.insert_key = false
-
-#Install net-tools in all machines
-config.vm.provision "shell", inline: "yum install -y net-tools"
-
-
- config.vm.define "load-balancer" do |host|
-  host.vm.hostname = "load-balancer"
-
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.10.1"
-
-  host.vm.provision "ansible", type: "ansible" do |ansible|
-   ansible.playbook = "playbook.yml"
-   ansible.vault_password_file = "pass.txt"
-   ansible.version = "2.5.0"
-   ansible.groups = {
-    "servers" => ["server1", "server2"]
-   }
+  #better performance with "linked clone" feature from VirtualBox
+  config.vm.provider "virtualbox" do |v|
+    v.linked_clone = true
   end
 
- end
+  config.vm.box = "centos/7"
+  #Same key for all machines
+  config.ssh.insert_key = false
+  config.vm.network "private_network", type: "dhcp"
+  #config.vm.network "public_network"
 
- 
- config.vm.define "server1" do |host|
-  host.vm.hostname = "server1"
-  host.vm.box = "centos/7"
-  host.vm.network "private_network", ip: "192.168.10.2"
-  host.ssh.username = "vagrant"
-  host.vm.provision "shell", inline: "yum install -y unzip"
-
-  host.vm.provision "ansible", type: "ansible" do |ansible|
-   ansible.playbook = "playbook.yml"
-   ansible.vault_password_file = "pass.txt"
-   ansible.version = "2.5.0"
-   ansible.groups = {
-    "servers" => ["server1", "server2"]
-   }
+  CLUSTER.each do |node|
+    config.vm.define "#{node}" do |host|
+      host.vm.hostname = "#{node}"
+    end
   end
-
- end
-
- config.vm.define "server2" do |host|
-  host.vm.hostname = "server2"
-  host.vm.box = "centos/7"
-  host.ssh.username = "vagrant"
-  host.vm.network "private_network", ip: "192.168.10.3"
-  host.vm.provision "shell", inline: "yum install -y unzip"
-
-  host.vm.provision "ansible", type: "ansible" do |ansible|
-   ansible.playbook = "playbook.yml"
-   ansible.vault_password_file = "pass.txt"
-   ansible.version = "2.5.0"
-   ansible.groups = {
-    "servers" => ["server1", "server2"]
-   }
-  end
-
- end
- 
+  
 end
