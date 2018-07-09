@@ -1,4 +1,4 @@
-- name: Provision proxy
+- name: Provision spock
   hosts: spock
   tasks:
     - yum:
@@ -58,9 +58,23 @@
         block: |
           ProxyPassMatch ^/thredds/([^/]*)/{{ esg_root }}/(.*) ajp://localhost:8223/thredds/$1/{{ esg_root }}/$2
           ProxyPassMatch ^/thredds/catalog/([^/]*)$ ajp://localhost:8223/thredds/catalog/$1
-          ProxyPassMatch ^/thredds/([^/]*)$ ajp://localhost:8223/thredds/$1
           ProxyPassMatch ^/thredds/js/(.*)$ ajp://localhost:8223/thredds/js/$1
           ProxyPassMatch ^/thredds/style/(.*)$ ajp://localhost:8223/thredds/style/$1
+      with_items:
+        - { string: 'VirtualHost \*:80', mark: 80 }
+        - { string: 'VirtualHost \*:443', mark: 443 }
+
+    - name: Add DocumentRoot and Rewrite rules in VirtualHosts
+      blockinfile:
+        path: /etc/httpd/conf/esgf-httpd.conf
+        insertafter: "{{ item.string }}"
+        marker: "# {mark} General directives {{ item.mark }}"
+        block: |
+          DocumentRoot /var/www/html
+          Options -Indexes
+          RewriteEngine On
+          RewriteRule /thredds$ /thredds/catalog/catalog.html [R]
+          RewriteRule /thredds/$ /thredds/catalog/catalog.html [R]
       with_items:
         - { string: 'VirtualHost \*:80', mark: 80 }
         - { string: 'VirtualHost \*:443', mark: 443 }
@@ -142,6 +156,13 @@
         executable: /bin/bash
       environment:
         UVCDAT_ANONYMOUS_LOG: "False"
+
+    - name: Copy static files
+      copy:
+        src: "{{ item }}"
+        dest: /var/www/html/thredds
+      with_fileglob: "static-files/*"
+      tags: hola
         
 # Why Ansible, why? https://github.com/ansible/ansible/issues/12170
 # tds-jk role needs to execute in serial
@@ -169,7 +190,6 @@
     - role: virtualenv-conda
     - role: supervisord
     - role: tds-jk
-  serial: 1
   tasks:
 # Set SSL in applicationContext.xml
     - name: Set useSSL true in tds applicationContext.xml
@@ -249,6 +269,7 @@
 # Java melody
     - include_tasks: 'java-melody.yml'
 
+# Restart services
     - name: restart httpd
       delegate_to: spock
       run_once: True
@@ -256,7 +277,6 @@
       tags: ['restart']
       ignore_errors: True
 
-# TDS Services management
     - name: restart TDS instances
       supervisorctl:
         name: "{{ item.name }}"
