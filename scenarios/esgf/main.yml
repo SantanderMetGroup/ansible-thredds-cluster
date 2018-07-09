@@ -162,7 +162,6 @@
         src: "{{ item }}"
         dest: /var/www/html/thredds
       with_fileglob: "static-files/*"
-      tags: hola
         
 # Why Ansible, why? https://github.com/ansible/ansible/issues/12170
 # tds-jk role needs to execute in serial
@@ -271,9 +270,11 @@
 
 # Restart services
     - name: restart httpd
+      service:
+        name: httpd
+        state: restarted
       delegate_to: spock
       run_once: True
-      command: service httpd restart
       tags: ['restart']
       ignore_errors: True
 
