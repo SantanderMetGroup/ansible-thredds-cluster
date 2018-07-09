@@ -1,0 +1,13 @@
+---
+#tasks file for lvs
+
+- name: Template LVS configure script for load-balancer
+  become: False
+  local_action:
+    module: template
+    src: lvs_script.sh
+    dest: files/
+    mode: 0744
+
+- name: Execute script
+  script: files/lvs_script.sh

@@ -1,0 +1,5 @@
+---
+# tasks file for iptables
+
+- name: REDIRECT packets destined to VIP
+  command: "iptables -t nat -A PREROUTING -d {{ hostvars['load-balancer']['ansible_eth1']['ipv4']['address'] }} -j REDIRECT"

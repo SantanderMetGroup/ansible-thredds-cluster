@@ -1,15 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 VAGRANTFILE_API_VERSION = "2"
 
 CLUSTER = ['load-balancer', 'server1', 'server2', 'client']
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  #better performance with "linked clone" feature from VirtualBox
+  #Better performance with "linked clone" feature from VirtualBox
   config.vm.provider "virtualbox" do |v|
     v.linked_clone = true
-    v.memory = 1024
   end
 
-
+#Configuration options for all machines
   config.vm.box = "centos/7"
   #Same key for all machines
   config.ssh.insert_key = false
@@ -23,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provision_servers.yml"
+    ansible.playbook = "provision.yml"
     ansible.groups = {
       "servers" => ["server1", "server2"]
     }
