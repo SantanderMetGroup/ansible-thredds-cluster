@@ -1,30 +1,24 @@
-- name: Register collection in tds gateway
+- name: Add workers in the gateway
   blockinfile:
+    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
     dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
-    marker: "# {mark} worker COLLECTION_{{ replica.1.name }}"
     block: |
-      worker.list=COLLECTION_{{ replica.1.name | replace("/", "-") }}
-      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.type=lb
-      worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.mount=/thredds/restrictedAccess/*
-  delegate_to: "{{ item.1.proxy }}"
-  when: item.1.proxy is defined
-  with_subelements:
-    - "{{ tds_instances }}"
-    - connectors
-
-- name: Add replicas to the collection
-  lineinfile:
-    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
-    state: present
-    line: 'worker.COLLECTION_{{ replica.1.name | replace("/", "-") }}.balance_workers={{ worker_name }}'
+      worker.{{ worker_name }}.type=ajp13
+      worker.{{ worker_name }}.host={{ ansible_host }}
+      worker.{{ worker_name }}.port={{ item.1.port }}
   delegate_to: "{{ item.1.proxy }}"
   vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}" # depends on how httpd was installed
     worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.port]|to_uuid, [ansible_hostname, item.1.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
     - connectors
-  when: 
-    - item.1.proxy is defined
-    - item.1.type == "ajp"
-    - replica.0.name == item.0.name
+  when: item.1.type == "ajp"
 
+- name: Add balance workers to the gateway
+  include_tasks: balance_workers.yml
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  loop_control:
+    loop_var: replica

@@ -81,3 +81,15 @@
     username: "{{ mod_jk_status_user }}"
     password: "{{ mod_jk_status_passwd }}"
   when:  mod_jk_status_user is defined 
+
+- name: Add collections (jk lb workers)
+  blockinfile:
+    dest: "{{ mod_jk_conf_path }}/mod_jk.workers"
+    marker: "# {mark} COLLECTION_{{ collection_name }}"
+    block: |
+      worker.list=COLLECTION_{{ collection_name }}
+      worker.COLLECTION_{{ collection_name }}.type=lb
+      worker.COLLECTION_{{ collection_name }}.mount=/thredds/restrictedAccess/*
+  vars:
+    collection_name: "{{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
