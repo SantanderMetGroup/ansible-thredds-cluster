@@ -9,4 +9,6 @@ ipvsadm -A -t {{ ansible_eth1.ipv4.address }}:{{ lb_bind_port }} -s rr
 ipvsadm -a -t {{ ansible_eth1.ipv4.address }}:{{ lb_bind_port }} -r {{ hostvars[server]['ansible_eth1']['ipv4']['address'] }}:{{ tds_port }} -g
 {% endfor %}
 #Save rules
-ipvsadm -S
+ipvsadm -S -n > /etc/ipvsadm.rules
+#To restore configurarion after reboot type:
+# ipvsadm-restore < /etc/ipvsadm.rules
