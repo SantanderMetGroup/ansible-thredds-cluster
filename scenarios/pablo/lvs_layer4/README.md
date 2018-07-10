@@ -1,9 +1,9 @@
-# Linux Virtual Server - L4 load balancing (DSR) #
+# Linux Virtual Server - DSR #
 
 With this repository you will be able to build a virtual environment consistinga of two diferent networks. One of them (representing the Internet) has a single client who sends requests to a TDS service. In the other network there is a load balancer who distributes the requests between both Tomcat application servers at layer 4 with a Direct Server Return scheme. Between both networks there is just a router whose single purpose is to interconnect both networks (not NAT functions involved).
 
 
-# Load Balancing Scheme #
+## Load Balancing Scheme ##
 All requests are directed towards the VIP (configured on the load balancer) so the load balancer redirects them towards the realservers depending on the load balancing scheme chosen (in this case, round robin).
 The load balancer doesn't touch the packet at IP level (i.e. IP source and destiny addreses remain the same, client's and VIP respectively) but just changes the destiny MAC address with one of the realservers' interfaces. Thanks to an iptables rule added on the realservers they accept the packet and send the response directly to the client with the VIP address as source (via the router of course, the important thing here is that the load balancer is bypassed).
 
@@ -12,10 +12,10 @@ The load balancer doesn't touch the packet at IP level (i.e. IP source and desti
 See [scheme.txt](scheme.txt) to understand the network definition.
 
 
-### Interface ###
+## Interfaces ##
 You can ignore *eth0* interfaces, they are built by Vagrant and don't matter at all considering the static routes we will configure with Ansible
 
-### IP static routes ###
+## IP static routes ##
 In order for DSR to work, all realservers should have the router as their default gateway.
 As you can see, the load balancer does not have a proper route to the client defined in its routes table, but it's OK: **That's the best evidence DSR works!**
 
