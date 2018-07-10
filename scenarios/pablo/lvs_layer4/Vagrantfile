@@ -3,7 +3,7 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
-CLUSTER = ['router','load-balancer', 'server1', 'server2', 'client']
+CLUSTER = ['load-balancer', 'server1', 'server2']
 
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -20,19 +20,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   CLUSTER.each do |node|
     config.vm.define "#{node}" do |host|
-    host.vm.network "private_network", ip: "192.168.10.168"
-    if #{node}=="router" 
-      host.vm.network "private_network", ip: "192.168.10.2"
-    end
+    host.vm.network "private_network", type: "dhcp"
     host.vm.hostname = "#{node}"
     end
   end
 
-    config.vm.define "client" do |host|
-      host.vm.network "private_network", ip: "192.168.10.168"
-      host.vm.hostname = "client"
-    end
-  
+  config.vm.define "client" do |host|
+    host.vm.network "private_network", ip:"192.168.10.168"
+    host.vm.hostname = "client"
+  end
+
+  config.vm.define "router" do |host|
+    host.vm.network "private_network", ip: "192.168.10.2"
+    host.vm.network "private_network", type: "dhcp"
+    host.vm.hostname = "router"
+  end
+
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provision.yml"
     ansible.groups = {
