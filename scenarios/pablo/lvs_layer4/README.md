@@ -5,7 +5,7 @@ With this repository you will be able to build a virtual environment consisting 
 
 ## Network Architecture ##
 
-See scheme.txt to understand the network definition.
+See [scheme.txt](scheme.txt) to understand the network definition.
 
 ## Vagrantfile ##
 In order to build the virtual environment you must type the following command:
