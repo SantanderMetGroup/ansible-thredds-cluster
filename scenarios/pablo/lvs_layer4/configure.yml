@@ -45,8 +45,10 @@
   roles:
     - iptables
 
-- name: Configure static routes on servers
-  hosts: servers
+- name: Configure static routes on load balancer and servers
+  hosts:
+    - servers
+    - load-balancer
   become: True
   tasks:
     - name: Delete default route
@@ -54,3 +56,17 @@
 
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router']['ansible_eth2']['ipv4']['address'] }}"
+
+- name: Configure static routes on client
+  hosts: client
+  become: True
+  tasks:
+    - name: Delete default route
+      command: "ip route del default"
+    - name: Add default route through router
+      command: "ip route add default via {{ hostvars['router']['ansible_eth1']['ipv4']['address'] }}"
+
+
+
+
+
