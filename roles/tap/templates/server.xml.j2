@@ -1,51 +1,41 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="{{ item.shutdown }}" shutdown="{{ item.name }}">
-  <GlobalNamingResources>
-    <Resource name="UserDatabase" auth="Container"
-              type="org.apache.catalina.UserDatabase"
-              description="User database that can be updated and saved"
-              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
-              pathname="conf/tomcat-users.xml" />
-  </GlobalNamingResources>
-  
-  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
-  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
-  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
-  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
-  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+    <GlobalNamingResources>
+    </GlobalNamingResources>
 
-  <Service name="Catalina">
-    {% for connector in item.connectors -%}
-      {% if connector.type == "http" and 'proxy' in connector -%}
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+    <Service name="Catalina">
+	{% for connector in item.connectors -%}
+	{% if connector.type == "http" and 'proxy' in connector -%}
 	<Connector
 	    port="{{ connector.port }}"
 	    protocol="{{ connector.protocol | default('HTTP/1.1') }}"
 	    connectionTimeout="{{ connector.connectionTimeout | default('20000') }}" 
 	    proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}" />
-      {% elif connector.type == "http" -%}
+	{% elif connector.type == "http" -%}
 	<Connector 
 	    port="{{ connector.port }}" 
 	    protocol="{{ connector.protocol | default('HTTP/1.1') }}" 
 	    connectionTimeout="{{ connector.connectionTimeout | default('20000') }}" />
-      {% elif connector.type == "ajp" -%}
+	{% elif connector.type == "ajp" -%}
 	<Connector
 	    port="{{ connector.port }}" 
-	    protocol="{{ connector.protocol | default('AJP/1.3') }}" 
-	    proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}" />
-      {% endif %}
-    {% endfor %}
+	    protocol="{{ connector.protocol | default('AJP/1.3') }}" />
+	<!-- proxyName="{{ hostvars[connector.proxy].mod_jk_hostname }}"  -->
+	{% endif %}
+	{% endfor %}
 
-    <Engine name="Catalina" defaultHost="localhost">
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
-        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-              digest="SHA" resourceName="UserDatabase">
-        </Realm>
-      </Realm>
-      <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
-        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-               prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
-	<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
-      </Host>
-    </Engine>
-  </Service>
+	<Engine name="Catalina" defaultHost="localhost">
+	    <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
+		<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+		    prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+		<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+	    </Host>
+	</Engine>
+    </Service>
 </Server>
