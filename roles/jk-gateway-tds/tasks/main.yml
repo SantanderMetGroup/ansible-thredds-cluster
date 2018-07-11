@@ -1,0 +1,56 @@
+# mod_jk_static_catalog, which is True by default, controls if static html
+# is created in conf.d, imitating the THREDDS catalog html page
+- name: Create configuration module for thredds
+  template:
+    src: thredds.conf.j2
+    dest: "{{ mod_jk_conf_path }}/thredds.conf"
+  when: mod_jk_static_catalog
+
+- name: Create thredds directory in htdocs directory
+  file:
+    dest: "{{ httpd_document_root }}/thredds"
+    state: directory
+  when: mod_jk_static_catalog
+
+- name: Create thredds static configuration files (images, css)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ httpd_document_root }}/thredds/{{ item }}"
+  when: mod_jk_static_catalog
+  with_items:
+    - folder.gif
+    - tdsCat.css
+    - threddsIcon.gif
+    - tds.css
+
+- name: Create thredds static configuration - catalog.html
+  template:
+     src: catalog.html.j2
+     dest: "{{ httpd_document_root }}/thredds/catalog.html"
+  when: mod_jk_static_catalog
+  tags: update_catalogs
+
+- name: Create thredds static configuration - catalog.xml
+  template:
+    src: catalog.xml.j2
+    dest: "{{ httpd_document_root }}/thredds/catalog.xml"
+  when: mod_jk_static_catalog
+
+- name: Create thredds static configuration - serverInfo.html
+  template:
+    src: serverInfo.html.j2
+    dest: "{{ httpd_document_root }}/thredds/serverInfo.html"
+  when: mod_jk_static_catalog
+
+- name: Add collections (jk lb workers)
+  blockinfile:
+    dest: "{{ mod_jk_conf_path }}/mod_jk.workers"
+    marker: "# {mark} COLLECTION_{{ collection_name }}"
+    block: |
+      worker.list=COLLECTION_{{ collection_name }}
+      worker.COLLECTION_{{ collection_name }}.type=lb
+      worker.COLLECTION_{{ collection_name }}.mount=/thredds/restrictedAccess/*
+  vars:
+    collection_name: "{{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
+
