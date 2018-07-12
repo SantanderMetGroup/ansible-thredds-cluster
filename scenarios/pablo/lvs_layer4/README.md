@@ -45,7 +45,7 @@ You can test functionality by running the command
 
 `curl {VIP}:8080/thredds -L` 
 
-from the client. This command makes an ordinary HTTP GET request (with the -L option you enable redirection from HTTP 302 response headers).
+from the client. This command makes an ordinary HTTP GET request (with the -L option you enable redirection for HTTP 302 response headers).
 
 In the folder *exchange* you will find files that correspond to captures with *tcpdump* on different hosts and interfaces. Open them with a packet sniffer like **wireshark** (*recommended*)  or with 
 
