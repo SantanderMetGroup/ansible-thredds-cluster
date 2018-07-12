@@ -21,10 +21,13 @@
   roles:
     - ipvsadm
   tasks:
-    - name: Delete default route
-      command: "ip route del default"
-    - name: Add default route through router
-      command: "ip route add default via {{ hostvars['router']['ansible_eth2']['ipv4']['address'] }}"
+    - name: Disable Reverse Path Filtering
+      sysctl:
+        name: {{ item }}
+        value: 0
+      with_items:
+        - net.ipv4.conf.all.rp_filter
+        - net.ipv4.conf.eth1.rp_filter
    
          
 ##### Servers configuration #####               
