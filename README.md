@@ -26,3 +26,11 @@ frontends load balancing setups and solutions. This implementation
 allows to configure different infrastructure and deployment setups, as
 more workers are easily added to the cluster by simply declaring them as
 Ansible variables and executing the playbooks.
+
+# Roles
+
+# Scenarios
+
+# Utils
+
+utils/test-authentication.yml is a playbook that configures a simple setup in the THREDDS instances for testing of authentication and authorization. This playbooks creates a user named "alice" with password "1234" who has access to the datasets in the collection2 (see data/ directory).
