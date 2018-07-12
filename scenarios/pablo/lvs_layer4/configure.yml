@@ -3,6 +3,7 @@
   become: True
   gather_facts: True
 
+##### Router configuration #####
 - name: Configure router
   hosts: router
   become: True
@@ -11,15 +12,23 @@
       sysctl:
         name: net.ipv4.ip_forward
         value: 1
-        
+     
+
+##### Load balancer configuration #####
 - name: Configure load-balancer
   hosts: load-balancer
   become: True
   roles:
     - ipvsadm
+  tasks:
+    - name: Delete default route
+      command: "ip route del default"
+    - name: Add default route through router
+      command: "ip route add default via {{ hostvars['router']['ansible_eth2']['ipv4']['address'] }}"
+   
          
-             
-- name: Configure servers with Tomcat
+##### Servers configuration #####               
+- name: Configure servers
   hosts: servers
   become: True
   vars_files:
@@ -35,29 +44,25 @@
         - supervisor
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   roles:
-    - role: ansible-miniconda-role
-    - role: supervisord-conda
-    - role: tds
-  
-- name: Configure servers with iptables
-  hosts: servers
-  become: True
-  roles:
-    - iptables
+    - name: Deploy and configure miniconda
+      role: ansible-miniconda-role
+    - name: Deploy python virtualenv on top of miniconda
+      role: supervisord-conda
+    - name: Deploy a TDS instance inside Tomcat
+      role: tds
+    - name: Configure Iptables rule to accept packets destined to VIP
+      role: iptables
 
-- name: Configure static routes on load balancer and servers
-  hosts:
-    - servers
-    - load-balancer
-  become: True
   tasks:
     - name: Delete default route
       command: "ip route del default"
-
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router']['ansible_eth2']['ipv4']['address'] }}"
 
-- name: Configure static routes on client
+
+
+##### Client configuration #####
+- name: Configure client
   hosts: client
   become: True
   tasks:
@@ -65,8 +70,3 @@
       command: "ip route del default"
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router']['ansible_eth1']['ipv4']['address'] }}"
-
-
-
-
-
