@@ -15,9 +15,9 @@
   vars_files:
     - secret.yml
   roles:
-    - role: jk-gateway
+    - role: jk-gateway-tds
   tasks:
-# Include cluster conf into esgf-httpd.conf
+    # Include cluster conf into esgf-httpd.conf
     - name: Delete Include mod_jk.conf from jk-gateway role
       lineinfile:
         state: absent
@@ -33,7 +33,7 @@
           Include /etc/httpd/conf.d/mod_jk.conf
           JkMountCopy All
 
-# Change directory of mod_jk.shm
+    # Change directory of mod_jk.shm
     - name: Create directory for mod_jk.shm
       file: path="/var/run/mod_jk" state=directory
 
@@ -43,7 +43,7 @@
         regexp: "JkShmFile .*"
         replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
 
-# Indicate resources served by esgf's tds
+    # Indicate resources served by esgf's tds
     - name: Comment ProxyPass /thredds in esgf-httpd.conf
       replace:
         path: "/etc/httpd/conf/esgf-httpd.conf"
@@ -79,7 +79,7 @@
         - { string: 'VirtualHost \*:80', mark: 80 }
         - { string: 'VirtualHost \*:443', mark: 443 }
 
-# Allow insecure ncss js resources
+    # Allow insecure ncss js resources
     - name: Allow insecure ncss js resources in esgf tomcat
       lineinfile:
         path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
@@ -92,7 +92,7 @@
         state: present
         insertafter: '<param-name>authenticationNotRequiredPatterns</param-name>'
 
-# Add dataset_root
+    # Add dataset_root
     - name: Create esgf directories dataset_roots
       file:
         state: directory
@@ -163,21 +163,34 @@
         dest: /var/www/html/thredds
       with_fileglob: "static-files/*"
         
-# Why Ansible, why? https://github.com/ansible/ansible/issues/12170
-# tds-jk role needs to execute in serial
-- hosts: backend
+    # /tds5 and /udg-tap
+    - name: Add /tds5 and /udg-tap workers 
+      blockinfile:
+        path: /etc/httpd/conf.d/mod_jk.workers
+        marker: "# {mark} tds5 udg-tap workers"
+        block: |
+          worker.tds5.type=ajp13
+          worker.tds5.host=192.168.202.129
+          worker.tds5.port=13009
+          worker.tap.type=ajp13
+          worker.tap.host=192.168.202.129
+          worker.tap.port=12009
+          worker.list=tds5,tap
+
+    - name: Add /tds5 and /udg-tap urimaps
+      blockinfile:
+        path: /etc/httpd/conf.d/mod_jk.urimaps
+        marker: "# {mark} tds5 udg-tap urimaps"
+        block: |
+          /udg-tap=tap
+          /udg-tap/*=tap
+          /tds5=tds5
+          /tds5/*=tds5
+
+
+- hosts: tds
   vars:
     proxy_name: "spock.meteo.unican.es" # where is this used?
-    derby_db_download_url: "http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz"
-    derby_db_filename: db-derby-10.12.1.1-lib.tar.gz
-
-    # Miniconda variables
-    miniconda_python: 2
-    miniconda_env:
-      name: udg
-      dependencies:
-        - libnetcdf=4.4.1
-        - supervisor=3.1.3
 
     # TDS variables
     tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
@@ -190,7 +203,7 @@
     - role: supervisord
     - role: tds-jk
   tasks:
-# Set SSL in applicationContext.xml
+    # Set SSL in applicationContext.xml
     - name: Set useSSL true in tds applicationContext.xml
       replace:
         regexp: '<property name="useSSL" value="false"/>'
@@ -205,70 +218,20 @@
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
       with_items: "{{ tds_instances }}"
 
-    - name: Insert derbydb resource in server.xml
-      blockinfile:
-        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
-        insertbefore: </GlobalNamingResources>
-        marker: "<!-- {mark} derbydb resource -->"
-        block: |
-          <Resource 
-            name="jdbc/adminDB" 
-            auth="Container" 
-            type="javax.sql.DataSource"
-            factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory" 
-            validationQuery="SELECT count(*) FROM users" 
-            maxActive="20" 
-            maxIdle="10" 
-            username="{{ derby.user }}" 
-            password="{{ derby.pass }}" 
-            driverClassName="org.apache.derby.jdbc.ClientDriver" 
-            url="{{ derby.url }}" 
-            readOnly="false"/>
-      with_items: "{{ tds_instances }}"
-
-    - name: Insert derbydb realm in server.xml
-      blockinfile:
-        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
-        insertbefore: <Host.*
-        marker: "<!-- {mark} derbydb realm -->"
-        block: |
-          <Realm
-            className="org.apache.catalina.realm.DataSourceRealm" 
-            digest="MD5"
-            debug="0"
-            dataSourceName="jdbc/adminDB"
-            userTable="USERS"
-            userNameCol="USERNAME"
-            userCredCol="PASSWORD"
-            userRoleTable="V_USERS_ROLES"
-            roleNameCol="ROLENAME"/>
-      with_items: "{{ tds_instances }}"
-
     - name: Copy context.xml for tds instances
       copy:
         src: context.xml
         dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
       with_items: "{{ tds_instances }}"
 
-# Copy derby-db client jar
-    - name: Download derby db
-      run_once: True
-      local_action: get_url
-      args:
-        url: "{{ derby_db_download_url }}"
-        dest: "/tmp/{{ derby_db_filename }}"
+    - include_tasks: ../../utils/derby-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
 
-    - name: Unarchive derby db in remote host
-      unarchive:
-        src: "/tmp/{{ derby_db_filename }}"
-        dest: "{{ tomcat_home }}"
-        extra_opts:
-          --strip-components=1
+    # Java melody
+    - include_tasks: '../../utils/java-melody.yml'
 
-# Java melody
-    - include_tasks: 'java-melody.yml'
-
-# Restart services
+    # Restart services
     - name: restart httpd
       service:
         name: httpd
