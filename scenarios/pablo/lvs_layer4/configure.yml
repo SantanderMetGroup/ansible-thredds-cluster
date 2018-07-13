@@ -23,11 +23,11 @@
   tasks:
     - name: Disable Reverse Path Filtering
       sysctl:
-        name: {{ item }}
+        name: "{{ item }}"
         value: 0
       with_items:
         - net.ipv4.conf.all.rp_filter
-        - net.ipv4.conf.eth1.rp_filter
+        - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
    
          
 ##### Servers configuration #####               
