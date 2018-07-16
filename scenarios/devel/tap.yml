@@ -1,20 +1,4 @@
-- name: Provision hosts
-  hosts: all
-  become: True
-  tasks:
-    - yum:
-        name: epel-release
-
-    - yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - "@Development tools"
-        - python-passlib
-        - net-tools # apt?
-        - unzip
-
-- hosts: proxies
+- hosts: gateway
   become: True
   vars:
     httpd_port: 8080
@@ -105,3 +89,20 @@
         src: certs/keystore
         dest: "{{ ansible_env.HOME }}/.keystore"
            
+    - name: restart httpd
+      become: True
+      command: httpd -k restart
+      run_once: True
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.gateway }}"
+      tags: restart
+
+    - name: restart tap instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tap_instances }}"
+      tags: [restart]

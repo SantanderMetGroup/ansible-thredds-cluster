@@ -1,21 +1,4 @@
-- name: Provision hosts
-  hosts: all
-  become: True
-  tasks:
-    - yum:
-        name: epel-release
-
-    - yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - "@Development tools"
-        - python-passlib
-        - net-tools # apt?
-        - unzip
-        - vim
-
-- hosts: proxies
+- hosts: gateway
   vars:
     venv_home: "{{ httpd_server_root }}/virtualenv"
     httpd_server_root: "{{ ansible_env.HOME }}/httpd"
@@ -29,7 +12,7 @@
     - role: httpd
     - role: jk-gateway-tds
 
-- hosts: backend
+- hosts: tds
   vars:
     miniconda_python: 2
     miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
@@ -58,7 +41,7 @@
         supervisorctl_path: "{{ hostvars[item].venv_home }}/bin/supervisorctl"
       run_once: True
       delegate_to: "{{ item }}"
-      with_items: "{{ groups.proxies }}"
+      with_items: "{{ groups.gateway }}"
       tags: restart
 
     - name: restart tds instances
