@@ -1,6 +1,6 @@
 # Linux Virtual Server - DSR #
 
-With this repository you will be able to build a virtual environment consistinga of two diferent networks. One of them (representing the Internet) has a single client who sends requests to a TDS service. In the other network there is a load balancer who distributes the requests between both Tomcat application servers at layer 4 with a Direct Server Return scheme. Between both networks there is just a router whose single purpose is to interconnect both networks (not NAT functions involved).
+With this repository you will be able to build a virtual environment consisting of two diferent networks. One of them (representing the Internet) has a single client who sends requests to a TDS service. In the other network there is a load balancer who distributes the requests between both Tomcat application servers at layer 4 with a Direct Server Return scheme. Between both networks there is just a router whose single purpose is to interconnect them (not NAT functions involved, so the server is able to see the client's IP address which is one of the advantadges of DSR).
 
 
 ## Load Balancing Scheme ##
@@ -21,6 +21,7 @@ As you can see, the load balancer does not have a proper route to the client def
 
 ## Vagrantfile ##
 In order to build the virtual environment you must type the following command:
+
 `vagrant ssh --provision`
 
 Besides the definitions of the machines, this Vagrantfile includes an Ansible provision block that **creates automatically the inventory file for Ansible** and runs a software provision playbook (*provision.yml*).
@@ -29,6 +30,7 @@ Besides the definitions of the machines, this Vagrantfile includes an Ansible pr
 ## configure.yml ##
 
 With this playbook you will execute all the necessary orders to configure the load-balancers and the servers. Execute it with:
+
 `ansible-playbook configure.yml --ask-vault-pass`
 
 This playbook uses the following roles:
@@ -39,8 +41,18 @@ This playbook uses the following roles:
 * **tds:** deploys a tds instance inside the Tomcat server
 
 ### Test ###
-You can test functionality by running the command `curl {VIP}:8080/thredds -L` from the client. This command makes an ordinary HTTP GET request (with the -L option you enable redirection from HTTP 302 response headers).
+You can test functionality by running the command 
 
-In the folder *exchange* you will find files that correspond to captures with *tcpdump* on different hosts and interfaces. Open them with a packet sniffer like **wireshark** (*recommended*)  or with `tcpdump -r {file}`.
+`curl {VIP}:8080/thredds -L` 
 
-This deployment also works for an internal client (i.e. a client on the same internal private network). You cant see that by typing `{VIP}:8080/thredds` on you internet browser. The only difference is that the response from the servers will be directly served to you rather than going through the router.
+from the client. This command makes an ordinary HTTP GET request (with the -L option you enable redirection for HTTP 302 response headers).
+
+In the folder *exchange* you will find files that correspond to captures with *tcpdump* on different hosts and interfaces. Open them with a packet sniffer like **wireshark** (*recommended*)  or with 
+
+`tcpdump -r {file}`.
+
+This deployment also works for an internal client (i.e. a client on the same internal private network). You cant see it by typing 
+
+`{VIP}:8080/thredds` 
+
+on you internet browser. The only difference is that the response from the servers will be directly served to you rather than going through the router.
