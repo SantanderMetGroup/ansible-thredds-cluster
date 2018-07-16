@@ -27,14 +27,13 @@ tds_instances:
     shutdown: 18000
     tds_debug:
       jpda_address: "{{ ansible_eth1.ipv4.address }}:8000"
-    host: "{{ ansible_eth1.ipv4.address }}"
+    jk_host: "{{ ansible_eth1.ipv4.address }}"
     connectors:
-      - type: ajp
+      - protocol: AJP/1.3
         port: 18009
-        proxy: proxy # ansible inventory host # Mandatory for delegate_to in tds
-      - type: http
+        proxy: proxy # Mandatory
+      - protocol: HTTP/1.1
         port: 8080
-        # proxy: proxy
     replicas:
       - name: collection1
       - name: collection2
