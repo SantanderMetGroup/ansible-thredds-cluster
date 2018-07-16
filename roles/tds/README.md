@@ -15,12 +15,12 @@ Every `tds_instance` corresponds to a tomcat process running in the $CATALAINA_B
     tds_instances:  
       - name: Identifier for the instance, also used in the path to the instance (appended to tomcat_base)  
         shutdown: Port for tomcat shutdown  
-	host: IP or hostname used is mod_jk worker.NAME.host directive
+	jk_host: IP or hostname used is mod_jk worker.NAME.host directive
         tds_content_root: Path to the content root of the TDS instance. Default is $CATALINA_BASE/content  
         tds_debug:  
           jpda_address: Default is localhost:8000  
-        connectors: Connectors for tomcat  
-          type: (http|ajp)  
+        connectors: Connectors for tomcat, this dict is rendered as xml attributes in the <Connector> element
+          protocol: (HTTP/1.1|AJP/1.3)  
           port: Port number for the connector  
           proxyName: proxyName attribute for the connector  
           connectionTimeout: connectionTimeout attribute for the connector  
