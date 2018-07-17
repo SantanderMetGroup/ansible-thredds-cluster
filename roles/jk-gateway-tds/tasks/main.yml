@@ -48,3 +48,16 @@
     collection_name: "{{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
 
+- name: Add collection urimaps
+  blockinfile:
+    path: "{{ mod_jk_conf_path }}/mod_jk.urimaps"
+    marker: "# {mark} {{ item.1.base }}/{{ item.0.path }}"
+    block: |
+      {{ item.1.base }}/{{ item.0.path }}=COLLECTION_{{ collection_name }}
+      {{ item.1.base }}/{{ item.0.path }}/*=COLLECTION_{{ collection_name }}
+  vars:
+    collection_name: "{{ item.0.path | replace('/', '-') }}"
+  tags: hola
+  with_subelements:
+    - "{{ collections }}"
+    - services
