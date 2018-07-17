@@ -29,4 +29,22 @@
     chdir: "{{ nginx_directory }}/{{ nginx_version }}"
     target: install
 
+- name: Create systemd unit file
+  template:
+    src: nginx.service.j2
+    dest: /usr/lib/systemd/system/nginx.service
+  vars:
+    ansible_become: True
 
+- name: Template configuration file for nginx
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_conf_path }}/nginx.conf"
+
+- name: Start nginx and enable it to start at boot
+  systemd:
+    name: nginx
+    enabled: True
+    state: started
+  vars:
+    ansible_become: True
