@@ -1,0 +1,16 @@
+- name: Provision all hosts
+  hosts: all
+  become: True
+  tasks:
+    - yum:
+        name: epel-release
+
+    - yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "@Development tools"
+        - python-passlib
+        - net-tools # apt?
+        - unzip
+        - vim
