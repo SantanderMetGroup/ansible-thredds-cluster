@@ -14,12 +14,17 @@
   template:
     src: nginx.conf.j2
     dest: "{{ nginx_path_prefix }}/nginx.conf"
+      
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  command: "setsebool -P httpd_can_network_connect 1"
 
-- name: Start nginx and enable it to start at boot
+- name: Enable nginx to start on boot 
   systemd:
-    name: nginx
+    name: nginx.service
     enabled: True
-    state: started
-  vars:
-    ansible_become: True
+
+- name: Start nginx
+  systemd:
+    name: nginx.service
+    state: restarted 
 
