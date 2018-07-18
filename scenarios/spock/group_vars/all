@@ -1,9 +1,17 @@
 ---
+# Needed because no httpd role is executed in the gateway
+httpd_document_root: /var/www/html
+
 collections:
 - path: udg-tds
   top: False # not mandatory here, static catalog.html not used for ESGF scenario
   catalogs:
     src: "TDSSPOCK/catalogs"
+  services:
+    - base: /thredds/catalog
+    - base: /thredds/fileServer
+    - base: /thredds/dodsC
+    - base: /thredds/ncss/grid
 
 datasets:
 - src: "TDSSPOCK/datasets"

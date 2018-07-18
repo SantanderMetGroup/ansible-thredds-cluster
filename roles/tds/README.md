@@ -15,7 +15,6 @@ Every `tds_instance` corresponds to a tomcat process running in the $CATALAINA_B
     tds_instances:  
       - name: Identifier for the instance, also used in the path to the instance (appended to tomcat_base)  
         shutdown: Port for tomcat shutdown  
-	jk_host: IP or hostname used is mod_jk worker.NAME.host directive
         tds_content_root: Path to the content root of the TDS instance. Default is $CATALINA_BASE/content  
         tds_debug:  
           jpda_address: Default is localhost:8000  
@@ -24,6 +23,8 @@ Every `tds_instance` corresponds to a tomcat process running in the $CATALAINA_B
           port: Port number for the connector  
           proxyName: proxyName attribute for the connector  
           connectionTimeout: connectionTimeout attribute for the connector  
+	  host: IP or hostname used is mod_jk worker.NAME.host directive
+	  proxy: Name of the host as defined in the ansible inventory, mandatory for AJP connector
         replicas: Collections that are supported by the instance  
           name: Must reference the path attribute of the collection that this instance replicates.  
 

@@ -3,7 +3,6 @@
     src: TdsClusterAuthorizer{{ tds_major_version }}.class
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer{{ tds_major_version }}.class"
   with_items: "{{ tds_instances }}"
-  tags: hola
 
 - name: Substitute TomcatAuthorizer by TdsClusterAuthorizer in applicationContext.xml (for TDS 5)
   replace:
@@ -12,7 +11,6 @@
     path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
   with_items: "{{ tds_instances }}"
   when: tds_major_version == 5|string
-  tags: hola
 
 - name: Substitute TomcatAuthorizer by TdsClusterAuthorizer in web.xml (for TDS 4)
   replace:
@@ -21,11 +19,11 @@
     path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
   when: tds_major_version == 4|string
-  tags: hola
 
 # TODO Should I create a lookup plugin called "unique_subelements" in order to prevent repetition?
 - name: Copy tds static files
   include_tasks: tds-static-files.yml
+  run_once: True
   loop_control:
     loop_var: connector
   with_subelements:

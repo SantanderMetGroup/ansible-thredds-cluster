@@ -12,5 +12,8 @@
   copy:
     src: "{{ item }}"
     dest: "{{ hostvars[connector.1.proxy].httpd_document_root }}/thredds/{{ item | basename }}"
-  when: (tds_major_version == 5|string or tds_version.startswith("ESGF"))
+  delegate_to: "{{ connector.1.proxy }}"
+  when: 
+    - tds_major_version|string == 5|string
+    - connector.1.proxy is defined
   with_fileglob: "v5/*"
