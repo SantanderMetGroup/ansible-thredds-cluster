@@ -10,6 +10,12 @@ This role is the glue between the role `jk-gateway` and the role `tds`. For ever
 
 See documentation for the role `tds`.
 
+This role requires the following variables to be declared by the user when roles defining them are not used in the play.
+
+- ansible\_become
+- httpd\_document\_root
+- mod\_jk\_conf\_path
+
 ## Variables
 
 ## Documentation

@@ -1,3 +1,12 @@
+# TODO Should I create a lookup plugin called "unique_subelements" in order to prevent repetition?
+- name: Copy tds static files
+  include_tasks: tds-static-files.yml
+  loop_control:
+    loop_var: connector
+  with_subelements:
+    - "{{ tds_instances }}"
+    - connectors
+
 # We are going to write to the same file in a remote host, so we need to
 # simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
 - name: Add workers to the gateway

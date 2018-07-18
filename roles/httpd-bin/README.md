@@ -6,6 +6,11 @@ This role deploys and httpd server using the system package manager. At the mome
 
 None.
 
+## Exports
+
+- `ansible_become`
+- `httpd_document_root`
+
 ## Variables
 
 - `httpd_server_root`: `/etc/httpd`

@@ -6,6 +6,10 @@ Here follows the documentation of the role jk-gateway. This role deploys mod_jk 
 
 Although this role does not define any dependencies in the `meta/` directory, it is supposed to be used on top of one of the `httpd` roles. It can also be used in top of an existing httpd installation that was previously carried out without any of the roles provided by this project, as it is the case of the ESGF scenario.
 
+## Exports
+
+- `mod_jk_conf_path`
+
 ## Role usage
 
 If you want to deploy the status worker, you have to declare the following variables:

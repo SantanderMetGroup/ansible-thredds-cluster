@@ -157,26 +157,6 @@
       environment:
         UVCDAT_ANONYMOUS_LOG: "False"
 
-    - name: Copy static files
-      copy:
-        src: "{{ item }}"
-        dest: /var/www/html/thredds
-      with_fileglob: "static-files/*"
-        
-    # /tds5 and /udg-tap
-    - name: Add /tds5 and /udg-tap workers 
-      blockinfile:
-        path: /etc/httpd/conf.d/mod_jk.workers
-        marker: "# {mark} tds5 udg-tap workers"
-        block: |
-          worker.tds5.type=ajp13
-          worker.tds5.host=192.168.202.129
-          worker.tds5.port=13009
-          worker.tap.type=ajp13
-          worker.tap.host=192.168.202.129
-          worker.tap.port=12009
-          worker.list=tds5,tap
-
     - name: Add /tds5 and /udg-tap urimaps
       blockinfile:
         path: /etc/httpd/conf.d/mod_jk.urimaps
@@ -186,7 +166,6 @@
           /udg-tap/*=tap
           /tds5=tds5
           /tds5/*=tds5
-
 
 - hosts: tds
   vars:

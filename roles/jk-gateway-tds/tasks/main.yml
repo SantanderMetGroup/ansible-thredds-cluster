@@ -12,17 +12,6 @@
     state: directory
   when: mod_jk_static_catalog
 
-- name: Create thredds static configuration files (images, css)
-  copy:
-    src: "{{ item }}"
-    dest: "{{ httpd_document_root }}/thredds/{{ item }}"
-  when: mod_jk_static_catalog
-  with_items:
-    - folder.gif
-    - tdsCat.css
-    - threddsIcon.gif
-    - tds.css
-
 - name: Template static TDS catalog.html
   template:
      src: catalog.html.j2
@@ -57,7 +46,6 @@
       {{ item.1.base }}/{{ item.0.path }}/*=COLLECTION_{{ collection_name }}
   vars:
     collection_name: "{{ item.0.path | replace('/', '-') }}"
-  tags: hola
   with_subelements:
     - "{{ collections }}"
     - services

@@ -6,6 +6,11 @@ This role deploys an httpd server, downloading sources into the control machine 
 
 None.
 
+## Exports
+
+- `ansible_become`
+- `httpd_document_root`
+
 ## Variables
 
 - `httpd_server_root`: `"{{ ansible_env.HOME }}/httpd"`
