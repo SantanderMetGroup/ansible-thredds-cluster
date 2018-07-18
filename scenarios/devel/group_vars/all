@@ -4,8 +4,6 @@ collections:
     top: True # Add a reference in the tds gateway to the collection
     references: ['collection2'] # Have I implemented this?
     mode: '2775'
-    _owner: zequi
-    _group: zequi
     catalogs:
       src: data/collection1
       _owner: zequi
@@ -28,7 +26,6 @@ collections:
 datasets:
   - src: data/datasets
     dest: '' # If empty, path is public/ in THREDDS
-    _owner: zequi
     #  - src: /home/zequi/tests/ncml-dataset
     #    dest: ''
 
@@ -38,13 +35,26 @@ tds_instances:
     tds_debug:
       jpda_address: "{{ ansible_eth1.ipv4.address }}:8000"
     connectors:
-      - protocol: AJP/1.3
-        port: 18009
-        proxy: proxy # Mandatory
-        host: "{{ ansible_eth1.ipv4.address }}"
       - protocol: HTTP/1.1
         port: 8080
     replicas:
-      - name: collection1
-      - name: collection2
+      - proxy: proxy # Mandatory
+        host: "{{ ansible_eth1.ipv4.address }}"
+        collections:
+          - collection1
+          - collection2
+        properties:
+          port: 18009
+          protocol: AJP/1.3
+
+tap_instances:
+  - name: tap1
+    shutdown: 20005
+    connectors:
+      - protocol: AJP/1.3
+        port: 20009
+        proxy: proxy
+        host: "{{ ansible_eth1.ipv4.address }}"
+    lb:
+      - name: tap
 

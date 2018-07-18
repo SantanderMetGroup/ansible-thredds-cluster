@@ -24,17 +24,21 @@
     src: catalog.xml
     dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/catalog.xml"
 
-- name: Create directories for instance replicas
+- name: Create directory {{ item.1 }} in instance {{ instance.name }}
   file:
-    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/{{ item.name }}"
+    dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/{{ item.1 }}"
     state: directory
-  with_items: "{{ instance.replicas }}"
+  with_subelements:
+    - "{{ instance.replicas }}"
+    - collections
 
 - name: Link collection in the instance root catalog
   blockinfile:
     dest: "{{ instance.tds_content_root | default(tds_instance_default_content_root) }}/thredds/catalog.xml"
-    marker: "<!-- {mark} {{ item.name }} -->"
+    marker: "<!-- {mark} {{ item.1 }} -->"
     insertbefore: "</catalog>"
     block: |
-      <catalogRef xlink:title="{{ item.name }}" xlink:href="{{ item.name }}/catalog.xml" name=""/>
-  with_items: "{{ instance.replicas }}"
+      <catalogRef xlink:title="{{ item.1 }}" xlink:href="{{ item.1 }}/catalog.xml" name=""/>
+  with_subelements: 
+    - "{{ instance.replicas }}"
+    - collections

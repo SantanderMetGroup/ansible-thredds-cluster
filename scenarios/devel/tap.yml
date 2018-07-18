@@ -76,12 +76,13 @@
       blockinfile:
         path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
         insertbefore: <Engine.*
+        marker: <!-- {mark} ssl -->
         block: |
           <Connector
           protocol="org.apache.coyote.http11.Http11NioProtocol"
           port="8443" maxThreads="200"
           scheme="https" secure="true" SSLEnabled="true"
-          keystoreFile="${user.home}/.keystore" keystorePass="coches1" clientAuth="false" sslProtocol="TLS"/>
+          keystoreFile="{{ ansible_env.HOME }}/.keystore" keystorePass="coches1" clientAuth="false" sslProtocol="TLS"/>
       with_items: "{{ tds_instances }}"
 
     - name: Copy keystore

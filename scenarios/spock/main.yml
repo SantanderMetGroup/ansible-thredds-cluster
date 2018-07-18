@@ -4,10 +4,12 @@
     - yum:
         name: python-passlib
         
+# See group_vars/ for vars
 - hosts: spock
   vars:
     esg_root: "esgcet"
-
+    # Needed because no httpd role is executed in the gateway
+    httpd_document_root: /var/www/html
     # Vars for jk-gateway
     mod_jk_static_catalog: False
     mod_jk_configure: --with-apxs=/usr/sbin/apxs
@@ -167,14 +169,10 @@
           /tds5=tds5
           /tds5/*=tds5
 
+# See group_vars/ for vars
 - hosts: tds
   vars:
     proxy_name: "spock.meteo.unican.es" # where is this used?
-
-    # TDS variables
-    tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
-    tds_version: "ESGF-5.0.1"
-    tds_filename: "tds-esgf.war"
   vars_files:
     - secret.yml
   roles:
