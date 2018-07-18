@@ -2,6 +2,7 @@ nginx
 =========
 
 This role installs nginx from packages repository and configures a very simple Layer 7 load balancing for different servers that must be confined in a group called *servers*
+
 Requirements
 ------------
 Not requirements needed
