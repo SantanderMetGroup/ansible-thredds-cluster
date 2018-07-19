@@ -1,38 +1,40 @@
-Role Name
+nginx-bin
 =========
 
-A brief description of the role goes here.
+This role installs nginx compiling the source code and configures a very simple Layer 7 load balancing for a group of servers that must be confined in a groups called *servers*
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The following requirements are needed on the remote host:
+
+* gcc (compiling library) 
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+* `nginx_url_prefix`: mirror for source code's download
+* `nginx_version`: version of nginx software
+* `nginx_filename`: name of the file that will be downloaded
+* `nginx_directory`: directory where downloaded tarball will be extracted
+* `nginx_path_prefix`: directory where all nginx's folders and files will be places with installation
+* `nginx_bin_path`: directory of nginx's executable
+* `nginx_conf_path`: directory where the configuration file (*nginx.conf*) will be placed
+* `nginx_pid_path`: directory where the file with the PID of the master process (*nginx.pid*) will be placed
+
+* `tds_port`: the port where the servers application will be listening to
+* `bind_port`: the port where the load balancer will be listening to (doesn't need to be the same as *tds_port*)
+
 
 Dependencies
 ------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+No dependencies
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - nginx-bin
 
-License
--------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
