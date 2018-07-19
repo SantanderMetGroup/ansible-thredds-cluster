@@ -1,5 +1,7 @@
 # Scenario spock
 
+This scenario deploys the THREDDS Clustering in top of the test ESGF node deployed in spock. It serves as a use case for testing the THREDDS Clustering together with ESGF. Additionally, this scenario also creates mod_jk workers that allow access to the /tds5 and /udg-tap through spock.meteo.unican.es.
+
 ## Usage
 
 1. `svn co PATH_TO_TDSSPOCK_SVN_REPO .`

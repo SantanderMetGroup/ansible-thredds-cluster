@@ -8,6 +8,7 @@ Although this role does not define any dependencies in the `meta/` directory, it
 
 ## Exports
 
+- `httpd_document_root`
 - `mod_jk_conf_path`
 
 ## Role usage

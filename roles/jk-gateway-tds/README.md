@@ -11,8 +11,7 @@ This role further configures the mod_jk deployed by the role jk-gateway by regis
 This role requires you to define the following variables, except that they are defined by other roles:
 
 - httpd\_document\_root - Used in tasks and in templates
-- httpd\_port - Used in templates
-- collections - Used in tasks
+- collections - From the deployment model. Used in tasks
 
 ## Variables
 
