@@ -67,7 +67,7 @@ The gateway is the software that works as a reverse proxy and it is in charge of
 
 Each TDS instance, or simply instance, corresponds to a Tomcat server proccess running the THREDDS web application in the backend hosts. Each host can run one or more instances. 
 
-Each instance has the option to support any number of collections and each instance will only respond to requests targeting data available in the supported collections. This is done through the appropriate filtering of requests in the gateway.
+Each instance has the option to support any number of collections and each instance will respond only to requests targeting data available in the supported collections. This is done through the appropriate filtering of requests in the gateway.
 
 In case of using the httpd+mod\_jk solution for the gateway, connectors of type AJP are used to connect the gateway with the instances. Usually, you only need one Connector element per gateway in the deployment, since Connector elements must reference their proxy.  Each instance can contain one or more connectors (Connector xml elements in Tomcat's server.xml).
 
@@ -79,11 +79,72 @@ From an user perspective, collections are an aggrupation of catalogs and dataset
 
 From an administrator perspective, when using Apache httpd+mod\_jk in the gateway, collections are mod\_jk workers of type load balancing compunded of replicas, that is, mod\_jk balance workers. Each replica points to a tomcat instance deployed in the backend hosts that holds a copy of the contents served by the collection. Each request is routed, through the use of urimaps, to the TDS instances that support the collection in which the requested data resides.
 
+\subsection{How to define the deployment model}
+
+The purpose of the deployment model is to define the common information needed by the different load balancing infrastructures. This information, defined using Ansible variables, will be used by the different roles and scenarios to perform their specific deployment of the THREDDS cluster.
+
+The deployment model is defined using the following variables:
+
+\begin{itemize}
+\item[-] collections
+\item[-] tds\_instances
+\item[-] datasets
+\end{itemize}
+
+The following is an example of the definition of these variables:
+
+\begin{lstlisting}
+collections:
+  - path: collection1 # Id of the collection and path in THREDDS
+    top: True # Add a reference in the tds gateway to the collection
+    catalogs:
+      src: data/collection1
+    services: 
+      - base: /thredds/catalog
+      - base: /thredds/fileServer
+      - base: /thredds/dodsC
+
+  - path: collection2
+    top: True
+    catalogs:
+      src: data/collection2
+    services:
+      - base: /thredds/dap4
+      - base: /thredds/dodsC
+      - base: /thredds/catalog
+      - base: /thredds/fileServer
+      - base: /thredds/ncss/grid
+
+datasets:
+  - src: data/datasets
+    dest: '' # If empty, path is public/ in THREDDS
+  - src: /home/user/tests/ncml-dataset
+    dest: '/path/to/dest'
+
+tds_instances:
+  - name: instance1
+    shutdown: 18000
+    tds_debug: # optional, used to enable jpda and other debug features
+      jpda_address: "{{ ansible_eth1.ipv4.address }}:8000"
+    connectors: # optional, connectors in conf/server.xml
+      - protocol: HTTP/1.1
+        port: 8080
+    replicas: # collections replicated by this tds instance
+      - proxy: proxy # proxy's ansible inventory name 
+        host: "{{ ansible_eth1.ipv4.address }}" 
+        collections: 
+          - collection1
+          - collection2
+        properties: # <Connector> in conf/server.xml
+          port: 18009
+          protocol: AJP/1.3
+\end{lstlisting}
+
 \section{Roles and scenarios}
 
-Ansible roles have been created to split the deployment of TDS Clustering into reutilizable parts. A user who wants to implement his specific TDS Clustering scenario has to define an Ansible inventory and playbook, and also define the variables that the Ansible roles will use to do the deployment.
-
 \subsection{Overview of roles}
+
+Ansible roles have been created to split the deployment of TDS Clustering into reutilizable parts. A user who wants to implement his specific TDS Clustering scenario has to define an Ansible inventory and a playbook, and also define the variables that the Ansible roles will use to do the deployment.
 
 The defined Ansible roles are:
 
@@ -95,6 +156,7 @@ The defined Ansible roles are:
 \item[-] httpd - Role to install httpd from source code
 \item[-] httpd-bin - Role to install httpd from system packages
 \item[-] jk-gateway - Role to deploy the mod\_jk gateway in top of httpd
+\item[-] jk-gateway-tds - Role to deploy collections and replicas in top of mod\_jk
 \item[-] tomcat - Role to deploy a tomcat server that will contain multiple instances
 \item[-] tds - Role to deploy the THREDDS Data Server in tomcat instances
 \item[-] tds-jk - Brigde between jk-gateway and tds
@@ -129,38 +191,65 @@ When the gateway is built using the Apache httpd+mod\_jk setup, it relies on the
 
 Additionally to the mod\_jk workers described above, a mod\_jk status worker is also created, which allows the user to check the state of the rest of the workers in a html view. See the role reference for more information.
 
-This is an example of mod\_jk urimaps. It can be observed that all THREDDS services for a collection are forwarded:
+\subsection{Implementation example}
+
+The httpd+mod\_jk implementation of THREDDS Clustering uses the information provided by the deployment model to create the appropriate mod\_jk workers and urimaps files, in addition to create the appropriate <Connector> elements in the tds instances (which will be of type AJP in this case).
+
+We are going to see the workers and urimaps files created given the following deployment model:
 
 \begin{lstlisting}
-/status-jk=jk-manager
-/status-jk/*=jk-manager
+collections:
+  - path: collection1 
+    top: True 
+    catalogs:
+      src: data/collection1
+    services: 
+      - base: /thredds/catalog
+      - base: /thredds/fileServer
+      - base: /thredds/dodsC
 
-/thredds/*/collection1=COLLECTION_collection1
-/thredds/*/collection1/*=COLLECTION_collection1
+datasets:
+  - src: data/datasets
+    dest: '' 
+
+tds_instances:
+  - name: instance1
+    shutdown: 18000
+    replicas: 
+      - proxy: proxy 
+        host: server1
+        collections: 
+          - collection1
+        properties: 
+          port: 18009
+          protocol: AJP/1.3
 \end{lstlisting}
 
-This is an example of a mod\_jk workers configuration file:
+The mod\_jk urimaps file will look like the following:
 
 \begin{lstlisting}
-worker.list=jk-manager
-worker.jk-manager.type=status
+/thredds/catalog/collection1=COLLECTION_collection1
+/thredds/catalog/collection1/*=COLLECTION_collection1
+/thredds/fileServer/collection1=COLLECTION_collection1
+/thredds/fileServer/collection1/*=COLLECTION_collection1
+/thredds/dodsC/collection1=COLLECTION_collection1
+/thredds/dodsC/collection1/*=COLLECTION_collection1
+\end{lstlisting}
 
-worker.host1_18009.type=ajp13
-worker.host1_18009.host=host1
-worker.host1_18009.port=18009
+The mod\_jk workers file will look like the following:
 
-worker.host2_18009.type=ajp13
-worker.host2_18009.host=host2
-worker.host2_18009.port=18009
+\begin{lstlisting}
+worker.server1_18009.type=ajp13
+worker.server1_18009.host=server1
+worker.server1_18009.port=18009
 
 worker.list=COLLECTION_collection1
 worker.COLLECTION_collection1.type=lb
 worker.COLLECTION_collection1.mount=/thredds/restrictedAccess/*
 
-worker.COLLECTION_collection1.balance_workers=host1_18009
-worker.COLLECTION_collection1.balance_workers=host2_18009
+worker.COLLECTION_collection1.balance_workers=server_18009
 \end{lstlisting}
 
-In this configuration, a collection named collection1 is created in the gateway and it is replicated in the backend hosts running THREDDS instances, host1 and host2. Every THREDDS instance provides a Connector listening in the specified port where the gateway can connect in order to forward requests. The worker names for the THREDDS instances are compounded of the hostname of the host where they are running plus the port in which the AJP connector is listening, allowing multiple instances to listen in the same host.
+In this configuration, a collection named collection1 is created in the gateway and it is replicated in the backend host running a THREDDS instance. The THREDDS instance provides a Connector listening in the specified port where the gateway can connect in order to forward requests. The worker names for the THREDDS instances are compounded of the hostname of the host where they are running plus the port in which the AJP connector is listening, allowing multiple instances to listen in the same host.
 
 \end{document}

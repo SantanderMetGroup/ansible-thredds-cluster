@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SCENARIOS='devel-jk,tds_standalone'
-ROLES='virtualenv-conda,virtualenv,supervisord,httpd,httpd-bin,jk-gateway,tomcat,tds,tds-jk'
+SCENARIOS='devel,tds_standalone,spock'
+ROLES='virtualenv-conda,virtualenv,supervisord,httpd,httpd-bin,jk-gateway,jk-gateway-tds,tomcat,tds,tds-jk'
 
 # Generate intermediate documentation for roles and scenarios
 eval pandoc -f markdown -t latex -o r.tex --base-header-level=2 ../roles/{$ROLES}/README.md
@@ -16,4 +16,3 @@ PANDOC_OPTS="--template template.latex"
 pandoc $PANDOC_OPTS $PANDOC_VARS -s -f latex -t latex -o tmp.tex {doc,titles/roles-reference,r,titles/scenarios-reference,s}.tex
 pandoc $PANDOC_OPTS $PANDOC_VARS -s --toc -f latex -o doc.pdf {doc,titles/roles-reference,r,titles/scenarios-reference,s}.tex
 
-rm {r,s}.tex

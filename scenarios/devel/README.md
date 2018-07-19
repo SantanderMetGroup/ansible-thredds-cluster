@@ -1,4 +1,4 @@
-# Scenario devel-jk
+# Scenario devel
 
 This scenario serves as use case for development and testing of the TDS+`mod_jk` gateway infrastructure. It also serves as an example of different use cases that can be implemented.
 
