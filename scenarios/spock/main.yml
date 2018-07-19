@@ -168,6 +168,19 @@
           /udg-tap/*=tap
           /tds5=tds5
           /tds5/*=tds5
+          workers.list=tap,tds5
+
+    - name: Add tap and tds5 workers
+      blockinfile:
+        path: /etc/httpd/conf.d/mod_jk.workers
+        marker: "# {mark} tds5 udg-tap workers"
+        block: |
+          worker.tap.host=oceano.macc.unican.es
+          worker.tap.port=12009
+          worker.tap.type=ajp13
+          worker.tds5.host=oceano.macc.unican.es
+          worker.tds5.port=13009
+          worker.tds5.type=ajp13
 
 # See group_vars/ for vars
 - hosts: tds
