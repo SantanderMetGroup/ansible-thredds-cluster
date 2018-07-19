@@ -42,7 +42,7 @@ This approach do away with the bottleneck created in the load balancer by the HT
 
 \section{Deployment model}
 
-The following image provides a first overview of the deployment model.
+The purpose of the deployment model is to define the common information needed by the different load balancing infrastructures. This information, defined using Ansible variables, will be used by the different roles and scenarios to perform their specific deployment of the THREDDS cluster. The following image provides a first overview of the deployment model.
 
 \begin{figure}[h]
 \includegraphics[width=1\textwidth]{images/overview.png}
@@ -80,8 +80,6 @@ From an user perspective, collections are an aggrupation of catalogs and dataset
 From an administrator perspective, when using Apache httpd+mod\_jk in the gateway, collections are mod\_jk workers of type load balancing compunded of replicas, that is, mod\_jk balance workers. Each replica points to a tomcat instance deployed in the backend hosts that holds a copy of the contents served by the collection. Each request is routed, through the use of urimaps, to the TDS instances that support the collection in which the requested data resides.
 
 \subsection{How to define the deployment model}
-
-The purpose of the deployment model is to define the common information needed by the different load balancing infrastructures. This information, defined using Ansible variables, will be used by the different roles and scenarios to perform their specific deployment of the THREDDS cluster.
 
 The deployment model is defined using the following variables:
 
@@ -159,6 +157,7 @@ The defined Ansible roles are:
 \item[-] jk-gateway-tds - Role to deploy collections and replicas in top of mod\_jk
 \item[-] tomcat - Role to deploy a tomcat server that will contain multiple instances
 \item[-] tds - Role to deploy the THREDDS Data Server in tomcat instances
+\item[-] tds-cluster - Role to deploy common cluster configuration
 \item[-] tds-jk - Brigde between jk-gateway and tds
 \end{itemize}
 
