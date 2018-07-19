@@ -1,3 +1,7 @@
+- name: Print tds_major_version
+  debug: var=tds_major_version
+  tags: [never, debug]
+
 #################### Tomcat BASE ####################
 - name: Create directory for each tds instance
   file:
@@ -82,10 +86,6 @@
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
   when: tds_version | truncate(4,True,'') == 'ESGF'
-
-- name: Print tds_major_version
-  debug: var=tds_major_version
-  tags: [never, debug]
 
 #################### content/thredds ####################
 - name: Create content/thredds/ directories in tomcat_home
