@@ -12,3 +12,13 @@ for controlling VirtualBox. The command and stderr is shown below.
 Do the following:
 
 `cp /usr/lib/libvdeplug.so.2 /usr/lib/libvdeplug.so`
+
+
+
+You wil most likely have to install libpcap:
+`apt install libpcap-dev`
+
+
+vde download mirror: https://sourceforge.net/projects/vde/files/vde2/2.3/vde2-2.3.tar.gz/download
+
+NOTE: ./configure --enable-experimental
