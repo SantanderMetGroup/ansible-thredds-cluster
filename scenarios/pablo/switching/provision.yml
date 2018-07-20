@@ -1,0 +1,73 @@
+- name: Provision DHCP server
+  hosts: dhcp
+  become: True
+  tasks:
+    - name: Install DHCP 
+      yum:
+        name: dhcp
+        state: present
+
+    - name: Create eth1 configuration file
+      copy:
+        src: ifcfg-eth1-dhcp_server
+        dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+          
+    - name: ifup eth1
+      command: "ifup eth1"
+
+    - name: Create DHCP configuration file
+      copy:
+        src: dhcp.conf
+        dest: /etc/dhcpd/dhcpd.conf
+
+    - name: Start DHCP
+      systemd:
+        enabled: yes
+        state: started
+
+- name: Common provision for load balancer and servers
+  hosts:
+    - servers
+    - load-balancer
+  become: True
+  tasks:
+    - name: Install neccessary software
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - tcpdump
+
+    - name: Create eth1 configuration file
+      copy:
+        src: ifcfg-eth1
+        dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+        
+    - name: ifup eth1
+      command: "ifup eth1"
+
+- name: Specific provision for load-balancer
+  hosts: load-balancer
+  become: True
+  tasks:
+    - name: Install software
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - ipvsadm
+
+- name: Specific provision for servers
+  hosts: servers
+  become: True
+  tasks:
+    - name: Install software
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - net-tools
+        - unzip
+        - iptables
+
+

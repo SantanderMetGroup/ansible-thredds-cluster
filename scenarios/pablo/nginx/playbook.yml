@@ -18,8 +18,25 @@
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   roles:
     - role: ansible-miniconda-role
-    - role: supervisord-conda
+    - role: virtualenv-conda
+    - role: supervisord
+    - role: tomcat
     - role: tds
+  tasks:
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+    
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [restart, update_catalogs]
+
 
 
 - name: Deploy nginx on load balancer
