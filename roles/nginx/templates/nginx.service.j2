@@ -1,0 +1,16 @@
+[Unit]
+Description=nginx - high performance web server
+Documentation=https://nginx.org/en/docs/
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile= {{ nginx_pid_path }}/nginx.pid
+ExecStartPre={{ nginx_bin_path }}/nginx -t -c {{ nginx_conf_path }}/nginx.conf
+ExecStart={{ nginx_bin_path }}/nginx -c {{ nginx_conf_path }}/nginx.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
