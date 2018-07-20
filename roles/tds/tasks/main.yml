@@ -1,3 +1,7 @@
+- name: Print tds_major_version
+  debug: var=tds_major_version
+  tags: [never, debug]
+
 #################### Tomcat BASE ####################
 - name: Create directory for each tds instance
   file:
@@ -23,7 +27,7 @@
     - "{{ tds_instances }}"
     - ['lib', 'jre']
     
-- name: Copy web.xml
+- name: Copy web.xml for tomcat-home
   copy:
     src: web.xml
     dest: "{{ tomcat_base }}/{{ item.name }}/conf/web.xml"
@@ -69,31 +73,19 @@
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
   with_items: "{{ tds_instances }}"
 
-- name: Create web.xml in WEB-INF
+- name: Copy web.xml in WEB-INF
   copy:
-    src: thredds_web.xml
+    src: web.xml.v{{ tds_major_version }}
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
+  when: tds_version | truncate(4,True,'') != 'ESGF'
 
-- name: Create web.xml in WEB-INF for TDS5-ESGF
+- name: Create web.xml in WEB-INF for TDS-ESGF
   copy:
-    src: thredds5_web.xml
+    src: web.xml.esgf
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
   with_items: "{{ tds_instances }}"
-  when: tds_version == "ESGF-5.0.1"
-
-- name: Copy TdsClusterAuthorizer in every instance
-  copy:
-    src: TdsClusterAuthorizer.class
-    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/TdsClusterAuthorizer.class"
-  with_items: "{{ tds_instances }}"
-
-- name: Substitute TomcatAuthorizer by TdsClusterAuthorizer in applicationContext.xml
-  replace:
-    regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
-    replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TdsClusterAuthorizer">'
-    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-  with_items: "{{ tds_instances }}"
+  when: tds_version | truncate(4,True,'') == 'ESGF'
 
 #################### content/thredds ####################
 - name: Create content/thredds/ directories in tomcat_home

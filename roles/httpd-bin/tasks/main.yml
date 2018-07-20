@@ -1,5 +1,8 @@
+# needed by tds-jk to know if it has to escalate privileges
 - set_fact:
-    ansible_become: "{{ ansible_become }}"
+    ansible_become: "{{ ansible_become | default(True) }}"
+    httpd_document_root: "{{ httpd_document_root }}"
+  tags: always
 
 - name: Add epel-release repository
   become: True
@@ -19,6 +22,7 @@
 
 - name: Print httpd version
   debug: var=httpd_version.stdout
+  tags: ['never', 'debug']
 
 - name: Copy httpd.conf
   template:
@@ -31,11 +35,7 @@
     path: /etc/httpd/conf.d/{{ item }}
   with_items: ["autoindex.conf", "userdir.conf", "welcome.conf"]
 
-- name: Install python-passlib and httpd
-  become: True
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - python-passlib
-    - httpd
+- name: Start httpd
+  command: httpd -k start
+  tags: ["never", "boot"]
+

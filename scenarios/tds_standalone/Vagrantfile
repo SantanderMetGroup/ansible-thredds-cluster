@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+def ssh_key_gen(box)
+  $script = <<-SCRIPT
+    ssh-keygen -t rsa -b 4096 -f /home/vagrant/.ssh/id_rsa -N ""
+    cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+    chown -R vagrant:vagrant /home/vagrant/.ssh
+    SCRIPT
+  
+  box.vm.provision "shell", inline: $script
+end
+
+def copy_files(box)
+  # allow ssh from control machine
+  box.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
+  box.vm.provision "shell", inline: "cat /tmp/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+
+  # copy test.sh
+  box.vm.provision "file", source: "test.sh", destination: "/home/vagrant/test.sh"
+  box.vm.provision "shell", inline: "chmod a+x /home/vagrant/test.sh"  
+end
+  
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.box = "ubuntu/trusty64"
+    ubuntu.vm.network "private_network", ip: "192.168.50.10"
+    ubuntu.vm.hostname = "ubuntu-test"
+    ubuntu.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install git python-virtualenv python-dev unzip -y"
+
+    copy_files(ubuntu)
+    ssh_key_gen(ubuntu)
+    
+    ubuntu.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize ['modifyvm', :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.define "centos" do |centos|
+    centos.vm.box = "centos/7"
+    centos.vm.network "private_network", ip: "192.168.50.11"
+    centos.vm.hostname = "centos-test"
+
+    # add EPEL and install packages
+    $script = <<-SCRIPT
+    sudo yum install unzip wget -y
+    wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo rpm -ivh epel-release-latest-7.noarch.rpm
+    sudo yum update -y && sudo yum install "@Development tools" git net-tools telnet wget python-devel python2-pip -y
+    sudo pip install --upgrade pip setuptools virtualenv
+    SCRIPT
+    
+    centos.vm.provision "shell", inline: $script
+    copy_files(centos)
+    ssh_key_gen(centos)
+    
+    centos.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize ['modifyvm', :id, "--memory", "1024"]
+    end
+  end
+end

@@ -1,6 +1,6 @@
 # These facts are required by the backend to reference their proxies
 - set_fact:
-      mod_jk_hostname: "{{ ansible_nodename }}" # hostname
+      httpd_document_root: "{{ httpd_document_root }}"
       mod_jk_conf_path: "{{ mod_jk_conf_path }}"
   tags: always
 
@@ -12,71 +12,28 @@
 
 - name: Reference mod_jk files from httpd.conf
   lineinfile:
-    path: "{{ httpd_conf_file }}"
+    path: "{{ httpd_conf_file | default('/etc/httpd/conf/httpd.conf') }}"
     line: Include {{ mod_jk_conf_path }}/*.conf
   
-- name: Copy mod_jk.conf
+- name: Template mod_jk.conf
   template:
     src: mod_jk.conf.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.conf"
 
-- name: Copy mod_jk.workers
+- name: Template mod_jk.workers
   template:
     src: mod_jk.workers.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.workers"
 
-- name: Copy mod_jk.urimaps
+- name: Template mod_jk.urimaps
   template:
     src: mod_jk.urimaps.j2
     dest: "{{ mod_jk_conf_path }}/mod_jk.urimaps"
-
-# Thredds's configuration
-# mod_jk_static_catalog, which is True by default, controls if static html
-# is created in conf.d, imitating the THREDDS catalog html page
-- name: Create configuration module for thredds
-  template:
-    src: thredds.conf.j2
-    dest: "{{ mod_jk_conf_path }}/thredds.conf"
-  when: mod_jk_static_catalog
-
-- name: Create thredds directory in htdocs directory
-  file:
-    dest: "{{ httpd_document_root }}/thredds"
-    state: directory
-  when: mod_jk_static_catalog
-
-- name: Create thredds static configuration files (images, css)
-  copy:
-    src: "{{ item }}"
-    dest: "{{ httpd_document_root }}/thredds/{{ item }}"
-  when: mod_jk_static_catalog
-  with_items:
-    - folder.gif
-    - tdsCat.css
-    - threddsIcon.gif
-    - tds.css
-
-- name: Create thredds static configuration - catalog.html
-  template:
-     src: catalog.html.j2
-     dest: "{{ httpd_document_root }}/thredds/catalog.html"
-  when: mod_jk_static_catalog
-  tags: update_catalogs
-
-- name: Create thredds static configuration - catalog.xml
-  template:
-    src: catalog.xml.j2
-    dest: "{{ httpd_document_root }}/thredds/catalog.xml"
-  when: mod_jk_static_catalog
-
-- name: Create thredds static configuration - serverInfo.html
-  template:
-    src: serverInfo.html.j2
-    dest: "{{ httpd_document_root }}/thredds/serverInfo.html"
-  when: mod_jk_static_catalog
   
 - name: Create password for proxy status web pages
   htpasswd:
-    path: "{{ mod_jk_status_passwd }}/.htpasswd"
-    username: "{{ applications.proxy.status.user }}"
-    password: "{{ applications.proxy.status.password }}"
+    path: "{{ mod_jk_status_path }}/.htpasswd"
+    username: "{{ mod_jk_status_user }}"
+    password: "{{ mod_jk_status_passwd }}"
+  when:  mod_jk_status_user is defined 
+

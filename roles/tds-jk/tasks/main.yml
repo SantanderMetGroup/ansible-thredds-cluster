@@ -1,24 +1,44 @@
-- name: Register balance workers in proxy
+- name: Add AJP Connectors to tomcat
   blockinfile:
-    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
-    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    path: "{{ tomcat_base }}/{{ item.0.name }}/conf/server.xml"
+    insertafter: <Service.*
+    marker: <!-- {mark} {{ item.1.properties.port }} -->
     block: |
-      worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
-      worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ ansible_host }}
-      worker.{{ ansible_hostname }}_{{ item.1.port }}.port={{ item.1.port }}
-  delegate_to: "{{ item.1.proxy }}"
-  vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}" # depends on how httpd was installed
-  with_subelements:
-    - "{{ tds_instances }}"
-    - connectors
-  when: item.1.type == "ajp"
-
-- name: Register replicas in proxy
-  include_tasks: jk_workers.yml
+      <Connector 
+      {% for key, value in item.1.properties.items() -%}
+        {{ key }}="{{ value }}"
+      {% endfor %} />
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
+
+# We are going to write to the same file in a remote host, so we need to
+# simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
+- name: Add workers to the gateway
+  include_tasks: jk_workers.yml
+  with_items: "{{ ansible_play_batch }}"
+  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+  loop_control:
+    loop_var: host_item
+
+- name: Set jvmRoute in tds instances
+  replace:
+    path: "{{ tomcat_base }}/{{ item.0.name }}/conf/server.xml"
+    regexp: "<Engine(?!(.*)jvmRoute)(.*)>"
+    replace: <Engine\2 jvmRoute="{{ worker_name }}">
+  vars:
+    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  when: item.1.properties.protocol.lower().startswith("ajp")
+
+# TODO Should I create a lookup plugin called "unique_subelements" in order to prevent repetition?
+- name: Copy tds static files
+  include_tasks: tds-static-files.yml
+  run_once: True
   loop_control:
     loop_var: replica
-
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas

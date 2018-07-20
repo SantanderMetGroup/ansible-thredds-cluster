@@ -2,9 +2,14 @@
 
 This role deploys and httpd server using the system package manager. At the moment, it only works in yum based systems.
 
-# Role dependencies
+## Role dependencies
 
 None.
+
+## Exports
+
+- `ansible_become`
+- `httpd_document_root`
 
 ## Variables
 
