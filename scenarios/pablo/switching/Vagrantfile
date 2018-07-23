@@ -11,33 +11,36 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #Same key for all machines
   config.ssh.insert_key = false
   #config.vm.network "public_network"
-
+  config.vm.provider "virtualbox" do |v|
+    v.linked_clone = true
+  end
 
   CLUSTER.each do |node|
     config.vm.define "#{node}" do |host|
       host.vm.hostname = "#{node}"
-    end
-    config.vm.provider "virtualbox" do |v|
-      #better performance with "linked clone" feature from VirtualBox
-      v.linked_clone = true
-      #Configure switched private network
-      v.customize ["modifyvm", :id, "--nic2", "generic"]
-      v.customize ["modifyvm", :id, "--nicgenericdrv2", "VDE"]
-      v.customize ["modifyvm", :id, "--nicproperty2", "network=/tmp/switch1"]
+      host.vm.provider "virtualbox" do |v|
+        #Configure switched private network
+        v.customize ["modifyvm", :id, "--nic2", "generic"]
+        v.customize ["modifyvm", :id, "--nicgenericdrv2", "VDE"]
+        v.customize ["modifyvm", :id, "--nicproperty2", "network=/tmp/switch1"]
+      end
     end
   end
 
-  config.vm.define "router" do |host|
-    config.vm.provider "virtualbox" do |v|
-      v.customize ["modifyvm", :id, "--nic2", "generic"]
-      v.customize ["modifyvm", :id, "--nicgenericdrv2", "VDE"]
-      v.customize ["modifyvm", :id, "--nicproperty2", "network=/tmp/switch1"]
+  config.vm.define "router" do |router|
+    #Configure private network with client
+    router.vm.network "private_network", ip: "192.168.0.2"
+
+    router.vm.provider "virtualbox" do |v|
+      #Configure switched private network with cluster
+      v.customize ["modifyvm", :id, "--nic3", "generic"]
+      v.customize ["modifyvm", :id, "--nicgenericdrv3", "VDE"]
+      v.customize ["modifyvm", :id, "--nicproperty3", "network=/tmp/switch1"]
     end
-    config.vm.network "private_network", ip: "192.168.0.2"
   end
 
-  config.vm.define "client" do |host|
-    config.vm.network "private_network", ip: "192.168.0.168"
+  config.vm.define "client" do |client|
+    client.vm.network "private_network", ip: "192.168.0.168"
   end
 
   config.vm.provision "ansible" do |ansible|
