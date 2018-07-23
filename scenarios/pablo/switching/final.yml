@@ -12,6 +12,7 @@
       sysctl:
         name: net.ipv4.ip_forward
         value: 1
+  tags: [router, network]
      
 
 ##### Load balancer configuration #####
@@ -28,6 +29,7 @@
       with_items:
         - net.ipv4.conf.all.rp_filter
         - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+  tags: [lb, network]
    
 ##### Servers configuration #####         
 - name: Configure servers with Tomcat
@@ -67,9 +69,11 @@
 
     - name: Delete default route
       command: "ip route del default"
+      tags: network
 
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router']['ansible_eth2']['ipv4']['address'] }}"
+      tags: network
 
 
 
@@ -82,3 +86,4 @@
       command: "ip route del default"
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router']['ansible_eth1']['ipv4']['address'] }}"
+  tags: network
