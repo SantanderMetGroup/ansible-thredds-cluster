@@ -17,13 +17,41 @@
 
     - name: Create DHCP configuration file
       copy:
-        src: dhcp.conf
-        dest: /etc/dhcpd/dhcpd.conf
+        src: dhcpd.conf
+        dest: /etc/dhcp/dhcpd.conf
 
     - name: Start DHCP
       systemd:
-        enabled: yes
-        state: started
+        name: dhcpd
+        state: restarted
+
+- name: Provision for router
+  gather_facts: True
+  hosts: router
+  become: True
+  tasks:
+    - name: Create eth1 configuration file
+      copy:
+        src: ifcfg-eth1
+        dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+        
+    - name: Register in DHCP server
+      blockinfile:
+        path: /etc/dhcp/dhcpd.conf
+        block: |
+          host router{
+            hardware ethernet {{ ansible_eth1.macaddress }};
+            fixed-address 192.0.2.1;
+          }
+      delegate_to: dhcp
+
+    - name: ifup eth1
+      command: "ifup eth1"
+
+    - name: Enable ip forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
 
 - name: Common provision for load balancer and servers
   hosts:
@@ -38,15 +66,8 @@
       with_items:
         - tcpdump
 
-    - name: Create eth1 configuration file
-      copy:
-        src: ifcfg-eth1
-        dest: /etc/sysconfig/network-scripts/ifcfg-eth1
-        
-    - name: ifup eth1
-      command: "ifup eth1"
 
-- name: Specific provision for load-balancer
+- name: Provision for load-balancer
   hosts: load-balancer
   become: True
   tasks:
@@ -57,7 +78,7 @@
       with_items:
         - ipvsadm
 
-- name: Specific provision for servers
+- name: Provision for servers
   hosts: servers
   become: True
   tasks:
@@ -70,4 +91,16 @@
         - unzip
         - iptables
 
-
+- name: Interface configuration of L.B. and Servers
+  hosts:
+    - load-balancer
+    - servers
+  become: True
+  tasks:
+    - name: Create eth1 configuration file
+      copy:
+        src: ifcfg-eth1
+        dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+        
+    - name: ifup eth1
+      command: "ifup eth1"
