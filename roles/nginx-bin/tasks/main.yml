@@ -1,50 +1,30 @@
 ---
 # tasks file for nginx
-
-- name: Download compressed file on local host
-  local_action:
-    module: get_url
-    url: "{{ nginx_url_prefix }}/{{ nginx_filename }}"
-    dest: "/tmp/{{ nginx_filename }}"
-
-- name: Create directory for nginx
-  file: 
-    path: "{{ nginx_directory }}"
-    state: directory
-
-- name: Unarchive nginx file
-  unarchive:
-    src: "/tmp/{{ nginx_filename }}"
-    dest: "{{ nginx_directory }}"
-
-- name: Configure nginx installation
-  command: "./configure --without-http_rewrite_module --without-http_gzip_module \
-           --prefix={{ nginx_path_prefix }}"
-  args:
-    chdir: "{{ nginx_directory }}/{{ nginx_version }}"
-    creates: "{{ nginx_directory }}/{{ nginx_version }}/Makefile"
+- name: Set up yum repository
+  yum:
+    name: "{{ nginx_repos_url }}"
+    state: present
 
 - name: Install nginx
-  make:
-    chdir: "{{ nginx_directory }}/{{ nginx_version }}"
-    target: install
-
-- name: Create systemd unit file
-  template:
-    src: nginx.service.j2
-    dest: /usr/lib/systemd/system/nginx.service
-  vars:
-    ansible_become: True
+  yum:
+    name: nginx
+    state: present
 
 - name: Template configuration file for nginx
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_conf_path }}/nginx.conf"
+    dest: "{{ nginx_path_prefix }}/nginx.conf"
+      
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  command: "setsebool -P httpd_can_network_connect 1"
 
-- name: Start nginx and enable it to start at boot
+- name: Enable nginx to start on boot 
   systemd:
-    name: nginx
+    name: nginx.service
     enabled: True
-    state: started
-  vars:
-    ansible_become: True
+
+- name: Start nginx
+  systemd:
+    name: nginx.service
+    state: restarted 
+
