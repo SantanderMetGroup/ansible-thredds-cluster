@@ -28,6 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "router" do |router|
+    router.vm.hostname = "router"
     #Configure private network with client
     router.vm.network "private_network", ip: "192.168.0.2"
 
@@ -37,9 +38,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.customize ["modifyvm", :id, "--nicgenericdrv3", "VDE"]
       v.customize ["modifyvm", :id, "--nicproperty3", "network=/tmp/switch1"]
     end
+
   end
 
   config.vm.define "client" do |client|
+    client.vm.hostname = "client"
     client.vm.network "private_network", ip: "192.168.0.168"
   end
 
