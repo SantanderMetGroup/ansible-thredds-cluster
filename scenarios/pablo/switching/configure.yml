@@ -1,9 +1,15 @@
+- name: Gather facts on all hosts
+  hosts: all
+  become: true
+  gather_facts: True
+
+##### DHCP server's networking configuration #####    
 - name: Configure DHCP server
   hosts: dhcp
   become: True
   tasks:
     - name: Create eth1 configuration file
-      copy:
+      template:
         src: ifcfg-eth1-dhcp_server
         dest: /etc/sysconfig/network-scripts/ifcfg-eth1
           
@@ -20,6 +26,12 @@
         name: dhcpd.service
         enabled: True
 
+    - name: Start DHCP
+      systemd:
+        name: dhcpd.service
+        state: started
+
+##### Router's networking configuration #####
 - name: Configure router
   gather_facts: True
   hosts: router
@@ -36,18 +48,31 @@
         block: |
           host router{
             hardware ethernet {{ ansible_eth2.macaddress }};
-            fixed-address 192.0.2.3;
+            fixed-address {{ gateway_ip }};
           }
       delegate_to: dhcp
 
     - name: ifup eth2
       command: "ifup eth2"
 
+
+##### Client's networking configuration #####
+- name: Configure client
+  hosts: client
+  become: True
+  tasks:
+    - name: Delete default route
+      command: "ip route del default"
+    - name: Add default route through router
+      command: "ip route add default via {{ gateway_ip }}"
+  tags: [restart, route]
+
     - name: Enable ip forwarding
       sysctl:
         name: net.ipv4.ip_forward
         value: 1
 
+##### Common networking configuration for Load Balancer and Servers #####
 - name: Configure L.B. and Servers
   hosts:
     - load-balancer
@@ -61,3 +86,14 @@
         
     - name: ifup eth1
       command: "ifup eth1"
+
+##### Servers' networking configuration #####
+- name: Delete default route
+  command: "ip route del default"
+  tags: [restart, route]
+
+- name: Add default route through router
+  command: "ip route add default via {{ gateway_ip }}"
+  tags: [restart, route]
+
+
