@@ -1,2 +1,13 @@
 ---
 # tasks file for nginx-tds
+- name: Register at nginx's load-balancer as backend server
+  lineinfile:
+    path: "{{ hostvars[item.1.proxy].nginx_conf_file_path }}"
+    line: "\t\tserver {{ ansible_eth1.ipv4.address }}:{{ tds_port }};"
+    insertafter: "upstream .* {\n"
+  delegate_to: load-balancer
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}" #Depends on how HAProxy was installed
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
