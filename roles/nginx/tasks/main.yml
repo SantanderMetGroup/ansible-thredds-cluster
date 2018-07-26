@@ -1,6 +1,11 @@
 ---
 # tasks file for nginx
 
+- name: Export variables backend servers need
+  set_fact:
+    nginx_conf_file_path: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
+    ansible_become: "{{ ansible_become | default(False) }}"
+
 - name: Download compressed file on local host
   local_action:
     module: get_url
@@ -39,4 +44,5 @@
 - name: Template configuration file for nginx
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_conf_path }}/nginx.conf"
+    dest: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
+    mode: 0666
