@@ -1,5 +1,10 @@
 ---
 # tasks file for nginx
+- name: Export variables backend servers need
+  set_fact:
+    nginx_conf_file_path: "{{ nginx_path_prefix }}/{{ nginx_conf_filename }}"
+    ansible_become: "{{ ansible_become | default(True) }}"
+
 - name: Set up yum repository
   yum:
     name: "{{ nginx_repos_url }}"
@@ -13,7 +18,7 @@
 - name: Template configuration file for nginx
   template:
     src: nginx.conf.j2
-    dest: "{{ nginx_path_prefix }}/nginx.conf"
+    dest: "{{ nginx_path_prefix }}/{{ nginx_conf_filename }}"
       
 - name: Set httpd_can_network_connect flag on and keep it persistent across reboots
   command: "setsebool -P httpd_can_network_connect 1"

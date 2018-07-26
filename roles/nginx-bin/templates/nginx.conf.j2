@@ -6,9 +6,6 @@ events {
 http {
 
   upstream backend {
-   {% for server in groups['servers'] %}
-   server {{ hostvars[server]['ansible_eth1']['ipv4']['address'] }}:{{ tds_port }};
-   {% endfor %}
   }
 
   # This server accepts all traffic to port {{ bind_port }} and passes it to the upstream. 
