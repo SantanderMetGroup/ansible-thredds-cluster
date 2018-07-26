@@ -1,9 +1,10 @@
----
-#tasks file for lvs
 
-- name: Create variable for VIP
+- name: Set new facts backend servers need
   set_fact:
     vip: "{{ ansible_eth1.ipv4.address }}"
+    bind_port: "{{ bind_port }}"
+    ipvs_rulefile_path: "{{ ipvs_rulefile_path }}"
+    ansible_become: "{{ ansible_become | default(True) }}"
 
 - name: Template LVS configure script for load-balancer
   become: False
@@ -15,7 +16,7 @@
 
 - name: Make sure ipvsadm.rules exists
   file:
-    path: /etc/ipvsadm.rules
+    path: "{{ ipvs_rulefile_path }}"
     state: touch
 
 - name: Execute script
