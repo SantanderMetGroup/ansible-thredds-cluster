@@ -5,10 +5,10 @@ ipvsadm -C
 #Add service on load-balancer's private interface
 ipvsadm -A -t {{ ansible_eth1.ipv4.address }}:{{ lb_bind_port }} -s rr
 #Add real servers
-{% for server in groups['servers'] %}
-ipvsadm -a -t {{ ansible_eth1.ipv4.address }}:{{ lb_bind_port }} -r {{ hostvars[server]['ansible_eth1']['ipv4']['address'] }}:{{ tds_port }} -g
-{% endfor %}
+#{% for server in groups['servers'] %}
+#ipvsadm -a -t {{ ansible_eth1.ipv4.address }}:{{ lb_bind_port }} -r {{ hostvars[server]['ansible_eth1']['ipv4']['address'] }}:{{ tds_port }} -g
+#{% endfor %}
 #Save rules
-ipvsadm -S -n > /etc/ipvsadm.rules
+ipvsadm -S -n > {{ ipvs_rulefile_path }}
 #To restore configurarion after reboot type:
 # ipvsadm-restore < /etc/ipvsadm.rules

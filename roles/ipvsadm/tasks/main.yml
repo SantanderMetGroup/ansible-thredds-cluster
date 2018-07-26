@@ -1,6 +1,10 @@
 ---
 #tasks file for lvs
 
+- name: Create variable for VIP
+  set_fact:
+    vip: "{{ ansible_eth1.ipv4.address }}"
+
 - name: Template LVS configure script for load-balancer
   become: False
   local_action:

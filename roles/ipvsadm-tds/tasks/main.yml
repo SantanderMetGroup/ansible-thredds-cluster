@@ -1,0 +1,11 @@
+---
+# tasks file for ipvsadm_tds
+- name: Register as backend server in load-balancer
+  become: True
+  command: "ipvsadm -a -t {{ vip }}:{{ lb_bind_port }} -r {{ ansible_eth1.ipv4.address }}:{{ tds_port }}"
+  delegate_to: load-balancer
+
+- name: Save rule
+  become: True
+  command: "ipvsadm -S -n >> {{ ipvs_rulefile_path }}"
+  delegate_to: load-balancer
