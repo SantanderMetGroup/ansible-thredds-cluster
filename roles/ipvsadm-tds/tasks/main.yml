@@ -1,11 +1,16 @@
----
-# tasks file for ipvsadm_tds
 - name: Register as backend server in load-balancer
-  become: True
-  command: "ipvsadm -a -t {{ vip }}:{{ lb_bind_port }} -r {{ ansible_eth1.ipv4.address }}:{{ tds_port }}"
-  delegate_to: load-balancer
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+  command: "ipvsadm -a -t {{ hostvars[item.1.proxy].vip }}:{{ hostvars[item.1.proxy].bind_port }} -r {{ ansible_eth1.ipv4.address }}:{{ tds_port }}"
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
 
 - name: Save rule
   become: True
-  command: "ipvsadm -S -n >> {{ ipvs_rulefile_path }}"
-  delegate_to: load-balancer
+  command: "ipvsadm -S -n >> {{ hostvars[item.1.proxy].ipvs_rulefile_path }}"
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
