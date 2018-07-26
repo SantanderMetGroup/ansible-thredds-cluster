@@ -40,24 +40,19 @@
 
 
 - name: Deploy nginx on load balancer
+  become: True
   hosts: load-balancer
   tags:
     - lb
   roles:
-          - role: nginx
-  #tasks:
-  # - name: Start nginx and enable it to start at boot
-  #   systemd:
-  #     name: nginx
-  #     enabled: True
-  #     state: started  
-  #   become: True
+          - role: nginx-bin
 
 - name: Register servers at load-balancer
   hosts: servers
   roles:
     - nginx-tds
-      
+  tags: newrole
+
 - name: Start nginx
   hosts: load-balancer
   tasks:
@@ -65,3 +60,4 @@
         name: nginx.service
         enabled: True
         state: started
+  tags: lb
