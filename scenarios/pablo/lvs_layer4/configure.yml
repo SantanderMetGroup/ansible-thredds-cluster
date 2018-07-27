@@ -18,7 +18,7 @@
   hosts: load-balancer
   become: True
   roles:
-    - ipvsadm
+    - role: ipvsadm
   tasks:
     - name: Disable Reverse Path Filtering
       sysctl:
@@ -48,6 +48,9 @@
     - role: virtualenv-conda
     - role: supervisord
     - role: tds
+    - role: ipvsadm-tds
+    - role: iptables
+      become: True
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:

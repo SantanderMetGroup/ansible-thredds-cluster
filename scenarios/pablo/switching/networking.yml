@@ -63,10 +63,10 @@
   tasks:
     - name: Delete default route
       command: "ip route del default"
+      tags: [restart]
     - name: Add default route through router
       command: "ip route add default via {{ gateway_ip }}"
-  tags: [restart, route]
-
+      tags: [restart]
     - name: Enable ip forwarding
       sysctl:
         name: net.ipv4.ip_forward
@@ -90,10 +90,10 @@
 ##### Servers' networking configuration #####
 - name: Delete default route
   command: "ip route del default"
-  tags: [restart, route]
+  tags: [restart]
 
 - name: Add default route through router
   command: "ip route add default via {{ gateway_ip }}"
-  tags: [restart, route]
+  tags: [restart]
 
 

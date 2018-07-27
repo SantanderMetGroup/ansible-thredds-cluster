@@ -3,24 +3,48 @@
   hosts: load-balancer
   roles:
           - role: haproxy
-          
+       
 - name: Configure servers with Tomcat
   hosts: servers
-  become: True
   vars_files:
-          - secret.yml
+    - secret.yml
   vars:
-          miniconda_python: 2
-          miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
-          miniconda_env:
-                name: udg
-                dependencies:
-                        - libnetcdf=4.4.1
-                        - supervisor
-          venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+    miniconda_python: 2
+    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
+    miniconda_env:
+      name: udg
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor
+    venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   roles:
-          - role: ansible-miniconda-role
-          - role: supervisord-conda
-          - role: tds
+    - role: virtualenv-conda
+      tags: tds_deploy
+    - role: supervisord
+      tags: tds_deploy
+    - role: tds
+      tags: tds_deploy
+    - role: haproxy-tds
+  tasks:
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+      tags: tds_deploy
+    
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [restart, update_catalogs, tds_deploy]   
 
-
+- name: Start HAProxy
+  hosts: load-balancer
+  tasks:
+    - name: Initiate haproxy
+      command: "./haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
+      args:
+        chdir: "{{ hostvars[inventory_hostname].haproxy_path }}"

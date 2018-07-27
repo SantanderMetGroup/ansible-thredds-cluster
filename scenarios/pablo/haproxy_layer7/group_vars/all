@@ -1,21 +1,48 @@
+---
 collections:
   - path: collection1 # Id of the collection and logic path in THREDDS
     top: True # Add a reference in the tds gateway to the collection
-    references: ['collection2'] # Have I implemented this?
     mode: '2775'
     catalogs:
       src: data/collection1
+      _owner: zequi
+    services: 
+      - base: /thredds/catalog
+      - base: /thredds/fileServer
+      - base: /thredds/dodsC
+
+  - path: collection2
+    top: True
+    catalogs:
+      src: data/collection2
+    services:
+      - base: /thredds/dap4
+      - base: /thredds/dodsC
+      - base: /thredds/catalog
+      - base: /thredds/fileServer
+      - base: /thredds/ncss/grid
 
 datasets:
   - src: data/datasets
     dest: '' # If empty, path is public/ in THREDDS
+    #  - src: /home/zequi/tests/ncml-dataset
+    #    dest: ''
 
 tds_instances:
   - name: instance1
     shutdown: 18000
+    tds_debug:
+      jpda_address: "{{ ansible_eth1.ipv4.address }}:8000"
     connectors:
-      - type: http
+      - protocol: HTTP/1.1
         port: 8080
-        # proxy: proxy
+        proxyPort: 8080
     replicas:
-      - name: collection1
+      - proxy: load-balancer # Mandatory
+        host: "{{ ansible_eth1.ipv4.address }}"
+        collections:
+          - collection1
+          - collection2
+        properties:
+          port: 18009
+          protocol: AJP/1.3

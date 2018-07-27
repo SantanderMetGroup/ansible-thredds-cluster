@@ -8,7 +8,8 @@
   hosts: load-balancer
   become: True
   roles:
-    - ipvsadm
+    - role: ipvsadm
+      tags: [restart]
   tasks:
     - name: Disable Reverse Path Filtering
       sysctl:
@@ -17,12 +18,10 @@
       with_items:
         - net.ipv4.conf.all.rp_filter
         - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
-  tags: [lb, network, restart]
   
 ##### Servers configuration #####         
 - name: Configure servers with Tomcat
   hosts: servers
-  become: True
   vars_files:
     - secret.yml
   vars:
@@ -35,16 +34,21 @@
         - supervisor
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   roles:
-    - role: ansible-miniconda-role
     - role: virtualenv-conda
+      tags: [tds_deploy]
     - role: supervisord
-    - role: tomcat
+      tags: [tds_deploy]
     - role: tds
+      tags: [tds_deploy]
     - role: iptables
+      become: True
+      tags: [restart]
+    - role: ipvsadm-tds
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
+      tags: [tds_deploy]
     
     - name: restart tds instances
       supervisorctl:
@@ -54,4 +58,4 @@
         password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
-      tags: [restart, update_catalogs]
+      tags: [restart, update_catalogs, tds_deploy]
