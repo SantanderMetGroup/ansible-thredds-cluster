@@ -1,5 +1,6 @@
+
 - name: Install dependencies
-  become: True 
+  become: True
   yum: name={{ item }}
   with_items:
           - make
@@ -7,8 +8,14 @@
           - pcre-devel
           - openssl-devel
           - zlib-devel          
+            
+- name: Set variables for backend servers
+  set_fact:
+    haproxy_path: "{{ haproxy_directory }}/{{ haproxy_version }}"
+    haproxy_conf_file: "{{ haproxy_conf_file }}"
+    ansible_become: "{{ ansible_become | default(False) }}"
+
 - name: Create directory for HAProxy
-  become_user: vagrant
   file:
           path: "{{ haproxy_directory }}"
           state: directory
@@ -41,8 +48,6 @@
                   USE_PCRE=1
                   USE_ZLIB=1
                   USE_OPENSSL=1
-                  DESTDIR={{ haproxy_directory }}
-  creates: "{{ haproxy_directory }}/{{ haproxy_version }}/haproxy }}"
 
 - name: Install HAProxy
   make:
@@ -57,10 +62,10 @@
 - name: Add configuration file
   template:
           src: haproxy.cfg.j2
-          dest: "{{ haproxy_directory }}/{{ haproxy_version }}/haproxy.cfg"
+          dest: "{{ haproxy_conf_file }}"
 
-- name: Initiate HAProxy
-  command: "./haproxy -f haproxy.cfg"
-  args:
-          chdir: "{{haproxy_directory }}/{{ haproxy_version }}"
+  #- name: Initiate HAProxy
+  #command: "./haproxy -f haproxy.cfg"
+  #args:
+  #        chdir: "{{haproxy_directory }}/{{ haproxy_version }}"
 
