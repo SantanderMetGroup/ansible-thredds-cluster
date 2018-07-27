@@ -1,0 +1,14 @@
+---
+# tasks file for haproxy-tds
+- name: Register at load-balancer
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+  lineinfile:
+    path: "{{hostvars[item.1.proxy].haproxy_conf_file }}"
+    line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address }}:{{ tds_port }}"
+    state: present
+    insertafter: "option forwardfor\n"
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
