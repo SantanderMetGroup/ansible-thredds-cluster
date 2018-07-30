@@ -26,10 +26,6 @@
         name: dhcpd.service
         enabled: True
 
-    - name: Start DHCP
-      systemd:
-        name: dhcpd.service
-        state: started
 
 ##### Router's networking configuration #####
 - name: Configure router
@@ -60,6 +56,16 @@
         name: net.ipv4.ip_forward
         value: 1
 
+
+##### Start DHCP server #####
+- name: Start DHCP server
+  hosts: dhcp
+  become: True
+  tasks:
+    - name: Start DHCP
+      systemd:
+        name: dhcpd.service
+        state: started
 
 ##### Client's networking configuration #####
 - name: Configure client
