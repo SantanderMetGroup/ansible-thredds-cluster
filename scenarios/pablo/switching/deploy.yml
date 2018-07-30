@@ -1,6 +1,5 @@
 - name: Gather facts on all hosts
   hosts: all
-  become: True
   gather_facts: True
 
 ##### Load balancer configuration #####
@@ -50,7 +49,7 @@
       vars:
         instances: "{{ tds_instances }}"
       tags: [tds_deploy]
-    
+
     - name: restart tds instances
       supervisorctl:
         name: "{{ item.name }}"
@@ -60,3 +59,8 @@
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: [restart, update_catalogs, tds_deploy]
+    
+    - include_tasks: routes.yml
+      vars:
+        ansible_become: True
+      tags: [restart]
