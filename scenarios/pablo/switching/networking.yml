@@ -55,6 +55,11 @@
     - name: ifup eth2
       command: "ifup eth2"
 
+    - name: Enable ip forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+
 
 ##### Client's networking configuration #####
 - name: Configure client
@@ -67,10 +72,6 @@
     - name: Add default route through router
       command: "ip route add default via {{ hostvars['router'].ansible_eth1.ipv4.address }}"
       tags: [restart]
-    - name: Enable ip forwarding
-      sysctl:
-        name: net.ipv4.ip_forward
-        value: 1
 
 ##### Common networking configuration for Load Balancer and Servers #####
 - name: Configure L.B. and Servers
