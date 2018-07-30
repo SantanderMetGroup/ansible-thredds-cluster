@@ -65,7 +65,7 @@
       command: "ip route del default"
       tags: [restart]
     - name: Add default route through router
-      command: "ip route add default via {{ gateway_ip }}"
+      command: "ip route add default via {{ hostvars['router'].ansible_eth1.ipv4.address }}"
       tags: [restart]
     - name: Enable ip forwarding
       sysctl:
@@ -88,12 +88,16 @@
       command: "ifup eth1"
 
 ##### Servers' networking configuration #####
-- name: Delete default route
-  command: "ip route del default"
-  tags: [restart]
+- name: Configure servers
+  hosts: servers
+  become: True
+  tasks:
+    - name: Delete default route
+      command: "ip route del default"
+      tags: [restart]
 
-- name: Add default route through router
-  command: "ip route add default via {{ gateway_ip }}"
-  tags: [restart]
+    - name: Add default route through router
+      command: "ip route add default via {{ gateway_ip }}"
+      tags: [restart]
 
 
