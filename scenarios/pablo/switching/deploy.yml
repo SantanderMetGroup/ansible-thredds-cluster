@@ -48,7 +48,7 @@
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
-      tags: [tds_deploy]
+      tags: [tds_deploy, auth]
 
     - name: restart tds instances
       supervisorctl:
@@ -58,9 +58,16 @@
         password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
-      tags: [restart, update_catalogs, tds_deploy]
+      tags: [restart, update_catalogs, tds_deploy, auth]
     
+    - include_tasks: ../../../utils/server_icon.yml
+      tags: [tds_deploy, icons]
+
     - include_tasks: routes.yml
       vars:
         ansible_become: True
       tags: [restart]
+    - name: Start DHCP
+      systemd:
+        name: dhcpd.service
+        state: started
