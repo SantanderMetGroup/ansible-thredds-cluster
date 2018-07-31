@@ -7,6 +7,7 @@
       <role rolename="restricted"/>
       <user username="alice" password="1234" roles="restringido,restrictedDatasetUser"/>
   with_items: "{{ instances }}"
+  tags: [tds_deploy, auth]
 
 - name: Add user realm as a global resource to instances
   blockinfile:
@@ -21,6 +22,7 @@
                 factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
                 pathname="conf/tomcat-users.xml" />
   with_items: "{{ instances }}"
+  tags: [tds_deploy, auth]
 
 - name: Add user realm to instances
   blockinfile:
@@ -32,4 +34,5 @@
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
       </Realm>
   with_items: "{{ instances }}"
+  tags: [tds_deploy, auth]
 
