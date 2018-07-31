@@ -40,6 +40,9 @@
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: [restart, update_catalogs, tds_deploy]   
+    
+    - include_tasks: ../../../utils/server_icon.yml
+      tags: [tds_deploy, icons]
 
 - name: Start HAProxy
   hosts: load-balancer
