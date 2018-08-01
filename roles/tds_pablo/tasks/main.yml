@@ -1,0 +1,126 @@
+- name: Print tds_major_version
+  debug: var=tds_major_version
+  tags: [never, debug]
+
+#################### Tomcat BASE ####################
+- name: Create directory for each tds instance
+  file:
+    dest: "{{ tomcat_base }}/{{ item.name }}"
+    state: directory
+  with_items:
+    - "{{ tds_instances }}"
+
+- name: Create dirs for instances
+  file:
+    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
+    state: directory
+  with_nested:
+    - "{{ tds_instances }}"
+    - ['logs', 'conf', 'webapps/thredds', 'temp']
+
+- name: Create soft links from instances to tomcat
+  file:
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
+    src: "{{ tomcat_home }}/{{ item.1 }}"
+    state: link
+  with_nested:
+    - "{{ tds_instances }}"
+    - ['lib', 'jre']
+    
+- name: Copy web.xml for tomcat-home
+  copy:
+    src: web.xml
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/web.xml"
+  with_items: "{{ tds_instances }}"
+
+- name: Copy server.xml 
+  template:
+    src: server.xml.j2
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+  with_items: "{{ tds_instances }}"
+
+- name: Copy context.xml
+  copy:
+    src: context.xml
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
+  with_items: "{{ tds_instances }}"
+
+- name: Copy tomcat-users.xml
+  template:
+    src: tomcat-users.xml.j2
+    dest: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
+  with_items: "{{ tds_instances }}"
+
+- name: Template catalina_vars
+  template:
+    src: catalina_vars.j2
+    dest: "{{ tomcat_base }}/{{ item.name }}/catalina_vars"
+  with_items: "{{ tds_instances }}"
+
+#################### TDS ####################
+- name: Download tds
+  run_once: True
+  local_action: get_url
+  args:
+    url: "{{ tds_download_url }}"
+    dest: "/tmp/{{ tds_filename }}"
+  vars:
+    ansible_become: False
+
+- name: Unarchive tds in webapps/thredds
+  unarchive:
+    src: "/tmp/{{ tds_filename }}"
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
+  with_items: "{{ tds_instances }}"
+
+- name: Copy web.xml in WEB-INF
+  copy:
+    src: web.xml.v{{ tds_major_version }}
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+  with_items: "{{ tds_instances }}"
+  when: tds_version | truncate(4,True,'') != 'ESGF'
+
+- name: Create web.xml in WEB-INF for TDS-ESGF
+  copy:
+    src: web.xml.esgf
+    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+  with_items: "{{ tds_instances }}"
+  when: tds_version | truncate(4,True,'') == 'ESGF'
+
+#################### content/thredds ####################
+- name: Create content/thredds/ directories in tomcat_home
+  file:
+    path: "{{ tomcat_home }}/content/thredds/{{ item }}"
+    state: directory
+    mode: "g+rwx"
+  with_items:
+    - public
+    - logs
+
+- name: Deploy content/thredds directory for instances
+  include_tasks: deploy_content_thredds.yml
+  with_items: "{{ tds_instances }}"
+  loop_control:
+    loop_var: instance
+
+#################### Deploy catalogs and datasets ####################
+- include_tasks: deploy_catalogs.yml
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  loop_control:
+    loop_var: instance
+  tags: update_catalogs
+    
+- name: Copy datasets 
+  synchronize:
+    src: "{{ item.src }}/"
+    dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
+    archive: False
+    recursive: True
+  with_items: "{{ datasets }}"
+  tags: update_catalogs
+
+#################### Supervisord ####################
+- include_tasks: supervisord_configuration.yml
+  with_items: "{{ tds_instances }}"
