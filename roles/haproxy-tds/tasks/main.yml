@@ -1,14 +1,23 @@
 ---
 # tasks file for haproxy-tds
-- name: Register at load-balancer
+- name: Register at load-balancer into default backend
   vars:
     ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
   lineinfile:
-    path: "{{hostvars[item.1.proxy].haproxy_conf_file }}"
+    path: "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
     line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address }}:{{ tds_port }}"
     state: present
-    insertafter: "option forwardfor\n"
+    insertafter: "backend {{ hostvars[item.1.proxy].default_backend }}\n"
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
+      
+
+- include_tasks: register_at_backend.yml
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  loop_control:
+    loop_var: instance
+
