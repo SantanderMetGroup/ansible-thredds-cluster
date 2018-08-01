@@ -23,8 +23,10 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-listen  firstbalancing
-	bind {{ haproxy_bind_address }}:{{ haproxy_bind_port }}
-	mode {{ haproxy_mode }}
-	balance {{ haproxy_balance_mode }}
-	option forwardfor
+frontend myfrontend
+  bind {{ haproxy_bind_address }}:{{ haproxy_bind_port }}
+  mode {{ haproxy_mode }}
+  option forwardfor
+
+backend {{ default_backend }}
+  balance {{ haproxy_balance_mode }}
