@@ -19,12 +19,13 @@ defaults
   errorfile 502 {{ haproxy_directory }}/{{ haproxy_version }}/errors/502.http
   errorfile 503 {{ haproxy_directory }}/{{ haproxy_version }}/errors/503.http
   errorfile 504 {{ haproxy_directory }}/{{ haproxy_version }}/errors/504.http
+  balance {{ haproxy_balance_mode }}
 
-frontend myfrontend
+frontend {{ default_frontend }}
 	bind {{ haproxy_bind_address }}:{{ haproxy_bind_port }}
 	mode {{ haproxy_mode }}
   option forwardfor
+  default_backend {{ default_backend }}
 
 backend {{ default_backend }}
-  balance {{ haproxy_balance_mode }}
 
