@@ -2,6 +2,8 @@
 collections:
   - path: collection1 # Id of the collection and logic path in THREDDS
     backend: col1
+    server: server1
+    acl_rule: collection1
     top: True # Add a reference in the tds gateway to the collection
     mode: '2775'
     catalogs:
@@ -14,6 +16,8 @@ collections:
 
   - path: collection2
     backend: col2
+    server: server2
+    acl_rule: collection2
     top: True
     catalogs:
       src: data/collection2
@@ -43,8 +47,10 @@ tds_instances:
       - proxy: load-balancer # Mandatory
         host: "{{ ansible_eth1.ipv4.address }}"
         collections:
-          - collection1
-          - collection2
+          - name: collection1
+            server: server1
+          - name: collection2
+            server: server2
         properties:
           port: 18009
           protocol: AJP/1.3
