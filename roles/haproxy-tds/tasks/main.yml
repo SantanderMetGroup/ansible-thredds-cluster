@@ -12,12 +12,21 @@
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
+
+- include_tasks: create_acl_rules.yml
+  run_once: True
+  with_items: "{{ collections }}"
+  loop_control:
+    loop_var: collection
       
+- include_tasks: create_backends.yml
+  run_once: True
+  with_items: "{{ collections }}"
+  loop_control:
+    loop_var: collection
 
 - include_tasks: register_at_backend.yml
-  with_subelements:
-    - "{{ tds_instances }}"
-    - replicas
+  with_items: "{{ collections }}"
   loop_control:
-    loop_var: instance
+    loop_var: collection
 

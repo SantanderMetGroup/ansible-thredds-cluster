@@ -1,0 +1,39 @@
+#- name: Check if ACL rule exists
+#  vars:
+#   ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+# command: "grep {{ hostvars[item.1.proxy].haproxy_conf_file }} -e 'acl {{ collection.acl_rule }}'"
+# ignore_errors: True #When Grep doesn't find anything return code = 1 (Alternative: https://stackoverflow.com/a/41011953)
+# with_subelements:
+#   - "{{ tds_instances }}"
+#   - replicas
+# register: grep_test
+# delegate_to: "{{ item.1.proxy }}"
+
+
+- name: Create ACL rule 
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+    uri_list:
+      - "/thredds/{{ collection.path }}/*"
+      - "/thredds/*/{{ collection.path }}"
+  lineinfile:
+    path: "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
+    line: "\tacl {{ collection.acl_rule }} path_reg {{ uri_list | join(\" \") }}"
+    insertbefore: "default_backend {{ hostvars[item.1.proxy].default_backend }}\n"
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+
+- name: Set ACL rule behaviour
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+  lineinfile:
+    path:  "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
+    line: "\tuse_backend {{ collection.backend }} if {{ collection.acl_rule }}"
+    insertbefore: "default_backend {{ hostvars[item.1.proxy].default_backend }}"
+  delegate_to: "{{ item.1.proxy }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+
