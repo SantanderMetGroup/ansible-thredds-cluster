@@ -3,6 +3,7 @@
   hosts: load-balancer
   roles:
           - role: haproxy
+  tags: [haproxy]
        
 - name: Configure servers with Tomcat
   hosts: servers
@@ -25,6 +26,7 @@
     - role: tds_pablo
       tags: tds_deploy
     - role: haproxy-tds
+      tags: [haproxy]
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
@@ -47,7 +49,13 @@
 - name: Start HAProxy
   hosts: load-balancer
   tasks:
-    - name: Initiate haproxy
-      command: "./haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
+    - name: Initiate haproxy if installed from sources
+      command: "./haproxy -f {{ haproxy_conf_file }}"
       args:
-        chdir: "{{ hostvars[inventory_hostname].haproxy_path }}"
+        chdir: "{{ haproxy_path }}"
+      when: haproxy_from_sources == True
+
+    - name: Initiate haproxy if installed from binary file
+      become: True
+      command: "haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
+      when: hostvars[inventory_hostname].haproxy_from_sources == False
