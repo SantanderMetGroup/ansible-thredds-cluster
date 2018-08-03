@@ -17,9 +17,9 @@ done
 
 if [ "${@: -1}" = "deploy" ]; then
 	if [ $u ] ; then
-		ansible-playbook standalone.yml --limit localhost -e root=$r --tags update_catalogs
+		ansible-playbook standalone.yml --limit localhost -e root=$r --tags update_catalogs,restart
 	else
-		ansible-playbook standalone.yml --limit localhost -e root=$r
+		ansible-playbook standalone.yml --limit localhost -e root=$r --skip-tags update_catalogs
 	fi
 else
 	ansible-playbook standalone.yml --limit localhost -e root=$r --tags "${@: -1}"
