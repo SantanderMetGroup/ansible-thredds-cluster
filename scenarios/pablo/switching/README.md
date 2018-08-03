@@ -1,7 +1,8 @@
 # Switching scenario #
 In this scenario a switched environment is created with VDE Switch, a virtual switch that can connect several network components together, in order to prove that DSR can work with a Layer 2 switch between the load balancer and the servers.
+## Networking Architecture
 
-
+![Architecture scheme](architecture.img)
 ## Requirements
 
 You should install the following software in your **host** machine:
