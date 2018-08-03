@@ -1,0 +1,56 @@
+- hosts: all
+  vars:
+    root: /tmp/sandbox
+    # roles customization
+    tomcat_home: "{{ root }}/tomcat"
+    tomcat_base: "{{ root }}"
+
+    tds_version: 5.0.0-beta2
+
+    miniconda_python: 2
+    miniconda_prefix: "{{ root }}/miniconda"
+    miniconda_manage_dependencies: False
+    miniconda_env:
+      name: tds
+      dependencies:
+        - python=2.7
+        - libnetcdf=4.4.1
+        - virtualenv=16.0.0
+
+    ## tds instances
+    tds_instances:
+      - name: tomcat
+        shutdown: 8089
+        tds_content_root: "{{ root }}/content"
+        connectors:
+          - type: http
+            port: '8080'
+
+  roles:
+    - role: virtualenv-conda
+    - role: supervisord
+    - role: tds
+
+  tasks:
+    # management
+    - name: Restart TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items:
+        - "{{ tds_instances }}"
+      tags: ['restart']
+
+    - name: Stop TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: stopped
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items:
+        - "{{ tds_instances }}"
+      tags: ['stop', 'never']
+
+    - name: Stop supervisor 
+      shell: kill -9 $(cat {{ venv_home }}/var/supervisord.pid)
+      tags: ['stop', 'never']

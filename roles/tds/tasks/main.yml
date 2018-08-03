@@ -23,6 +23,9 @@
     dest: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
     src: "{{ tomcat_home }}/{{ item.1 }}"
     state: link
+  # Used in scenario standalone, where there is no distinction
+  # between tomcat_home and tomcat_base
+  when: tomcat_home == item.0.name
   with_nested:
     - "{{ tds_instances }}"
     - ['lib', 'jre']
@@ -97,20 +100,63 @@
     - public
     - logs
 
-- name: Deploy content/thredds directory for instances
-  include_tasks: deploy_content_thredds.yml
+- name: Create content/thredds/ directories in instances
+  file:
+    path: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds"
+    state: directory
   with_items: "{{ tds_instances }}"
-  loop_control:
-    loop_var: instance
+
+- name: Create soft link from instance content/thredds/public to tomcat
+  file:
+    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/public"
+    src: "{{ tomcat_home }}/content/thredds/public"
+    state: link
+  with_items: "{{ tds_instances }}"
+
+- name: Copy threddsConfig.xml
+  copy:
+    src: threddsConfig.xml
+    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/threddsConfig.xml"
+  with_items: "{{ tds_instances }}"
+
+- name: Create a common catalog.xml in every instance
+  copy:
+    src: catalog.xml
+    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/catalog.xml"
+  with_items: "{{ tds_instances }}"
 
 #################### Deploy catalogs and datasets ####################
+- name: Create directories for collections in instances 
+  file:
+    dest: "{{ item.0.tds_content_root | default([tomcat_base,item.0.name,'content']|join('/')) }}/thredds/{{ item.1.path }}"
+    state: directory
+  with_nested:
+    - "{{ tds_instances }}"
+    - "{{ collections }}"
+  when: item.1 is defined
+  tags: ["update_catalogs"]
+
+- name: Link collection in the instance root catalog
+  blockinfile:
+    dest: "{{ item.0.tds_content_root | default([tomcat_base,item.0.name,'content']|join('/')) }}/thredds/catalog.xml"
+    marker: "<!-- {mark} {{ item.1.path }} -->"
+    insertbefore: "</catalog>"
+    block: |
+      <catalogRef xlink:title="{{ item.1.path }}" xlink:href="{{ item.1.path }}/catalog.xml" name=""/>
+  with_nested: 
+    - "{{ tds_instances }}"
+    - "{{ collections }}"
+  when: item.1 is defined
+  tags: ["update_catalogs"]
+    
 - include_tasks: deploy_catalogs.yml
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
   loop_control:
     loop_var: instance
-  tags: update_catalogs
+  when: item.1 is defined
+  tags: ["update_catalogs"]
     
 - name: Copy datasets 
   synchronize:
@@ -119,7 +165,8 @@
     archive: False
     recursive: True
   with_items: "{{ datasets }}"
-  tags: update_catalogs
+  when: datasets is defined
+  tags: ["update_catalogs"]
 
 #################### Supervisord ####################
 - include_tasks: supervisord_configuration.yml

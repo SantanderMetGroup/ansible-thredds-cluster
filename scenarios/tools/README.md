@@ -1,4 +1,4 @@
-# Scenario tds_standalone
+# Scenario tools
 
 This scenario deploys a sandbox, using the framework provided by TDS Collections, that contains:
 
@@ -16,13 +16,12 @@ The THREDDS instance is populated with the following data:
 
 ## Requirements
 
-1. ssh key pair in your ~/.ssh directory and authorized to ssh to localhost
 1. ansible 2.5
 
 ## Usage in localhost
 
 1. `git clone --recursive -b devel https://github.com/SantanderMetGroup/ansible-thredds-cluster`
-1. `cd ansible-thredds-cluster/scenarios/zequi/tds_standalone`
+1. `cd ansible-thredds-cluster/scenarios/zequi/tools`
 1. `./run.sh -h`
 1. Deploy the TDS instance `./run.sh -r /tmp/sandbox deploy`
 1. (in web browser) `localhost:8080/thredds`
