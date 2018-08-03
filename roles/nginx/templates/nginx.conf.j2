@@ -5,17 +5,12 @@ events {
 
 http {
 
-  upstream backend {
-
-  }
 
   # This server accepts all traffic to port {{ bind_port }} and passes it to the upstream. 
   # Notice that the upstream name and the proxy_pass need to match.
 
   server {
+    proxy_set_header HOST $http_host;
     listen {{ bind_port }}; 
-    location / {
-    proxy_pass http://backend;
-    }
   }
 }
