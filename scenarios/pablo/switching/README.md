@@ -1,14 +1,14 @@
-#Switching scenario#
+# Switching scenario #
 In this scenario a switched environment is created with VDE Switch, a virtual switch that can connect several network components together, in order to prove
 that DSR can work with a Layer 2 switch between the load balancer and the servers.
 
 
-##Requirements
+## Requirements
 
 You should install the following software in your **host** machine:
 * vde_switch *(see the Important Notes section below)*
 
-###vde_switch installation
+### vde_switch installation
 Download the tarball file from the following URL:
 
 [https://sourceforge.net/projects/vde/files/vde2/2.3/vde2-2.3.tar.gz/download](https://sourceforge.net/projects/vde/files/vde2/2.3/vde2-2.3.tar.gz/download)
@@ -18,7 +18,7 @@ And then configure the installation with:
 
 By activating this flag you will be able to capture packets on the switch.
 
-##Execution
+## Execution
 Before doing `vagrant up` you should start the vde_switch by running the following command:
 
 `vde_switch -s /tmp/switch1`
@@ -56,13 +56,13 @@ You will find a **vde-dump.cap** file in your working directory which you can op
 
 
 
-###Documentation
+### Documentation
 
 * [VDE Switch General Info](http://wiki.virtualsquare.org/wiki/index.php/VDE)
 * [VDE Switch Basic Networking](http://wiki.virtualsquare.org/wiki/index.php/VDE_Basic_Networking)
 
 
-####Important Notes
+#### Important Notes
 
 1. If you get this error message when doing `vagrant up`:
 ```
