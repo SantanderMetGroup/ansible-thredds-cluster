@@ -17,15 +17,17 @@
         - supervisor
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
   roles:
-    - role: ansible-miniconda-role
     - role: virtualenv-conda
+      tags: [tds_deploy]
     - role: supervisord
-    - role: tomcat
+      tags: [tds_deploy]
     - role: tds
+      tags: [tds_deploy]
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
+      tags: [tds_deploy]
     
     - name: restart tds instances
       supervisorctl:
@@ -35,23 +37,20 @@
         password: "{{ supervisord_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
-      tags: [restart, update_catalogs]
-
+      tags: [restart, update_catalogs, tds_deploy]
 
 
 - name: Deploy nginx on load balancer
   become: True
   hosts: load-balancer
-  tags:
-    - lb
   roles:
           - role: nginx-bin
+          - role: nginx-gateway-tds
 
 - name: Register servers at load-balancer
   hosts: servers
   roles:
     - nginx-tds
-  tags: newrole
 
 - name: Start nginx
   hosts: load-balancer
@@ -60,4 +59,3 @@
         name: nginx.service
         enabled: True
         state: started
-  tags: lb
