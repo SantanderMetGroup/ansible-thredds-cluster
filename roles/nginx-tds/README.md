@@ -13,3 +13,6 @@ Role usage
 In order to work properly, this role requires the following variables to be declared as facts by the load balancer in its nginx installation/deployment
 role: nginx\_conf\_file\_path, default\_backend, ansible\_become.
 
+Variables
+---------
+* `tds_port`: the port where the Tomcat servers will be listening to
