@@ -1,8 +1,13 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
 - name: Deploy HAProxy on load balancer
   gather_facts: False
   hosts: load-balancer
   roles:
           - role: haproxy
+          - role: haproxy-gateway-tds
   tags: [haproxy]
        
 - name: Configure servers with Tomcat
@@ -23,7 +28,7 @@
       tags: tds_deploy
     - role: supervisord
       tags: tds_deploy
-    - role: tds_pablo
+    - role: tds
       tags: tds_deploy
     - role: haproxy-tds
       tags: [haproxy]
