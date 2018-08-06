@@ -15,30 +15,30 @@
     path: "{{ nginx_conf_file }}"
     insertafter: "http {"
     block: |
-      upstream {{ item.path | replace('/', '_') }} {
+      upstream {{ item.path | replace('/', '-') }} {
       }
-    marker: "#{mark} {{ item.path | replace('/', '_') }} upstream block"
+    marker: "#{mark} {{ item.path | replace('/', '-') }} upstream block"
   with_items: "{{ collections }}"
 
 - name: Create location block for default backend
   blockinfile:
     path: "{{ nginx_conf_file }}"
     insertafter: "listen {{ bind_port }};"
-    block: |
-      location / {
-        proxy_pass http://{{ default_backend }};
-      }
+    block: |4
+          location / {
+            proxy_pass http://{{ default_backend }};
+          }
     marker: "#{mark} '/'(default) location block"
 
 - name: Create location blocks for collections
   blockinfile: 
     path: "{{ nginx_conf_file }}"
     insertafter: "listen {{ bind_port }};"
-    block: |
-      location {{ item.1.base }} {
-        proxy_pass http://{{ item.0.path | replace('/', '_') }};
-      }
-    marker: "#{mark} {{ item.1.base }}/{{ item.0.path | replace('/', '_') }} location block"
+    block: |4
+          location {{ item.1.base }}/{{ item.0.path | replace('/','-') }} {
+            proxy_pass http://{{ item.0.path | replace('/', '-') }};
+          }
+    marker: "#{mark} {{ item.1.base }}/{{ item.0.path | replace('/', '-') }} location block"
   with_subelements:
     - "{{ collections }}"
     - services
