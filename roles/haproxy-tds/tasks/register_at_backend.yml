@@ -1,13 +1,8 @@
-- name: Register at load-balancer into {{ item.backend }} backend
-  vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+- name: Register at load-balancer into backend
   lineinfile:
-    path: "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
+    path: "{{ hostvars[instance.1.proxy].haproxy_conf_file }}"
     line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address}}:{{ tds_port }}"
-    insertafter: "backend {{ collection.backend }}\n"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - replicas
-  when: collection.server == ansible_hostname
-  delegate_to: "{{ item.1.proxy }}"
+    insertafter: "backend {{ item }}"
+  with_items: "{{ instance.1.collections }}"
+  delegate_to: "{{ instance.1.proxy }}"
 

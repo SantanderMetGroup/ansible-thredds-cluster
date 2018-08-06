@@ -13,20 +13,13 @@
     - "{{ tds_instances }}"
     - replicas
 
-- include_tasks: create_acl_rules.yml
-  run_once: True
-  with_items: "{{ collections }}"
-  loop_control:
-    loop_var: collection
-      
-- include_tasks: create_backends.yml
-  run_once: True
-  with_items: "{{ collections }}"
-  loop_control:
-    loop_var: collection
 
 - include_tasks: register_at_backend.yml
-  with_items: "{{ collections }}"
+  vars:
+    ansible_become: "{{ hostvars[instance.1.proxy].ansible_become }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
   loop_control:
-    loop_var: collection
+    loop_var: instance
 
