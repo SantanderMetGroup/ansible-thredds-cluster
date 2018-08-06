@@ -1,7 +1,7 @@
 Role nginx-bin
 =========
 
-This role installs nginx from packages repository and configures Layer 7 load balancing for different servers. Further configuration is required by running the role nginx-gateway-tds.
+This role installs nginx from packages repository and makes an initial Layer 7 load balancing configurations. Further configuration is required by running the role nginx-gateway-tds.
 
 
 Role Variables
