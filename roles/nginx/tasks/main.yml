@@ -1,10 +1,13 @@
 ---
 # tasks file for nginx
 
-- name: Export variables backend servers need
+- name: Export variables 
   set_fact:
     nginx_conf_file_path: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
     ansible_become: "{{ ansible_become | default(False) }}"
+    default_backend: "{{ default_backend }}"
+    nginx_from_source: True
+    nginx_bin_path: "{{ nginx_bin_path }}"
 
 - name: Download compressed file on local host
   local_action:
@@ -23,6 +26,7 @@
     dest: "{{ nginx_directory }}"
 
 - name: Configure nginx installation
+  ansible_become: False
   command: "./configure --without-http_rewrite_module --without-http_gzip_module \
            --prefix={{ nginx_path_prefix }}"
   args:
@@ -33,13 +37,6 @@
   make:
     chdir: "{{ nginx_directory }}/{{ nginx_version }}"
     target: install
-
-- name: Create systemd unit file
-  template:
-    src: nginx.service.j2
-    dest: /usr/lib/systemd/system/nginx.service
-  vars:
-    ansible_become: True
 
 - name: Template configuration file for nginx
   template:
