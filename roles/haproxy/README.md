@@ -3,10 +3,6 @@ Role haproxy
  
 This roles installs HAProxy compiling the source code, copies the configuration file and runs it. Further configuration is required by running the role haproxy-gateway-tds.
 
-Requirements
-------------
-No requirements
-
 Role Variables
 --------------
 * haproxy_url - URL for the download of HAProxy
