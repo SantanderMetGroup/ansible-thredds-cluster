@@ -1,0 +1,37 @@
+---
+# tasks file for haproxy-gateway-tds
+
+- name: Define default backend
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "default_backend {{ default_backend }}"
+    insertafter: "option forwardfor"
+
+- name: Create ACL for each collection
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "acl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}"
+    insertafter: "option forwardfor"
+  with_items: "{{ collections }}"
+
+- name: Define ACL rule behaviour
+  lineinfile: 
+    path: "{{ haproxy_conf_file }}"
+    line: "use_backend {{ item.path | replace('/', '-') }} if {{ item.path | replace('/', '-') }}"
+    insertbefore: "backend .*"
+    firstmatch: True
+  with_items: "{{ collections }}"
+
+
+- name: Create default backend block
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "backend {{ default_backend }}"
+
+- name: Create backend block for each ACL rule
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "backend {{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
+
+      
