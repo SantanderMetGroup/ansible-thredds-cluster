@@ -1,7 +1,7 @@
 Role haproxy-bin
 =========
 
-Installs HAProxy on the remote host, copies the configuration file and runs it. Further configuration is required by running the role haproxy-gateway-tds.
+Installs HAProxy on the remote host and copies an inital configuration file . Further configuration is required by running the role haproxy-gateway-tds.
 
 Requirements
 ------------
