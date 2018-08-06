@@ -41,21 +41,29 @@
 
 
 - name: Deploy nginx on load balancer
-  become: True
   hosts: load-balancer
   roles:
-          - role: nginx-bin
-          - role: nginx-gateway-tds
+    - role: nginx
+    - role: nginx-gateway-tds
 
 - name: Register servers at load-balancer
   hosts: servers
   roles:
-    - nginx-tds
+    - role: nginx-tds
 
 - name: Start nginx
+  become: True
   hosts: load-balancer
   tasks:
-    - systemd:
+    - name: When installed from binary files
+      systemd:
         name: nginx.service
         enabled: True
         state: started
+      when: nginx_from_source == False
+
+    - name: When installed from source
+      command: "./nginx"
+      args:
+        chdir: "{{ nginx_bin_path }}"
+      when: nginx_from_source == True
