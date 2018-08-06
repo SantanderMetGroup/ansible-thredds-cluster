@@ -1,7 +1,7 @@
 Role nginx
 =========
 
-This role installs nginx compiling the source code and configures Layer 7 load balancing for a group of servers. Further configuration is required by running the role nginx-gateway-tds.
+This role installs nginx compiling the source code and makes an initial Layer 7 load balancing configuration. Further configuration is required by running the role nginx-gateway-tds.
 
 Requirements
 ------------
