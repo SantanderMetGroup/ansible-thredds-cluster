@@ -20,7 +20,5 @@ Role Variables
 * haproxy\_bind\_address and haproxy\_bind\_port -> Bind parameters passed to the `listen`section. IP address ('\*' stands for all interfaces in the host) and port the load balancer will be listening on.
 * haproxy\_balance\_mode -> Balance algorithm the load balancer will execute.
 * haproxy_servers -> Array of servers that will be located in the backend, each of them defined by its listening socket (IP address + port)
-Dependencies
-------------
-No dependencies
+
 
