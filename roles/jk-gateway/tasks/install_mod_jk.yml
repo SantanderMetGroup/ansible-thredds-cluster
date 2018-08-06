@@ -3,7 +3,7 @@
   local_action: get_url
   args:
     url: "{{ mod_jk_download_url }}"
-    dest: "/tmp"
+    dest: "{{ mod_jk_downloads_tmp }}"
   vars:
     ansible_become: False
 
@@ -12,7 +12,7 @@
   
 - name: Unarchive mod_jk
   unarchive:
-    src: "/tmp/{{ mod_jk_filename }}"
+    src: "{{ mod_jk_downloads_tmp }}/{{ mod_jk_filename }}"
     dest: "{{ mod_jk_src }}"
 
 - name: Configure and install mod_jk

@@ -13,7 +13,7 @@
       local_action: get_url
       args:
         url: "{{ item }}"
-        dest: "/tmp"
+        dest: "{{ httpd_downloads_tmp }}"
       vars:
         ansible_become: False
       with_items:
@@ -24,7 +24,7 @@
 
     - name: Unarchive dependencies in remote host
       unarchive:
-        src: "/tmp/{{ item }}"
+        src: "{{ httpd_downloads_tmp }}/{{ item }}"
         dest: "{{ httpd_src }}"
       with_items:
         - "{{ apr_filename }}"

@@ -21,10 +21,10 @@
     tds_instances:
       - name: tomcat
         shutdown: 8089
-        tds_content_root: "{{ root }}/content"
+        tds_content_root: "{{ tomcat_home }}/content"
         connectors:
           - type: http
-            port: '8080'
+            port: 8080
 
   roles:
     - role: virtualenv-conda
@@ -52,5 +52,5 @@
       tags: ['stop', 'never']
 
     - name: Stop supervisor 
-      shell: kill -9 $(cat {{ venv_home }}/var/supervisord.pid)
+      shell: kill $(cat {{ venv_home }}/var/supervisord.pid)
       tags: ['stop', 'never']

@@ -18,7 +18,7 @@ The data directory contains sample THREDDS catalog files and NetCDF datasets.
 ## Usage
 
 1. vagrant up && vagrant reload
-1. ansible-playbook (source.yml|binary.yml) --ask-vault-pass [--limit test-simple]
+1. ansible-playbook (source.yml|binary.yml) [--limit test-simple]
 1. (in web browser) localhost:9000/thredds, localhost:9000/status-jk
 
 ## Infrastructure description

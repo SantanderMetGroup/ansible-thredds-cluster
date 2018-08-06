@@ -66,13 +66,13 @@
   local_action: get_url
   args:
     url: "{{ tds_download_url }}"
-    dest: "/tmp/{{ tds_filename }}"
+    dest: "{{ tds_downloads_tmp}}/{{ tds_filename }}"
   vars:
     ansible_become: False
 
 - name: Unarchive tds in webapps/thredds
   unarchive:
-    src: "/tmp/{{ tds_filename }}"
+    src: "{{ tds_downloads_tmp }}/{{ tds_filename }}"
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
   with_items: "{{ tds_instances }}"
 
@@ -91,14 +91,11 @@
   when: tds_version | truncate(4,True,'') == 'ESGF'
 
 #################### content/thredds ####################
-- name: Create content/thredds/ directories in tomcat_home
+- name: Create content/thredds/public directories in tomcat_home
   file:
-    path: "{{ tomcat_home }}/content/thredds/{{ item }}"
+    path: "{{ tomcat_home }}/content/thredds/public"
     state: directory
     mode: "g+rwx"
-  with_items:
-    - public
-    - logs
 
 - name: Create content/thredds/ directories in instances
   file:
@@ -111,6 +108,9 @@
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/public"
     src: "{{ tomcat_home }}/content/thredds/public"
     state: link
+  # This when is used to control the special case in scenarios/standalone,
+  # where content/thredds of the instance is the content/thredds of the tomcat_home
+  when: tomcat_home|basename != item.name
   with_items: "{{ tds_instances }}"
 
 - name: Copy threddsConfig.xml

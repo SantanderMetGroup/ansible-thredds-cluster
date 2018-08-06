@@ -12,7 +12,7 @@
   local_action: get_url
   args:
     url: "{{ item.url }}"
-    dest: "/tmp/{{ item.filename }}"
+    dest: "{{ tomcat_downloads_tmp }}/{{ item.filename }}"
     headers: "{{ item.header }}"
   vars:
     ansible_become: False
@@ -22,7 +22,7 @@
 
 - name: Unarchive file in remote host
   unarchive:
-    src: "/tmp/{{ item.filename }}"
+    src: "{{ tomcat_downloads_tmp }}/{{ item.filename }}"
     dest: "{{ item.dest }}"
     extra_opts:
       --strip-components=1
