@@ -10,7 +10,7 @@
 - name: Create ACL for each collection
   lineinfile:
     path: "{{ haproxy_conf_file }}"
-    line: "acl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}"
+    line: "acl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}/*"
     insertafter: "option forwardfor"
   with_items: "{{ collections }}"
 
