@@ -4,20 +4,20 @@
 - name: Define default backend
   lineinfile:
     path: "{{ haproxy_conf_file }}"
-    line: "default_backend {{ default_backend }}"
+    line: "\tdefault_backend {{ default_backend }}"
     insertafter: "option forwardfor"
 
 - name: Create ACL for each collection
   lineinfile:
     path: "{{ haproxy_conf_file }}"
-    line: "acl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}/*"
+    line: "\tacl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}/*"
     insertafter: "option forwardfor"
   with_items: "{{ collections }}"
 
 - name: Define ACL rule behaviour
   lineinfile: 
     path: "{{ haproxy_conf_file }}"
-    line: "use_backend {{ item.path | replace('/', '-') }} if {{ item.path | replace('/', '-') }}"
+    line: "\tuse_backend {{ item.path | replace('/', '-') }} if {{ item.path | replace('/', '-') }}"
     insertbefore: "backend .*"
     firstmatch: True
   with_items: "{{ collections }}"
@@ -34,4 +34,10 @@
     line: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
 
+- name: Set cookie persistence for authentication
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "\tcookie JSESSIONID prefix nocache"
+    insertafter: "backend {{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
       

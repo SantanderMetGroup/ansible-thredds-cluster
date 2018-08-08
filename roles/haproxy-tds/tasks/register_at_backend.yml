@@ -1,7 +1,7 @@
 - name: Register at load-balancer into backend
   lineinfile:
     path: "{{ hostvars[instance.1.proxy].haproxy_conf_file }}"
-    line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address}}:{{ tds_port }}"
+    line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address}}:{{ tds_port }} cookie {{ ansible_hostname }}"
     insertafter: "backend {{ item }}"
   with_items: "{{ instance.1.collections }}"
   delegate_to: "{{ instance.1.proxy }}"
