@@ -1,0 +1,49 @@
+- name: Create configuration module for thredds
+  template:
+    src: thredds.conf.j2
+    dest: "{{ mod_jk_conf }}/thredds.conf"
+  when: gateway_tds_static_catalog
+
+- name: Create thredds directory in htdocs directory
+  file:
+    dest: "{{ httpd_htdocs }}/thredds"
+    state: directory
+  when: gateway_tds_static_catalog
+
+- name: Template static TDS catalog.html
+  template:
+     src: catalog.html.j2
+     dest: "{{ httpd_htdocs }}/thredds/catalog.html"
+  when: gateway_tds_static_catalog
+  tags: update_catalogs
+
+- name: Create thredds static configuration - serverInfo.html
+  template:
+    src: serverInfo.html.j2
+    dest: "{{ httpd_htdocs }}/thredds/serverInfo.html"
+  when: gateway_tds_static_catalog
+
+- name: Add collections (jk lb workers)
+  blockinfile:
+    dest: "{{ mod_jk_conf }}/mod_jk.workers"
+    marker: "# {mark} COLLECTION_{{ collection_name }}"
+    block: |
+      worker.list=COLLECTION_{{ collection_name }}
+      worker.COLLECTION_{{ collection_name }}.type=lb
+      worker.COLLECTION_{{ collection_name }}.mount=/thredds/restrictedAccess/*
+  vars:
+    collection_name: "{{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
+
+- name: Add collection urimaps
+  blockinfile:
+    path: "{{ mod_jk_conf }}/mod_jk.urimaps"
+    marker: "# {mark} {{ item.1.base }}/{{ item.0.path }}"
+    block: |
+      {{ item.1.base }}/{{ item.0.path }}=COLLECTION_{{ collection_name }}
+      {{ item.1.base }}/{{ item.0.path }}/*=COLLECTION_{{ collection_name }}
+  vars:
+    collection_name: "{{ item.0.path | replace('/', '-') }}"
+  with_subelements:
+    - "{{ collections }}"
+    - services

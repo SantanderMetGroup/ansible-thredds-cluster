@@ -1,14 +1,13 @@
 - hosts: gateway
   vars:
-    venv_home: "{{ httpd_server_root }}/virtualenv"
-    httpd_server_root: "{{ ansible_env.HOME }}/httpd"
-    httpd_port: 8080
+    httpd_root: "{{ ansible_env.HOME }}/httpd"
+    # httpd_port: 8080 # useless?
     mod_jk_status_user: proxy
     mod_jk_status_passwd: proxy
-    mod_jk_configure: --prefix={{ httpd_server_root }}/modules --with-apxs={{ httpd_server_root }}/bin/apxs
+    mod_jk_configure: --prefix={{ httpd_root }}/modules --with-apxs={{ httpd_root }}/bin/apxs
   roles:
-    - role: virtualenv
-    - role: supervisord
+    - role: miniconda
+    #- role: supervisord
     - role: httpd
     - role: jk-gateway-tds
 
@@ -36,8 +35,8 @@
       supervisorctl:
         name: httpd
         state: restarted
-        username: "{{ supervisord_user | default(omit) }}"
-        password: "{{ supervisord_password | default(omit) }}"
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ hostvars[item].venv_home }}/bin/supervisorctl"
       run_once: True
       delegate_to: "{{ item }}"
@@ -48,8 +47,8 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        username: "{{ supervisord_user | default(omit) }}"
-        password: "{{ supervisord_password | default(omit) }}"
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: ["restart","update_catalogs"]

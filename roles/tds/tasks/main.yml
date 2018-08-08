@@ -7,8 +7,7 @@
   file:
     dest: "{{ tomcat_base }}/{{ item.name }}"
     state: directory
-  with_items:
-    - "{{ tds_instances }}"
+  with_items: "{{ tds_instances }}"
 
 - name: Create dirs for instances
   file:
@@ -16,50 +15,30 @@
     state: directory
   with_nested:
     - "{{ tds_instances }}"
-    - ['logs', 'conf', 'webapps/thredds', 'temp']
-
-- name: Create soft links from instances to tomcat
-  file:
-    dest: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
-    src: "{{ tomcat_home }}/{{ item.1 }}"
-    state: link
-  # Used in scenario standalone, where there is no distinction
-  # between tomcat_home and tomcat_base
-  when: tomcat_home == item.0.name
+    - ['bin', 'conf', 'lib', 'logs', 'webapps/thredds', 'temp', 'work']
+    
+- name: Copy conf files into instances
+  copy:
+    src: "{{ item.1 }}"
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
   with_nested:
     - "{{ tds_instances }}"
-    - ['lib', 'jre']
-    
-- name: Copy web.xml for tomcat-home
-  copy:
-    src: web.xml
-    dest: "{{ tomcat_base }}/{{ item.name }}/conf/web.xml"
-  with_items: "{{ tds_instances }}"
-
-- name: Copy server.xml 
+    - ["web.xml", "context.xml"]
+  
+- name: Template files into instances
   template:
-    src: server.xml.j2
-    dest: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
-  with_items: "{{ tds_instances }}"
-
-- name: Copy context.xml
-  copy:
-    src: context.xml
-    dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
-  with_items: "{{ tds_instances }}"
-
-- name: Copy tomcat-users.xml
-  template:
-    src: tomcat-users.xml.j2
-    dest: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
-  with_items: "{{ tds_instances }}"
+    src: "{{ item.1 }}.j2"
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
+  with_nested:
+    - "{{ tds_instances }}"
+    - ["server.xml", "tomcat-users.xml"]
 
 - name: Template catalina_vars
   template:
     src: catalina_vars.j2
     dest: "{{ tomcat_base }}/{{ item.name }}/catalina_vars"
   with_items: "{{ tds_instances }}"
-
+  
 #################### TDS ####################
 - name: Download tds
   run_once: True
@@ -108,9 +87,6 @@
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/public"
     src: "{{ tomcat_home }}/content/thredds/public"
     state: link
-  # This when is used to control the special case in scenarios/standalone,
-  # where content/thredds of the instance is the content/thredds of the tomcat_home
-  when: tomcat_home|basename != item.name
   with_items: "{{ tds_instances }}"
 
 - name: Copy threddsConfig.xml
@@ -167,7 +143,3 @@
   with_items: "{{ datasets }}"
   when: datasets is defined
   tags: ["update_catalogs"]
-
-#################### Supervisord ####################
-- include_tasks: supervisord_configuration.yml
-  with_items: "{{ tds_instances }}"

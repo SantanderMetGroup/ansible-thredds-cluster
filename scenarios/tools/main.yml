@@ -2,17 +2,19 @@
   vars:
     root: /tmp/sandbox
     # roles customization
-    tomcat_home: "{{ root }}/tomcat-home"
     tomcat_base: "{{ root }}/tomcat-base"
+    
     miniconda_python: 2
     miniconda_prefix: "{{ root }}/miniconda"
     miniconda_manage_dependencies: False
     miniconda_env:
       name: tds
+      channels:
+        - birdhouse
       dependencies:
-        - python=2.7
         - libnetcdf=4.4.1
-        - virtualenv=16.0.0
+        - supervisor
+        - apache-tomcat
     
     # Deployment model
     ## collections
@@ -47,9 +49,9 @@
     toolsUI_url: "{{ toolsUI_urlbase }}/{{ toolsUI_tool }}/{{ toolsUI_version }}/{{ toolsUI_jar }}"
     
   roles:
-    - role: virtualenv-conda
-    - role: supervisord
+    - role: miniconda
     - role: tds
+    - role: supervisor-tds
 
   tasks:
     # toolsUI
@@ -122,7 +124,7 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
         - "{{ tds_instances }}"
       tags: ['restart']
@@ -131,11 +133,11 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: stopped
-        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
         - "{{ tds_instances }}"
       tags: ['stop', 'never']
 
     - name: Stop supervisor 
-      shell: kill -9 $(cat {{ venv_home }}/var/supervisord.pid)
+      shell: kill -9 $(cat {{ supervisor_home }}/var/supervisord.pid)
       tags: ['stop', 'never']

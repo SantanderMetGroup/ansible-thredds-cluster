@@ -1,19 +1,6 @@
-- name: Create thredds static configuration files (images, css) for TDS 4
+- name: Create thredds static configuration files (images, css)
   copy:
     src: "{{ item }}"
-    dest: "{{ hostvars[replica.1.proxy].httpd_document_root }}/thredds/{{ item | basename }}"
+    dest: "{{ hostvars[replica.1.proxy].httpd_htdocs }}/thredds/{{ item | basename }}"
   delegate_to: "{{ replica.1.proxy }}"
-  when: 
-    - tds_major_version|string == 4|string
-    - replica.1.proxy is defined
-  with_fileglob: v4/*
-
-- name: Create thredds static configuration files (images, css) for TDS 5
-  copy:
-    src: "{{ item }}"
-    dest: "{{ hostvars[replica.1.proxy].httpd_document_root }}/thredds/{{ item | basename }}"
-  delegate_to: "{{ replica.1.proxy }}"
-  when: 
-    - tds_major_version|string == 5|string
-    - replica.1.proxy is defined
-  with_fileglob: "v5/*"
+  with_fileglob: v{{ tds_major_version|string }}/*

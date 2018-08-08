@@ -1,7 +1,7 @@
 - name: Register urimaps in proxy
   delegate_to: "{{ item.1.proxy }}"
   blockinfile:
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.urimaps"
+    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.urimaps"
     marker: "# {mark} TAP {{ lb.1.name }}"
     block: |
       /udg-tap=TAP_{{ lb.1.name }}
@@ -12,7 +12,7 @@
 
 - name: Register lb in proxy
   blockinfile:
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.workers"
     marker: "# {mark} TAP_{{ lb.1.name }}"
     block: |
       worker.list=TAP_{{ lb.1.name }}
@@ -25,7 +25,7 @@
 - name: Register balance workers in proxy
   blockinfile:
     marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
-    dest: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    dest: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.workers"
     block: |
       worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
       worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ item.1.host | default(ansible_nodename) }}
@@ -38,7 +38,7 @@
 
 - name: Add balance workers to lb
   lineinfile:
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf_path }}/mod_jk.workers"
+    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.workers"
     state: present
     line: 'worker.TAP_{{ lb.1.name }}.balance_workers={{ ansible_hostname }}_{{ item.1.port }}'
   delegate_to: "{{ item.1.proxy }}"

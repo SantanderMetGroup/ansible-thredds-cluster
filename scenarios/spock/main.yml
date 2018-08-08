@@ -8,27 +8,40 @@
 - hosts: spock
   vars:
     esg_root: "esgcet"
-    # Needed because no httpd role is executed in the gateway
-    httpd_document_root: /var/www/html
-    # Vars for jk-gateway
+    
+    # Needed because httpd is already installed
+    httpd_htdocs: /var/www/html
+    httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
+    
+    # gateway-jk
+    # poner como defaults, en caso de q no exista role de instalación
+    # luego en los role de instalación poner como vars, no como defaults
+    mod_jk_status: "{{ mod_jk_conf }}"
+    mod_jk_conf: /etc/httpd/conf.d
+    mod_jk_shm: /var/run/mod_jk/mod_jk.shm
+    mod_jk_log: /etc/httpd/logs/mod_jk.log
+    
     mod_jk_static_catalog: False
     mod_jk_configure: --with-apxs=/usr/sbin/apxs
     mod_jk_src: /opt/mod_jk
   vars_files:
     - secret.yml
   roles:
-    - role: jk-gateway-tds
+    - role: source
+      dependencies:
+        - mod_jk
+    - role: gateway-jk-tds
   tasks:
     # Include cluster conf into esgf-httpd.conf
     - name: Delete Include mod_jk.conf from jk-gateway role
       lineinfile:
         state: absent
-        path: /etc/httpd/conf/esgf-httpd.conf
-        regexp: Include /etc/httpd/conf.d/mod_jk.conf
+        path: "{{ httpd_conf_file }}"
+        regexp: Include /etc/httpd/conf.d/\*.conf
 
     - name: Include mod_jk.conf in esgf-httpd.conf
       blockinfile:
-        path: "/etc/httpd/conf/esgf-httpd.conf"
+        path: "{{ httpd_conf_file }}"
         insertbefore: 'VirtualHost \*:80'
         marker: "# {mark} Include jk"
         block: |
@@ -41,20 +54,20 @@
 
     - name: Change directory of JkShmFile in mod_jk.conf
       replace:
-        path: "{{ mod_jk_conf_path }}/mod_jk.conf"
+        path: "{{ mod_jk_conf }}/mod_jk.conf"
         regexp: "JkShmFile .*"
-        replace: "JkShmFile /var/run/mod_jk/mod_jk.shm"
+        replace: "JkShmFile {{ mod_jk_shm }}"
 
     # Indicate resources served by esgf's tds
     - name: Comment ProxyPass /thredds in esgf-httpd.conf
       replace:
-        path: "/etc/httpd/conf/esgf-httpd.conf"
+        path: "{{ httpd_conf_file }}"
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
 
     - name: Add ProxyPassMatch directives to esgf-httpd.conf
       blockinfile:
-        path: "/etc/httpd/conf/esgf-httpd.conf"
+        path: "{{ httpd_conf_file }}"
         insertafter: '{{ item.string }}'
         marker: "# {mark} ProxyPassMatch {{ item.mark }}"
         block: |
@@ -68,7 +81,7 @@
 
     - name: Add DocumentRoot and Rewrite rules in VirtualHosts
       blockinfile:
-        path: /etc/httpd/conf/esgf-httpd.conf
+        path: "{{ httpd_conf_file }}"
         insertafter: "{{ item.string }}"
         marker: "# {mark} General directives {{ item.mark }}"
         block: |
@@ -168,7 +181,6 @@
           /udg-tap/*=tap
           /tds5=tds5
           /tds5/*=tds5
-          workers.list=tap,tds5
 
     - name: Add tap and tds5 workers
       blockinfile:
@@ -181,6 +193,7 @@
           worker.tds5.host=oceano.macc.unican.es
           worker.tds5.port=13009
           worker.tds5.type=ajp13
+          workers.list=tap,tds5
 
 # See group_vars/ for vars
 - hosts: tds
@@ -189,8 +202,8 @@
   vars_files:
     - secret.yml
   roles:
-    - role: virtualenv-conda
-    - role: supervisord
+    - role: miniconda
+    - role: supervisor-tds
     - role: tds-jk
   tasks:
     # Set SSL in applicationContext.xml
@@ -235,7 +248,7 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       ignore_errors: True
       tags:
