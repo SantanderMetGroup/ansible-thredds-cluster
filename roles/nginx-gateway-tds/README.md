@@ -4,8 +4,6 @@ Role nginx-gateway-tds
 This role completes the configuration of nginx by including in the configuration file the definition of the *upstreams* and their corresponding *location* blocks
 using the information provided in the deployment model.
 
-Requirements
-------------
 
 
 Role Variables
