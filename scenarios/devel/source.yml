@@ -6,10 +6,11 @@
     mod_jk_status_passwd: proxy
     mod_jk_configure: --prefix={{ httpd_root }}/modules --with-apxs={{ httpd_root }}/bin/apxs
   roles:
-    - role: miniconda
-    #- role: supervisord
-    - role: httpd
-    - role: jk-gateway-tds
+    - role: source
+      dependencies:
+        - httpd
+        - mod_jk
+    - role: gateway-jk-tds
 
 - hosts: tds
   vars:
@@ -22,9 +23,12 @@
         - virtualenv=16.0.0
 
   roles:
-    - role: virtualenv-conda
-    - role: supervisord
+    - role: source
+      dependencies:
+        - tomcat
+        - supervisor
     - role: tds-jk
+    - role: supervisor-tds
 
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
@@ -37,7 +41,7 @@
         state: restarted
         username: "{{ supervisor_user | default(omit) }}"
         password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ hostvars[item].venv_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ hostvars[item].supervisor_home }}/bin/supervisorctl"
       run_once: True
       delegate_to: "{{ item }}"
       with_items: "{{ groups.gateway }}"
@@ -49,7 +53,7 @@
         state: restarted
         username: "{{ supervisor_user | default(omit) }}"
         password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: ["restart","update_catalogs"]
 
