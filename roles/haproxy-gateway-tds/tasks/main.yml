@@ -7,12 +7,21 @@
     line: "\tdefault_backend {{ default_backend }}"
     insertafter: "option forwardfor"
 
-- name: Create ACL for each collection
+- name: Create ACL for each collection(1)
   lineinfile:
     path: "{{ haproxy_conf_file }}"
-    line: "\tacl {{ item.path | replace('/', '-') }} path_reg /thredds/*/{{ item.path }} /thredds/{{ item.path }}/*"
+    line: "\tacl {{ item.path | replace('/', '-') }} path_beg /thredds/{{ item.path | replace('/', '-') }}"
     insertafter: "option forwardfor"
   with_items: "{{ collections }}"
+
+- name: Create ACL for each collection(2)
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "\tacl {{ item.0.path | replace('/','-') }} path_beg {{ item.1.base }}/{{ item.0.path }}"
+    insertafter: "option forwardfor"
+  with_subelements:
+    - "{{ collections }}"
+    - services
 
 - name: Define ACL rule behaviour
   lineinfile: 
@@ -40,4 +49,3 @@
     line: "\tcookie JSESSIONID prefix nocache"
     insertafter: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
-      
