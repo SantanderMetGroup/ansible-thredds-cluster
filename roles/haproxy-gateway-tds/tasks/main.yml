@@ -43,7 +43,13 @@
     line: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
 
-- name: Set cookie persistence for authentication
+- name: Set cookie persistence for authentication in default backends
+  lineinfile:
+    path: "{{ haproxy_conf_file }}"
+    line: "\tcookie JSESSIONID prefix nocache"
+    insertafter: "backend {{ default_backend }}"
+
+- name: Set cookie persistence for authentication in mapped backends
   lineinfile:
     path: "{{ haproxy_conf_file }}"
     line: "\tcookie JSESSIONID prefix nocache"
