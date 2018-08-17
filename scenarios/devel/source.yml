@@ -1,27 +1,31 @@
 - hosts: gateway
   vars:
-    httpd_root: "{{ ansible_env.HOME }}/httpd"
-    # httpd_port: 8080 # useless?
+    httpd_user: vagrant
+    httpd_group: vagrant
     mod_jk_status_user: proxy
     mod_jk_status_passwd: proxy
     mod_jk_configure: --prefix={{ httpd_root }}/modules --with-apxs={{ httpd_root }}/bin/apxs
   roles:
     - role: source
       dependencies:
+        - supervisor
         - httpd
         - mod_jk
+    - role: httpd
     - role: gateway-jk-tds
+    - role: supervisor-httpd
+  tasks:    
+    - name: restart httpd
+      supervisorctl:
+        name: httpd
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      tags: [never, restart]
+
 
 - hosts: tds
-  vars:
-    miniconda_python: 2
-    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
-    miniconda_env:
-      name: udg
-      dependencies:
-        - libnetcdf=4.4.1
-        - virtualenv=16.0.0
-
   roles:
     - role: source
       dependencies:
@@ -35,18 +39,6 @@
       vars:
         instances: "{{ tds_instances }}"
 
-    - name: restart httpd
-      supervisorctl:
-        name: httpd
-        state: restarted
-        username: "{{ supervisor_user | default(omit) }}"
-        password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ hostvars[item].supervisor_home }}/bin/supervisorctl"
-      run_once: True
-      delegate_to: "{{ item }}"
-      with_items: "{{ groups.gateway }}"
-      tags: restart
-
     - name: restart tds instances
       supervisorctl:
         name: "{{ item.name }}"
@@ -55,7 +47,7 @@
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
-      tags: ["restart","update_catalogs"]
+      tags: [never, restart, update_catalogs]
 
 # - hosts: hostA
 #   roles:

@@ -1,50 +1,52 @@
 - hosts: gateway
-  vars:
-    ansible_become: True
-    httpd_port: 8080
-    mod_jk_status_user: proxy
-    mod_jk_status_passwd: proxy
-    mod_jk_configure: --with-apxs=/usr/bin/apxs # /usr/sbin/apxs for CentOS 6
+  become: True
   roles:
-    - role: httpd-bin
-    - role: jk-gateway-tds
+    - role: system
+      dependencies:
+        - httpd
+    - role: httpd
+    - role: gateway-proxy
+  tasks:
+    - name: Change httpd port to 8080
+      become: True
+      replace:
+        path: "{{ httpd_conf_file }}"
+        regexp: Listen 80$
+        replace: Listen 8080
+
+    - name: Enable httpd network connect in Selinux
+      command: /usr/sbin/setsebool -P httpd_can_network_connect 1
+        
+    - name: restart httpd
+      become: True
+      systemd:
+        state: restarted
+        name: httpd
+      tags: [never, restart]
 
 - hosts: tds
-  vars:
-    # ansible_become: True # not valid in inventory because group_vars are flattened
-    miniconda_python: 2
-    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
-    miniconda_env:
-      name: udg
-      dependencies:
-        - python=2.7
-        - libnetcdf=4.4.1
-        - virtualenv=16.0.0
-
+  become: True
   roles:
-    - role: virtualenv-conda
-    - role: supervisord
-    - role: tds-jk
-
+    - role: system
+      dependencies:
+        - tomcat
+    - role: tds
+    - role: tds-proxy
+    - role: systemd-tds
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
 
-    - name: restart httpd
-      become: True
-      command: httpd -k restart
-      run_once: True
-      delegate_to: "{{ item }}"
-      with_items: "{{ groups.gateway }}"
-      tags: restart
+    - name: Change group ownership of tds instances
+      shell: chown -R :tomcat {{ tomcat_base }}/*
 
+    - name: Add write permission to tomcat user in tds instances
+      shell: chmod -R g+w {{ tomcat_base }}/*
+      
     - name: restart tds instances
-      supervisorctl:
-        name: "{{ item.name }}"
+      systemd:
         state: restarted
-        username: "{{ supervisor_user | default(omit) }}"
-        password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+        name: "tomcat@{{ item.name }}.service"
       with_items: "{{ tds_instances }}"
-      tags: [restart, update_catalogs]
+      tags: [never, restart]

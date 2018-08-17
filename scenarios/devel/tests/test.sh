@@ -4,7 +4,7 @@ RESTRICTED='http://localhost:9000/thredds/restrictedAccess/restringido'
 USER='alice'
 PASSWORD='1234'
 
-CURL_OPTS='-v -o /dev/null -L --cookie-jar cookie.txt -b cookie.txt'
+CURL_OPTS='--referer ";auto" -v -o /dev/null -L --cookie-jar cookie.txt -b cookie.txt'
 
 curl $CURL_OPTS $DATASET1
 curl $CURL_OPTS -u alice:1234 $DATASET2

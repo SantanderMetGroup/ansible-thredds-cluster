@@ -1,0 +1,10 @@
+- name: Replace tomcat@.service
+  become: True
+  template:
+    src: tomcat@.service
+    dest: /etc/systemd/system/multi-user.target.wants/tomcat@{{ item.name }}.service
+  with_items: "{{ tds_instances }}"
+
+- name: Reload systemd daemon
+  become: True
+  command: systemctl daemon-reload

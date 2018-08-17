@@ -30,7 +30,6 @@
     block: |
       worker.list=COLLECTION_{{ collection_name }}
       worker.COLLECTION_{{ collection_name }}.type=lb
-      worker.COLLECTION_{{ collection_name }}.mount=/thredds/restrictedAccess/*
   vars:
     collection_name: "{{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
@@ -47,3 +46,12 @@
   with_subelements:
     - "{{ collections }}"
     - services
+
+- name: Add restrictedAccess worker
+  blockinfile:
+    path: "{{ mod_jk_conf }}/mod_jk.workers"
+    marker: "# {mark} restrictedAccess"
+    block: |
+      worker.list=restrictedAccess
+      worker.restrictedAccess.type=lb
+      worker.restrictedAccess.mount=/thredds/restrictedAccess/*

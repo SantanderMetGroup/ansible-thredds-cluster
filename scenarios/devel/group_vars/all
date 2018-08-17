@@ -47,6 +47,22 @@ tds_instances:
           port: 18009
           protocol: AJP/1.3
 
+  - name: instance2
+    shutdown: 19000
+    tds_debug:
+      jpda_adress: "{{ ansible_eth1.ipv4.address }}:8001"
+    connectors:
+      - protocol: HTTP/1.1
+        port: 9090
+    replicas:
+      - proxy: proxy
+        host: "{{ ansible_eth1.ipv4.address }}"
+        collections:
+          - collection2
+        properties:
+          port: 19009
+          protocol: AJP/1.3
+
 tap_instances:
   - name: tap1
     shutdown: 20005

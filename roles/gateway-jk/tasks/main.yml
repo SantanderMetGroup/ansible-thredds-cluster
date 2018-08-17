@@ -1,4 +1,5 @@
 - set_fact:
+    ansible_become: "{{ ansible_become | default(False) }}"
     httpd_htdocs: "{{ httpd_htdocs }}" # tds-jk needs to copy static web files
     mod_jk_conf: "{{ mod_jk_conf }}" # tds-jk needs to register workers in mod_jk.workers file
 
@@ -27,4 +28,3 @@
     username: "{{ mod_jk_status_user }}"
     password: "{{ mod_jk_status_passwd }}"
   when:  mod_jk_status_user is defined and mod_jk_status_passwd is defined
-

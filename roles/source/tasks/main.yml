@@ -1,0 +1,34 @@
+- name: Create downloads directory in {{ downloads }}
+  run_once: True
+  local_action: file
+  args:
+    state: directory
+    path: "{{ downloads }}"
+
+- name: Install httpd
+  include_tasks: httpd.yml
+  when: '"httpd" in dependencies'
+  tags:
+    - install
+    - httpd
+  
+- name: Install mod_jk
+  include_tasks: mod_jk.yml
+  when: '"mod_jk" in dependencies'
+  tags:
+    - install
+    - mod_jk
+
+- name: Install tomcat
+  include_tasks: tomcat.yml
+  when: '"tomcat" in dependencies'
+  tags:
+    - install
+    - tomcat
+
+- name: Install supervisor
+  include_tasks: supervisor.yml
+  when: '"supervisor" in dependencies'
+  tags:
+    - install
+    - supervisor

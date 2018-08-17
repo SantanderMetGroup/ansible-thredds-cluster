@@ -1,23 +1,13 @@
 #!/bin/bash
 
-function shutdown()
-{
-    date
-    echo "Shutting down Tomcat"
-    #unset CATALINA_PID # Necessary in some cases
-    #unset LD_LIBRARY_PATH # Necessary in some cases
-    #unset JAVA_OPTS # Necessary in some cases
-
-    . $CATALINA_HOME/bin/catalina.sh stop
-}
-
-source catalina_vars
+CATALINA_HOME={{ tomcat_home }}
+CATALINA_BASE={{ tomcat_base }}/{{ item.name }}
 
 {% if item.tds_debug is defined %}
 JPDA_ADDRESS={{ item.tds_debug.jpda_address | default('localhost:8000') }}
-. $CATALINA_HOME/bin/catalina.sh jpda start
+. {{ tomcat_home }}/bin/catalina.sh jpda start
 {% else %}
-. $CATALINA_HOME/bin/catalina.sh start
+. {{ tomcat_home }}/bin/catalina.sh start
 {% endif %}
 
 

@@ -1,0 +1,36 @@
+- name: Add AJP Connectors to tomcat
+  blockinfile:
+    path: "{{ tomcat_base }}/{{ item.0.name }}/conf/server.xml"
+    insertafter: <Service.*
+    marker: <!-- {mark} {{ item.1.properties.port }} -->
+    block: |
+      <Connector 
+      {% for key, value in item.1.properties.items() -%}
+        {{ key }}="{{ value }}"
+      {% endfor %} />
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+
+- name: Set jvmRoute in tds instances
+  replace:
+    path: "{{ tomcat_base }}/{{ item.0.name }}/conf/server.xml"
+    regexp: "<Engine(?!(.*)jvmRoute)(.*)>"
+    replace: <Engine\2 jvmRoute="{{ worker_name }}">
+  vars:
+    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
+  when: item.1.properties.protocol.lower().startswith("ajp")
+
+# TODO Should I create a lookup plugin called "unique_subelements" in order to prevent repetition?
+# TODO Not sure this works with multiple replicas (because of run_once)
+- name: Copy tds static files
+  include_tasks: tds-static-files.yml
+  run_once: True
+  loop_control:
+    loop_var: replica
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas

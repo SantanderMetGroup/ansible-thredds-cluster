@@ -1,0 +1,22 @@
+- name: Template supervisor_wrapper
+  template:
+    src: supervisor_wrapper.sh.j2
+    dest: "{{ httpd_root }}/supervisor_wrapper.sh"
+    mode: "u=rwx,g=rx"
+
+- name: Template httpd conf into supervisor
+  template:
+    src: httpd.conf
+    dest: "{{ supervisor_programs }}/httpd.conf"
+  register: supervisor_httpd_configured
+
+- name: Add httpd to supervisor
+  supervisorctl:
+    name: httpd
+    state: present
+    supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ supervisor_user | default(omit) }}"
+    password: "{{ supervisor_password | default(omit) }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
+  when: supervisor_httpd_configured.changed
