@@ -1,0 +1,23 @@
+- name: Create LXD containers
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Create containers
+      lxd_container:
+        name: "{{ item }}"
+        state: started
+        source:
+          type: image
+          alias: centos/7
+      with_items: "{{ groups['all'] }}"
+
+- name: Provision
+  hosts: all
+  connection: lxd
+  tasks:
+    - name: Install software
+      yum:
+        name:
+          - tcpdump
+          - net-tools
+        state: present
