@@ -4,20 +4,30 @@
     vip: "{{ ansible_eth1.ipv4.address }}"
     bind_port: "{{ bind_port }}"
     ipvs_rulefile_path: "{{ ipvs_rulefile_path }}"
-    ansible_become: "{{ ansible_become | default(True) }}"
 
-- name: Template LVS configure script for load-balancer
-  become: False
-  local_action:
-    module: template
-    src: lvs_script.sh.j2
-    dest: files/lvs_script.sh
-    mode: 0744
+
+- name: Set ansible_become if using containers
+  set_fact:
+    ansible_become: "{{ ansible_become | default(False) }}"
+  when: 
+    - using_containers is defined
+    - using_containers == True
+
+- name: Set ansible_become if not using containers
+  set_fact:
+    ansible_become: "{{ ansible_become | default(True) }}"
+  when: using_containers == False or using_containers is not defined
+
+- name: Clear previous ipvsadm rules
+  command: "ipvsadm -C"
+
+- name: Add service on load balancer's interface
+  command: "ipvsadm -A -t {{ ansible_eth1.ipv4.address }}:{{ bind_port }} -s rr"
 
 - name: Make sure ipvsadm.rules exists
   file:
     path: "{{ ipvs_rulefile_path }}"
     state: touch
 
-- name: Execute script
-  script: files/lvs_script.sh
+  #- name: Save rules
+  #command: "ipvsadm -S -n  > {{ ipvs_rulefile_path }}"
