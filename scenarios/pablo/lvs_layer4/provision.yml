@@ -4,12 +4,17 @@
     - load-balancer
   become: True
   tasks:
+    - name: Install EPEL repository (needed for nuttcp)
+      command: yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
+
     - name: Install software
       yum:
         name: "{{ item }}"
         state: present
       with_items:
         - tcpdump
+        - iperf3
+        - nuttcp
 
 
 - name: Provision servers
