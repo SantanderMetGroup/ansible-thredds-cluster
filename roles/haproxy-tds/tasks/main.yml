@@ -2,7 +2,7 @@
 # tasks file for haproxy-tds
 - name: Register at load-balancer into default backend
   vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become }}"
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False)  }}"
   lineinfile:
     path: "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
     line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address }}:{{ tds_port }} cookie {{ ansible_hostname }}"
@@ -16,7 +16,7 @@
 
 - include_tasks: register_at_backend.yml
   vars:
-    ansible_become: "{{ hostvars[instance.1.proxy].ansible_become }}"
+    ansible_become: "{{ hostvars[instance.1.proxy].ansible_become | default(False) }}"
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
