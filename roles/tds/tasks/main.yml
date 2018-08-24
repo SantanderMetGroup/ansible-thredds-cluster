@@ -112,7 +112,17 @@
     loop_var: instance
   tags: update_catalogs
     
-- name: Copy datasets 
+- name: Copy datasets into containers
+  copy:
+    src: "{{ item.src }}/"
+    dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
+  with_items: "{{ datasets }}"
+  tags: update_catalogs
+  when:
+    - using_containers is defined
+    - using_containers == True
+
+- name: Copy datasets into VMs
   synchronize:
     src: "{{ item.src }}/"
     dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
@@ -120,6 +130,7 @@
     recursive: True
   with_items: "{{ datasets }}"
   tags: update_catalogs
+  when: (using_containers == False) or (using_containers is not defined)
 
 #################### Supervisord ####################
 - include_tasks: supervisord_configuration.yml
