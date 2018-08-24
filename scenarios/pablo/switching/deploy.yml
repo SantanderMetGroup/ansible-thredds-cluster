@@ -67,7 +67,11 @@
       vars:
         ansible_become: True
       tags: [restart]
-    - name: Start DHCP
-      systemd:
+
+##### DHCP configuration #####
+- name: Start DHCP server
+  hosts: dhcp
+  tasks:
+    - systemd:
         name: dhcpd.service
         state: started
