@@ -1,38 +1,68 @@
-- name: Common provision for servers and L.B.
-  hosts: 
-    - servers
-    - load-balancer
-  become: True
+- name: Create LXD containers
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Create containers
+      lxd_container:
+        name: "{{ item }}"
+        state: started
+        profiles: myprofile
+        source:
+          type: image
+          alias: centos/7
+      with_items: "{{ groups['all'] }}"
+
+- name: Fix ipv4 assignment issue
+  hosts: all
+  connection: lxd
+  tasks:
+    - name: Edit ifcfg-eth0 file
+      lineinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-eth0
+        line: "DEVICE=eth1"
+        regexp: "DEVICE=eth0"
+        state: present
+
+    - name: Change ifcfg file's name
+      command: "mv /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth1"
+
+    - name: ifup eth1
+      command: "ifup eth1"
+
+
+- name: Provision
+  hosts: all
+  connection: lxd
   tasks:
     - name: Install software
       yum:
-        name: "{{ item }}"
+        name:
+          - tcpdump
         state: present
-      with_items:
-        - tcpdump
 
+    - name: Install iperf3 for testing
+      yum:
+        name: iperf3
+        enablerepo: epel
+        state: present
 
 - name: Provision servers
   hosts: servers
-  become: True
-  gather_facts: False
-  tasks:
-    - yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - net-tools
-        - unzip
-
-- name: Provision load-balancer
-  hosts: load-balancer
-  become: True
-  gather_facts: False
+  connection: lxd
   tasks:
     - name: Install software
       yum:
-        name: "{{ item }}"
+        name:
+          - net-tools
+          - unzip
         state: present
-      with_items:
-        - gcc
-       
+
+- name: Provision Load Balancer
+  hosts: load-balancer
+  connection: lxd
+  tasks:
+    - name: Install software
+      yum:
+        name:
+          - gcc
+        state: present
