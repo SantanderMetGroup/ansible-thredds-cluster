@@ -1,4 +1,14 @@
-- name: Synchronize catalogs
+- name: Copy catalogs to containers
+  copy:
+    src: "{{ item.catalogs.src }}/"
+    dest: "{{ instance.0.tds_content_root | default(tomcat_base+'/'+instance.0.name+'/content') }}/thredds/{{ item.path }}"
+  with_items: "{{ collections }}"
+  tags: update_catalogs
+  when:
+    - using_containers is defined
+    - using_containers == True
+
+- name: Synchronize catalogs to VMs
   synchronize:
     src: "{{ item.catalogs.src }}/"
     dest: "{{ instance.0.tds_content_root | default(tomcat_base+'/'+instance.0.name+'/content') }}/thredds/{{ item.path }}"
@@ -6,3 +16,4 @@
     recursive: True
   with_items: "{{ collections }}"
   tags: update_catalogs
+  when: (using_containers == False) or (using_containers is not defined)
