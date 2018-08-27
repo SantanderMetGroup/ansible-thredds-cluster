@@ -9,6 +9,12 @@
   roles:
           - role: haproxy-bin
           - role: haproxy-gateway-tds
+  tasks:
+    - name: Set variable
+      set_fact:
+        haproxy_from_sources: True
+      tags: [always]
+
   tags: [haproxy]
        
 - name: Configure servers with Tomcat
@@ -50,9 +56,7 @@
         supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
       with_items: "{{ tds_instances }}"
       tags: [restart, update_catalogs, tds_deploy]   
-    
-    - include_tasks: ../../../utils/server_icon.yml
-      tags: [tds_deploy, icons]
+
 
 - name: Start HAProxy
   hosts: load-balancer
@@ -66,5 +70,6 @@
 
     - name: Initiate haproxy if installed from binary file
       become: True
-      command: "haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
-      when: hostvars[inventory_hostname].haproxy_from_sources == False
+      command: "haproxy -f {{ haproxy_conf_file }}"
+      when: haproxy_from_sources == False
+  tags: [haproxy, start_haproxy]
