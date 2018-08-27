@@ -32,6 +32,13 @@
       command: "ifup eth1"
       ignore_errors: True
 
+- name: Set load balancer's container as privileged
+  hosts: localhost
+  connection: local
+  tasks:
+    - command: "lxc config set load-balancer security.privileged true"
+    - command: "lxc restart load-balancer"
+
 
 - name: Provision
   hosts: all
@@ -39,12 +46,13 @@
   tasks:
     - name: Install EPEL repository
       command: "yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y"
-
+      ignore_errors: True
 
     - name: Install software
       yum:
         name:
           - tcpdump
+          - sudo
           - iperf3
           - nuttcp
         enablerepo: epel
