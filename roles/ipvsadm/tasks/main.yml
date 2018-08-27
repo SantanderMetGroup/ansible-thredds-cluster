@@ -4,19 +4,7 @@
     vip: "{{ ansible_eth1.ipv4.address }}"
     bind_port: "{{ bind_port }}"
     ipvs_rulefile_path: "{{ ipvs_rulefile_path }}"
-
-
-- name: Set ansible_become if using containers
-  set_fact:
-    ansible_become: "{{ ansible_become | default(False) }}"
-  when: 
-    - using_containers is defined
-    - using_containers == True
-
-- name: Set ansible_become if not using containers
-  set_fact:
     ansible_become: "{{ ansible_become | default(True) }}"
-  when: using_containers == False or using_containers is not defined
 
 - name: Clear previous ipvsadm rules
   command: "ipvsadm -C"
