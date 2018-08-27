@@ -7,8 +7,7 @@
 - name: Configure load-balancer
   hosts: load-balancer
   connection: lxd
-  vars:
-    using_containers: True
+  become: True
   roles:
     - role: ipvsadm
   tasks:
@@ -28,7 +27,6 @@
   vars_files:
     - secret.yml
   vars:
-    using_containers: True
     miniconda_python: 2
     miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
     miniconda_env:
@@ -37,6 +35,7 @@
         - libnetcdf=4.4.1
         - supervisor
     venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+    using_containers: True
   roles:
     - role: virtualenv-conda
     - role: supervisord
