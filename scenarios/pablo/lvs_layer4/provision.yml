@@ -1,44 +1,45 @@
-- name: Common provision for servers and L.B.
-  hosts: 
-    - servers
-    - load-balancer
-  become: True
-  tasks:
-    - name: Install EPEL repository (needed for nuttcp)
-      command: yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
+- name: Gather Facts on all hosts
+  hosts: all
+  gather_facts: True
 
+- name: Provision
+  hosts: all
+  become: True
+  gather_facts: True
+  tasks:
+    - name: Install EPEL repository
+      command: "yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm -y"
+      args:
+        warn: False
+          
     - name: Install software
       yum:
-        name: "{{ item }}"
+        name:
+          - tcpdump
+          - iperf3
+          - nuttcp
+        enablerepo: epel
         state: present
-      with_items:
-        - tcpdump
-        - iperf3
-        - nuttcp
 
 
 - name: Provision servers
   hosts: servers
   become: True
-  gather_facts: False
-  tasks:
-    - yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - net-tools
-        - unzip
-        - iptables
-
-- name: Provision load-balancer
-  hosts: load-balancer
-  become: True
-  gather_facts: False
   tasks:
     - name: Install software
       yum:
-        name: "{{ item }}"
+        name:
+          - net-tools
+          - unzip
+          - iptables
         state: present
-      with_items:
-        - ipvsadm 
-       
+
+- name: Provision Load Balancer
+  hosts: load-balancer
+  become: True
+  tasks:
+    - name: Install software
+      yum:
+        name:
+          - ipvsadm
+        state: present

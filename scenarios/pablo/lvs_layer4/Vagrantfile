@@ -25,16 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "client" do |host|
-    host.vm.network "private_network", ip:"192.168.10.168"
-    host.vm.hostname = "client"
-  end
-
-  config.vm.define "router" do |host|
-    host.vm.network "private_network", ip: "192.168.10.2"
-    host.vm.network "private_network", type: "dhcp"
-    host.vm.hostname = "router"
-  end
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provision.yml"
