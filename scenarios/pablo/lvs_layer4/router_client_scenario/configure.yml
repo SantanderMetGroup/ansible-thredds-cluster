@@ -1,0 +1,87 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+##### Router configuration #####
+- name: Configure router
+  hosts: router
+  become: True
+  tasks:
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+     
+
+##### Load balancer configuration #####
+- name: Configure load-balancer
+  hosts: load-balancer
+  become: True
+  roles:
+    - role: ipvsadm
+  tasks:
+    - name: Disable Reverse Path Filtering
+      sysctl:
+        name: "{{ item }}"
+        value: 0
+      with_items:
+        - net.ipv4.conf.all.rp_filter
+        - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+   
+         
+##### Servers configuration #####               
+- name: Configure servers with Tomcat
+  hosts: servers
+  vars_files:
+    - secret.yml
+  become: False
+  vars:
+    miniconda_python: 2
+    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
+    miniconda_env:
+      name: udg
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor
+    venv_home: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+  roles:
+    - role: virtualenv-conda
+    - role: supervisord
+    - role: tds
+    - role: ipvsadm-tds
+    - role: iptables
+      become: True
+  tasks:
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+    
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [restart, update_catalogs]
+
+    - name: Delete default route
+      become: True
+      command: "ip route del default"
+
+    - name: Add default route through router
+      become: True
+      command: "ip route add default via {{ hostvars['router'].ansible_eth2.ipv4.address }}"
+
+
+
+##### Client configuration #####
+- name: Configure client
+  hosts: client
+  become: True
+  tasks:
+    - name: Delete default route
+      command: "ip route del default"
+    - name: Add default route through router
+      command: "ip route add default via {{ hostvars['router'].ansible_eth1.ipv4.address }}"
