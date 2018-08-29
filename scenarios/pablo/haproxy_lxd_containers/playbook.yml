@@ -63,13 +63,13 @@
   connection: lxd
   tasks:
     - name: Initiate haproxy if installed from sources
-      command: "./haproxy -f {{ haproxy_conf_file }}"
+      command: "./haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
       args:
         chdir: "{{ haproxy_path }}"
       when: haproxy_from_sources == True
 
     - name: Initiate haproxy if installed from binary file
       become: True
-      command: "haproxy -f {{ haproxy_conf_file }}"
+      command: "haproxy -f {{ hostvars[inventory_hostname].haproxy_conf_file }}"
       when: haproxy_from_sources == False
   tags: [haproxy, start_haproxy]
