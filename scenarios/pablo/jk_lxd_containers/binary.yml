@@ -1,0 +1,52 @@
+- hosts: gateway
+  connection: lxd
+  vars:
+    ansible_become: True
+    httpd_port: 8080
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
+    mod_jk_configure: --with-apxs=/usr/bin/apxs # /usr/sbin/apxs for CentOS 6
+  roles:
+    - role: httpd-bin
+    - role: jk-gateway-tds
+
+- hosts: tds
+  connection: lxd
+  vars:
+    # ansible_become: True # not valid in inventory because group_vars are flattened
+    miniconda_python: 2
+    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda2"
+    miniconda_env:
+      name: udg
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor=3.1.3
+    using_containers: True
+
+  roles:
+    - role: virtualenv-conda
+    - role: supervisord
+    - role: tds-jk
+
+  tasks:
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+
+    - name: restart httpd
+      become: True
+      command: httpd -k restart
+      run_once: True
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.gateway }}"
+      tags: restart
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [restart, update_catalogs]

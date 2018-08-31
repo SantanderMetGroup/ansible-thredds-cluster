@@ -1,0 +1,109 @@
+- hosts: gateway
+  become: True
+  vars:
+    httpd_port: 8080
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
+    mod_jk_configure: --with-apxs=/usr/bin/apxs # /usr/sbin/apxs for CentOS 6
+  roles:
+    - role: httpd-bin
+    - role: jk-gateway-tds
+  tasks:
+    # SSL
+    # Required to add certs/cert.pem to firefox trusted certificates
+    - name: SSL
+      tags: ssl
+      block:
+        - yum:
+            name: mod_ssl
+            state: present
+
+        - file:
+            path: /etc/httpd/conf.d/ssl.conf
+            state: absent
+
+        - copy:
+            src: certs/{{ item }}
+            dest: /root/{{ item }}
+          with_items:
+            - cert.pem
+            - key.pem
+
+        - blockinfile:
+            path: /etc/httpd/conf/httpd.conf
+            block: |
+              JkMountCopy All
+              LoadModule ssl_module modules/mod_ssl.so
+              LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+              Listen 443
+              <VirtualHost *:443>
+              SSLEngine on
+              SSLCertificateFile "/root/cert.pem"
+              SSLCertificateKeyFile "/root/key.pem"
+              </VirtualHost>
+
+
+- hosts: tap
+  vars:
+    tap_build: local
+  roles:
+    - role: virtualenv
+    - role: supervisord
+    - role: tap
+    - role: tds-jk
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+
+    - include_tasks: ../../utils/derby-authentication.yml
+      vars:
+        instances: "{{ tap_instances }}"
+        derby:
+          user: alice
+          pass: 1234
+          url: localhost
+
+    - name: Remove requires-channel http from TAP
+      replace:
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/udg-tap/WEB-INF/applicationContext-security.xml"
+        regexp: "(.*)requires-channel=\"http\"(.*)"
+        replace: '\1\2'
+        backup: yes
+      with_items: "{{ tap_instances }}"
+
+    - name: SSL Connector for tomcat instances
+      blockinfile:
+        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+        insertbefore: <Engine.*
+        marker: <!-- {mark} ssl -->
+        block: |
+          <Connector
+          protocol="org.apache.coyote.http11.Http11NioProtocol"
+          port="8443" maxThreads="200"
+          scheme="https" secure="true" SSLEnabled="true"
+          keystoreFile="{{ ansible_env.HOME }}/.keystore" keystorePass="coches1" clientAuth="false" sslProtocol="TLS"/>
+      with_items: "{{ tds_instances }}"
+
+    - name: Copy keystore
+      copy:
+        src: certs/keystore
+        dest: "{{ ansible_env.HOME }}/.keystore"
+           
+    - name: restart httpd
+      become: True
+      command: httpd -k restart
+      run_once: True
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.gateway }}"
+      tags: restart
+
+    - name: restart tap instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisord_user | default(omit) }}"
+        password: "{{ supervisord_password | default(omit) }}"
+        supervisorctl_path: "{{ venv_home }}/bin/supervisorctl"
+      with_items: "{{ tap_instances }}"
+      tags: [restart]
