@@ -1,9 +1,13 @@
 - hosts: gateway
   become: True
+  vars:
+    mod_proxy_status_user: proxy
+    mod_proxy_status_passwd: proxy
   roles:
-    - role: system
-      dependencies:
-        - httpd
+    - role: system-httpd
+#    - role: system
+#      dependencies:
+#        - httpd
     - role: httpd
     - role: gateway-proxy
   tasks:
@@ -27,11 +31,15 @@
 - hosts: tds
   become: True
   roles:
-    - role: system
-      dependencies:
-        - tomcat
+    - role: system-tomcat
+    - role: system-memcached
+#    - role: system
+#      dependencies:
+#        - tomcat
+#        - memcached
     - role: tds
     - role: tds-proxy
+    - role: tds-memcached
     - role: systemd-tds
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
@@ -44,6 +52,11 @@
     - name: Add write permission to tomcat user in tds instances
       shell: chmod -R g+w {{ tomcat_base }}/*
       
+    - name: restart memcached
+      systemd:
+        state: restarted
+        name: "memcached.service"
+        
     - name: restart tds instances
       systemd:
         state: restarted

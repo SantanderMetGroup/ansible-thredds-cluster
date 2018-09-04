@@ -56,3 +56,10 @@
     path: "{{ proxy_conf }}"
     insertafter: "# END restrictedAccess"
     line: ProxyPass "/thredds/restrictedAccess" "balancer://restricted/thredds/restrictedAccess"
+
+- name: Create password for proxy status web pages
+  htpasswd:
+    path: "{{ mod_proxy_status }}/.htpasswd"
+    username: "{{ mod_proxy_status_user }}"
+    password: "{{ mod_proxy_status_passwd }}"
+  when:  mod_proxy_status_user is defined and mod_proxy_status_passwd is defined

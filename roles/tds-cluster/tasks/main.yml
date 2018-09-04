@@ -1,3 +1,10 @@
+- name: Add <Cluster> to tds_instances
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    insertbefore: </Host>
+    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+  with_items: "{{ tds_instances }}"
+  
 - name: Copy TdsClusterAuthorizer in every instance
   copy:
     src: TdsClusterAuthorizer{{ tds_major_version }}.class

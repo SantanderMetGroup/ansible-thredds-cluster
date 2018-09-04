@@ -1,0 +1,28 @@
+- name: Download jars
+  become: False
+  local_action: get_url
+  args:
+    url: "{{ item }}"
+    dest: /tmp/
+  with_items:
+    - http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/2.3.0/memcached-session-manager-2.3.0.jar
+    - http://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc7/2.3.0/memcached-session-manager-tc7-2.3.0.jar
+    - http://repo1.maven.org/maven2/net/spy/spymemcached/2.9.1/spymemcached-2.9.1.jar
+
+- name: Copy into tomcat instances
+  copy:
+    src: /tmp/{{ item }}
+    dest: "{{ tomcat_home }}/lib/{{ item }}"
+  with_items:
+    - memcached-session-manager-2.3.0.jar
+    - memcached-session-manager-tc7-2.3.0.jar
+    - spymemcached-2.9.1.jar
+
+- name: Add Manager configuration
+  blockinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/META-INF/context.xml"
+    insertbefore: </Context>
+    marker: "<!-- {mark} manager -->"
+    block: |
+      <Manager {% for key, value in item.manager.items() -%}{{ key }}="{{ value }}" {% endfor %} />
+  with_items: "{{ tds_instances }}"

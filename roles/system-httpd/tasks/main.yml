@@ -3,7 +3,6 @@
   package:
     state: present
     name: "{{ 'apache2' if ansible_pkg_mgr == 'apt' else 'httpd' }}"
-  when: '"httpd" in dependencies'
   tags: install
 
 - name: Create link to /etc/mime.types
@@ -12,31 +11,12 @@
     state: link
     src: /etc/mime.types
     dest: "{{ httpd_conf }}/mime.types"
-  when: '"httpd" in dependencies'
 
 - name: Register httpd version
   command: bash -c "httpd -v | head -n1 | awk '{print substr($3,8,3)}'"
   register: httpd_version_var
-  when: '"httpd" in dependencies'
 
 # Unlike source or miniconda, we don't know the version that has been installed
 - set_fact:
     httpd_version: "{{ httpd_version_var.stdout }}"
     httpd_major_version: "{{ httpd_version_var.stdout }}"
-  when: '"httpd" in dependencies'
-
-- name: Install tomcat
-  become: True
-  package:
-    state: present
-    name: tomcat{{ tomcat_version if ansible_pkg_mgr == "apt" else "" }}
-  when: '"tomcat" in dependencies'
-  tags: install
-
-- name: Install supervisor
-  become: True
-  package:
-    state: present
-    name: supervisor
-  when: '"supervisor" in dependencies'
-  tags: install
