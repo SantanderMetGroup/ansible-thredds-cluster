@@ -1,15 +1,13 @@
-# Define which servers to include in the load balancing scheme. 
 events {
   worker_connections 1024;
 }
 
 http {
 
-
   # This server accepts all traffic to port {{ bind_port }} and passes it to the upstream. 
-  # Notice that the upstream name and the proxy_pass need to match.
 
   server {
+    root {{ nginx_static }};
     proxy_set_header Connection "";
     proxy_set_header HOST $http_host;
     listen {{ bind_port }}; 
