@@ -1,0 +1,28 @@
+- name: Create directory for thredds' static content
+  file:
+    path: "{{ hostvars[replica.1.proxy].nginx_document_root }}/thredds"
+    state: directory
+    mode: 0755
+  delegate_to: "{{ replica.1.proxy }}"
+
+- name: Create thredds static configuration files (images, css) for TDS 4
+  copy:
+    src: "{{ item }}"
+    dest: "{{ hostvars[replica.1.proxy].nginx_document_root }}/thredds/{{ item | basename }}"
+    mode: 0644
+  delegate_to: "{{ replica.1.proxy }}"
+  when: 
+    - tds_major_version|string == 4|string
+    - replica.1.proxy is defined
+  with_fileglob: v4/*
+
+- name: Create thredds static configuration files (images, css) for TDS 5
+  copy:
+    src: "{{ item }}"
+    dest: "{{ hostvars[replica.1.proxy].nginx_document_root }}/thredds/{{ item | basename }}"
+    mode: 0644
+  delegate_to: "{{ replica.1.proxy }}"
+  when: 
+    - tds_major_version|string == 5|string
+    - replica.1.proxy is defined
+  with_fileglob: "v5/*"
