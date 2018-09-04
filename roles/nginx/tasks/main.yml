@@ -4,9 +4,10 @@
 - name: Export variables 
   set_fact:
     nginx_conf_file_path: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
-    ansible_become: "{{ ansible_become | default(False) }}"
+    nginx_document_root: "{{ nginx_static }}"
     default_backend: "{{ default_backend }}"
     nginx_from_source: True
+    ansible_become: "{{ ansible_become | default(False) }}"
     nginx_bin_path: "{{ nginx_bin_path }}"
 
 - name: Download compressed file on local host
@@ -19,6 +20,7 @@
   file: 
     path: "{{ nginx_directory }}"
     state: directory
+    mode: 0755
 
 - name: Unarchive nginx file
   unarchive:
@@ -28,7 +30,7 @@
 - name: Configure nginx installation
   ansible_become: False
   command: "./configure --without-http_rewrite_module --without-http_gzip_module \
-           --prefix={{ nginx_path_prefix }}"
+           --prefix={{ nginx_path_prefix }} --with-pcre"
   args:
     chdir: "{{ nginx_directory }}/{{ nginx_version }}"
     creates: "{{ nginx_directory }}/{{ nginx_version }}/Makefile"
@@ -43,3 +45,9 @@
     src: nginx.conf.j2
     dest: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
     mode: 0666
+
+- name: Create directory for static content
+  file:
+    path: "{{ nginx_static }}"
+    state: directory
+    mode: 0755
