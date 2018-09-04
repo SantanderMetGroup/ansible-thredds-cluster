@@ -4,6 +4,13 @@
   gather_facts: True
 
           
+- name: Deploy nginx on load balancer
+  hosts: load-balancer
+  connection: lxd
+  roles:
+    - role: nginx
+    - role: nginx-gateway-tds
+
 - name: Configure servers with Tomcat
   hosts: servers
   connection: lxd
@@ -24,7 +31,7 @@
       tags: [tds_deploy]
     - role: supervisord
       tags: [tds_deploy]
-    - role: tds
+    - role: nginx-tds
       tags: [tds_deploy]
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
@@ -43,19 +50,6 @@
       tags: [restart, update_catalogs, tds_deploy]
 
 
-- name: Deploy nginx on load balancer
-  hosts: load-balancer
-  connection: lxd
-  roles:
-    - role: nginx
-    - role: nginx-gateway-tds
-
-- name: Register servers at load-balancer
-  hosts: servers
-  connection: lxd
-  roles:
-    - role: nginx-tds
-
 - name: Start nginx
   become: True
   hosts: load-balancer
@@ -65,11 +59,11 @@
       systemd:
         name: nginx.service
         enabled: True
-        state: started
+        state: restarted
       when: nginx_from_source == False
 
     - name: When installed from source
-      command: "./nginx"
+      command: "./nginx -s reload"
       args:
         chdir: "{{ nginx_bin_path }}"
       when: nginx_from_source == True
