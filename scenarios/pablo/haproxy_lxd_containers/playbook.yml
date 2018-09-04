@@ -9,12 +9,6 @@
   roles:
           - role: haproxy-bin
           - role: haproxy-gateway-tds
-  tasks:
-    - name: Set variable
-      set_fact:
-        haproxy_from_sources: True
-      tags: [always]
-
   tags: [haproxy]
        
 - name: Configure servers with Tomcat
@@ -46,7 +40,11 @@
       vars:
         instances: "{{ tds_instances }}"
       tags: tds_deploy
-    
+
+    - name: Pause for 5 seconds
+      pause:
+        seconds: 5
+
     - name: restart tds instances
       supervisorctl:
         name: "{{ item.name }}"
