@@ -1,4 +1,6 @@
 - name: Register at default upstream
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
   lineinfile:
     path: "{{ hostvars[item.1.proxy].nginx_conf_file_path }}"
     line: "\tserver {{ ansible_eth1.ipv4.address }}:{{ tds_port }};"
@@ -9,6 +11,8 @@
     - replicas
 
 - name: Register at specific upstream for my instance
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
   include_tasks: balance_servers.yml
   with_subelements:
     - "{{ tds_instances }}"

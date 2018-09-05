@@ -2,8 +2,6 @@
 # simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
 - name: Register at load balancer's upstream
   include_tasks: register_backend.yml
-  vars:
-    ansible_become: "{{ hostvars[replica.1.proxy].ansible_become | default(False) }}"   #Depends on how NGINX was installed
   with_items: "{{ ansible_play_batch }}"
   when: "hostvars[host_item].inventory_hostname == inventory_hostname"
   loop_control:
