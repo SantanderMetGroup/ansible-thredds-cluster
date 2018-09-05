@@ -1,18 +1,12 @@
-- name: Register as backend server in load-balancer
+# We are going to write to the same file in a remote host, so we need to
+# simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
+- name: Register RIP in load-balancer
   vars:
     ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
-  command: "ipvsadm -a -t {{ hostvars[item.1.proxy].vip }}:{{ hostvars[item.1.proxy].bind_port  }} -r {{ ansible_eth1.ipv4.address }}:{{ hostvars[item.1.proxy].bind_port  }} -g"
-  delegate_to: "{{ item.1.proxy }}"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - replicas
+  include_tasks: register_rip.yml
+  with_items: "{{ ansible_play_batch }}"
+  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+  loop_control:
+    loop_var: host_item
 
-- name: Save rule
-  become: True
-  command: "echo -a -t {{ hostvars[item.1.proxy].vip }}:{{ hostvars[item.1.proxy].bind_port  }} \
-            -r {{ ansible_eth1.ipv4.address }}:{{ hostvars[item.1.proxy].bind_port  }} \
-            >> {{ hostvars[item.1.proxy].ipvs_rulefile_path }} -g"
-  delegate_to: "{{ item.1.proxy }}"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - replicas
+
