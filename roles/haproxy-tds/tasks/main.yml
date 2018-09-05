@@ -1,8 +1,6 @@
 # We are going to write to the same file in a remote host, so we need to
 # simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
 - name: Register at load balancer's backend
-  vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
   include_tasks: register_backend.yml
   with_items: "{{ ansible_play_batch }}"
   when: "hostvars[host_item].inventory_hostname == inventory_hostname"
