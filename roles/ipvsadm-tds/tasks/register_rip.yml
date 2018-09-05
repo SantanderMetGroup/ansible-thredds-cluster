@@ -1,4 +1,6 @@
 - name: Register as backend server in load-balancer
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
   command: "ipvsadm -a -t {{ hostvars[item.1.proxy].vip }}:{{ hostvars[item.1.proxy].bind_port  }} -r {{ ansible_eth1.ipv4.address }}:{{ hostvars[item.1.proxy].bind_port  }} -g"
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
@@ -6,6 +8,8 @@
     - replicas
 
 - name: Save rules
+  vars:
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
   command: "ipvsadm-save > {{ hostvars[item.1.proxy].ipvs_rulefile_path }}"
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
