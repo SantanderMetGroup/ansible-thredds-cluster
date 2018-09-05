@@ -1,7 +1,7 @@
 - name: Download virtualenv package
   local_action: get_url
   args:
-    dest: "{{ downloads }}"
+    dest: "{{ downloads_tmp }}"
     url: "{{ venv_file_url }}"
   vars:
     ansible_become: False
@@ -17,7 +17,7 @@
     
 - name: Unarchive virtualenv
   unarchive: 
-    src: "{{ downloads }}/{{ venv_file_name }}"
+    src: "{{ downloads_tmp }}/{{ venv_file_name }}"
     dest: "{{ venv_sw }}"
 
 - name: Check if virtualenv is already created

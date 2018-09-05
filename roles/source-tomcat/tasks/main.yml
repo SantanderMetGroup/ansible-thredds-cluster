@@ -1,4 +1,3 @@
----
 - name: Create directories for tomcat
   file:
     dest: "{{ item }}"
@@ -12,7 +11,7 @@
   local_action: get_url
   args:
     url: "{{ item.url }}"
-    dest: "{{ downloads }}/{{ item.filename }}"
+    dest: "{{ downloads_tmp }}/{{ item.filename }}"
     headers: "{{ item.header }}"
   with_items:
     - { url: "{{ jdk_download_url }}", filename: "{{ jdk_filename }}", header: "{{ jdk_header }}" }
@@ -20,7 +19,7 @@
 
 - name: Unarchive file in remote host
   unarchive:
-    src: "{{ downloads }}/{{ item.filename }}"
+    src: "{{ downloads_tmp }}/{{ item.filename }}"
     dest: "{{ item.dest }}"
     extra_opts:
       --strip-components=1

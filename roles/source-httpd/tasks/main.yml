@@ -11,7 +11,7 @@
   local_action: get_url
   args:
     url: "{{ item }}"
-    dest: "{{ downloads }}"
+    dest: "{{ downloads_tmp }}"
   with_items:
     - "{{ apr_download_url }}"
     - "{{ apr_util_download_url }}"
@@ -20,7 +20,7 @@
 
 - name: Unarchive dependencies in remote host
   unarchive:
-    src: "{{ downloads }}/{{ item }}"
+    src: "{{ downloads_tmp }}/{{ item }}"
     dest: "{{ httpd_src }}"
   with_items:
     - "{{ apr_filename }}"
@@ -75,4 +75,3 @@
     - /usr/bin/make
     - /usr/bin/make install
     - /usr/bin/make clean
-
