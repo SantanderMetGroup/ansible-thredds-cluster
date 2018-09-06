@@ -35,14 +35,22 @@
         - apache-tomcat
   roles:
     - role: miniconda
+    - role: system-memcached
     - role: tds-jk
     - role: supervisor-tds
-    - role: msm
+    - role: tds-memcached
 
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
+
+    - name: restart memcached
+      become: True
+      systemd:
+        name: memcached
+        state: restarted
+      tags: [never, restart]
 
     - name: restart tds instances
       supervisorctl:
