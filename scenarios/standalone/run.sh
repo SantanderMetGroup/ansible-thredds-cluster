@@ -13,7 +13,7 @@ while getopts ":r:uh" o; do
 done
 
 if [ "${@: -1}" = "deploy" ]; then
-    ansible-playbook main.yml --limit localhost -e root=$r --skip-tags update_catalogs
+    ansible-playbook main.yml -e root=$r --skip-tags update_catalogs
 else
-    ansible-playbook main.yml --limit localhost -e root=$r --tags "${@: -1}"
+    ansible-playbook main.yml -e root=$r --tags "${@: -1}"
 fi
