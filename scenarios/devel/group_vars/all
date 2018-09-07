@@ -40,10 +40,10 @@ tds_instances:
     manager:
       className: "de.javakaffee.web.msm.MemcachedBackupSessionManager"
       memcachedNodes: "n1:{{ hostvars['hostA'].ansible_eth1.ipv4.address }}:11211"
-    replicas:
-      - proxy: proxy # Mandatory
+    gateways:
+      - id: proxy
         host: "{{ ansible_eth1.ipv4.address }}"
-        collections:
+        replicas:
           - collection1
           - collection2
         properties:
@@ -60,10 +60,10 @@ tds_instances:
 #    manager:
 #      className: "de.javakaffee.web.msm.MemcachedBackupSessionManager"
 #      memcachedNodes: "n1:{{ hostvars['hostA'].ansible_eth1.ipv4.address }}:11211"
-#    replicas:
-#      - proxy: proxy
+#    gateways:
+#      - id: proxy
 #        host: "{{ ansible_eth1.ipv4.address }}"
-#        collections:
+#        replicas:
 #          - collection2
 #        properties:
 #          port: 19009

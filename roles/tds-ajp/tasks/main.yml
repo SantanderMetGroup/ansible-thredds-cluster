@@ -10,7 +10,7 @@
       {% endfor %} />
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways
 
 - name: Set jvmRoute in tds instances
   replace:
@@ -21,7 +21,7 @@
     worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways
   when: item.1.properties.protocol.lower().startswith("ajp")
 
 # TODO Should I create a lookup plugin called "unique_subelements" in order to prevent repetition?
@@ -33,4 +33,4 @@
     loop_var: replica
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways

@@ -1,37 +1,37 @@
 - name: Add workers in the collection balancer
   blockinfile:
     marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.properties.port }}"
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.workers"
+    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
     block: |
       worker.{{ worker_name }}.type=ajp13
       worker.{{ worker_name }}.host={{ item.1.host | default(ansible_nodename) }}
       worker.{{ worker_name }}.port={{ item.1.properties.port }}
-  delegate_to: "{{ item.1.proxy }}"
+  delegate_to: "{{ item.1.id }}"
   vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}" # depends on how httpd was installed
+    ansible_become: "{{ hostvars[item.1.id].ansible_become | default(False) }}" # depends on how httpd was installed
     worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways
   when: item.1.properties.protocol.lower().startswith("ajp")
 
 - name: Add workers in the restricted balancer
   lineinfile:
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.workers"
+    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
     insertafter: "# END restrictedAccess"
     line: worker.restrictedAccess.balance_workers={{ worker_name }}
-  delegate_to: "{{ item.1.proxy }}"
+  delegate_to: "{{ item.1.id }}"
   vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}" # depends on how httpd was installed
+    ansible_become: "{{ hostvars[item.1.id].ansible_become | default(False) }}" # depends on how httpd was installed
     worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways
 
 - name: Add balance workers to the gateway
   include_tasks: balance_workers.yml
   with_subelements:
     - "{{ tds_instances }}"
-    - replicas
+    - gateways
   loop_control:
     loop_var: instance
