@@ -13,9 +13,6 @@
     httpd_htdocs: /var/www/html
     httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
     
-    # gateway-jk
-    # poner como defaults, en caso de q no exista role de instalación
-    # luego en los role de instalación poner como vars, no como defaults
     mod_jk_status: "{{ mod_jk_conf }}"
     mod_jk_conf: /etc/httpd/conf.d
     mod_jk_shm: /var/run/mod_jk/mod_jk.shm
@@ -27,9 +24,7 @@
   vars_files:
     - secret.yml
   roles:
-    - role: source
-      dependencies:
-        - mod_jk
+    - role: source-modjk
     - role: gateway-jk-tds
   tasks:
     # Include cluster conf into esgf-httpd.conf
