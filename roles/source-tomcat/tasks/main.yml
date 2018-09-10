@@ -1,28 +1,19 @@
 - name: Create directories for tomcat
   file:
-    dest: "{{ item }}"
+    dest: "{{ tomcat_home }}"
     state: directory
-  with_items:
-    - "{{ tomcat_home }}"
-    - "{{ jdk_install_base }}"
 
 - name: Download dependencies
   run_once: True
   local_action: get_url
   args:
-    url: "{{ item.url }}"
-    dest: "{{ downloads_tmp }}/{{ item.filename }}"
-    headers: "{{ item.header }}"
-  with_items:
-    - { url: "{{ jdk_download_url }}", filename: "{{ jdk_filename }}", header: "{{ jdk_header }}" }
-    - { url: "{{ tomcat_download_url }}", filename: "{{ tomcat_filename }}", header: "" }
+    url: "{{ tomcat_download_url }}"
+    dest: "{{ downloads_tmp }}/{{ tomcat_filename }}"
+    headers: ""
 
 - name: Unarchive file in remote host
   unarchive:
-    src: "{{ downloads_tmp }}/{{ item.filename }}"
-    dest: "{{ item.dest }}"
+    src: "{{ downloads_tmp }}/{{ tomcat_filename }}"
+    dest: "{{ tomcat_home }}"
     extra_opts:
       --strip-components=1
-  with_items:
-    - { filename: "{{ tomcat_filename }}", dest: "{{ tomcat_home }}" }
-    - { filename: "{{ jdk_filename }}", dest: "{{ jdk_install_base }}" }
