@@ -1,0 +1,39 @@
+- name: Set up the gateway
+  hosts: gateway
+  vars:
+    # httpd is already installed, fill the interface
+    httpd_root: /etc/httpd
+    httpd_version: 2.2.15
+    httpd_htdocs: /var/www/html
+    httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
+  roles:
+    - role: gateway-proxy
+  tasks:
+    - name: Comment ProxyPass /thredds in esgf-httpd.conf
+      replace:
+        path: "{{ httpd_conf_file }}"
+        regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
+        replace: '#\1'
+
+- name: Set up backend servers
+  hosts: backend
+  vars:
+    # Miniconda variables
+    miniconda_python: 2
+    miniconda_env:
+      name: f2f
+      channels:
+        - birdhouse
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor
+        - apache-tomcat
+    
+    # TDS variables
+    tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
+    tds_version: "ESGF-5.0.1"
+    tds_filename: "tds-esgf.war"
+  roles:
+    - role: miniconda
+    - role: supervisor-tds
+    - role: tds-proxy
