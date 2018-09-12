@@ -17,7 +17,7 @@ tds_instances:
         clientAuth: want
         sslEnabledProtocol: TLSv1,TLSv1.1,TLSv1.2
         proxyPort: 443
-        proxyName: "{{ hostvars['esgf-node'].ansible_nodename }}"
+        proxyName: "{{ hostvars['esgf'].ansible_nodename }}"
         server: X
         ciphers: TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,SSL_RSA_WITH_3DES_EDE_CBC_SHA
         truststoreFile: "{{ tomcat_base }}/instance1/conf/esg-truststore.ts"
@@ -26,8 +26,8 @@ tds_instances:
         keystoreFile: "{{ tomcat_base }}/instance1/conf/keystore-tomcat"
         keystorePass: coches1
     gateways:
-      - id: esgf-node
-        host: "{{ ansible_nodename }}"
+      - id: esgf
+        host: "{{ ansible_eth1.ipv4.address }}"
         replicas:
           - esgcet
         properties:

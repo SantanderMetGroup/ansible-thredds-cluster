@@ -15,9 +15,18 @@
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
 
+    - name: Restart httpd
+      service:
+        name: httpd
+        state: restarted
+      tags: [never, restart]
+
 - name: Set up backend servers
   hosts: backend
   vars:
+    # Download TDS in the gateway fails because of selinux and local_action
+    ansible_python_interpreter: /usr/bin/python
+    
     # Miniconda variables
     miniconda_python: 2
     miniconda_env:
@@ -37,3 +46,20 @@
     - role: miniconda
     - role: supervisor-tds
     - role: tds-proxy
+  tasks:
+    - name: Synchronize thredds and esg-orp
+      synchronize:
+        src: "/usr/local/tomcat/webapps/{{ item.1 }}"
+        dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/{{ item.1 }}"
+      with_nested:
+        - "{{ tds_instances}}"
+        - ["thredds", "esg-orp"]
+      
+    - name: restart TDS instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      ignore_errors: True
+      tags: [never, restart]
