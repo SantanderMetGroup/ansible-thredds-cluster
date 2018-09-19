@@ -1,6 +1,8 @@
 tds_instances:
   - name: instance1
     shutdown: 20005
+    tds_debug:
+      jpda_address: "{{ ansible_eth1.ipv4.address }}:7999"
     connectors:
       # SSL HTTP/1.1 Connector, as defined in ESGF node tomcat
       - port: 8443
@@ -17,7 +19,7 @@ tds_instances:
         clientAuth: want
         sslEnabledProtocol: TLSv1,TLSv1.1,TLSv1.2
         proxyPort: 443
-        proxyName: "{{ hostvars['esgf'].ansible_nodename }}"
+        proxyName: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}"
         server: X
         ciphers: TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_128_CBC_SHA,SSL_RSA_WITH_3DES_EDE_CBC_SHA
         truststoreFile: "{{ tomcat_base }}/instance1/conf/esg-truststore.ts"
@@ -25,13 +27,14 @@ tds_instances:
         keyAlias: my_esgf_node
         keystoreFile: "{{ tomcat_base }}/instance1/conf/keystore-tomcat"
         keystorePass: coches1
+      # AJP Connector, as defined in ESGF node tomcat
+      - port: 8223
+        protocol: AJP/1.3
+        redirectPort: 8443
     gateways:
       - id: esgf
         host: "{{ ansible_eth1.ipv4.address }}"
+        port: 8223
+        route: "{{ ansible_nodename }}"
         replicas:
-          - esgcet
-        properties:
-          # AJP Connector, as defined in ESGF node tomcat
-          port: 8223
-          protocol: AJP/1.3
-          redirectPort: 8443
+          - esg_dataroot

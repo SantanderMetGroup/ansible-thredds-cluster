@@ -1,0 +1,15 @@
+- name: Create {{ httpd_htdocs }}/thredds directory
+  file:
+    state: directory
+    path: "{{ httpd_htdocs }}/thredds/catalog"
+
+- name: Template static TDS catalog.html
+  template:
+     src: catalog.html.j2
+     dest: "{{ httpd_htdocs }}/thredds/catalog/catalog.html"
+  
+- name: Copy THREDDS static files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ httpd_htdocs }}/thredds/{{ item | basename }}"
+  with_fileglob: v{{ tds_version[:1]|string }}/*

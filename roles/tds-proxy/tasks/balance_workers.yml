@@ -2,22 +2,19 @@
   lineinfile:
     dest: "{{ hostvars[instance.1.id].proxy_conf }}"
     insertafter: <Proxy \"balancer://{{ item }}\">
-    line: BalancerMember "ajp://{{ instance.1.host | default(ansible_nodename) }}:{{ instance.1.properties.port }}" loadfactor=1 route={{ worker_name }}
+    line: BalancerMember "ajp://{{ instance.1.host | default(ansible_nodename) }}:{{ instance.1.port }}" loadfactor=1 route={{ instance.1.route }}
   delegate_to: "{{ instance.1.id }}"
   vars:
     ansible_become: "{{ hostvars[instance.1.id].ansible_become | default(False) }}" # depends on how httpd was installed
-    worker_name: "{{ instance.0.tds_debug is not defined | ternary([ansible_hostname, instance.1.properties.port]|to_uuid, [ansible_hostname, instance.1.properties.port]|join('_')) }}"
   with_items: "{{ instance.1.replicas }}"
-  when: instance.1.properties.protocol.lower().startswith("ajp")
 
 - name: Add workers in the restricted balancer
   blockinfile:
     dest: "{{ hostvars[instance.1.id].proxy_conf }}"
     insertafter: <Proxy \"balancer://restricted\">
-    marker: "# {mark} RESTRICTED_{{ worker_name }}"
+    marker: "# {mark} RESTRICTED_{{ instance.1.route }}"
     block: |
-      BalancerMember "ajp://{{ instance.1.host | default(ansible_nodename) }}:{{ instance.1.properties.port }}" loadfactor=1 route={{ worker_name }}
+      BalancerMember "ajp://{{ instance.1.host | default(ansible_nodename) }}:{{ instance.1.port }}" loadfactor=1 route={{ instance.1.route }}
   delegate_to: "{{ instance.1.id }}"
   vars:
     ansible_become: "{{ hostvars[instance.1.id].ansible_become | default(False) }}"
-    worker_name: "{{ instance.0.tds_debug is not defined | ternary([ansible_hostname, instance.1.properties.port]|to_uuid, [ansible_hostname, instance.1.properties.port]|join('_')) }}"

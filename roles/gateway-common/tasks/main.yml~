@@ -1,0 +1,5 @@
+- name: Copy THREDDS static files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ httpd_htdocs }}/thredds/{{ item | basename }}"
+  with_fileglob: v{{ tds_version[:1]|default(5)|string }}/*

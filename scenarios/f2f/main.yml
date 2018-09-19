@@ -8,6 +8,7 @@
     httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
   roles:
     - role: gateway-proxy
+    - role: tds-proxy
   tasks:
     - name: Comment ProxyPass /thredds in esgf-httpd.conf
       replace:
@@ -15,10 +16,8 @@
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
 
-    - name: Restart httpd
-      service:
-        name: httpd
-        state: restarted
+    - name: Restart ESGF node
+      command: 'esg-node restart'
       tags: [never, restart]
 
 - name: Set up backend servers
@@ -50,10 +49,28 @@
     - name: Synchronize thredds and esg-orp
       synchronize:
         src: "/usr/local/tomcat/webapps/{{ item.1 }}"
-        dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/{{ item.1 }}"
+        dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/"
       with_nested:
         - "{{ tds_instances}}"
         - ["thredds", "esg-orp"]
+
+    - name: Copy truststore and keystore
+      copy:
+        src: /esg/config/tomcat/{{ item.1 }}
+        dest: "{{ tomcat_base }}/{{ item.0.name }}/conf"
+      with_nested:
+        - "{{ tds_instances }}"
+        - ["esg-truststore.ts", "keystore-tomcat"]
+
+    - name: Replace /esg/config/tomcat locations
+      shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
+      with_items:
+        - "{{ tds_instances }}"
+
+    - name: Replace /esg/config locations
+      shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
+      with_items:
+        - "{{ tds_instances }}"
       
     - name: restart TDS instances
       supervisorctl:

@@ -11,11 +11,14 @@ LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
 
 <Location /status-proxy>
     SetHandler balancer-manager
-   	Allow from all
-	AuthType Basic
-	AuthName "Restricted Content"
-	AuthUserFile {{ httpd_root }}/conf.d/.htpasswd
-	Require valid-user
+    Allow from all
+
+{% if mod_proxy_status_user is defined and mod_proxy_status_passwd is defined %}
+    AuthType Basic
+    AuthName "Restricted Content"
+    AuthUserFile {{ httpd_root }}/conf.d/.htpasswd
+    Require valid-user
+{% endif %}
 </Location>
 
 ProxyPass /status-proxy !
