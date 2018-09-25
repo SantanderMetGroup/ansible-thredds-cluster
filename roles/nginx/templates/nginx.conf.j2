@@ -3,13 +3,16 @@ events {
 }
 
 http {
-
-  # This server accepts all traffic to port {{ bind_port }} and passes it to the upstream. 
+  upstream {{ default_upstream }} {
+  }
 
   server {
-    root {{ nginx_static }};
     proxy_set_header Connection "";
     proxy_set_header HOST $http_host;
-    listen {{ bind_port }}; 
+    listen {{ bind_address }}:{{ bind_port }}; 
+
+    location / {
+      proxy_pass http://{{ default_upstream }};
+    }
   }
 }
