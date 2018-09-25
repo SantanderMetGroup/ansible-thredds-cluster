@@ -1,15 +1,5 @@
 ---
-# tasks file for nginx-gateway-td
-- name: Create default upstream
-  blockinfile:
-    path: "{{ nginx_conf_file }}"
-    insertafter: "http {"
-    block: |
-      upstream {{ default_backend }} {
-      }
-    marker: "#{mark} {{ default_backend }} upstream block"
-    
-
+# tasks file for nginx-gateway-tds
 - name: Create upstreams for each collection
   blockinfile:
     path: "{{ nginx_conf_file }}"
@@ -20,25 +10,14 @@
     marker: "#{mark} {{ item.path | replace('/', '-') }} upstream block"
   with_items: "{{ collections }}"
 
-- name: Create location block for default backend
-  blockinfile:
-    path: "{{ nginx_conf_file }}"
-    insertafter: "listen {{ bind_port }};"
-    block: |4
-          location / {
-            proxy_pass http://{{ default_backend }};
-          }
-    marker: "#{mark} '/'(default) location block"
 
 - name: Create location blocks for collections
   blockinfile: 
     path: "{{ nginx_conf_file }}"
     insertafter: "listen {{ bind_port }};"
     block: |4
-          location {{ item.1.base }}/{{ item.0.path | replace('/','-') }} {
-            proxy_pass http://{{ item.0.path | replace('/', '-') }};
+          location ~ .*/{{ item.path | replace('/','-') }}.* {
+            proxy_pass http://{{ item.path | replace('/', '-') }};
           }
     marker: "#{mark} {{ item.1.base }}/{{ item.0.path | replace('/', '-') }} location block"
-  with_subelements:
-    - "{{ collections }}"
-    - services
+  with_items: "{{ collections }}"
