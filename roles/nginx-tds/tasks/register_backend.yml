@@ -1,10 +1,10 @@
 - name: Register at default upstream
   vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}" #Depends on how NGINX was installed
   lineinfile:
     path: "{{ hostvars[item.1.proxy].nginx_conf_file_path }}"
-    line: "\tserver {{ ansible_eth1.ipv4.address }}:{{ tds_port }};"
-    insertafter: "upstream {{ hostvars[item.1.proxy].default_backend }} {\n"
+    line: "\tserver {{ item.1.host }};"
+    insertafter: "upstream {{ hostvars[item.1.proxy].default_upstream }} {\n"
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
     - "{{ tds_instances }}"
