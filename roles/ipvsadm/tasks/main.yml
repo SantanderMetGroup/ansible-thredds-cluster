@@ -1,7 +1,6 @@
-
 - name: Set new facts backend servers need
   set_fact:
-    vip: "{{ ansible_eth1.ipv4.address }}"
+    vip: "{{ bind_address }}"
     bind_port: "{{ bind_port }}"
     ipvs_rulefile_path: "{{ ipvs_rulefile_path }}"
     ansible_become: "{{ ansible_become | default(True) }}"
@@ -10,12 +9,12 @@
   command: "ipvsadm -C"
 
 - name: Add service on load balancer's interface
-  command: "ipvsadm -A -t {{ ansible_eth1.ipv4.address }}:{{ bind_port }} -s rr"
+  command: "ipvsadm -A -t {{ bind_address }}:{{ bind_port }} -s rr"
 
 - name: Make sure ipvsadm.rules exists
   file:
     path: "{{ ipvs_rulefile_path }}"
     state: touch
 
-  #- name: Save rules
-  #command: "ipvsadm -S -n  > {{ ipvs_rulefile_path }}"
+- name: Save rule
+  command: "ipvsadm -S -n  > {{ ipvs_rulefile_path }}"
