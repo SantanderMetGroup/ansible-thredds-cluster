@@ -5,7 +5,48 @@
     mode: 0755
   delegate_to: "{{ replica.1.proxy }}"
 
-- name: Create thredds static configuration files (images, css) for TDS 4
+- name: Create location block for static files
+  blockinfile:
+    path: "{{ hostvars[replica.1.proxy].nginx_conf_file_path }}"
+    insertafter: "listen {{ hostvars[replica.1.proxy].bind_port}};"
+    block: |4
+        location ~ .*(.jpg|.gif|.css)$ {
+          root static;
+        }
+    marker: "# {mark} static files block"
+  delegate_to: "{{ replica.1.proxy }}"
+
+- name: Create location block for static HTML files for TDS 4
+  blockinfile: 
+    path: "{{ hostvars[replica.1.proxy].nginx_conf_file_path }}"
+    insertafter: "listen {{ hostvars[replica.1.proxy].bind_port}};"
+    block: |4
+        location ~ .*{{ item | basename }}$ {
+          root static;
+        }
+    marker: "# {mark} {{ item | basename }} location block"
+  delegate_to: "{{ replica.1.proxy }}"
+  with_fileglob: v4/*.html
+  when: 
+    - tds_major_version|string == 4|string
+    - replica.1.proxy is defined
+
+- name: Create location block for static HTML files for TDS 5
+  blockinfile: 
+    path: "{{ hostvars[replica.1.proxy].nginx_conf_file_path }}"
+    insertafter: "listen {{ hostvars[replica.1.proxy].bind_port}};"
+    block: |4
+        location ~ .*{{ item | basename }}$ {
+          root static;
+        }
+    marker: "# {mark} {{ item | basename }} location block"
+  delegate_to: "{{ replica.1.proxy }}"
+  with_fileglob: v5/*.html
+  when: 
+    - tds_major_version|string == 5|string
+    - replica.1.proxy is defined
+
+- name: Copy thredds static configuration files (images, css) for TDS 4
   copy:
     src: "{{ item }}"
     dest: "{{ hostvars[replica.1.proxy].nginx_document_root }}/thredds/{{ item | basename }}"
@@ -16,7 +57,7 @@
     - replica.1.proxy is defined
   with_fileglob: v4/*
 
-- name: Create thredds static configuration files (images, css) for TDS 5
+- name: Copy thredds static configuration files (images, css) for TDS 5
   copy:
     src: "{{ item }}"
     dest: "{{ hostvars[replica.1.proxy].nginx_document_root }}/thredds/{{ item | basename }}"
