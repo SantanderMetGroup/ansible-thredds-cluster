@@ -2,6 +2,6 @@
   lineinfile:
     path: "{{ hostvars[instance.1.proxy].nginx_conf_file_path }}"
     insertafter: "upstream {{ item }} {"
-    line: "\tserver {{ ansible_eth1.ipv4.address }}:{{ tds_port }};"
+    line: "\tserver {{ instance.1.host }};"
   delegate_to: "{{ instance.1.proxy }}"
   with_items: "{{ instance.1.collections }}"
