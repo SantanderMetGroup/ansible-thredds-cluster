@@ -3,12 +3,13 @@
 
 - name: Export variables 
   set_fact:
-    nginx_conf_file_path: "{{ nginx_conf_path }}/{{ nginx_conf_filename }}"
+    nginx_conf_file_path: "{{ nginx_conf_file }}"
     nginx_document_root: "{{ nginx_static }}"
-    default_backend: "{{ default_backend }}"
+    default_upstream: "{{ default_upstream }}"
     nginx_from_source: True
     ansible_become: "{{ ansible_become | default(False) }}"
     nginx_bin_path: "{{ nginx_bin_path }}"
+    bind_port: "{{ bind_port }}"
 
 - name: Download compressed file on local host
   local_action:
@@ -28,12 +29,14 @@
     dest: "{{ nginx_directory }}"
 
 - name: Configure nginx installation
-  ansible_become: False
-  command: "./configure --without-http_rewrite_module --without-http_gzip_module \
-           --prefix={{ nginx_path_prefix }} --with-pcre"
+  command: "./configure {{ nginx_configure }}" 
   args:
     chdir: "{{ nginx_directory }}/{{ nginx_version }}"
     creates: "{{ nginx_directory }}/{{ nginx_version }}/Makefile"
+
+- name: Build nginx
+  make:
+    chdir: "{{ nginx_directory }}/{{ nginx_version }}"
 
 - name: Install nginx
   make:
