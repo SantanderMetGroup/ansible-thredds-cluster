@@ -125,14 +125,23 @@
   when: item.1 is defined
   tags: ["update_catalogs"]
     
-- include_tasks: deploy_catalogs.yml
-  with_subelements:
-    - "{{ tds_instances }}"
-    - gateways
-  loop_control:
-    loop_var: instance
-  when: item.1 is defined
-  tags: ["update_catalogs"]
+#- include_tasks: deploy_catalogs.yml
+#  with_subelements:
+#    - "{{ tds_instances }}"
+#    - gateways
+#  loop_control:
+#    loop_var: instance
+#  when: item.1 is defined
+#  tags: ["update_catalogs"]
+
+- name: Synchronize catalogs
+  synchronize:
+    src: "{{ item.collection.catalogs.src }}/"
+    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base+'/'+item.tds_instance.name+'/content') }}/thredds/{{ item.collection.path }}"
+    archive: False
+    recursive: True
+  with_items: "{{ replicas }}"
+  tags: update_catalogs
     
 - name: Copy datasets 
   synchronize:
