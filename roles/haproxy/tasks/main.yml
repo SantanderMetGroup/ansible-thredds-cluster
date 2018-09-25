@@ -1,17 +1,16 @@
-
 - name: Install dependencies
   become: True
-  yum: name={{ item }}
-  with_items:
-          - make
-          - gcc
-          - pcre-devel
-          - openssl-devel
-          - zlib-devel          
+  yum:
+    name:
+      - make
+      - gcc
+      - pcre-devel
+      - openssl-devel
+      - zlib-devel          
             
 - name: Export variables
   set_fact:
-    haproxy_from_sources: True
+    haproxy_from_source: True
     haproxy_path: "{{ haproxy_directory }}/{{ haproxy_version }}"
     haproxy_conf_file: "{{ haproxy_conf_file }}"
     ansible_become: "{{ ansible_become | default(False) }}"
@@ -20,55 +19,54 @@
 
 - name: Create directory for HAProxy
   file:
-          path: "{{ haproxy_directory }}"
-          state: directory
+    path: "{{ haproxy_directory }}"
+    state: directory
 
 - name: Download HAProxy
   run_once: True
+  vars:
+    ansible_become: False
   local_action: get_url
   args:
-          url: "{{ haproxy_url }}"
-          dest: "/tmp/{{ haproxy_filename }}"
-  vars:
-          ansible_become: False
+    url: "{{ haproxy_url }}"
+    dest: "/tmp/{{ haproxy_filename }}"
                           
 - name: Unarchive HAProxy file
   unarchive:
-          src: "/tmp/{{ haproxy_filename }}"
-          dest: "{{ haproxy_directory }}"
+    src: "/tmp/{{ haproxy_filename }}"
+    dest: "{{ haproxy_directory }}"
 
 - name: Insert destiny directory on Makefile
   lineinfile:
-          path: "{{ haproxy_directory }}/{{ haproxy_version }}/Makefile"
-          regexp: '^DESTDIR ='
-          line: 'DESTDIR = {{ haproxy_directory }}/{{ haproxy_version }}'
+    path: "{{ haproxy_directory }}/{{ haproxy_version }}/Makefile"
+    regexp: '^DESTDIR ='
+    line: 'DESTDIR = {{ haproxy_directory }}/{{ haproxy_version }}'
 
 - name: Compile source code
   make:
-          chdir: "{{ haproxy_directory }}/{{ haproxy_version }}"
-          params:
-                  TARGET=linux2628
-                  USE_PCRE=1
-                  USE_ZLIB=1
-                  USE_OPENSSL=1
+    chdir: "{{ haproxy_directory }}/{{ haproxy_version }}"
+    params:
+      TARGET=linux2628
+      USE_PCRE=1
+      USE_ZLIB=1
+      USE_OPENSSL=1
 
 - name: Install HAProxy
   make:
-          chdir: "{{ haproxy_directory }}/{{ haproxy_version }}"
-          target: install
+    chdir: "{{ haproxy_directory }}/{{ haproxy_version }}"
+    target: install
 
 - name: Copy error files
   copy:
-          src: errors
-          dest: "{{ haproxy_directory }}/{{ haproxy_version }}"
+    src: errors
+    dest: "{{ haproxy_directory }}/{{ haproxy_version }}"
 
 - name: Add configuration file
   template:
-          src: haproxy.cfg.j2
-          dest: "{{ haproxy_conf_file }}"
+    src: haproxy.cfg.j2
+    dest: "{{ haproxy_conf_file }}"
 
   #- name: Initiate HAProxy
   #command: "./haproxy -f haproxy.cfg"
   #args:
   #        chdir: "{{haproxy_directory }}/{{ haproxy_version }}"
-
