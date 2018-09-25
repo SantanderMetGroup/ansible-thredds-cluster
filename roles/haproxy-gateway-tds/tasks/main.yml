@@ -1,12 +1,6 @@
 ---
 # tasks file for haproxy-gateway-tds
 
-- name: Define default backend
-  lineinfile:
-    path: "{{ haproxy_conf_file }}"
-    line: "\tdefault_backend {{ default_backend }}"
-    insertafter: "option forwardfor"
-
 - name: Create ACL for each collection(1)
   lineinfile:
     path: "{{ haproxy_conf_file }}"
@@ -31,22 +25,12 @@
     firstmatch: True
   with_items: "{{ collections }}"
 
-- name: Create default backend block
-  lineinfile:
-    path: "{{ haproxy_conf_file }}"
-    line: "backend {{ default_backend }}"
-
 - name: Create backend block for each ACL rule
   lineinfile:
     path: "{{ haproxy_conf_file }}"
     line: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
 
-- name: Set cookie persistence for authentication in default backends
-  lineinfile:
-    path: "{{ haproxy_conf_file }}"
-    line: "\tcookie JSESSIONID prefix nocache"
-    insertafter: "backend {{ default_backend }}"
 
 - name: Set cookie persistence for authentication in mapped backends
   lineinfile:
