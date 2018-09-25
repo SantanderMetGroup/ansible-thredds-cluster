@@ -5,5 +5,8 @@
   iptables:
     table: nat
     chain: PREROUTING
-    destination: "{{ hostvars['load-balancer']['ansible_eth1']['ipv4']['address'] }}"
+    destination: "{{ hostvars[{{ item.1.proxy }}.vip }}"
     jump: REDIRECT
+  with_subelements:
+    - "{{ tds_instances }}"
+    - replicas
