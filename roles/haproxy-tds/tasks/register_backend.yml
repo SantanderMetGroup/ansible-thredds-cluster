@@ -1,9 +1,9 @@
 - name: Register at load-balancer into default backend
   vars:
-    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False)  }}"
+    ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
   lineinfile:
     path: "{{ hostvars[item.1.proxy].haproxy_conf_file }}"
-    line: "\tserver {{ ansible_hostname }} {{ ansible_eth1.ipv4.address }}:{{ tds_port }} cookie {{ ansible_hostname }}"
+    line: "\tserver {{ ansible_hostname }} {{ item.1.host  }} cookie {{ ansible_hostname }}"
     state: present
     insertafter: "backend {{ hostvars[item.1.proxy].default_backend }}\n"
   delegate_to: "{{ item.1.proxy }}"
@@ -14,7 +14,7 @@
 - name: Register at collections' specific backend 
   include_tasks: balance_servers.yml
   vars:
-    ansible_become: "{{ hostvars[instance.1.proxy].ansible_become | default(False) }}"
+    ansible_become: "{{ hostvars[instance.1.proxy].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
   with_subelements:
     - "{{ tds_instances }}"
     - replicas
