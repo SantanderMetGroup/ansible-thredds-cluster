@@ -3,15 +3,11 @@
 #
 - name: Set variables for backend servers
   set_fact:
-    haproxy_from_sources: False
+    haproxy_from_source: False
     haproxy_conf_file: "{{ haproxy_conf_file }}"
     default_backend: "{{ default_backend }}"
     default_frontend: "{{ default_frontend }}"
-
-- name: Setting ansible_become if not using containers
-  set_fact:
-    ansible_become: True
-  #when: (using_containers is not defined) or (using_containers == False)
+    ansible_become: "{{ ansible_become | default(True) }}"
 
 - name: Install HAProxy
   yum:
