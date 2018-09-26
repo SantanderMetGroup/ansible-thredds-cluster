@@ -30,7 +30,7 @@
     path: "{{ proxy_conf }}"
     insertafter: "# END COLLECTION_{{ collection_name }}"
     line: |
-      ProxyPass "{{ item.1.base }}/{{ item.0.path }}" "balancer://{{ collection_name }}{{ item.1.base }}/{{ item.0.path }}"
+      ProxyPass "/thredds/{{ item.1 }}/{{ item.0.path }}" "balancer://{{ collection_name }}/thredds/{{ item.1 }}/{{ item.0.path }}"
   vars:
     collection_name: "{{ item.0.path | replace('/', '-') }}"
   with_subelements:

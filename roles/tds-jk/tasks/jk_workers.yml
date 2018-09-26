@@ -1,37 +1,35 @@
 - name: Add workers in the collection balancer
   blockinfile:
-    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.properties.port }}"
-    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
+    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.port }}"
+    path: "{{ hostvars[item.gateway].mod_jk_conf }}/mod_jk.workers"
     block: |
       worker.{{ worker_name }}.type=ajp13
-      worker.{{ worker_name }}.host={{ item.1.host | default(ansible_nodename) }}
-      worker.{{ worker_name }}.port={{ item.1.properties.port }}
-  delegate_to: "{{ item.1.id }}"
+      worker.{{ worker_name }}.host={{ item.host | default(ansible_hostname) }}
+      worker.{{ worker_name }}.port={{ item.port }}
+  delegate_to: "{{ item.gateway }}"
   vars:
-    ansible_become: "{{ hostvars[item.1.id].ansible_become | default(False) }}" # depends on how httpd was installed
-    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - gateways
-  when: item.1.properties.protocol.lower().startswith("ajp")
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}" # depends on how httpd was installed
+    worker_name: "{{ ansible_hostname ~ '_' ~ item.port }}"
+  with_items: "{{ replicas }}"
 
 - name: Add workers in the restricted balancer
   lineinfile:
-    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
+    path: "{{ hostvars[item.gateway].mod_jk_conf }}/mod_jk.workers"
     insertafter: "# END restrictedAccess"
     line: worker.restrictedAccess.balance_workers={{ worker_name }}
-  delegate_to: "{{ item.1.id }}"
+  delegate_to: "{{ item.gateway }}"
   vars:
-    ansible_become: "{{ hostvars[item.1.id].ansible_become | default(False) }}" # depends on how httpd was installed
-    worker_name: "{{ item.0.tds_debug is not defined | ternary([ansible_hostname, item.1.properties.port]|to_uuid, [ansible_hostname, item.1.properties.port]|join('_')) }}"
-  with_subelements:
-    - "{{ tds_instances }}"
-    - gateways
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}" # depends on how httpd was installed
+    worker_name: "{{ ansible_hostname ~ '_' ~ item.port }}"
+  with_items: "{{ replicas }}"
 
-- name: Add balance workers to the gateway
-  include_tasks: balance_workers.yml
-  with_subelements:
-    - "{{ tds_instances }}"
-    - gateways
-  loop_control:
-    loop_var: instance
+- name: Add workers to the load balancer
+  lineinfile:
+    dest: "{{ hostvars[item.gateway].mod_jk_conf }}/mod_jk.workers"
+    state: present
+    line: 'worker.COLLECTION_{{ item.collection.path | replace("/", "-") }}.balance_workers={{ worker_name }}'
+  delegate_to: "{{ item.gateway }}"
+  vars:
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}" # depends on how httpd was installed
+    worker_name: "{{ ansible_hostname ~ '_' ~ item.port }}"
+  with_items: "{{ replicas }}"
