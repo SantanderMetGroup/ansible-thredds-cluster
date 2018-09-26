@@ -3,7 +3,6 @@
   package:
     state: present
     name: "{{ 'apache2' if ansible_pkg_mgr == 'apt' else 'httpd' }}"
-  tags: install
 
 - name: Create link to /etc/mime.types
   become: True
@@ -15,6 +14,9 @@
 - name: Register httpd version
   command: bash -c "httpd -v | head -n1 | awk '{print substr($3,8,3)}'"
   register: httpd_version_var
+
+- debug: var=httpd_version_var
+  tags: [never, debug]
 
 # Unlike source or miniconda, we don't know the version that has been installed
 - set_fact:
