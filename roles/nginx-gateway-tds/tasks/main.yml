@@ -14,10 +14,10 @@
 - name: Create location blocks for collections
   blockinfile: 
     path: "{{ nginx_conf_file }}"
-    insertafter: "listen {{ bind_port }};"
+    insertafter: "listen {{bind_address}}:{{ bind_port }};"
     block: |4
           location ~ .*/{{ item.path | replace('/','-') }}.* {
             proxy_pass http://{{ item.path | replace('/', '-') }};
           }
-    marker: "#{mark} {{ item.1.base }}/{{ item.0.path | replace('/', '-') }} location block"
+    marker: "#{mark} {{ item.path | replace('/', '-') }} location block"
   with_items: "{{ collections }}"
