@@ -10,7 +10,7 @@
 - name: Save rules
   vars:
     ansible_become: "{{ hostvars[item.1.proxy].ansible_become | default(False) }}"
-  command: "ipvsadm-save > {{ hostvars[item.1.proxy].ipvs_rulefile_path }}"
+  command: "ipvsadm-save -n > {{ hostvars[item.1.proxy].ipvs_rulefile_path }}"
   delegate_to: "{{ item.1.proxy }}"
   with_subelements:
     - "{{ tds_instances }}"
