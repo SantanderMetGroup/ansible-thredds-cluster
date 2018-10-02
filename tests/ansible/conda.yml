@@ -1,0 +1,63 @@
+- hosts: gateways
+  vars:
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
+
+    miniconda_python: 3
+    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda3"
+    miniconda_env:
+      name: httpd
+      channels:
+        - zequihg50
+      dependencies:
+        - httpd-jk
+  roles:
+    - role: miniconda
+    - role: gateway-jk-tds
+
+  tasks:
+    - name: restart httpd
+      command: "{{ httpd_root }}/bin/httpd -k restart"
+      tags: [never, restart]
+
+- hosts: tds
+  vars:
+    miniconda_pyhon: 3
+    miniconda_prefix: "{{ ansible_env.HOME }}/miniconda3"
+    miniconda_env:
+      name: tds
+      channels:
+        - birdhouse
+      dependencies:
+        - python=2.7 # supervisor requires python2
+        - libnetcdf # for ncss
+        - supervisor # for management of the instances
+        - apache-tomcat
+  roles:
+    - role: miniconda
+    - role: system-memcached
+    - role: tds-jk
+    - role: supervisor-tds
+    - role: tds-memcached
+
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+
+    - name: restart memcached
+      become: True
+      systemd:
+        name: memcached
+        state: restarted
+      tags: [never, restart]
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [never, restart, update_catalogs]

@@ -1,0 +1,61 @@
+- hosts: gateways
+  vars:
+    # required interface
+    httpd_root: "{{ ansible_env.HOME }}/httpd"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+    
+    httpd_user: vagrant
+    httpd_group: vagrant
+    mod_jk_status_user: proxy
+    mod_jk_status_passwd: proxy
+    mod_jk_configure: --prefix={{ httpd_root }}/modules --with-apxs={{ httpd_root }}/bin/apxs
+  roles:
+    - role: source-supervisor
+    - role: source-httpd
+    - role: source-modjk
+    - role: httpd
+    - role: gateway-jk-tds
+    - role: supervisor-httpd
+  tasks:    
+    - name: restart httpd
+      supervisorctl:
+        name: httpd
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      tags: [never, restart]
+
+
+- hosts: tds
+  vars:
+    # required interface
+    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
+    tomcat_base: "{{ ansible_env.HOME }}/instances"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: source-tomcat
+    - role: source-supervisor
+    - role: tds-cluster
+    - role: tds-jk
+    - role: supervisor-tds
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds_instances }}"
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      with_items: "{{ tds_instances }}"
+      tags: [never, restart, update_catalogs]
+
+# - hosts: hostA
+#   roles:
+#     - role: logstash
+#       logstash_home: "{{ ansible_env.HOME }}/tomcat"
+#       logstash_pipeline: "pipeline.conf"

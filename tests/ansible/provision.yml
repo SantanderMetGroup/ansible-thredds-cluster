@@ -1,0 +1,35 @@
+- name: Provision all hosts
+  hosts: all
+  become: True
+  vars:
+    common:
+      - python-passlib
+      - net-tools
+      - unzip
+      - vim
+      - telnet
+    apt:
+      - build-essential
+    yum:
+      - "@Development tools"
+  tasks:
+    - package:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ common }}"
+
+    - yum:
+        name: epel-release
+      when: ansible_pkg_mgr == "yum"
+
+    - yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ yum }}"
+      when: ansible_pkg_mgr == "yum"
+
+    - apt:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ apt }}"
+      when: ansible_pkg_mgr == "apt"
