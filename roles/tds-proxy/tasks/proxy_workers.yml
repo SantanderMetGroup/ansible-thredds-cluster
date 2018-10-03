@@ -2,7 +2,7 @@
   lineinfile:
     dest: "{{ hostvars[item.gateway].proxy_conf }}"
     insertafter: <Proxy \"balancer://{{ item.collection.path }}\">
-    line: BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.connector.port }}" loadfactor={{ item.loadfactor | default(1) }} route={{ item.route }}
+    line: BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.port }}" loadfactor={{ item.loadfactor | default(1) }} route={{ item.route }}
   delegate_to: "{{ item.gateway }}"
   vars:
     ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}" # depends on how httpd was installed
@@ -14,7 +14,7 @@
     insertafter: <Proxy \"balancer://restricted\">
     marker: "# {mark} RESTRICTED_{{ item.route }}"
     block: |
-      BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.connector.port }}" loadfactor=1 route={{ item.route }}
+      BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.port }}" loadfactor=1 route={{ item.route }}
   delegate_to: "{{ item.gateway }}"
   vars:
     ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}"

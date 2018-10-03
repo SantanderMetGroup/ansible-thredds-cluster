@@ -27,10 +27,10 @@
 - name: Add collection urimaps
   blockinfile:
     path: "{{ mod_jk_conf }}/mod_jk.urimaps"
-    marker: "# {mark} {{ item.1.base }}/{{ item.0.path }}"
+    marker: "# {mark} {{ item.1 }}/{{ item.0.path }}"
     block: |
-      {{ item.1.base }}/{{ item.0.path }}=COLLECTION_{{ collection_name }}
-      {{ item.1.base }}/{{ item.0.path }}/*=COLLECTION_{{ collection_name }}
+      /thredds/{{ item.1 }}/{{ item.0.path }}=COLLECTION_{{ collection_name }}
+      /thredds/{{ item.1 }}/{{ item.0.path }}/*=COLLECTION_{{ collection_name }}
   vars:
     collection_name: "{{ item.0.path | replace('/', '-') }}"
   with_subelements:

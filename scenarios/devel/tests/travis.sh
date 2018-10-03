@@ -5,18 +5,12 @@ trap "exit" INT
 SCENARIOS=(binary conda source)
 COOKIE=cookie.txt
 HOSTS=(proxy hostA)
-
-function setup() {
-    pushd ..
-    # clean previous deployments
-    (vagrant destroy -f && vagrant up ${HOSTS[*]}) || { echo "Failed at setup"; final; }
-    popd
-}
+INVENTORY=tests/travis.inv
 
 function deploy() {
     pushd ..
-    ansible-playbook $1.yml || { echo "Failed to deploy scenario $1"; final; }
-    ansible-playbook $1.yml --tags restart || { echo "Failed to restart scenario $1"; final; }
+    ansible-playbook $1.yml -i $INVENTORY --tags all || { echo "Failed to deploy scenario $1"; final; }
+    ansible-playbook $1.yml -i $INVENTORY --tags restart || { echo "Failed to restart scenario $1"; final; }
     popd
 }
 
@@ -32,14 +26,6 @@ function test(){
     curl $CURL_OPTS -u alice:1234 $RESTRICTED || { echo "Failed while downloading restricted dataset"; final; }
 }
 
-function clean() {
-    pushd ..
-    vagrant destroy -f
-    popd
-    
-    rm $COOKIE
-}
-
 function final() {
     popd
     exit 1
@@ -47,13 +33,10 @@ function final() {
 
 # main
 for s in "${SCENARIOS[@]}"; do
-    setup
-    sleep 5s
     deploy $s
 
     # wait 10s, else 503 is returned
     sleep 10s
     
     test
-    clean
 done
