@@ -1,4 +1,6 @@
 #!/bin/bash
 
-/usr/local/bin/ansible-playbook provision.yml conda.yml
-/usr/local/bin/ansible-playbook conda.yml --tags start,restart
+PLAYBOOK="/root/ansible/$1"
+
+/usr/local/bin/ansible-playbook /root/ansible/provision.yml $PLAYBOOK
+/usr/local/bin/ansible-playbook $PLAYBOOK --tags start,restart

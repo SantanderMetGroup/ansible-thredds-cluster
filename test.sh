@@ -1,24 +1,33 @@
 #!/bin/bash
 
-trap "exit" INT
+# CTRL-C
+trap "exit" SIGINT
+
+# if any command fail, exit
+#set -e
 
 GATEWAY_PORT=4000
+PLAYBOOKS=(conda.yml binary.yml)
 
 function debug() {
-    echo "Docker: $(docker --version)"
-    echo "docker-compose: $(docker-compose --version)"
+    echo "$(docker --version)"
+    echo "$(docker-compose --version)"
 }
 
-function docker_up() {
+# deploy the playbook passed as parameter
+function deploy() {
+    # allow failing (because of supervisord)
+    #unset errexit
     docker-compose up --scale tds=2 -d tds
-    docker-compose run ansible
+    docker-compose run ansible /root/main.sh $1
+    #set -e
 }
 
-function docker_down() {
+function down() {
     docker-compose stop && docker-compose rm -f
 }
 
-function test_curl() {
+function requests() {
     DATASET1="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection1/singleDataset.nc.html"
     DATASET2="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection2/singleDataset.nc.html"
     RESTRICTED="http://localhost:$GATEWAY_PORT/thredds/restrictedAccess/restringido"
@@ -33,10 +42,11 @@ function test_curl() {
 
 # main
 debug
-docker_up
-echo 'End docker_up'
-sleep 10s
-echo 'End sleep'
-test_curl
-echo 'End curl'
-#docker_down
+
+for i in "${PLAYBOOKS[@]}"
+do
+    deploy $i
+    sleep 5s
+    requests
+    down
+done
