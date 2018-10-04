@@ -1,5 +1,7 @@
 # Ansible THREDDS clustering
 
+[![Build Status](https://travis-ci.org/SantanderMetGroup/ansible-thredds-cluster.svg?branch=devel)](https://travis-ci.org/SantanderMetGroup/ansible-thredds-cluster)
+
 The THREDDS project is developing middleware to bridge the gap between
 data providers and data users. The goal is to simplify the discovery and
 use of scientific data and to allow scientific publications and
