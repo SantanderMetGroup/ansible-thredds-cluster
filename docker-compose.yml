@@ -4,7 +4,13 @@ services:
     build: 
       context: .
     depends_on:
-      - server
-  server:
+      - gateway
+      - tds
+  gateway:
+    build:
+      context: tests/
+    ports:
+      - "4000:8080"
+  tds:
     build:
       context: tests/

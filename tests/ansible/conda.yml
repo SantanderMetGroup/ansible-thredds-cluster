@@ -16,6 +16,13 @@
     - role: gateway-jk-tds
 
   tasks:
+    - name: Set User and Group
+      blockinfile:
+        path: "{{ httpd_conf_file }}"
+        block: |
+          User ansible
+          Group ansible
+
     - name: restart httpd
       command: "{{ httpd_root }}/bin/httpd -k restart"
       tags: [never, restart]
@@ -42,16 +49,13 @@
     - role: tds-memcached
 
   tasks:
-    - include_tasks: ../../utils/test-authentication.yml
+    - include_tasks: utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
 
     - name: restart memcached
-      become: True
-      systemd:
-        name: memcached
-        state: restarted
-      tags: [never, restart]
+      command: memcached -d
+      tags: [never, start]
 
     - name: restart tds instances
       supervisorctl:

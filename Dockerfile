@@ -1,6 +1,14 @@
 FROM williamyeh/ansible:debian9
 
+RUN apt-get update && apt-get install -y rsync
+
 COPY ./tests /root
 COPY ./roles /root/roles
+COPY ./utils /root/ansible/utils
 
-RUN mv /root/ssh /root/.ssh && chmod 700 /root/.ssh
+RUN mv /root/ssh /root/.ssh && chmod -R 600 /root/.ssh
+
+WORKDIR /root/ansible
+
+# CMD ["/usr/local/bin/ansible-playbook", "-i", "./inventory", "provision.yml", "conda.yml"]
+CMD ["/root/main.sh"]

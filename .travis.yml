@@ -7,10 +7,11 @@ services:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y python-pip virtualbox vagrant
+  - sudo apt-get install -y python-pip curl
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
-install:
-  - sudo pip install ansible>=2.5
-      
 script:
-  - cd $TRAVIS_BUILD_DIR/scenarios/devel/tests; bash travis.sh
+  - cd $TRAVIS_BUILD_DIR ; bash test.sh
