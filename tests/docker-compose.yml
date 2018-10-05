@@ -2,15 +2,16 @@ version: '3'
 services:
   ansible:
     build: 
-      context: .
+      context: ../
+      dockerfile: tests/ansible/Dockerfile
     depends_on:
       - gateway
       - tds
   gateway:
     build:
-      context: tests/
+      context: ssh/
     ports:
       - "4000:8080"
   tds:
     build:
-      context: tests/
+      context: ssh/

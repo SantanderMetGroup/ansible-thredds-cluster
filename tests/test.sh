@@ -19,7 +19,7 @@ function deploy() {
     # allow failing (because of supervisord)
     #unset errexit
     docker-compose up --scale tds=2 -d tds
-    docker-compose run ansible /root/main.sh $1
+    docker-compose run ansible /root/ansible/main.sh $1
     #set -e
 }
 
@@ -42,6 +42,7 @@ function requests() {
 
 # main
 debug
+export COMPOSE_PROJECT_NAME="ansible-thredds-cluster"
 
 for i in "${PLAYBOOKS[@]}"
 do
