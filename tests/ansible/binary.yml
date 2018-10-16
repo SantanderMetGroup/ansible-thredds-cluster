@@ -15,8 +15,9 @@
         regexp: Listen 80$
         replace: Listen 8080
 
-    - name: Enable httpd network connect in Selinux
-      command: /usr/sbin/setsebool -P httpd_can_network_connect 1
+    # Fails on docker
+    #- name: Enable httpd network connect in Selinux
+    #  command: /usr/sbin/setsebool -P httpd_can_network_connect 1
         
     - name: restart httpd
       become: True
@@ -26,16 +27,15 @@
       tags: [never, restart]
 
 - hosts: tds
-  become: True
   roles:
-    - role: system-tomcat
-    - role: system-memcached
+    - { role: system-tomcat, become: yes }
+    - { role: system-memcached, become: yes }
     - role: tds
     - role: tds-proxy
-    - role: tds-memcached
-    - role: systemd-tds
+    - { role: tds-memcached, become: yes }
+    - { role: systemd-tds, become: yes }
   tasks:
-    - include_tasks: ../../utils/test-authentication.yml
+    - include_tasks: utils/test-authentication.yml
       vars:
         instances: "{{ tds_instances }}"
 

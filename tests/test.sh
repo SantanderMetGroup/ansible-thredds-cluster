@@ -1,33 +1,36 @@
 #!/bin/bash
 
 # CTRL-C
-trap "exit" SIGINT
+trap "exit" INT
 
 # if any command fail, exit
-#set -e
+set -e
+
+# print commands as they execute
+#set -x
 
 GATEWAY_PORT=4000
-PLAYBOOKS=(conda.yml binary.yml)
+PLAYBOOKS=${1:-"conda.yml"}
 
-function debug() {
+debug() {
     echo "$(docker --version)"
     echo "$(docker-compose --version)"
 }
 
 # deploy the playbook passed as parameter
-function deploy() {
+deploy() {
     # allow failing (because of supervisord)
     #unset errexit
-    docker-compose up --scale tds=2 -d tds
-    docker-compose run ansible /root/ansible/main.sh $1
+    docker-compose up --force-recreate --scale tds=2 -d
+    docker run --network ansible-thredds-cluster_default ansible /root/ansible/main.sh $1
     #set -e
 }
 
-function down() {
-    docker-compose stop && docker-compose rm -f
+down() {
+    docker-compose stop
 }
 
-function requests() {
+requests() {
     DATASET1="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection1/singleDataset.nc.html"
     DATASET2="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection2/singleDataset.nc.html"
     RESTRICTED="http://localhost:$GATEWAY_PORT/thredds/restrictedAccess/restringido"
@@ -44,7 +47,12 @@ function requests() {
 debug
 export COMPOSE_PROJECT_NAME="ansible-thredds-cluster"
 
-for i in "${PLAYBOOKS[@]}"
+# if image ansible exists don't create it
+if [[ "$(docker images -q ansible 2> /dev/null)" == "" ]]; then
+    (cd .. && docker build -t ansible -f tests/ansible/Dockerfile .)
+fi
+
+for i in $PLAYBOOKS
 do
     deploy $i
     sleep 5s

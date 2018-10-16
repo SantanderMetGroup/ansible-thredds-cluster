@@ -1,14 +1,17 @@
-FROM ubuntu:16.04
+FROM centos:7
 
-# required: openssh-server python sudo
-# optional: vim telnet less
-RUN apt-get update && apt-get install -y openssh-server python sudo vim telnet less
+RUN yum install -y epel-release && yum install -y \
+	openssh-server python sudo \
+	python-passlib rsync net-tools unzip \
+	vim telnet
+
+RUN yum groupinstall -y "Development Tools"
 
 # add apache user
-RUN adduser --disabled-password --gecos "" ansible ; \
-	adduser ansible sudo ; \
+RUN adduser ansible -G wheel ; \
 	echo 'ansible:ansible' | chpasswd
 
+RUN ssh-keygen -A
 RUN mkdir /var/run/sshd ; \
 	echo 'root:ansible' | chpasswd ; \
 	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
