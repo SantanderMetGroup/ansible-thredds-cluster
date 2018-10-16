@@ -4,7 +4,7 @@
 trap "exit" INT
 
 # if any command fail, exit
-#set -e
+set -e
 
 # print commands as they execute
 #set -x
@@ -19,11 +19,8 @@ debug() {
 
 # deploy the playbook passed as parameter
 deploy() {
-    # allow failing (because of supervisord)
-    #unset errexit
     docker-compose up --force-recreate --scale tds=2 -d
-    docker run --network ansible-thredds-cluster_default ansible /root/ansible/main.sh $1
-    #set -e
+    docker run -t --network ansible-thredds-cluster_default ansible /root/ansible/main.sh $1
 }
 
 down() {
