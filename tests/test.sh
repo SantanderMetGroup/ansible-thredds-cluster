@@ -4,13 +4,13 @@
 trap "exit" INT
 
 # if any command fail, exit
-set -e
+#set -e
 
 # print commands as they execute
 #set -x
 
 GATEWAY_PORT=4000
-PLAYBOOKS=${1:-"conda.yml"}
+PLAYBOOKS=${1:-"conda.yml source.yml"}
 
 debug() {
     echo "$(docker --version)"
