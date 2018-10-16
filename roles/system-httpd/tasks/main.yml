@@ -1,8 +1,8 @@
 - name: Install httpd
   become: True
-  package:
+  yum:
     state: present
-    name: "{{ 'apache2' if ansible_pkg_mgr == 'apt' else 'httpd' }}"
+    name: httpd
 
 - name: Create link to /etc/mime.types
   become: True
@@ -16,7 +16,6 @@
   register: httpd_version_var
 
 - debug: var=httpd_version_var
-  tags: [never, debug]
 
 # Unlike source or miniconda, we don't know the version that has been installed
 - set_fact:
