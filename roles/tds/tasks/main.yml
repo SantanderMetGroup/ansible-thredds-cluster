@@ -123,16 +123,7 @@
     - "{{ tds }}"
     - "{{ collections }}"
   when: item.1 is defined
-  tags: ["update_catalogs"]
-    
-#- include_tasks: deploy_catalogs.yml
-#  with_subelements:
-#    - "{{ tds }}"
-#    - gateways
-#  loop_control:
-#    loop_var: instance
-#  when: item.1 is defined
-#  tags: ["update_catalogs"]
+  tags: update_catalogs
 
 - name: Synchronize catalogs
   synchronize:
@@ -143,7 +134,7 @@
   with_items: "{{ replicas }}"
   tags: update_catalogs
     
-- name: Synchronize datasets 
+- name: Synchronize datasets
   synchronize:
     src: "{{ item.src }}/"
     dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
@@ -151,4 +142,4 @@
     recursive: True
   with_items: "{{ datasets }}"
   when: datasets is defined
-  tags: ["update_catalogs"]
+  tags: update_catalogs

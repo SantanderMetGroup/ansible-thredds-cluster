@@ -9,8 +9,10 @@ set -e
 # print commands as they execute
 #set -x
 
+PROJECT_NAME="ansible-thredds-cluster"
+
 GATEWAY_PORT=4000
-PLAYBOOKS=${1:-"conda.yml source.yml"}
+PLAYBOOKS=${1:-"binary.yml source.yml conda.yml"}
 
 debug() {
     echo "$(docker --version)"
@@ -20,7 +22,7 @@ debug() {
 # deploy the playbook passed as parameter
 deploy() {
     docker-compose up --force-recreate --scale tds=2 -d
-    docker run -t --network ansible-thredds-cluster_default ansible /root/ansible/main.sh $1
+    docker run -t --network ansible-thredds-cluster_default $PROJECT_NAME /root/ansible/main.sh $1
 }
 
 down() {
@@ -45,8 +47,8 @@ debug
 export COMPOSE_PROJECT_NAME="ansible-thredds-cluster"
 
 # if image ansible exists don't create it
-if [[ "$(docker images -q ansible 2> /dev/null)" == "" ]]; then
-    (cd .. && docker build -t ansible -f tests/ansible/Dockerfile .)
+if [[ "$(docker images -q $PROJECT_NAME 2> /dev/null)" == "" ]]; then
+    (cd .. && docker build -t $PROJECT_NAME -f tests/ansible/Dockerfile .)
 fi
 
 for i in $PLAYBOOKS

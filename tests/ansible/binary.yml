@@ -27,13 +27,22 @@
       tags: [never, restart]
 
 - hosts: tds
+  become: True
+  pre_tasks:
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
   roles:
-    - { role: system-tomcat, become: yes }
-    - { role: system-memcached, become: yes }
+    - role: system-tomcat
     - role: tds
     - role: tds-modproxy
-    - { role: tds-memcached, become: yes }
-    - { role: systemd-tds, become: yes }
+    - role: tomcat-memcached
+      instances: "{{ tds }}"
+    - role: supervisor-tds
   tasks:
     - include_tasks: utils/test-authentication.yml
       vars:
@@ -45,15 +54,15 @@
     - name: Add write permission to tomcat user in tds instances
       shell: chmod -R g+w {{ tomcat_base }}/*
       
-    - name: restart memcached
-      systemd:
-        state: restarted
-        name: "memcached.service"
-      tags: [never, restart]
+    - name: start memcached
+      command: memcached -d
         
     - name: restart tds instances
-      systemd:
+      supervisorctl:
+        name: "{{ item.name }}"
         state: restarted
-        name: "tomcat@{{ item.name }}.service"
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items: "{{ tds }}"
       tags: [never, restart]

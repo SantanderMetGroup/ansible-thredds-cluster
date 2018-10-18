@@ -47,15 +47,15 @@
     - role: tds-modjk
     - role: supervisor-tds
     - role: tomcat-memcached
+      instances: "{{ tds }}"
 
   tasks:
     - include_tasks: utils/test-authentication.yml
       vars:
         instances: "{{ tds }}"
 
-    - name: restart memcached
+    - name: start memcached
       command: memcached -d
-      tags: [never, start]
 
     - name: restart tds instances
       supervisorctl:
@@ -65,4 +65,4 @@
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items: "{{ tds }}"
-      tags: [never, restart, update_catalogs]
+      tags: [never, restart]

@@ -16,7 +16,15 @@
     - role: httpd
     - role: gateway-jk-tds
     - role: supervisor-httpd
-  tasks:    
+  tasks:
+    - name: start httpd
+      supervisorctl:
+        name: httpd
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+
     - name: restart httpd
       supervisorctl:
         name: httpd
@@ -25,7 +33,6 @@
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       tags: [never, restart]
-
 
 - hosts: tds
   vars:
@@ -37,14 +44,23 @@
     - role: source-tomcat
     - role: source-supervisor
     - role: tds
+    - role: tds-modjk
     - role: tomcat-cluster
       instances: "{{ tds }}"
-    - role: tds-modjk
     - role: supervisor-tds
   tasks:
     - include_tasks: utils/test-authentication.yml
       vars:
         instances: "{{ tds }}"
+
+    - name: start tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+      with_items: "{{ tds }}"
 
     - name: restart tds instances
       supervisorctl:
