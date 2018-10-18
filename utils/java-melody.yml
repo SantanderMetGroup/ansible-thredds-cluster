@@ -16,12 +16,9 @@
     - "{{ tds_instances }}"
 
 - name: Add /monitoring to gateway urimaps
-  delegate_to: "{{ item.1.proxy }}"
+  delegate_to: "{{ item.gateway }}"
   run_once: True
   lineinfile:
-    path: "{{ hostvars[item.1.proxy].mod_jk_conf }}/mod_jk.urimaps"
+    path: "{{ hostvars[item.gateway].mod_jk_conf }}/mod_jk.urimaps"
     line: /thredds/monitoring=COLLECTION_udg-tds
-  when: item.1.protocol.lower().startswith("ajp")
-  with_subelements: 
-    - "{{ tds_instances }}"
-    - connectors
+  with_items: "{{ replicas }}"
