@@ -7,14 +7,14 @@
   file:
     dest: "{{ tomcat_base }}/{{ item.name }}"
     state: directory
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Create dirs for instances
   file:
     path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
     state: directory
   with_nested:
-    - "{{ tds_instances }}"
+    - "{{ tds }}"
     - ['bin', 'conf', 'lib', 'logs', 'webapps/thredds', 'temp', 'work']
     
 - name: Copy conf files into instances
@@ -22,7 +22,7 @@
     src: "{{ item.1 }}"
     dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
   with_nested:
-    - "{{ tds_instances }}"
+    - "{{ tds }}"
     - ["web.xml", "context.xml"]
   
 - name: Template files into instances
@@ -30,14 +30,14 @@
     src: "{{ item.1 }}.j2"
     dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
   with_nested:
-    - "{{ tds_instances }}"
+    - "{{ tds }}"
     - ["server.xml", "tomcat-users.xml"]
 
 - name: Template setenv.sh
   template:
     src: setenv.sh.j2
     dest: "{{ tomcat_base }}/{{ item.name }}/bin/setenv.sh"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
   
 #################### TDS ####################
 - name: Download tds
@@ -53,20 +53,20 @@
   unarchive:
     src: "{{ tds_downloads_tmp }}/{{ tds_filename }}"
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Copy web.xml in WEB-INF
   copy:
     src: web.xml.v{{ tds_major_version }}
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
   when: tds_version | truncate(4,True,'') != 'ESGF'
 
 - name: Create web.xml in WEB-INF for TDS-ESGF
   copy:
     src: web.xml.esgf
     dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
   when: tds_version | truncate(4,True,'') == 'ESGF'
 
 #################### content/thredds ####################
@@ -80,26 +80,26 @@
   file:
     path: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds"
     state: directory
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Create soft link from instance content/thredds/public to tomcat
   file:
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/public"
     src: "{{ tomcat_home }}/content/thredds/public"
     state: link
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Copy threddsConfig.xml
   copy:
     src: threddsConfig.xml
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/threddsConfig.xml"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Create a common catalog.xml in every instance
   copy:
     src: catalog.xml
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/catalog.xml"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 #################### Deploy catalogs and datasets ####################
 - name: Create directories for collections in instances 
@@ -107,7 +107,7 @@
     dest: "{{ item.0.tds_content_root | default([tomcat_base,item.0.name,'content']|join('/')) }}/thredds/{{ item.1.path }}"
     state: directory
   with_nested:
-    - "{{ tds_instances }}"
+    - "{{ tds }}"
     - "{{ collections }}"
   when: item.1 is defined
   tags: ["update_catalogs"]
@@ -120,14 +120,14 @@
     block: |
       <catalogRef xlink:title="{{ item.1.path }}" xlink:href="{{ item.1.path }}/catalog.xml" name=""/>
   with_nested: 
-    - "{{ tds_instances }}"
+    - "{{ tds }}"
     - "{{ collections }}"
   when: item.1 is defined
   tags: ["update_catalogs"]
     
 #- include_tasks: deploy_catalogs.yml
 #  with_subelements:
-#    - "{{ tds_instances }}"
+#    - "{{ tds }}"
 #    - gateways
 #  loop_control:
 #    loop_var: instance

@@ -51,7 +51,7 @@
         src: "/usr/local/tomcat/webapps/{{ item.1 }}"
         dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/"
       with_nested:
-        - "{{ tds_instances}}"
+        - "{{ tds}}"
         - ["thredds", "esg-orp"]
 
     - name: Copy truststore and keystore
@@ -59,24 +59,24 @@
         src: /esg/config/tomcat/{{ item.1 }}
         dest: "{{ tomcat_base }}/{{ item.0.name }}/conf"
       with_nested:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
         - ["esg-truststore.ts", "keystore-tomcat"]
 
     - name: Replace /esg/config/tomcat locations
       shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
 
     - name: Replace /esg/config locations
       shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
       
     - name: restart TDS instances
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
       ignore_errors: True
       tags: [never, restart]

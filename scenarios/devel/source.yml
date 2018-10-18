@@ -42,7 +42,7 @@
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
-        instances: "{{ tds_instances }}"
+        instances: "{{ tds }}"
 
     - name: restart tds instances
       supervisorctl:
@@ -51,7 +51,7 @@
         username: "{{ supervisor_user | default(omit) }}"
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
       tags: [never, restart, update_catalogs]
 
 # - hosts: hostA

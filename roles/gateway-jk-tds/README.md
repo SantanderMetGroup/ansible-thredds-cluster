@@ -1,6 +1,6 @@
 # Role gateway-jk-tds
 
-This role further configures the mod_jk deployed by the role gateway-jk by registering the appropriate mod_jk workers and urimaps using the information defined in the collections and tds_instances variables. It also creates the static resources that will be served by the gateway instead of the backend TDS instances.
+This role further configures the mod_jk deployed by the role gateway-jk by registering the appropriate mod_jk workers and urimaps using the information defined in the collections and tds variables. It also creates the static resources that will be served by the gateway instead of the backend TDS instances.
 
 ## Role dependencies
 

@@ -37,7 +37,7 @@
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
-        instances: "{{ tds_instances }}"
+        instances: "{{ tds }}"
 
     - name: Change group ownership of tds instances
       shell: chown -R :tomcat {{ tomcat_base }}/*
@@ -55,5 +55,5 @@
       systemd:
         state: restarted
         name: "tomcat@{{ item.name }}.service"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
       tags: [never, restart]

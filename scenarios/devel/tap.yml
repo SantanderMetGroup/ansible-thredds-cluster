@@ -54,7 +54,7 @@
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
-        instances: "{{ tds_instances }}"
+        instances: "{{ tds }}"
 
     - include_tasks: ../../utils/derby-authentication.yml
       vars:
@@ -83,7 +83,7 @@
           port="8443" maxThreads="200"
           scheme="https" secure="true" SSLEnabled="true"
           keystoreFile="{{ ansible_env.HOME }}/.keystore" keystorePass="coches1" clientAuth="false" sslProtocol="TLS"/>
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     - name: Copy keystore
       copy:

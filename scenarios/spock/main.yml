@@ -207,24 +207,24 @@
         regexp: '<property name="useSSL" value="false"/>'
         replace: '<property name="useSSL" value="true"/>'
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     - name: Use port 8443 instead of 443 in tds applicationContext.xml
       replace:
         regexp: '<property name="sslPort" value="8443"/>'
         replace: '<property name="sslPort" value="443"/>'
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     - name: Copy context.xml for tds instances
       copy:
         src: context.xml
         dest: "{{ tomcat_base }}/{{ item.name }}/conf/context.xml"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     - include_tasks: ../../utils/derby-authentication.yml
       vars:
-        instances: "{{ tds_instances }}"
+        instances: "{{ tds }}"
 
     # Java melody
     - include_tasks: '../../utils/java-melody.yml'
@@ -242,7 +242,7 @@
         name: "{{ item.name }}"
         state: restarted
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
       ignore_errors: True
       tags:
         - restart

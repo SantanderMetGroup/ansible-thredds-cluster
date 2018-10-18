@@ -3,13 +3,13 @@
     src: supervisor_wrapper.sh.j2
     dest: "{{ tomcat_base }}/{{ item.name }}/supervisor_wrapper.sh"
     mode: "u=rwx,g=rx,o=rx"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
 
 - name: Create tomcat instances conf file into supervisord 
   template:
     src: tomcat.conf.j2
     dest: "{{ supervisor_programs }}/{{ item.name }}.conf"
-  with_items: "{{ tds_instances }}"
+  with_items: "{{ tds }}"
   register: tomcat_conf_supervisord
 
 - name: Add tds_instance to supervisord

@@ -26,7 +26,7 @@
     ## tds instances
     tds_debug: True
     tds_version: 5.0.0-beta2
-    tds_instances:
+    tds:
       - name: instance1
         shutdown: 8089
         tds_content_root: "{{ root }}/content"
@@ -74,14 +74,14 @@
       copy:
         src: FakeAuthorizer.class
         dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/FakeAuthorizer.class"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     - name: Use FakeAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
       replace:
         regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
         replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.FakeAuthorizer">'
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
-      with_items: "{{ tds_instances }}"
+      with_items: "{{ tds }}"
 
     # Commented because it's unexpected behaviour for the user
 #    # create datasets in main catalog for datasets in public
@@ -97,13 +97,13 @@
 #            <service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/"/>
 #            <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
 #          </service>
-#      with_items: "{{ tds_instances }}"
+#      with_items: "{{ tds }}"
 #      tags: update_catalogs
 #
 #    - name: Register datasets in catalog
 #      find:
 #        paths: "{{ item.tds_content_root }}/thredds/public/"
-#      with_items: "{{ tds_instances }}"
+#      with_items: "{{ tds }}"
 #      register: instances_datasets
 #      tags: update_catalogs
 #
@@ -126,7 +126,7 @@
         state: restarted
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
       tags: ['restart']
 
     - name: Stop TDS
@@ -135,7 +135,7 @@
         state: stopped
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
       tags: ['stop', 'never']
 
     - name: Stop supervisor 

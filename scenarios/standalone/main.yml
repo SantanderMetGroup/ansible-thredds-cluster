@@ -19,7 +19,7 @@
         - apache-tomcat
 
     ## tds instances
-    tds_instances:
+    tds:
       - name: tomcat
         shutdown: 8089
         connectors:
@@ -39,7 +39,7 @@
         state: restarted
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
       tags: ['restart']
 
     - name: Stop TDS
@@ -48,7 +48,7 @@
         state: stopped
         supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
       with_items:
-        - "{{ tds_instances }}"
+        - "{{ tds }}"
       tags: ['stop', 'never']
 
     - name: Stop supervisor 
