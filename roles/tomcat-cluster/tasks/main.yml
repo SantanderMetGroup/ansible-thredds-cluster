@@ -1,0 +1,6 @@
+- name: Add <Cluster> to tds
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    insertbefore: </Host>
+    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+  with_items: "{{ instances }}"
