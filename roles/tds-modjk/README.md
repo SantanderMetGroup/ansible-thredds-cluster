@@ -1,4 +1,4 @@
-# Role tds-jk
+# Role tds-modjk
 
 This role is the glue between the role `gateway-jk` and the role `tds`. For every `tds_instance` defined for the `tds` role, it configures the `mod_jk` reverse proxy or gateway to redirect requests to the appropriate `tds_instance`.
 
