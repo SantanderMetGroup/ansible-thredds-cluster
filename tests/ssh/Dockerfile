@@ -9,9 +9,9 @@ RUN yum groupinstall -y "Development Tools"
 
 # add apache user
 RUN adduser ansible -G wheel ; \
-	echo 'ansible:ansible' | chpasswd
+	echo 'ansible:ansible' | chpasswd ; \
+	echo '%wheel         ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-RUN ssh-keygen -A
 RUN mkdir /var/run/sshd ; \
 	echo 'root:ansible' | chpasswd ; \
 	sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -32,6 +32,8 @@ RUN mkdir /home/ansible/.ssh ; \
 
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+
+RUN ssh-keygen -A
 
 EXPOSE 22 8080 18009
 CMD ["/usr/sbin/sshd", "-D"]

@@ -4,7 +4,7 @@
     # roles customization
     tomcat_base: "{{ root }}"
 
-    tds_version: 5.0.0-beta2
+    tds_version: 4.6.11
 
     miniconda_python: 2
     miniconda_prefix: "{{ root }}/miniconda"
@@ -21,6 +21,8 @@
     ## tds instances
     tds:
       - name: tomcat
+        tds_debug:
+          jpda_address: "{{ ansible_nodename }}:8000"
         shutdown: 8089
         connectors:
           - type: http
@@ -28,16 +30,21 @@
 
   roles:
     - role: miniconda
+      dependencies: [supervisor,jdk,tomcat]
     - role: tds
     - role: supervisor-tds
 
   tasks:
     # management
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+        
     - name: Restart TDS
       supervisorctl:
         name: "{{ item.name }}"
         state: restarted
-        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items:
         - "{{ tds }}"
       tags: ['restart']
@@ -46,7 +53,7 @@
       supervisorctl:
         name: "{{ item.name }}"
         state: stopped
-        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items:
         - "{{ tds }}"
       tags: ['stop', 'never']

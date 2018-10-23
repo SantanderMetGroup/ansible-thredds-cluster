@@ -12,7 +12,8 @@ set -e
 PROJECT_NAME="ansible-thredds-cluster"
 
 GATEWAY_PORT=4000
-PLAYBOOKS=${1:-"binary.yml source.yml conda.yml"}
+# yum.yml -> catalina.sh not found because of systemd
+PLAYBOOKS=${1:-"conda.yml source.yml"}
 
 debug() {
     echo "$(docker --version)"
@@ -56,5 +57,5 @@ do
     deploy $i
     sleep 5s
     requests
-    down
+    #down
 done

@@ -20,9 +20,7 @@
   shell: netstat -tunlp | grep ":{{ supervisor_port }}"
   register: supervisor_sock
   failed_when: "'FAILED' in supervisor_sock.stderr"
-  tags: boot
 
 - name: Run supervisord
-  shell: "{{ supervisor_home }}/bin/supervisord -c {{ supervisor_etc }}/supervisord.conf"
+  shell: "{{ supervisor_bin }}/supervisord -c {{ supervisor_etc }}/supervisord.conf"
   when: supervisor_sock.stdout == ""
-  tags: boot

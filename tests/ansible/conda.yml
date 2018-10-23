@@ -41,8 +41,9 @@
         - supervisor # for management of the instances
         - apache-tomcat
   roles:
+    - role: yum
+      dependencies: [memcached]
     - role: miniconda
-    - role: system-memcached
     - role: tds
     - role: tds-modjk
     - role: supervisor-tds
@@ -63,6 +64,6 @@
         state: restarted
         username: "{{ supervisor_user | default(omit) }}"
         password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ supervisor_home }}/bin/supervisorctl"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items: "{{ tds }}"
       tags: [never, restart]

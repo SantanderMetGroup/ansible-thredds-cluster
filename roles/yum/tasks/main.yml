@@ -1,0 +1,13 @@
+- name: Include vars for dependencies
+  include_vars:
+    file: "{{ role_path }}/defaults/{{ item }}.yml"
+  with_items: "{{ dependencies }}"
+  when: not item in no_vars
+  tags: always
+
+- name: Install dependencies
+  include_tasks: "{{ dependency }}.yml"
+  with_items: "{{ dependencies }}"
+  loop_control:
+    loop_var: dependency
+  
