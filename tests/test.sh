@@ -57,5 +57,5 @@ do
     deploy $i
     sleep 5s
     requests
-    #down
+    down
 done
