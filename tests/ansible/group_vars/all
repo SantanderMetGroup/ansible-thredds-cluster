@@ -2,13 +2,11 @@
 datasets:
   - src: data/datasets
     dest: '' # If empty, path is public/ in THREDDS
-    #  - src: /home/zequi/tests/ncml-dataset
-    #    dest: ''
     
 collections:
   - &collection1
     path: collection1 # Id of the collection and logical path in THREDDS
-    top: True # Add a reference in the tds gateway to the collection
+    top: True # default True # Add a reference in the tds gateway to the collection
     mode: '2775'
     catalogs:
       src: data/collection1
@@ -49,34 +47,3 @@ replicas:
 
   - <<: *replica1
     collection: *collection2
-
-#  - name: instance2
-#    shutdown: 19000
-#    tds_debug:
-#      jpda_adress: "{{ ansible_eth1.ipv4.address }}:8001"
-#    connectors:
-#      - protocol: HTTP/1.1
-#        port: 9090
-#    manager:
-#      className: "de.javakaffee.web.msm.MemcachedBackupSessionManager"
-#      memcachedNodes: "n1:{{ hostvars['hostA'].ansible_eth1.ipv4.address }}:11211"
-#    gateways:
-#      - id: proxy
-#        host: "{{ ansible_eth1.ipv4.address }}"
-#        replicas:
-#          - collection2
-#        properties:
-#          port: 19009
-#          protocol: AJP/1.3
-
-tap_instances:
-  - name: tap1
-    shutdown: 20005
-    connectors:
-      - protocol: AJP/1.3
-        port: 20009
-        proxy: proxy
-        host: "{{ ansible_eth1.ipv4.address }}"
-    lb:
-      - name: tap
-
