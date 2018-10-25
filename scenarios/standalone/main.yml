@@ -18,19 +18,8 @@
         - supervisor
         - apache-tomcat
 
-    ## tds instances
-    tds:
-      - name: tomcat
-        tds_debug:
-          jpda_address: "{{ ansible_nodename }}:8000"
-        shutdown: 8089
-        connectors:
-          - type: http
-            port: 8080
-
   roles:
     - role: miniconda
-      dependencies: [supervisor,jdk,tomcat]
     - role: tds
     - role: supervisor-tds
 
