@@ -49,7 +49,7 @@ export COMPOSE_PROJECT_NAME="ansible-thredds-cluster"
 
 # if image ansible exists don't create it
 if [[ "$(docker images -q $PROJECT_NAME 2> /dev/null)" == "" ]]; then
-    (cd .. && docker build -t $PROJECT_NAME -f tests/ansible/Dockerfile .)
+    (cd .. && docker build -t $PROJECT_NAME .)
 fi
 
 for i in $PLAYBOOKS
