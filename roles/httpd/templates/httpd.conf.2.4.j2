@@ -19,7 +19,9 @@ LoadModule authz_user_module modules/mod_authz_user.so
 LoadModule auth_basic_module modules/mod_auth_basic.so
 
 # required by systemd systems
+{% if ansible_service_mgr == "systemd" %}
 IncludeOptional "{{ httpd_root }}/conf.*d/00-systemd.con[f]"
+{% endif %}
 
 TypesConfig conf/mime.types
 

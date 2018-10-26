@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     config.vm.define host["name"] do |machine|
       machine.vm.synced_folder ".", "/vagrant", disabled: true
       machine.vm.hostname = host["name"]
-      machine.vm.box = "centos/6"
+      machine.vm.box = "centos/7"
       machine.vm.network "private_network", type: "dhcp"
       machine.vm.network "forwarded_port", host: host["forwarded_port"], guest: 8080
 

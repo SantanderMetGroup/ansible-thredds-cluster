@@ -31,12 +31,20 @@
   become: True
   vars:
     ansible_become_pass: ansible
+    jdk_root: "{{ ansible_env.HOME }}/jdk"
+    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
+    tomcat_base: "{{ ansible_env.HOME }}/instances"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
   roles:
+    - role: source
+      dependencies: [jdk, tomcat, supervisor]
     - role: yum
-      dependencies: [jdk, tomcat, memcached]
+      dependencies: [memcached]
     - role: tds
     - role: tds-modproxy
     - role: tomcat-memcached
+      instances: "{{ tds }}"
+    - role: supervisor-tds
       instances: "{{ tds }}"
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
@@ -44,7 +52,7 @@
         instances: "{{ tds }}"
 
     - name: Change group ownership of tds instances
-      shell: chown -R :tomcat {{ tomcat_base }}/*
+      shell: chown -R ansible:ansible {{ tomcat_base }}/*
 
     - name: Add write permission to tomcat user in tds instances
       shell: chmod -R g+w {{ tomcat_base }}/*
@@ -53,8 +61,11 @@
       command: memcached -d -u ansible
 
     - name: restart tds instances
-      systemd:
+      supervisorctl:
+        name: "{{ item.name }}"
         state: restarted
-        name: "tomcat@{{ item.name }}.service"
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items: "{{ tds }}"
-      tags: [never, restart]
+      tags: [never, restart, update_catalogs]

@@ -5,10 +5,6 @@ LoadModule log_config_module modules/mod_log_config.so
 LoadModule dir_module modules/mod_dir.so
 LoadModule mime_module modules/mod_mime.so
 LoadModule authz_host_module modules/mod_authz_host.so
-# required for Allow in mod_jk.conf
-LoadModule access_compat_module modules/mod_access_compat.so 
-# required for AuthType in mod_jk.conf
-LoadModule authn_core_module modules/mod_authn_core.so
 # required for AuthUserFile in mod_jk.conf
 LoadModule authn_file_module modules/mod_authn_file.so
 # required for Require valid-user in mod_jk.conf
@@ -17,7 +13,9 @@ LoadModule authz_user_module modules/mod_authz_user.so
 LoadModule auth_basic_module modules/mod_auth_basic.so
 
 # required by systemd systems
+{% if ansible_service_mgr == "systemd" %}
 Include "{{ httpd_root }}/conf.modules.d/00-systemd.conf"
+{% endif %}
 
 TypesConfig conf/mime.types
 
@@ -25,6 +23,9 @@ PidFile {{ httpd_root }}/run/httpd.pid
 
 ServerName localhost
 Listen {{ httpd_port }}
+
+User "{{ httpd_user }}"
+Group "{{ httpd_group }}"
 
 DocumentRoot "{{ httpd_htdocs }}"
 DirectoryIndex index.html
