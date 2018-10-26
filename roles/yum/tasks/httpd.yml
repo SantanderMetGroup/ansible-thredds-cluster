@@ -15,7 +15,8 @@
   command: bash -c "httpd -v | head -n1 | awk '{print substr($3,8,3)}'"
   register: httpd_version_var
 
-- debug: var=httpd_version_var
+- name: Print httpd version
+  debug: var=httpd_version_var.stdout
 
 # Unlike source or miniconda, we don't know the version that has been installed
 - set_fact:

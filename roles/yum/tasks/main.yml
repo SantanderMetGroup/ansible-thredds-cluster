@@ -5,6 +5,15 @@
   when: not item in no_vars
   tags: always
 
+- name: Install epel
+  yum:
+    name: epel-release
+
+- name: Install libselinux-python
+  yum:
+    state: present
+    name: libselinux-python
+
 - name: Install dependencies
   include_tasks: "{{ dependency }}.yml"
   with_items: "{{ dependencies }}"

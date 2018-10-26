@@ -34,11 +34,11 @@ tds:
         port: 18009
     manager:
       className: "de.javakaffee.web.msm.MemcachedBackupSessionManager"
-      memcachedNodes: "n1:{{ hostvars['ansible-thredds-cluster_tds_2'].ansible_nodename }}:11211"
+      memcachedNodes: "n1:{{ hostvars[groups['tds'][0]].ansible_nodename }}:11211"
 
 replicas:
   - &replica1
-    gateway: ansible-thredds-cluster_gateway_1 # ansible host id
+    gateway: "{{ groups['gateways'][0] }}" # ansible host id
     host: "{{ ansible_nodename }}" # tds_instance IP or hostname
     tds_instance: *instance1
     collection: *collection1

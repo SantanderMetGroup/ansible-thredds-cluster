@@ -4,6 +4,11 @@
   vars:
     debug: False
   tasks:
+    - name: EPEL
+      yum:
+        name: epel-release
+      when: ansible_pkg_mgr == "yum"
+
     - name: Required packages
       package:
         name: "{{ item }}"

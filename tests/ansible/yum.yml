@@ -1,0 +1,64 @@
+- hosts: gateways
+  become: True
+  vars:
+    mod_proxy_status_user: proxy
+    mod_proxy_status_passwd: proxy
+  roles:
+    - role: yum
+      dependencies: [httpd]
+    - role: httpd
+    - role: gateway-proxy
+  tasks:
+    - name: Change httpd port to 8080
+      become: True
+      replace:
+        path: "{{ httpd_conf_file }}"
+        regexp: Listen 80$
+        replace: Listen 8080
+
+    - name: Enable httpd network connect in Selinux
+      command: /usr/sbin/setsebool -P httpd_can_network_connect 1
+        
+    - name: restart httpd
+      become: True
+      command: httpd -k restart
+      tags: [never, restart]
+
+- hosts: tds
+  become: True
+  vars:
+    ansible_become_pass: ansible
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: yum
+      dependencies: [jdk, tomcat, memcached]
+    - role: source
+      dependencies: [supervisor]
+    - role: tds
+    - role: tds-modproxy
+    - role: tomcat-memcached
+      instances: "{{ tds }}"
+    - role: supervisor-tds
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+
+    - name: Change group ownership of tds instances
+      shell: chown -R :tomcat {{ tomcat_base }}/*
+
+    - name: Add write permission to tomcat user in tds instances
+      shell: chmod -R g+w {{ tomcat_base }}/*
+      
+    - name: start memcached
+      command: memcached -d -u ansible
+        
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [never, restart]
