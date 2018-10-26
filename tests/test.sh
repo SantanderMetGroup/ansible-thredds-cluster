@@ -15,7 +15,7 @@ debug() {
 # deploy the playbook passed as parameter
 deploy() {
     docker-compose up --force-recreate --scale tds=2 -d
-    docker run -t --network ansible-thredds-cluster_default $PROJECT_NAME /root/ansible/main.sh $1
+    docker run -t --network ansible-thredds-cluster_default $PROJECT_NAME /ansible-thredds-cluster/tests/ansible/main.sh $1
 }
 
 down() {
