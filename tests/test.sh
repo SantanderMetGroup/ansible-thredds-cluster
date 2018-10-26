@@ -1,19 +1,11 @@
 #!/bin/bash
 
-# CTRL-C
-trap "exit" INT
-
-# if any command fail, exit
-set -e
-
-# print commands as they execute
-#set -x
+trap "exit" INT # CTRL-C
+set -e # if any command fail, exit
+cd ..
 
 PROJECT_NAME="ansible-thredds-cluster"
-
-GATEWAY_PORT=4000
-# yum.yml -> catalina.sh not found because of systemd
-PLAYBOOKS=${1:-"conda.yml source.yml"}
+PLAYBOOKS=${1:-"conda.yml source.yml"} # yum.yml -> catalina.sh not found because of systemd
 
 debug() {
     echo "$(docker --version)"
@@ -31,9 +23,9 @@ down() {
 }
 
 requests() {
-    DATASET1="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection1/singleDataset.nc.html"
-    DATASET2="http://localhost:$GATEWAY_PORT/thredds/dodsC/collection2/singleDataset.nc.html"
-    RESTRICTED="http://localhost:$GATEWAY_PORT/thredds/restrictedAccess/restringido"
+    DATASET1="http://$1:$2/thredds/dodsC/collection1/singleDataset.nc.html"
+    DATASET2="http://$1:$2/thredds/dodsC/collection2/singleDataset.nc.html"
+    RESTRICTED="http://$1:$2/thredds/restrictedAccess/restringido"
     USER='alice'
     PASSWORD='1234'
 
@@ -45,17 +37,17 @@ requests() {
 
 # main
 debug
-export COMPOSE_PROJECT_NAME="ansible-thredds-cluster"
+export COMPOSE_PROJECT_NAME=$PROJECT_NAME
 
 # if image ansible exists don't create it
 if [[ "$(docker images -q $PROJECT_NAME 2> /dev/null)" == "" ]]; then
-    (cd .. && docker build -t $PROJECT_NAME .)
+    docker build -t $PROJECT_NAME .
 fi
 
 for i in $PLAYBOOKS
 do
     deploy $i
     sleep 5s
-    requests
+    requests localhost 4000
     down
 done
