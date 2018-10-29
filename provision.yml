@@ -1,0 +1,23 @@
+- name: Provision
+  hosts: all
+  become: True
+  vars:
+    debug: False
+  tasks:
+    - name: EPEL
+      yum:
+        name: epel-release
+      when: ansible_pkg_mgr == "yum"
+
+    - name: Required packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items: [openssh-server, sudo, python, python-passlib, rsync, unzip]
+
+    - name: Debug packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items: [vim telnet net-tools]
+      when: debug

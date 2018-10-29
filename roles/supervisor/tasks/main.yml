@@ -1,0 +1,26 @@
+- name: Create supervisord directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ supervisor_etc }}"
+    - "{{ supervisor_var }}"
+
+- name: Create directory {{ supervisor_programs }}
+  file:
+    dest: "{{ supervisor_programs }}"
+    state: directory
+
+- name: Create supervisord.conf
+  template:
+    src: supervisord.conf.j2
+    dest: "{{ supervisor_etc }}/supervisord.conf"
+
+- name: Check if supervisord is already running
+  shell: netstat -tunlp | grep ":{{ supervisor_port }}"
+  register: supervisor_sock
+  failed_when: "'FAILED' in supervisor_sock.stderr"
+
+- name: Run supervisord
+  shell: "{{ supervisor_bin }}/supervisord -c {{ supervisor_etc }}/supervisord.conf"
+  when: supervisor_sock.stdout == ""

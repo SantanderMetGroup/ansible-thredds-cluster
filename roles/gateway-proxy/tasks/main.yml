@@ -1,0 +1,60 @@
+- set_fact:
+    ansible_become: True
+    httpd_htdocs: "{{ httpd_htdocs }}"
+    proxy_conf: "{{ httpd_root }}/conf.d/mod_proxy.conf"
+
+- name: Template mod_proxy conf
+  template:
+    src: mod_proxy.conf.j2
+    dest: "{{ proxy_conf }}"
+
+- name: Include mod_proxy.conf in {{ httpd_conf_file }}
+  lineinfile:
+    path: "{{ httpd_conf_file }}"
+    line: Include {{ proxy_conf }}
+
+- name: Add collections (balancer workers)
+  blockinfile:
+    path: "{{ proxy_conf }}"
+    marker: "# {mark} COLLECTION_{{ collection_name }}"
+    block: |
+      <Proxy "balancer://{{ collection_name }}">
+      ProxySet stickysession=JSESSIONID
+      </Proxy>
+  vars:
+    collection_name: "{{ item.path | replace('/', '-') }}"
+  with_items: "{{ collections }}"
+
+- name: Add collection urimaps
+  lineinfile:
+    path: "{{ proxy_conf }}"
+    insertafter: "# END COLLECTION_{{ collection_name }}"
+    line: |
+      ProxyPass "/thredds/{{ item.1 }}/{{ item.0.path }}" "balancer://{{ collection_name }}/thredds/{{ item.1 }}/{{ item.0.path }}"
+  vars:
+    collection_name: "{{ item.0.path | replace('/', '-') }}"
+  with_subelements:
+    - "{{ collections }}"
+    - services
+
+- name: Add restrictedAccess balancer
+  blockinfile:
+    path: "{{ proxy_conf }}"
+    marker: "# {mark} restrictedAccess"
+    block: |
+      <Proxy "balancer://restricted">
+      ProxySet stickysession=JSESSIONID
+      </Proxy>
+
+- name: Add restrictedAccess ProxyPass
+  lineinfile:
+    path: "{{ proxy_conf }}"
+    insertafter: "# END restrictedAccess"
+    line: ProxyPass "/thredds/restrictedAccess" "balancer://restricted/thredds/restrictedAccess"
+
+- name: Create password for proxy status web pages
+  htpasswd:
+    path: "{{ mod_proxy_status }}/.htpasswd"
+    username: "{{ mod_proxy_status_user }}"
+    password: "{{ mod_proxy_status_passwd }}"
+  when:  mod_proxy_status_user is defined and mod_proxy_status_passwd is defined

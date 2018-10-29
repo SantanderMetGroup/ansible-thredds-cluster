@@ -1,0 +1,24 @@
+- name: Install httpd
+  become: True
+  yum:
+    state: present
+    name: httpd
+
+- name: Create link to /etc/mime.types
+  become: True
+  file:
+    state: link
+    src: /etc/mime.types
+    dest: "{{ httpd_conf }}/mime.types"
+
+- name: Register httpd version
+  command: bash -c "httpd -v | head -n1 | awk '{print substr($3,8,3)}'"
+  register: httpd_version_var
+
+- name: Print httpd version
+  debug: var=httpd_version_var.stdout
+
+# Unlike source or miniconda, we don't know the version that has been installed
+- set_fact:
+    httpd_version: "{{ httpd_version_var.stdout }}"
+    httpd_major_version: "{{ httpd_version_var.stdout }}"

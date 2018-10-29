@@ -1,0 +1,41 @@
+downloads_tmp: "{{ playbook_dir }}/downloads"
+
+# httpd
+httpd_version: '2.4.25'
+httpd_src: "{{ httpd_root }}/src"
+httpd_major_version: "{{ httpd_version|truncate(3, False, '', 0) }}"
+httpd_mirror: https://archive.apache.org/dist/httpd/
+httpd_filename_unarchive: "httpd-{{ httpd_version }}"
+httpd_filename: "{{ httpd_filename_unarchive }}.tar.gz"
+httpd_download_url: "{{ httpd_mirror }}/{{ httpd_filename }}"
+httpd_to_be_removed: ['build','build-1','icons','man','manual','src','include']
+
+httpd_htdocs: "{{ httpd_root }}/htdocs"
+httpd_conf: "{{ httpd_root }}/conf"
+httpd_conf_file: "{{ httpd_conf }}/httpd.conf"
+httpd_pid: "{{ httpd_root }}/logs/httpd.pid"
+
+## Dependencies for compilation
+# APR configuration
+apr_version: "1.5.2"
+apr_filename_unarchive: "apr-{{ apr_version }}"
+apr_filename: "{{ apr_filename_unarchive }}.tar.gz"
+apr_mirror: https://archive.apache.org/dist/apr
+apr_download_url: "{{ apr_mirror }}/{{ apr_filename }}"
+apr_install_base: "{{ httpd_root }}"
+
+# APR-Util configuration
+apr_util_version: "1.5.4"
+apr_util_filename_unarchive: "apr-util-{{ apr_util_version }}"
+apr_util_filename: "{{ apr_util_filename_unarchive }}.tar.gz"
+apr_util_mirror: https://archive.apache.org/dist/apr
+apr_util_download_url: "{{ apr_util_mirror }}/{{ apr_util_filename }}"
+apr_util_install_base: "{{ httpd_root }}"
+
+# PCRE configuration
+pcre_version: "8.40"
+pcre_filename_unarchive: "pcre-{{ pcre_version }}"
+pcre_filename: "{{ pcre_filename_unarchive }}.tar.gz"
+pcre_mirror: https://ftp.pcre.org/pub/pcre
+pcre_download_url: "{{ pcre_mirror }}/{{ pcre_filename }}"
+pcre_install_base: "{{ httpd_root }}"

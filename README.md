@@ -1,5 +1,7 @@
 # Ansible THREDDS clustering
 
+[![Build Status](https://travis-ci.org/SantanderMetGroup/ansible-thredds-cluster.svg?branch=devel)](https://travis-ci.org/SantanderMetGroup/ansible-thredds-cluster)
+
 The THREDDS project is developing middleware to bridge the gap between
 data providers and data users. The goal is to simplify the discovery and
 use of scientific data and to allow scientific publications and
@@ -27,10 +29,18 @@ allows to configure different infrastructure and deployment setups, as
 more workers are easily added to the cluster by simply declaring them as
 Ansible variables and executing the playbooks.
 
-# Roles
+## Roles
 
-# Scenarios
+Roles deploy the underlying infrastructure required to deploy specific scenarios for the end-user. They accept variables to customize deployments.
 
-# Utils
+## Scenarios
+
+Scenarios are concrete use cases that make use of roles to create end-user deployments.
+
+## Utils
 
 utils/test-authentication.yml is a playbook that configures a simple setup in the THREDDS instances for testing of authentication and authorization. This playbooks creates a user named "alice" with password "1234" who has access to the datasets in the collection2 (see data/ directory).
+
+## Tests
+
+Run tests/test.sh to test deployments using Docker containers.

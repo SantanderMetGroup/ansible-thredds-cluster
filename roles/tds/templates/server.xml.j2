@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Server port="{{ item.shutdown }}" shutdown="{{ item.name }}">
+<Server port="{{ item.0.shutdown }}" shutdown="{{ item.0.name }}">
     <GlobalNamingResources>
     </GlobalNamingResources>
 
@@ -11,7 +11,7 @@
 
     <Service name="Catalina">
 
-	{% for connector in item.connectors -%}
+	{% for connector in item.0.connectors -%}
 	<Connector
 	{% for key, value in connector.items() -%}
 		{{ key }}="{{ value }}"
@@ -22,7 +22,6 @@
 	    <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
 		<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
 		    prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
-		<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
 	    </Host>
 	</Engine>
     </Service>

@@ -8,7 +8,7 @@ This role deploys a tds instance inside the tomcat server deployed by the 'tomca
 
 ## Role usage
 
-This role requires that you define the following variables, from the deployment model, in your playbook: `tds_instances`, `collections`, `datasets`.
+This role requires that you define the following variables, from the deployment model, in your playbook: `tds`, `collections`, `datasets`.
     
 ## Variables
 

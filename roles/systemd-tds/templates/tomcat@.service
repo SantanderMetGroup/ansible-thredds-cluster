@@ -1,0 +1,20 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Environment="CATALINA_HOME={{ tomcat_home }}"
+Environment="CATALINA_BASE={{ tomcat_base }}/{{ item.name }}"
+Environment="JRE_HOME={{ jdk_root }}"
+Environment="CATALINA_OPTS=-d64 -Xmx4096m -Xms512m -server -ea -XX:+HeapDumpOnOutOfMemoryError -Djava.awt.headless=true -Dtds.content.root.path={{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}"
+Environment="CONTENT_ROOT="
+Environment="CATALINA_PID={{ tomcat_base }}/{{ item.name }}/logs/catalina.pid"
+
+ExecStart=/usr/libexec/tomcat/server start
+ExecStop=/usr/libexec/tomcat/server stop
+SuccessExitStatus=143
+User=tomcat
+
+[Install]
+WantedBy=multi-user.target

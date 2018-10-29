@@ -1,32 +1,32 @@
 ---
 collections:
-- path: udg-tds
-  top: False # not mandatory here, static catalog.html not used for ESGF scenario
-  catalogs:
-    src: TDSSPOCK/catalogs
-  services:
-    - base: /thredds/catalog
-    - base: /thredds/fileServer
-    - base: /thredds/dodsC
-    - base: /thredds/ncss/grid
+  - &udg-tds
+    path: udg-tds
+    top: False # not mandatory here, static catalog.html not used for ESGF scenario
+    catalogs:
+      src: TDSSPOCK/catalogs
+    services: ["catalog", "fileServer", "dodsC", "ncss/grid"]
 
 datasets:
-- src: "TDSSPOCK/datasets"
-  dest: ''
+  - src: "TDSSPOCK/datasets"
+    dest: ''
       
-tds_instances:
-- name: instance1
-  shutdown: 18005
-  tds_debug:
-    jpda_address: "{{ ansible_eth0.ipv4.address }}:8000"
-  connectors:
-    - protocol: HTTP/1.1
-      port: '18008'
-  replicas:
-    - proxy: spock
-      host: "{{ ansible_nodename }}" # i.e wn020 and wn019
-      collections:
-        - udg-tds
-      properties:
-        protocol: AJP/1.3
-        port: '18009'
+tds:
+  - &instance1
+    name: instance1
+    shutdown: 18005
+    tds_debug:
+      jpda_address: "{{ ansible_eth0.ipv4.address }}:8000"
+    connectors:
+      - protocol: HTTP/1.1
+        port: '18008'
+      - protocol: AJP/1.3
+        port: 18009
+
+replicas:
+  - gateway: spock
+    host: "{{ ansible_nodename }}"
+    tds_instance: *instance1
+    collection: *udg-tds
+    port: 18009
+    route: "{{ ansible_nodename ~ '_' ~ 18009 }}"
