@@ -1,11 +1,20 @@
 tomcat_base: '/usr/local'
 
+collections:
+  - &collection1
+    path: esg_dataroot
+    catalogs:
+      src: /esg/content/thredds/esgcet
+    services: [dodsC, fileServer, catalog]
+
 tds:
   - name: tomcat
-    gateways:
-      - id: esgf
-        host: "{{ ansible_eth1.ipv4.address }}"
-        route: "{{ ansible_nodename }}"
-        port: 8223
-        replicas:
-          - esg_dataroot
+
+replicas:
+  - gateway: esgf
+    host: "{{ ansible_eth1.ipv4.address }}"
+    route: "{{ ansible_nodename }}"
+    port: 8223
+    tds_instance:
+      name: tomcat
+    collection: *collection1
