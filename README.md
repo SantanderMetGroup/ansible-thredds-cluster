@@ -39,8 +39,8 @@ Scenarios are concrete use cases that make use of roles to create end-user deplo
 
 ## Utils
 
-utils/test-authentication.yml is a playbook that configures a simple setup in the THREDDS instances for testing of authentication and authorization. This playbooks creates a user named "alice" with password "1234" who has access to the datasets in the collection2 (see data/ directory).
+`utils/test-authentication.yml` is a playbook that configures a simple setup in the THREDDS instances for testing of authentication and authorization. This playbooks creates a user named "alice" with password "1234" who has access to the datasets in the collection2 (see data/ directory).
 
 ## Tests
 
-Run tests/test.sh to test deployments using Docker containers.
+Run `cd tests && ./test.sh` to test deployments using Docker containers.
