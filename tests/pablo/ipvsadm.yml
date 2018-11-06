@@ -1,0 +1,67 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Configure load balancer
+  become: True
+  hosts: gateways
+  roles:
+    - role: yum
+      dependencies: [ipvsadm]
+    - role: ipvsadm
+
+- name: Configure servers
+  hosts: tds
+  vars:
+    # required interface
+    jdk_root: "{{ ansible_env.HOME }}/jdk"
+    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
+    tomcat_base: "{{ ansible_env.HOME }}/instances"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: source
+      dependencies: [jdk, tomcat, supervisor]
+    - role: tds
+      tags: [tds]
+    - role: tds-ipvsadm
+    - role: iptables
+      become: True
+    - role: tomcat-cluster
+      instances: "{{ tds }}"
+    - role: supervisor-tds
+  tasks:
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+
+    - name: start tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [never, restart, update_catalogs]
+
+
+- name: Start ipvsadm
+  hosts: gateways
+  become: True
+  tasks:
+    # - meta: end_play
+
+    - systemd:
+        name: ipvsadm.service
+        state: started
+          
+    - shell: "ipvsadm-restore < {{ ipvs_rules }}"
