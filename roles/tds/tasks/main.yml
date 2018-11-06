@@ -134,21 +134,7 @@
   with_items: "{{ replicas }}"
   tags: update_catalogs
     
-<<<<<<< HEAD
-- name: Copy datasets into containers
-  copy:
-    src: "{{ item.src }}/"
-    dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
-  with_items: "{{ datasets }}"
-  tags: update_catalogs
-  when:
-    - using_containers is defined
-    - using_containers == True
-
-- name: Copy datasets into VMs
-=======
 - name: Synchronize datasets
->>>>>>> 5bee35a17f61f29e8e6a3f0474160624a679c189
   synchronize:
     src: "{{ item.src }}/"
     dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
@@ -157,11 +143,3 @@
   with_items: "{{ datasets }}"
   when: datasets is defined
   tags: update_catalogs
-<<<<<<< HEAD
-  when: (using_containers == False) or (using_containers is not defined)
-
-#################### Supervisord ####################
-- include_tasks: supervisord_configuration.yml
-  with_items: "{{ tds_instances }}"
-=======
->>>>>>> 5bee35a17f61f29e8e6a3f0474160624a679c189
