@@ -9,6 +9,15 @@
     - role: yum
       dependencies: [ipvsadm]
     - role: ipvsadm
+  tasks:
+    - name: Disable Reverse Path Filtering
+      sysctl:
+        name: "{{ item }}"
+        value: 0
+      with_items:
+        - net.ipv4.conf.all.rp_filter
+        - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+                                                              
 
 - name: Configure servers
   hosts: tds
@@ -30,7 +39,7 @@
       instances: "{{ tds }}"
     - role: supervisor-tds
   tasks:
-    - include_tasks: ../../../utils/test-authentication.yml
+    - include_tasks: ../../utils/test-authentication.yml
       vars:
         instances: "{{ tds }}"
 
@@ -58,7 +67,6 @@
   hosts: gateways
   become: True
   tasks:
-    # - meta: end_play
 
     - systemd:
         name: ipvsadm.service
