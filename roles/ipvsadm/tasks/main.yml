@@ -2,7 +2,7 @@
   set_fact:
     vip: "{{ bind_address }}"
     bind_port: "{{ bind_port }}"
-    ipvs_rulefile_path: "{{ ipvs_rulefile_path }}"
+    ipvs_rules: "{{ ipvs_rules }}"
     ansible_become: "{{ ansible_become | default(True) }}"
 
 - name: Clear previous ipvsadm rules
@@ -11,10 +11,23 @@
 - name: Add service on load balancer's interface
   command: "ipvsadm -A -t {{ bind_address }}:{{ bind_port }} -s rr"
 
-- name: Make sure ipvsadm.rules exists
+- name: Make sure ipvsadm rules file exists
   file:
-    path: "{{ ipvs_rulefile_path }}"
+    path: "{{ ipvs_rules }}"
     state: touch
 
 - name: Save rule
-  command: "ipvsadm-save -n  > {{ ipvs_rulefile_path }}"
+  shell: "ipvsadm-save -n  > {{ ipvs_rules }}"
+
+- name: Save rules on stop
+  lineinfile:
+    path: "{{ ipvs_config }}"
+    regexp: ^IPVS_SAVE_ON_STOP=
+    line: "IPVS_SAVE_ON_STOP=\"yes\""
+
+- name: Save rules on restart
+  lineinfile:
+    path: "{{ ipvs_config }}"
+    regexp: ^IPVS_SAVE_ON_RESTART=
+    line: "IPVS_SAVE_ON_RESTART=\"yes\""
+

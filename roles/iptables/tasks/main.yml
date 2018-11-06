@@ -5,8 +5,5 @@
   iptables:
     table: nat
     chain: PREROUTING
-    destination: "{{ hostvars[{{ item.1.proxy }}.vip }}"
+    destination: "{{ hostvars[default_gateway].vip }}"
     jump: REDIRECT
-  with_subelements:
-    - "{{ tds_instances }}"
-    - replicas
