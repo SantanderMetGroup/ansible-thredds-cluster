@@ -1,0 +1,7 @@
+# Simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
+- name: Register RIP in load-balancer
+  include_tasks: register_rip.yml
+  with_items: "{{ ansible_play_batch }}"
+  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+  loop_control:
+    loop_var: host_item

@@ -1,0 +1,37 @@
+- name: Download Nginx on local host
+  local_action:
+    module: get_url
+    url: "{{ nginx_url_prefix ~ '/' ~  nginx_filename }}"
+    dest: "{{ nginx_install_file }}"
+
+- name: Create directory for nginx
+  file:
+    path: "{{ nginx_directory }}"
+    state: directory
+    mode: 0755
+
+- name: Unarchive Nginx 
+  unarchive:
+    src: "{{ nginx_install_file }}"
+    dest: "{{ nginx_directory }}"
+
+- name: Configure nginx installation
+  command: "./configure {{ nginx_configure }}"
+  args:
+    chdir: "{{ nginx_directory ~ '/' ~ nginx_version }}"
+    creates: "{{ nginx_directory ~ '/' ~ nginx_version ~ '/Makefile' }}"
+
+- name: Build nginx
+  make:
+    chdir: "{{ nginx_directory ~ '/' ~ nginx_version }}"
+
+- name: Install Nginx
+  make:
+    chdir: "{{ nginx_directory ~ '/' ~ nginx_version }}"
+    target: install
+
+- name: Create directory for static content
+  file:
+    path: "{{ nginx_static }}"
+    state: directory
+    mode: 0755

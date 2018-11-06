@@ -1,0 +1,69 @@
+- name: Create directory for THREDDS' static content
+  file:
+    path: "{{ hostvars[replica.gateway].nginx_static }}/thredds"
+    state: directory
+    mode: 0755
+  delegate_to: "{{ replica.gateway }}"
+
+- name: Create location block for static files
+  blockinfile:
+    path: "{{ hostvars[replica.gateway].nginx_conf }}"
+    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    block: |4
+        location ~ .*(.jpg|.gif|.css)$ {
+          root static;
+        }
+    marker: "# {mark} static files block"
+  delegate_to: "{{ replica.gateway }}"
+
+- name: Create location block for static HTML files for TDS 4
+  blockinfile: 
+    path: "{{ hostvars[replica.gateway].nginx_conf }}"
+    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    block: |4
+        location ~ .*{{ item | basename }}$ {
+          root static;
+        }
+    marker: "# {mark} {{ item | basename }} location block"
+  delegate_to: "{{ replica.gateway }}"
+  with_fileglob: v4/*.html
+  when: 
+    - tds_major_version|string == 4|string
+    - replica.gateway is defined
+
+- name: Create location block for static HTML files for TDS 5
+  blockinfile: 
+    path: "{{ hostvars[replica.gateway].nginx_conf }}"
+    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    block: |4
+        location ~ .*{{ item | basename }}$ {
+          root static;
+        }
+    marker: "# {mark} {{ item | basename }} location block"
+  delegate_to: "{{ replica.gateway }}"
+  with_fileglob: v5/*.html
+  when: 
+    - tds_major_version|string == 5|string
+    - replica.gateway is defined
+
+- name: Copy thredds static configuration files (images, css) for TDS 4
+  copy:
+    src: "{{ item }}"
+    dest: "{{ hostvars[replica.gateway].nginx_static }}/thredds/{{ item | basename }}"
+    mode: 0644
+  delegate_to: "{{ replica.gateway }}"
+  when: 
+    - tds_major_version|string == 4|string
+    - replica.gateway is defined
+  with_fileglob: v4/*
+
+- name: Copy thredds static configuration files (images, css) for TDS 5
+  copy:
+    src: "{{ item }}"
+    dest: "{{ hostvars[replica.gateway].nginx_static }}/thredds/{{ item | basename }}"
+    mode: 0644
+  delegate_to: "{{ replica.gateway }}"
+  when: 
+    - tds_major_version|string == 5|string
+    - replica.gateway is defined
+  with_fileglob: "v5/*"

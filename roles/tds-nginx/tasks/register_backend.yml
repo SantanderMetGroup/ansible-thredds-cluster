@@ -1,0 +1,19 @@
+- name: Register at default upstream
+  vars:
+    ansible_become: "{{ hostvars[default_gateway].ansible_become | default(False) }}" #Depends on how NGINX was installed
+  lineinfile:
+    path: "{{ hostvars[default_gateway].nginx_conf }}"
+    line: "\tserver {{ default_host }}:{{ default_port }};"
+    insertafter: "upstream {{ hostvars[default_gateway].default_upstream }} {\n"
+  delegate_to: "{{ default_gateway }}"
+  with_items: "{{ replicas }}"
+
+- name: Register at specific upstream for my instance
+  vars:
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}"
+  lineinfile:
+    path: "{{ hostvars[item.gateway].nginx_conf }}"
+    insertafter: "upstream {{ item.collection.path | replace('/', '-') }}"
+    line: "\t server {{ item.host }}:{{ item.port }};"
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ replicas }}"
