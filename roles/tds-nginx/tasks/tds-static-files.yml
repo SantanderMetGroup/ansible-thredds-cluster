@@ -1,6 +1,6 @@
 - name: Create directory for THREDDS' static content
   file:
-    path: "{{ hostvars[replica.gateway].nginx_static }}/thredds"
+    path: "{{ hostvars[replica.gateway].nginx_static }}/thredds/catalog"
     state: directory
     mode: 0755
   delegate_to: "{{ replica.gateway }}"
@@ -27,6 +27,22 @@
     marker: "# {mark} {{ item | basename }} location block"
   delegate_to: "{{ replica.gateway }}"
   with_fileglob: "v{{ tds_version[:1]|string }}/*.html"
+
+- name: Create location block for static catalog.html
+  blockinfile:
+    path: "{{ hostvars[replica.gateway].nginx_conf }}"
+    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    block: |4
+        location = /thredds/catalog/catalog.html {
+          root static;
+        }
+  delegate_to: "{{ replica.gateway }}"
+
+- name: Template static catalog
+  template:
+    src: catalog.html.j2
+    dest: "{{ hostvars[replica.gateway].nginx_static }}/thredds/catalog/catalog.html"
+  delegate_to: "{{ replica.gateway }}"
 
 - name: Copy thredds static configuration files (images, css) for TDS 
   copy:
