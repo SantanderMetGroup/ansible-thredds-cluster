@@ -30,18 +30,22 @@
   roles:
     - role: source
       dependencies: [jdk, tomcat, supervisor]
+      tags: [tds_deploy]
     - role: tds
-      tags: [tds]
+      tags: [tds_deploy]
     - role: tds-ipvsadm
     - role: iptables
       become: True
     - role: tomcat-cluster
       instances: "{{ tds }}"
+      tags: [tds_deploy]
     - role: supervisor-tds
+      tags: [tds_deploy]
   tasks:
     - include_tasks: ../../utils/test-authentication.yml
       vars:
         instances: "{{ tds }}"
+      tags: [tds_deploy]
 
     - name: start tds instances
       supervisorctl:
@@ -51,6 +55,7 @@
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items: "{{ tds }}"
+      tags: [tds_deploy]
 
     - name: restart tds instances
       supervisorctl:
@@ -60,7 +65,7 @@
         password: "{{ supervisor_password | default(omit) }}"
         supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
       with_items: "{{ tds }}"
-      tags: [never, restart, update_catalogs]
+      tags: [tds_deploy, restart, update_catalogs]
 
 
 - name: Start ipvsadm
