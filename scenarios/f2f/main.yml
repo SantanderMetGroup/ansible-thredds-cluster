@@ -16,6 +16,21 @@
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
 
+    - name: Rewrite /thredds to /thredds/catalog/catalog.html
+      blockinfile:
+        path: "{{ httpd_conf_file }}"
+        insertafter: Header always set X-Content-Type-Options nosniff
+        block: |
+          RewriteEngine on
+          RewriteRule   "^/thredds/?$" "/thredds/catalog/catalog.html" [R]
+
+    - name: Replace localhost by gateway IP in esgf.properties
+      replace:
+        path: /esg/config/esgf.properties
+        regexp: https://localhost/esg-orp
+        replace: https://{{ ansible_eth1.ipv4.address }}/esg-orp
+        backup: yes
+
     - name: Restart ESGF node
       command: 'esg-node restart'
       tags: [never, restart]
@@ -64,13 +79,27 @@
 
     - name: Replace /esg/config/tomcat locations
       shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items:
-        - "{{ tds }}"
+      with_items: "{{ tds }}"
 
     - name: Replace /esg/config locations
       shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items:
-        - "{{ tds }}"
+      with_items: "{{ tds }}"
+
+    - name: Remove AccessLoggingFilter
+      replace:
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+        regexp: <filter>\n\s+<filter-name>AccessLoggingFilter(.|\n)*</filter-mapping>
+        replace: "<!-- Removed AccessLoggingFilter -->"
+        backup: yes
+      with_items: "{{ tds }}"
+
+    - name: Replace localhost by gateway IP in thredds web.xml
+      replace:
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+        regexp: localhost/esg-orp
+        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
+        backup: yes
+      with_items: "{{ tds }}"
       
     - name: restart TDS instances
       supervisorctl:
