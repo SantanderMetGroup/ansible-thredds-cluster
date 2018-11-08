@@ -3,16 +3,11 @@ events {
 }
 
 http {
-  upstream {{ default_upstream }} {
-  }
 
   server {
     proxy_set_header Connection "";
     proxy_set_header HOST $http_host;
     listen {{ bind_address }}:{{ bind_port }}; 
 
-    location / {
-      proxy_pass http://{{ default_upstream }};
-    }
   }
 }

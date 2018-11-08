@@ -1,5 +1,10 @@
 ---
-- name: Create upstreams for each collection
+- name: Set facts for backend servers to register
+  set_fact:
+    catalog_upstream: "{{ catalog_upstream }}"
+    restricted_upstream: "{{ restricted_upstream }}"
+
+- name: Create upstream block for each collection
   blockinfile:
     path: "{{ nginx_conf }}"
     insertafter: "http {"
@@ -8,15 +13,51 @@
       }
     marker: "#{mark} {{ item.path | replace('/', '-') }} upstream block"
   with_items: "{{ collections }}"
-
-
-- name: Create location blocks for collections
+     
+- name: Create upstream block for main catalog & restrictedAccess
+  blockinfile:
+    path: "{{ nginx_conf }}"
+    insertafter: "http {"
+    block: |
+      upstream {{ item }} {
+      }
+    marker: "#{mark} {{ item }} upstream block"
+  with_items:
+    - "{{ catalog_upstream }}"
+    - "{{ restricted_upstream }}"
+  
+- name: Create location blocks for collections+service
   blockinfile: 
     path: "{{ nginx_conf }}"
-    insertafter: "listen {{bind_address}}:{{ bind_port }};"
-    block: |4
-          location ~ .*/{{ item.path | replace('/','-') }}.* {
-            proxy_pass http://{{ item.path | replace('/', '-') }};
+    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    block: |
+          location /thredds/{{ item.1 }}/{{ item.0.path | replace('/','-') }} {
+            proxy_pass http://{{ item.0.path | replace('/', '-') }};
           }
-    marker: "#{mark} {{ item.path | replace('/', '-') }} location block"
-  with_items: "{{ collections }}"
+    marker: "#{mark} {{ item.1 }}/{{ item.0.path | replace('/', '-') }} location block"
+  with_subelements: 
+    - "{{ collections }}"
+    - services
+
+- name: Create location blocks for main catalog & restrictedAccess
+  blockinfile:
+    path: "{{ nginx_conf }}"
+    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    block: |
+          location /thredds/{{ item }} {
+            proxy_pass http://{{ item }};
+          }
+    marker: "#{mark} {{ item }} location block"
+  with_items:
+    - "{{ catalog_upstream }}"
+    - "{{ restricted_upstream }}"
+
+- name: Create location block for /thredds uri (which redirects to main catalog)
+  blockinfile:
+    path: "{{ nginx_conf }}"
+    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    block: |
+        location /thredds {
+          proxy_pass http://{{ catalog_upstream }};
+        }
+    marker: "#{mark} /thredds location block"

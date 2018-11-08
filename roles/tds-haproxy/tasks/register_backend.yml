@@ -1,19 +1,32 @@
-- name: Register at load-balancer into default backend
+- name: Register at HAProxy into main catalog's backend
   vars:
-    ansible_become: "{{ hostvars[default_gateway].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
-  lineinfile:
-    path: "{{ hostvars[default_gateway].haproxy_conf }}"
-    line: "\tserver {{ ansible_hostname }} {{ default_host  }} cookie {{ ansible_hostname }}"
-    state: present
-    insertafter: "backend {{ hostvars[default_gateway].default_backend }}\n"
-  delegate_to: "{{ default_gateway }}"
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
+  blockinfile:
+    marker: "\t#{mark} {{ ansible_hostname }}'s register in catalog's backend"
+    path: "{{ hostvars[item.gateway].haproxy_conf }}"
+    block: "\tserver {{ ansible_hostname }} {{ item.host  }}:{{ item.port }} cookie {{ ansible_hostname }}"
+    insertafter: "backend {{ hostvars[item.gateway].catalog_backend }}"
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ replicas }}"
+
+- name: Register at HAProxy into restritedAccess backend
+  vars:
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
+  blockinfile:
+    marker: "\t#{mark} {{ ansible_hostname }}'s register in restrictedAccess backend"
+    path: "{{ hostvars[item.gateway].haproxy_conf }}"
+    block: "\tserver {{ ansible_hostname }} {{ item.host  }}:{{ item.port }} cookie {{ ansible_hostname }}"
+    insertafter: "backend {{ hostvars[item.gateway].restricted_backend }}"
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ replicas }}"
 
 - name: Register at collections' specific backend 
   vars:
     ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
-  lineinfile:
+  blockinfile:
+    marker: "\t#{mark} {{ ansible_hostname }}'s register in {{ item.collection.path | replace('/', '-') }} backend"
     path: "{{ hostvars[item.gateway].haproxy_conf }}"
-    line: "\t server {{ ansible_hostname }} {{ item.host }} cookie {{ ansible_hostname }}"
+    block: "\t server {{ ansible_hostname }} {{ item.host }}:{{ item.port }} cookie {{ ansible_hostname }}"
     insertafter: "backend {{ item.collection.path | replace('/', '-') }}"
   delegate_to: "{{ item.gateway }}"
   with_items: "{{ replicas }}"

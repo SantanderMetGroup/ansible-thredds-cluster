@@ -1,21 +1,34 @@
 ---
-- name: Create ACL for each collection(1)
-  lineinfile:
-    path: "{{ haproxy_conf }}"
-    line: "\tacl {{ item.path | replace('/', '-') }} path_beg /thredds/{{ item.path | replace('/', '-') }}"
-    insertafter: "option forwardfor"
-  with_items: "{{ collections }}"
+- name: Set facts for backend servers to register
+  set_fact:
+    catalog_backend: "{{ catalog_backend }}"
+    restricted_backend: "{{ restricted_backend }}"
 
-- name: Create ACL for each collection(2)
+- name: Create ACL for each service+collection
   lineinfile:
     path: "{{ haproxy_conf }}"
-    line: "\tacl {{ item.0.path | replace('/','-') }} path_beg {{ item.1 }}/{{ item.0.path }}"
+    line: "\tacl {{ item.0.path | replace('/','-') }} path_beg /thredds/{{ item.1 }}/{{ item.0.path }}"
     insertafter: "option forwardfor"
   with_subelements:
     - "{{ collections }}"
     - services
 
-- name: Define ACL rule behaviour
+- name: Create ACLs for main catalog & restrictedAccess
+  lineinfile:
+    path: "{{ haproxy_conf }}"
+    line: "\tacl {{ item }} path_beg /thredds/{{ item }}"
+    insertafter: "option forwardfor"
+  with_items:
+    - "{{ catalog_backend }}"
+    - "{{ restricted_backend }}"
+
+- name: Create ACL for /thredds uri (which redirects to main catalog)
+  lineinfile:
+    path: "{{ haproxy_conf }}"
+    line: "\t acl {{ catalog_backend }} path_end thredds"
+    insertafter: "option forwardfor"
+
+- name: Define collections' ACL rule behaviour
   lineinfile: 
     path: "{{ haproxy_conf }}"
     line: "\tuse_backend {{ item.path | replace('/', '-') }} if {{ item.path | replace('/', '-') }}"
@@ -23,16 +36,40 @@
     firstmatch: True
   with_items: "{{ collections }}"
 
-- name: Create backend block for each ACL rule
+- name: Define main catalog's & restrictedAccess ACLs rule behaviour
+  lineinfile:
+    path: "{{ haproxy_conf }}"
+    line: "\tuse_backend {{ item }} if {{ item }}"
+  with_items:
+    - "{{ catalog_backend }}"
+    - "{{ restricted_backend }}"
+
+- name: Create backend block for each collection
   lineinfile:
     path: "{{ haproxy_conf }}"
     line: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
 
+- name: Create backend block for main catalog &  restrictedAccess
+  lineinfile:
+    path: "{{ haproxy_conf }}"
+    line: "backend {{ item }}"
+  with_items:
+    - "{{ catalog_backend }}"
+    - "{{ restricted_backend }}"
 
-- name: Set cookie persistence for authentication in mapped backends
+- name: Set cookie persistence for authentication in collection backends
   lineinfile:
     path: "{{ haproxy_conf }}"
     line: "\tcookie JSESSIONID prefix nocache"
     insertafter: "backend {{ item.path | replace('/', '-') }}"
   with_items: "{{ collections }}"
+
+- name: Set cookie persistence for authentication in main catalog's & restrictedAccess backend
+  lineinfile:
+    path: "{{ haproxy_conf }}"
+    line: "\t cookie JSESSIONID prefix nocache"
+    insertafter: "backend {{ item }}"
+  with_items:
+    - "{{ catalog_backend }}"
+    - "{{ restricted_backend }}"
