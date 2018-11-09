@@ -1,20 +1,32 @@
 Role haproxy
 =========
- 
-This roles installs HAProxy compiling the source code and copies an initial configuration file. Further configuration is required by running the role haproxy-gateway-tds.
+
+This role implements an initial configuration of HAProxy templating the configuration file.
+
+Requirements
+------------
 
 Role Variables
 --------------
-* haproxy_url - URL for the download of HAProxy
-* haproxy_version: version of HAProxy's software
-* haproxy_filename - "{{ haproxy_version }}.tar.gz" - Name of the file that will be downloaded
-* haproxy_directory: Directory where HAProxy will be installed
-* haproxy_user -> Value of the `user` parameter passed to the `global` section of HAProxy's configuration file. User that will run the service.
-* haproxy_group -> Value of the `group` parameter passed to the global section of HAProxy's configuration file. Group the user belongs to.
-* haproxy_mode -> Value of the `mode` parameter passed to the `listen`section of HAProxy's configuration file. Mode HAProxy will work on (can be *http* or *tcp*)
-* haproxy_mode -> Value of the `chroot` parameter passed to the `global` section of HAProxy's configuration file. Equivalent to `chroot` that will be executed by the user before dropping privileges.
-* haproxy\_bind\_address and haproxy\_bind\_port -> Bind parameters passed to the `listen`section. IP address ('\*' stands for all interfaces in the host) and port the load balancer will be listening on.
-* haproxy\_balance\_mode -> Balance algorithm the load balancer will execute.
-* haproxy_servers -> Array of servers that will be located in the backend, each of them defined by its listening socket (IP address + port)
+
+haproxy\_user: User that will run the Haproxy master process
+haproxy\_group: Group _haproxy\_user_ belongs to
+haproxy\_mode: Load balancing mode (must be _http_ or _tcp_)
+haproxy\_chroot: Directory _haproxy\_user_ will lockself itself into before dropping privileges
+default\_frontend: Name of the default frontend, where the load balancer will listen
+haproxy\_balance_mode: Load Balancing Scheme ('roundrobin', 'leastconn','uri','source'... read [HAPRoxy docs](http://cbonte.github.io/haproxy-dconv/1.8/configuration.html#4.2-balance) for further info)
+bind\_address: IP address HAProxy will be listening to (use '*' for all interfaces)
+bind\_port: TCP port HAProxy will be listening to.
+
+Dependencies
+------------
+
+This role assumes you have previously installed HAProxy using either[yum](haproxy) or [source](haproxy) roles, as it uses some of their variables.
+
+References
+----------
+
+[HAProxy Documentation](http://cbonte.github.io/haproxy-dconv/1.8/configuration.html)
+
 
 

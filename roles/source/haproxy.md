@@ -11,16 +11,16 @@ dependencies: [haproxy]
 ## Defaults
 
 ```haproxy
-haproxy_major_version: 1.8
-haproxy_version: haproxy-1.8.12
-haproxy_url: "{{ 'http://www.haproxy.org/download/' ~ haproxy_major_version ~ '/src/' ~ haproxy_version ~ '.tar.gz' }}"
-haproxy_directory: "{{ ansible_env.HOME ~ '/haproxy_install'}}"
-haproxy_install_file: "{{ playbook_dir ~ '/downloads/' ~ haproxy_version ~ '.tar.gz' }}"
-haproxy_root: "{{ ansible_env.HOME ~ '/haproxy' }}"
-haproxy_bin: "{{ haproxy_root ~ '/usr/local/sbin/haproxy' }}"
-haproxy_conf_dir: "{{ haproxy_root ~ '/conf' }}"
-haproxy_conf_file: haproxy.cfg
-haproxy_errors: "{{ haproxy_root ~ '/errors' }}"
+haproxy\_major_version: HAProxy major version
+haproxy\_version: Haproxy version, must be in format _haproxy-x.y.z_
+haproxy\_url: HAProxy download URL
+haproxy\_install_file: Path in local host to download HAProxy
+haproxy\_directory: Path to unarchive downloaded file
+haproxy\_root: HAProxy root directory
+haproxy\_bin: Path to HAProxy's executable
+haproxy\_conf_dir: Directory for HAProxy's configuration files
+haproxy\_conf_file: Name of HAProxy's configuration file
+haproxy\_errors: Directory for Haproxy's HTTP errors files
 ```
 
 ## Vars
