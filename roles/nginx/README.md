@@ -1,19 +1,19 @@
 Role nginx
 =========
 
-This role this role implements an initial configuration of Nginx templating the configuration file
+This role implements an initial configuration of Nginx templating the configuration file
 
 
 Role Variables
 --------------
 
-bind\_address: IP address Nginx will be listening to (insert '*' or '' to listen on all interfaces)
-bind\_port: TCP port Nginx will be listening to
+* `bind_address`: IP address Nginx will be listening to (insert '*' or '' to listen on all interfaces)
+* `bind_port`: TCP port Nginx will be listening to
 
 Dependencies
 ------------
 
-This role assumes you have previously installed Nginx using either[yum](nginx) or [source](nginx) roles, as it uses some of their variables.
+This role assumes you have previously installed Nginx using either [yum](../yum/nginx.md) or [source](../source/nginx.md) roles, as it uses some of their variables.
 
 References
 ----------
