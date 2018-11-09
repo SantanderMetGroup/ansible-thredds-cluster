@@ -1,10 +1,11 @@
 # source-haproxy
 
-Role to install haproxy by downloading and compiling it from source code in every host; it also creates a directory for configuration files and copies some .html files for different HTTP errors.
+Role to install HAProxy by downloading and compiling it from source code in every host; it also creates a directory for configuration files and copies some .html files for different HTTP errors.
 
 ## Required vars
 
 ```haproxy
+dependencies: [haproxy]
 ```
 
 ## Defaults
