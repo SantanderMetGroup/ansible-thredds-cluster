@@ -1,15 +1,14 @@
-Role nginx-gateway-tds
+Role gateway-nginx
 ======================
 
-This role completes the configuration of Nginx by including in the configuration file the definition of the *upstreams* and their corresponding *location* blocks
-using the information provided in the deployment model in order to balance TDS instances.
+This role completes the configuration of Nginx by including in the configuration file the definition of the *upstreams* and their corresponding *location* blocks using the information provided in the deployment model in order to balance TDS instances.
 
 
 Role Variables
 --------------
 
-catalog_upstream: Name of the upstream for main catalog request
-restricted_upstream: Name of the upstream for restricted requests (authentication needed)
+* `catalog_upstream`: Name of the upstream for main catalog request
+* `restricted_upstream`: Name of the upstream for restricted requests (authentication needed)
 
 Dependencies
 ------------
