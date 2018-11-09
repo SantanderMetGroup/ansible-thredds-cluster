@@ -1,11 +1,10 @@
 - name: Register as backend server in load-balancer
   vars:
-    ansible_become: "{{ hostvars[default_gateway].ansible_become | default(False) }}"
-  command: "ipvsadm -a -t {{ hostvars[default_gateway].vip }}:{{ hostvars[default_gateway].bind_port  }} -r {{ rip }} -g"
-  delegate_to: "{{ default_gateway }}"
-
-- name: Save rules
-  vars:
-    ansible_become: "{{ hostvars[default_gateway].ansible_become | default(False) }}"
-  shell: "ipvsadm-save -n > {{ hostvars[default_gateway].ipvs_rules }}"
-  delegate_to: "{{ default_gateway }}"
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}"
+  blockinfile:
+    path: "{{ hostvars[item.gateway].ipvs_rules }}"
+    insertafter: EOF
+    block: "-a -t {{ hostvars[item.gateway].vip }}:{{hostvars[item.gateway].bind_port }} -r {{ rip }} -g"
+    marker: "#{mark} {{ ansible_hostname }} register"
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ replicas }}"
