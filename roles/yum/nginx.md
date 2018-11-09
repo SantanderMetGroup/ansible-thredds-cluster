@@ -11,8 +11,9 @@ dependencies: [nginx]
 ## Defaults
 
 ```nginx
-nginx_repo_url: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
-#nginx_repo_url: http://nginx.org/packages/centos/6/noarch/RPMS/nginx-release-centos-6-0.el6.ngx.noarch.rpm
+centos_version: Centos Major Version of remote host
+architecture: CPU architecture of remote host
+nginx_repo_url: URL for repository update
 nginx_root: Nginx root directory
 nginx_static: Path to Nginx static content directory
 nginx_conf: Path to Nginx's configuration file
