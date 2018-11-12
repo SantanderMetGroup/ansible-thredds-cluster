@@ -67,7 +67,7 @@
         dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/"
       with_nested:
         - "{{ tds}}"
-        - ["thredds", "esg-orp"]
+        - ["thredds"] # Parece que el orp no hace falta, esg-security en el thredds
 
     - name: Copy truststore and keystore
       copy:
@@ -100,7 +100,33 @@
         replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
         backup: yes
       with_items: "{{ tds }}"
-      
+
+    - name: Create datasets directory
+      become: True
+      file:
+        status: directory
+        path: /esg/data
+        owner: vagrant
+        group: vagrant
+
+    - name: Syncronize datasets
+      synchronize:
+        src: /esg/data
+        dest: /esg/data
+
+    - name: Install openjdk (required for keytool)
+      yum:
+        state: present
+        name: java-1.8.0-openjdk
+
+    - name: Copy hostcert.pem
+      copy:
+        src: /etc/certs/hostcert.pem
+        dest: /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+
+    - name: Add hostcert.pem to miniconda cacerts
+      command: keytool -import -trustcacerts -alias smg -keystore /home/vagrant/miniconda/envs/f2f/jre/lib/security/cacerts -file /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+
     - name: restart TDS instances
       supervisorctl:
         name: "{{ item.name }}"

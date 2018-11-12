@@ -34,17 +34,15 @@
         name: "{{ item.name }}"
         state: restarted
         supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items:
-        - "{{ tds }}"
-      tags: ['restart']
+      with_items: "{{ tds }}"
+      tags: restart
 
     - name: Stop TDS
       supervisorctl:
         name: "{{ item.name }}"
         state: stopped
         supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items:
-        - "{{ tds }}"
+      with_items: "{{ tds }}"
       tags: ['stop', 'never']
 
     - name: Stop supervisor 
