@@ -25,7 +25,7 @@
 - name: Create ACL for /thredds uri (which redirects to main catalog)
   lineinfile:
     path: "{{ haproxy_conf }}"
-    line: "\t acl {{ catalog_backend }} path_end thredds"
+    line: "\t acl {{ catalog_backend }} path_reg thredds/?$"
     insertafter: "option forwardfor"
 
 - name: Define collections' ACL rule behaviour
