@@ -4,7 +4,7 @@
   blockinfile:
     path: "{{ hostvars[item.gateway].ipvs_rules }}"
     insertafter: EOF
-    block: "-a -t {{ hostvars[item.gateway].vip }}:{{hostvars[item.gateway].bind_port }} -r {{ rip }} -g"
+    block: "-a -t {{ hostvars[item.gateway].vip }}:{{hostvars[item.gateway].bind_port }} -r {{ item.host }} -g"
     marker: "#{mark} {{ ansible_hostname }} register"
   delegate_to: "{{ item.gateway }}"
   with_items: "{{ replicas }}"
