@@ -1,3 +1,49 @@
+- name: Generate DRS and local publication
+  hosts: gateway
+  tasks:
+    - name: Copy esgf-httpd.conf with cog options removed
+      copy: src=esgf-httpd.conf dest=/etc/httpd/conf/esgf-httpd.conf
+
+    - name: Copy sftlf.nc to /esg/data/test
+      copy: src=sftlf.nc dest=/esg/data/test/sftlf.nc
+
+    - name: Copy esgf_policies_local.xml
+      copy: src=esgf_policies_local.xml dest=/esg/config/esgf_policies_local.xml
+
+    - name: mkdir /esg/data/drs
+      file:
+        state: directory
+        path: /esg/data/drs
+
+    - name: Copy esg.test.ini
+      copy: src=esg.test.ini dest=/esg/config/esgcet/esg.test.ini
+
+    - name: esgdrs
+      command: esgdrs {{ item }} --project test --symlink  --set-value project=Test /esg/data/test/
+      args:
+        chdir: /esg/data/drs
+      with_items: [list, tree, todo, upgrade]
+      tags: [never,drs]
+
+    - name: esgmapfile
+      command: esgmapfile --project test Test/
+      args:
+        chdir: /esg/data/drs
+      tags: [never,publish]
+
+    - name: esgpublish
+      shell: "yes no | esgpublish --project test --map mapfiles/ --service fileservice --thredds"
+      args:
+        chdir: /esg/data/drs
+      ignore_errors: True
+      tags: [never,publish]
+
+    - name: Link esg_dataroot to esgcet
+      file:
+        state: link
+        src: /esg/content/thredds/esgcet
+        dest: /esg/content/thredds/esg_dataroot
+
 - name: Set up the gateway
   hosts: gateway
   vars:
@@ -10,11 +56,25 @@
     - role: gateway-proxy
     - role: tds-modproxy
   tasks:
+    - name: Copy hostcert.pem and hostkey.pem
+      copy: src={{ item }} dest=/etc/certs/{{ item }}
+      with_items: [hostcert.pem, hostkey.pem]
+
+    - name: Copy keystore and truststore
+      copy: src={{ item }} dest=/esg/config/tomcat/{{ item }}
+      with_items: [keystore-tomcat, esg-truststore.ts, cacert.pem]
+
     - name: Comment ProxyPass /thredds in esgf-httpd.conf
       replace:
         path: "{{ httpd_conf_file }}"
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
+
+    - name: Add DocumentRoot {{ httpd_htdocs }} to {{ httpd_conf_file }}
+      lineinfile:
+        path: "{{ httpd_conf_file }}"
+        insertafter: NameVirtualHost \\*:80
+        line: DocumentRoot /var/www/html
 
     - name: Rewrite /thredds to /thredds/catalog/catalog.html
       blockinfile:
@@ -29,7 +89,12 @@
         path: /esg/config/esgf.properties
         regexp: https://localhost/esg-orp
         replace: https://{{ ansible_eth1.ipv4.address }}/esg-orp
-        backup: yes
+
+    - name: Replace localhost by gateway IP in thredds web.xml
+      replace:
+        path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
+        regexp: localhost/esg-orp
+        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
 
     - name: Restart ESGF node
       command: 'esg-node restart'
@@ -90,29 +155,21 @@
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
         regexp: <filter>\n\s+<filter-name>AccessLoggingFilter(.|\n)*</filter-mapping>
         replace: "<!-- Removed AccessLoggingFilter -->"
-        backup: yes
-      with_items: "{{ tds }}"
-
-    - name: Replace localhost by gateway IP in thredds web.xml
-      replace:
-        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-        regexp: localhost/esg-orp
-        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
-        backup: yes
       with_items: "{{ tds }}"
 
     - name: Create datasets directory
       become: True
       file:
-        status: directory
+        state: directory
         path: /esg/data
         owner: vagrant
         group: vagrant
 
     - name: Syncronize datasets
       synchronize:
-        src: /esg/data
+        src: /esg/data/
         dest: /esg/data
+        archive: True
 
     - name: Install openjdk (required for keytool)
       yum:
