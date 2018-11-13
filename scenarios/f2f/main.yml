@@ -6,6 +6,7 @@
 
     - name: Copy sftlf.nc to /esg/data/test
       copy: src=sftlf.nc dest=/esg/data/test/sftlf.nc
+      tags: drs
 
     - name: Copy esgf_policies_local.xml
       copy: src=esgf_policies_local.xml dest=/esg/config/esgf_policies_local.xml
@@ -14,9 +15,11 @@
       file:
         state: directory
         path: /esg/data/drs
+      tags: drs
 
     - name: Copy esg.test.ini
       copy: src=esg.test.ini dest=/esg/config/esgcet/esg.test.ini
+      tags: drs
 
     - name: esgdrs
       command: esgdrs {{ item }} --project test --symlink  --set-value project=Test /esg/data/test/
@@ -172,6 +175,7 @@
         archive: True
 
     - name: Install openjdk (required for keytool)
+      become: True
       yum:
         state: present
         name: java-1.8.0-openjdk
@@ -181,8 +185,19 @@
         src: /etc/certs/hostcert.pem
         dest: /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
 
+    - name: Install pyexpect
+      pip:
+        name: pexpect
+        executable: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/bin/pip"
+
     - name: Add hostcert.pem to miniconda cacerts
-      command: keytool -import -trustcacerts -alias smg -keystore /home/vagrant/miniconda/envs/f2f/jre/lib/security/cacerts -file /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+      expect:
+        command: keytool -import -trustcacerts -alias smg -keystore /home/vagrant/miniconda/envs/f2f/jre/lib/security/cacerts -file /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+        responses:
+          password: "changeit"
+          Trust: "yes"
+      environment:
+        PYTHONPATH: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/lib/python2.7/site-packages/"
 
     - name: restart TDS instances
       supervisorctl:
