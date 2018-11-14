@@ -6,7 +6,7 @@ Three vagrant machines are provided:
 - server 1 and 2 - Two servers where TDS will be installed.
 
 ```bash
-vagrant up esgf server1
+vagrant up esgf server1 server2
 vagrant ssh esgf
 ```
 
@@ -18,7 +18,6 @@ sudo su -
 setenforce 0
 
 cd /root
-yum install -y git
 git clone -b devel --recursive https://github.com/SantanderMetGroup/ansible-thredds-cluster
 
 # Install ESGF node (https://github.com/ESGF/esgf-installer/wiki/ESGF-Installation-Using-Autoinstaller)

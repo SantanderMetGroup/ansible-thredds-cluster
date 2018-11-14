@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi"/>
+    <property name="dataset_version" value="20160531"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v1"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="9002034"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="362c5f23e6d758f7f85eb4e5ea9f3748d37ea525de65dee092aaa01de962f152"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">9002034</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44620551"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="52640287d824796a95af937bdbc14911e4cd83992f033869a5dee6a8f3f89e6b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44620551</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44569496"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="2a501b993b221fbe1ffc7abfb28ecdf7a00e76791aef15801cc73a2299f9fa67"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44569496</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44492073"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="2c26debf9bb3be90d61a1de5ba22d4ac920fbf8c558b22713dc813217c607d3d"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44492073</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44811101"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="0cf30e435777e31ab840beef59f1bac14b41e4d49601ac6b9bf66277698ac4c5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44811101</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44840212"/>
+      <property name="mod_time" value="2016-05-11 13:40:29"/>
+      <property name="checksum" value="a853e91d21d127e5d71f5cfdc5ed205187c17bdacc6e14053dd6a0abab4e4202"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44840212</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="44659756"/>
+      <property name="mod_time" value="2016-05-11 13:40:28"/>
+      <property name="checksum" value="46c17c94295a652e46c33bc8d5c5e552fee81652d262093b6355ce9f50667d85"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">44659756</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.v20160531.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" name="clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="18044859"/>
+      <property name="mod_time" value="2016-05-11 13:40:28"/>
+      <property name="checksum" value="1b326d15916a6b01f53f436ce60618593872b3bc09d610361622fe9a76da27ee"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <dataSize units="bytes">18044859</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwvi" vocabulary_name="atmosphere_cloud_liquid_water_content" units="kg m-2">Liquid Water Content</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2011-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation.1" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="12053"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clwvi.clwvi.20160531.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" ncoords="1827"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clwvi/v20160531/clwvi_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850"/>
+    <property name="dataset_version" value="20160531"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v1"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="6121052"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="b862942a347883800362da3dd9dd5717c970c0ba17340d5c303400e5f8ab70e4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">6121052</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="28946074"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="0ca25a8bf9f3f56bb1d303a6e01b15f481dd308767fc7860f0516ab86b3d0055"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">28946074</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="28743373"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="4b9c152ee18908d4c123943cba661697ecb69b24127f4fd5517f13fc64f51997"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">28743373</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29232488"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="81fd6b249ad4108ba7244fe9bb4112cbab436325a7d10bb54b204512c926b211"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">29232488</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29625952"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="caa0d9360d5d6aebda81413d075aff75b48eaeb2fe020890cab3a827e9a8e7b4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">29625952</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29196736"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="1c30d9ba4923bfd9dcd574d411ef1511dfb50507342325370afcb35ff05bbb30"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">29196736</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29703575"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="1ceeb7ec1196ec258b6d6109e9a79ea6df1241256ab4de0bc5c129d1d4c2114c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">29703575</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.v20160531.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" name="clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="12055061"/>
+      <property name="mod_time" value="2016-05-10 16:57:56"/>
+      <property name="checksum" value="099a2ab8aa4c935b3041687d44619add517b8a59be5095b8da2cb979aee99ef4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <dataSize units="bytes">12055061</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clfr850" vocabulary_name="Cloud fraction" units="1">Cloud fraction</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2011-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation.1" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="12053"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.clfr850.clfr850.20160531.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" ncoords="1827"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/clfr850/v20160531/clfr850_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

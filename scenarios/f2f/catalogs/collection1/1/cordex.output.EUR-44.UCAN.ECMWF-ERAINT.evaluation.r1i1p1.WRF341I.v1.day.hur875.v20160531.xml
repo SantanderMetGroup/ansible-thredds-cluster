@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875"/>
+    <property name="dataset_version" value="20160531"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v1"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="12275946"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="427dc60745cbc0a72aa17e3fbf2f58c844bc75ae5dccc3130046d772e522ae64"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">12275946</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61098714"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="83dd46142fae90ade675ee98aa470e0b05ccb1c31c63e3d5bd0d6088e255ed24"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61098714</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61128588"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="e301ebc9311d25fea5c09bfbe1c06d2261898421205f7d6bbf4ae69898421507"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61128588</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61154628"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="d66abddefbb5ff409e62812a2d338536ffe486af76ffe24a5372ddcbdb29d424"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61154628</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61098142"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="6d12801e6dd5cc3c7bf8d10a909605d93a8f582f6b8033af29aa34f32d97cea3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61098142</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61117025"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="9f156af5f84dabbf7a4a6c39e4bbf69252f88b238cb124e5a290ed0b1427d3ce"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61117025</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61080700"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="8b1b2643b86780fadbceba1f568818b8559f0d522570ac5f0fa94ca08c23deba"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">61080700</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.v20160531.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" name="hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="24524564"/>
+      <property name="mod_time" value="2016-05-10 16:58:35"/>
+      <property name="checksum" value="d499d17c86b7e1e128dc126d571a2ee2316246e3bcd5023e517d958b354b597a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <dataSize units="bytes">24524564</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hur875" vocabulary_name="relative_humidity" units="1">Relative humidity</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2011-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation.1" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="12053"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hur875.hur875.20160531.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" ncoords="1827"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hur875/v20160531/hur875_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>
