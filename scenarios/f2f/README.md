@@ -33,7 +33,7 @@ script -c '/usr/local/bin/esg-autoinstall' installation.log
 cd /root/ansible-thredds-cluster/scenarios/f2f
 source /usr/local/conda/bin/activate esgf-pub
 pip install ansible==2.5
-ansible-playbook main.yml --tags drs,publish
+ansible-playbook test-publication.yml # This step is not necessary, catalogs are already generated
 ansible-playbook main.yml
 ansible-playbook main.yml --tags restart
 ```

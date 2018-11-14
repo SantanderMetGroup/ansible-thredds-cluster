@@ -1,19 +1,19 @@
 - name: Create a common catalog.xml in every instance
   copy:
     src: catalog.xml
-    dest: "{{ item.tds_content_root | default([tomcat_base ~ item.name ~ '/content']) }}/thredds/catalog.xml"
+    dest: "{{ item.tds_content_root | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/catalog.xml"
   with_items: "{{ tds }}"
 
 - name: Create directories for collections in instances 
   file:
-    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ item.tds_instance.name ~ '/content') }}/thredds/{{ item.collection.path }}"
+    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ '/' ~ item.tds_instance.name ~ '/content') }}/thredds/{{ item.collection.path }}"
     state: directory
   with_items: "{{ replicas }}"
   tags: update_catalogs
 
 - name: Link collection in the instance root catalog
   blockinfile:
-    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ item.tds_instance.name ~ '/content') }}/thredds/catalog.xml"
+    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ '/' ~ item.tds_instance.name ~ '/content') }}/thredds/catalog.xml"
     marker: "<!-- {mark} {{ item.collection.name }} -->"
     insertbefore: "</catalog>"
     block: |

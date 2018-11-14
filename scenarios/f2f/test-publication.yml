@@ -1,0 +1,42 @@
+- name: Generate DRS and local publication
+  hosts: gateway
+  tasks:
+    - name: Copy esgf-httpd.conf with cog options removed
+      copy: src=esgf-httpd.conf dest=/etc/httpd/conf/esgf-httpd.conf
+
+    - name: Copy sftlf.nc to /esg/data/test
+      copy: src=sftlf.nc dest=/esg/data/test/sftlf.nc
+
+    - name: Copy esgf_policies_local.xml
+      copy: src=esgf_policies_local.xml dest=/esg/config/esgf_policies_local.xml
+
+    - name: mkdir /esg/data/drs
+      file:
+        state: directory
+        path: /esg/data/drs
+
+    - name: Copy esg.test.ini
+      copy: src=esg.test.ini dest=/esg/config/esgcet/esg.test.ini
+
+    - name: esgdrs
+      command: esgdrs {{ item }} --project test --symlink  --set-value project=Test /esg/data/test/
+      args:
+        chdir: /esg/data/drs
+      with_items: [list, tree, todo, upgrade]
+
+    - name: esgmapfile
+      command: esgmapfile --project test Test/
+      args:
+        chdir: /esg/data/drs
+
+    - name: esgpublish
+      shell: "yes no | esgpublish --project test --map mapfiles/ --service fileservice --thredds"
+      args:
+        chdir: /esg/data/drs
+      ignore_errors: True # Ignore error (due to interactive prompt?)
+
+    - name: Link esg_dataroot to esgcet
+      file:
+        state: link
+        src: /esg/content/thredds/esgcet
+        dest: /esg/content/thredds/esg_dataroot
