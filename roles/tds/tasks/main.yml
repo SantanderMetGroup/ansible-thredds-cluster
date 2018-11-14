@@ -78,7 +78,7 @@
 
 - name: Create content/thredds/ directories in instances
   file:
-    path: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds"
+    path: "{{ item.tds_content_root | default(tomcat_base,item.name ~ '/content') }}/thredds"
     state: directory
   with_items: "{{ tds }}"
 
@@ -94,52 +94,3 @@
     src: threddsConfig.xml
     dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/threddsConfig.xml"
   with_items: "{{ tds }}"
-
-- name: Create a common catalog.xml in every instance
-  copy:
-    src: catalog.xml
-    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/catalog.xml"
-  with_items: "{{ tds }}"
-
-#################### Deploy catalogs and datasets ####################
-- name: Create directories for collections in instances 
-  file:
-    dest: "{{ item.0.tds_content_root | default([tomcat_base,item.0.name,'content']|join('/')) }}/thredds/{{ item.1.path }}"
-    state: directory
-  with_nested:
-    - "{{ tds }}"
-    - "{{ collections }}"
-  when: item.1 is defined
-  tags: ["update_catalogs"]
-
-- name: Link collection in the instance root catalog
-  blockinfile:
-    dest: "{{ item.0.tds_content_root | default([tomcat_base,item.0.name,'content']|join('/')) }}/thredds/catalog.xml"
-    marker: "<!-- {mark} {{ item.1.path }} -->"
-    insertbefore: "</catalog>"
-    block: |
-      <catalogRef xlink:title="{{ item.1.path }}" xlink:href="{{ item.1.path }}/catalog.xml" name=""/>
-  with_nested: 
-    - "{{ tds }}"
-    - "{{ collections }}"
-  when: item.1 is defined
-  tags: update_catalogs
-
-- name: Synchronize catalogs
-  synchronize:
-    src: "{{ item.collection.catalogs.src }}/"
-    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base+'/'+item.tds_instance.name+'/content') }}/thredds/{{ item.collection.path }}"
-    archive: False
-    recursive: True
-  with_items: "{{ replicas }}"
-  tags: update_catalogs
-    
-- name: Synchronize datasets
-  synchronize:
-    src: "{{ item.src }}/"
-    dest: "{{ tomcat_home }}/content/thredds/public/{{ item.dest | default('') }}/"
-    archive: False
-    recursive: True
-  with_items: "{{ datasets }}"
-  when: datasets is defined
-  tags: update_catalogs

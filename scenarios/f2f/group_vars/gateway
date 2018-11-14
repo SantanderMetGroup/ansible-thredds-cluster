@@ -3,12 +3,21 @@ tomcat_base: '/usr/local'
 
 collections:
   - &collection1
-    path: esg_dataroot
+    name: collection1
+    path: collection1
     catalogs:
-      src: /esg/content/thredds/esgcet
+      src: catalogs/collection1
+    services: [dodsC, fileServer, catalog]
+
+  - &collection2
+    name: collection2
+    path: collection2
+    catalogs:
+      src: catalogs/collection2
     services: [dodsC, fileServer, catalog]
 
 tds:
+  &tomcat
   - name: tomcat
 
 replicas:
@@ -16,6 +25,5 @@ replicas:
     host: "{{ ansible_eth1.ipv4.address }}"
     route: "{{ ansible_nodename }}"
     port: 8223
-    tds_instance:
-      name: tomcat
+    tds_instance: *tomcat
     collection: *collection1
