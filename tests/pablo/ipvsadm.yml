@@ -5,6 +5,8 @@
 - name: Configure load balancer
   become: True
   hosts: gateways
+  vars:
+    vip: "{{ ansible_eth1.ipv4.address }}"
   roles:
     - role: yum
       dependencies: [ipvsadm]
