@@ -15,7 +15,6 @@ Role Variables
 * `haproxy_chroot`: Directory _haproxy\_user_ will lockself itself into before dropping privileges
 * `default_frontend`: Name of the default frontend, where the load balancer will listen
 * `haproxy_balance_mode`: Load Balancing Scheme ('roundrobin', 'leastconn','uri','source'... read [HAPRoxy docs](http://cbonte.github.io/haproxy-dconv/1.8/configuration.html#4.2-balance) for further info)
-* `bind_address`: IP address HAProxy will be listening to (use '*' for all interfaces)
 * `bind_port`: TCP port HAProxy will be listening to.
 
 Dependencies

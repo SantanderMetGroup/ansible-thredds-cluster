@@ -29,7 +29,7 @@
 - name: Create location blocks for collections+service
   blockinfile: 
     path: "{{ nginx_conf }}"
-    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    insertafter: "listen {{ bind_port }};"
     block: |
           location /thredds/{{ item.1 }}/{{ item.0.path | replace('/','-') }} {
             proxy_pass http://{{ item.0.path | replace('/', '-') }};
@@ -42,7 +42,7 @@
 - name: Create location blocks for main catalog & restrictedAccess
   blockinfile:
     path: "{{ nginx_conf }}"
-    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    insertafter: "listen {{ bind_port }};"
     block: |
           location /thredds/{{ item }} {
             proxy_pass http://{{ item }};
@@ -55,7 +55,7 @@
 - name: Create location block for /thredds uri (which redirects to main catalog)
   blockinfile:
     path: "{{ nginx_conf }}"
-    insertafter: "listen {{ bind_address }}:{{ bind_port }};"
+    insertafter: "listen {{ bind_port }};"
     block: |
         location /thredds {
           proxy_pass http://{{ catalog_upstream }};

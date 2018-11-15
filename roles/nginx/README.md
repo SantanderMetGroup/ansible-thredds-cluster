@@ -7,7 +7,6 @@ This role implements an initial configuration of Nginx templating the configurat
 Role Variables
 --------------
 
-* `bind_address`: IP address Nginx will be listening to (insert '*' or '' to listen on all interfaces)
 * `bind_port`: TCP port Nginx will be listening to
 
 Dependencies

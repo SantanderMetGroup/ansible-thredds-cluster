@@ -8,7 +8,7 @@
 - name: Create location block for static files
   blockinfile:
     path: "{{ hostvars[replica.gateway].nginx_conf }}"
-    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    insertafter: "listen {{hostvars[replica.gateway].bind_port }};"
     block: |4
         location ~ .*(.png|.jpg|.gif|.css)$ {
           root static;
@@ -19,7 +19,7 @@
 - name: Create location block for static HTML files for TDS 
   blockinfile: 
     path: "{{ hostvars[replica.gateway].nginx_conf }}"
-    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    insertafter: "listen {{hostvars[replica.gateway].bind_port }};"
     block: |4
         location ~ .*{{ item | basename }}$ {
           root static;
@@ -31,7 +31,7 @@
 - name: Create location block for static catalog.html
   blockinfile:
     path: "{{ hostvars[replica.gateway].nginx_conf }}"
-    insertafter: "listen {{ hostvars[replica.gateway].bind_address }}:{{hostvars[replica.gateway].bind_port }};"
+    insertafter: "listen {{hostvars[replica.gateway].bind_port }};"
     block: |4
         location = /thredds/catalog/catalog.html {
           root static;
