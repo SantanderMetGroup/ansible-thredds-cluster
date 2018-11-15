@@ -18,6 +18,10 @@ defaults
   errorfile 503 {{ haproxy_root }}/errors/503.http
   errorfile 504 {{ haproxy_root }}/errors/504.http
   balance {{ haproxy_balance_mode }}
+  timeout connect 5000
+  timeout client  30000
+  timeout server  30000
+  timeout check   5000
 
 frontend {{ default_frontend }}
 	bind *:{{ bind_port }}
