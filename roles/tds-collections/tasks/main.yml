@@ -24,11 +24,25 @@
 - name: Synchronize catalogs
   synchronize:
     src: "{{ item.collection.catalogs.src }}/"
-    dest: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ '/' ~ item.tds_instance.name ~ '/content') }}/thredds/{{ item.collection.path }}"
+    dest: "{{ content_root }}/thredds/{{ item.collection.path }}"
     archive: False
     recursive: True
   with_items: "{{ replicas }}"
+  vars:
+    content_root: "{{ item.tds_instance.tds_content_root | default(tomcat_base ~ '/' ~ item.tds_instance.name ~ '/content') }}"
   tags: update_catalogs
+
+- name: Render datasets
+  blockinfile:
+    path: "{{ content_root }}/thredds/{{ item.0.collection.path }}"
+    block: "{{ item.1 }}"
+    insertbefore: </catalog>
+  with_subelements:
+    - "{{ replicas }}"
+    - collection.datasets
+    - skip_missing: True
+  vars:
+    content_root: "{{ item.0.tds_instance.tds_content_root | default(tomcat_base ~ '/' ~ item.0.tds_instance.name ~ '/content') }}"
     
 - name: Synchronize datasets
   synchronize:
