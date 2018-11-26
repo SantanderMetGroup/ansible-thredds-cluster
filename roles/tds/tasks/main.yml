@@ -3,6 +3,12 @@
   tags: [never, debug]
 
 #################### Tomcat BASE ####################
+- name: Remove existing TDS installation (to avoid conflicts when version changes)
+  file:
+    state: absent
+    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/"
+  with_items: "{{ tds }}"
+  
 - name: Create directory for each tds instance
   file:
     dest: "{{ tomcat_base }}/{{ item.name }}"
@@ -78,13 +84,13 @@
 
 - name: Create content/thredds/ directories in instances
   file:
-    path: "{{ item.tds_content_root | default(tomcat_base,item.name ~ '/content') }}/thredds"
+    path: "{{ item.tds_content_root | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds"
     state: directory
   with_items: "{{ tds }}"
 
 - name: Create soft link from instance content/thredds/public to tomcat
   file:
-    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/public"
+    dest: "{{ item.tds_content_root | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/public"
     src: "{{ tomcat_home }}/content/thredds/public"
     state: link
   with_items: "{{ tds }}"

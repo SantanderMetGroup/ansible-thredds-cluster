@@ -43,13 +43,13 @@
       replace:
         path: /esg/config/esgf.properties
         regexp: https://localhost/esg-orp
-        replace: https://{{ ansible_eth1.ipv4.address }}/esg-orp
+        replace: https://{{ ansible_eth2.ipv4.address }}/esg-orp
 
     - name: Replace localhost by gateway IP in thredds web.xml
       replace:
         path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
         regexp: localhost/esg-orp
-        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
+        replace: "{{ hostvars['esgf'].ansible_eth2.ipv4.address }}/esg-orp"
 
     - name: Restart ESGF node
       command: 'esg-node restart'
@@ -71,11 +71,6 @@
         - libnetcdf=4.4.1
         - supervisor
         - apache-tomcat
-    
-    # TDS variables
-    tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
-    tds_version: "ESGF-5.0.1"
-    tds_filename: "tds-esgf.war"
   roles:
     - role: miniconda
     - role: supervisor-tds
@@ -151,6 +146,8 @@
           Trust: "yes"
       environment:
         PYTHONPATH: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/lib/python2.7/site-packages/"
+      register: keytool_cmd
+      failed_when: keytool_cmd.rc > 1
       ignore_errors: True # Avoid error if alias already exists
 
     - name: restart TDS instances
