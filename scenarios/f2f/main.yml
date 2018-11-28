@@ -1,3 +1,12 @@
+- name: Global config
+  hosts: all
+  tasks:
+    - name: Add esgf.test.es to /etc/hosts
+      become: True
+      lineinfile:
+        path: /etc/hosts
+        line: 172.28.128.3      esgf.test.es
+
 - name: Set up the gateway
   hosts: gateway
   vars:
@@ -87,6 +96,13 @@
     - role: supervisor-tds
     - role: tds-modproxy
   tasks:
+    - name: Update keystore password
+      replace:
+        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+        regexp: CHANGEME
+        replace: coches1
+      with_items: "{{ tds }}"
+
     - name: Remove previous TDS installation
       file:
         state: absent
