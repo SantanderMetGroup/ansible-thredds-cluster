@@ -15,6 +15,9 @@
       copy: src={{ item }} dest=/etc/certs/{{ item }}
       with_items: [hostcert.pem, hostkey.pem]
 
+    - name: Copy cacert.pem into /etc/certs/cachain.pem
+      copy: src=cacert.pem dest=/etc/certs/cachain.pem
+
     - name: Copy keystore and truststore
       copy: src={{ item }} dest=/esg/config/tomcat/{{ item }}
       with_items: [keystore-tomcat, esg-truststore.ts, cacert.pem]
@@ -51,6 +54,12 @@
         regexp: localhost/esg-orp
         replace: "{{ hostvars['esgf'].ansible_eth2.ipv4.address }}/esg-orp"
 
+    - name: Allow tomcat remote debugging
+      lineinfile:
+        path: /usr/local/bin/esg-functions
+        insertafter: '-Djava.awt.headless=true \\'
+        line: '-Xdebug -Xrunjdwp:transport=dt_socket,address=7999,server=y,suspend=n \'
+
     - name: Restart ESGF node
       command: 'esg-node restart'
       tags: [never, restart]
@@ -73,17 +82,22 @@
         - apache-tomcat
   roles:
     - role: miniconda
+    - role: tds
+    - role: tds-collections
     - role: supervisor-tds
-    - role: tds-collections  
     - role: tds-modproxy
   tasks:
+    - name: Remove previous TDS installation
+      file:
+        state: absent
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
+      with_items: "{{ tds }}"
+
     - name: Synchronize thredds and esg-orp
       synchronize:
-        src: "/usr/local/tomcat/webapps/{{ item.1 }}"
-        dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/"
-      with_nested:
-        - "{{ tds}}"
-        - ["thredds"] # Parece que el orp no hace falta, esg-security en el thredds
+        src: "/usr/local/tomcat/webapps/thredds"
+        dest: "{{ tomcat_base }}/{{ item.name }}/webapps/"
+      with_items: "{{ tds }}"
 
     - name: Copy truststore and keystore
       copy:
