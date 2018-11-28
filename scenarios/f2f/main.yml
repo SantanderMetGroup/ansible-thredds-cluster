@@ -20,6 +20,12 @@
     - role: tds-collections
     - role: tds-modproxy
   tasks:
+    - name: Update keystore password
+      replace:
+        path: "/usr/local/tomcat/conf/server.xml"
+        regexp: CHANGEME
+        replace: coches1
+
     - name: Copy hostcert.pem and hostkey.pem
       copy: src={{ item }} dest=/etc/certs/{{ item }}
       with_items: [hostcert.pem, hostkey.pem]
@@ -96,13 +102,6 @@
     - role: supervisor-tds
     - role: tds-modproxy
   tasks:
-    - name: Update keystore password
-      replace:
-        path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
-        regexp: CHANGEME
-        replace: coches1
-      with_items: "{{ tds }}"
-
     - name: Remove previous TDS installation
       file:
         state: absent
