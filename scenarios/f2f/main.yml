@@ -20,6 +20,9 @@
     - role: tds-collections
     - role: tds-modproxy
   tasks:
+    - name: Copy httpd.conf (excludes WSGI stuff)
+      copy: src=esgf-httpd.conf dest={{ httpd_conf_file }}
+
     - name: Update keystore password
       replace:
         path: "/usr/local/tomcat/conf/server.xml"
