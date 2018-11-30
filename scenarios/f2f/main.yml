@@ -111,7 +111,7 @@
         path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
       with_items: "{{ tds }}"
 
-    - name: Synchronize thredds and esg-orp
+    - name: Synchronize thredds
       synchronize:
         src: "/usr/local/tomcat/webapps/thredds"
         dest: "{{ tomcat_base }}/{{ item.name }}/webapps/"
@@ -125,10 +125,12 @@
         - "{{ tds }}"
         - ["esg-truststore.ts", "keystore-tomcat"]
 
+    # Really needed?    
     - name: Replace /esg/config/tomcat locations
       shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
       with_items: "{{ tds }}"
 
+    # Really needed?
     - name: Replace /esg/config locations
       shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
       with_items: "{{ tds }}"
