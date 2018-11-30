@@ -5,6 +5,11 @@
     ipvs_rules: "{{ ipvs_rules }}"
     ansible_become: "{{ ansible_become | default(True) }}"
 
+- name: Enable ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+
 - name: Clear previous ipvsadm rules
   command: "ipvsadm -C"
 
