@@ -1,0 +1,25 @@
+- name: Register as backend server in load-balancer
+  vars:
+    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}"
+  blockinfile:
+    path: "{{ hostvars[item.gateway].keepalived_conf }}"
+    insertbefore: "}"
+    block: |
+      real_server {{ item.host }} {{ item.port }} {
+        weight 1
+        HTTP_GET {
+          connect_port 8080
+          connect_timeout 3
+          retry 3
+          delay_before_retry 3
+          url {
+            path /thredds/catalog/catalog.html
+            status_code 200
+          }
+        }
+    marker: "#{mark} {{ ansible_hostname }} register"
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ replicas }}"
+
+
+    
