@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 host=${1:-"esgf.test.es"}
 
 requests() {
@@ -17,7 +18,7 @@ requests() {
 
     > $cookie
     # Request dataset, this redirects us to the ORP
-    curl $curl_opts $dataset
+    curl --fail $curl_opts $dataset
 
     # Submit the openid provider in the ORP, this redirects us to the IdP
     curl $curl_opts \

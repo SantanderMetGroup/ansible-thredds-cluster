@@ -70,13 +70,13 @@
       replace:
         path: /esg/config/esgf.properties
         regexp: https://localhost/esg-orp
-        replace: https://{{ ansible_eth2.ipv4.address }}/esg-orp
+        replace: https://{{ ansible_eth1.ipv4.address }}/esg-orp
 
     - name: Replace localhost by gateway IP in thredds web.xml
       replace:
         path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
         regexp: localhost/esg-orp
-        replace: "{{ hostvars['esgf'].ansible_eth2.ipv4.address }}/esg-orp"
+        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
 
     - name: Allow tomcat remote debugging
       lineinfile:
