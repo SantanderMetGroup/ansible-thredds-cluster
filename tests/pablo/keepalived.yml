@@ -1,0 +1,77 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Configure load balancer
+  become: True
+  hosts: gateways
+  vars:
+    vip: "{{ ansible_eth1.ipv4.address }}"
+  roles:
+    - role: yum
+      dependencies: [ipvsadm]
+    - role: source
+      dependencies: [keepalived]
+    - role: keepalived
+  tasks:
+    - name: Disable Reverse Path Filtering
+      sysctl:
+        name: "{{ item }}"
+        value: 0
+      with_items:
+        - net.ipv4.conf.all.rp_filter
+        - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+                                                              
+- name: Configure servers
+  hosts: tds
+  vars:
+    # required interface
+    jdk_root: "{{ ansible_env.HOME }}/jdk"
+    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
+    tomcat_base: "{{ ansible_env.HOME }}/instances"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: source
+      dependencies: [jdk, tomcat, supervisor]
+      tags: [tds_deploy]
+    - role: tds
+      tags: [tds_deploy]
+    - role: tds-keepalived
+      become: True
+    - role: tomcat-cluster
+      instances: "{{ tds }}"
+      tags: [tds_deploy]
+    - role: supervisor-tds
+      tags: [tds_deploy]
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: start tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy, restart, update_catalogs]
+
+
+- name: Start keepalived
+  hosts: gateways
+  become: True
+  tasks:          
+    - command: "{{ keepalived_bin }} -f {{ keepalived_conf }} -p {{ keepalived_pid }} -c {{ keepalived_checkers_pid }}"
