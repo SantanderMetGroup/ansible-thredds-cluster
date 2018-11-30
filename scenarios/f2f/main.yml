@@ -17,11 +17,17 @@
     httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
   roles:
     - role: gateway-proxy
-    - role: tds-collections
+#    - role: tds-collections
     - role: tds-modproxy
   pre_tasks:
     - name: Copy httpd.conf (excludes WSGI stuff)
       copy: src=esgf-httpd.conf dest={{ httpd_conf_file }}
+
+    - name: Add esgcet dataRoot
+      lineinfile:
+        path: /esg/content/thredds/esgcet/catalog.xml
+        insertafter: '<datasetRoot location="/esg/data" path="esg_dataroot"/>'
+        line: '  <datasetRoot location="/esg/data" path="esgcet"/>'
   tasks:
     - name: Update keystore password
       replace:

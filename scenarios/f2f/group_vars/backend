@@ -4,16 +4,9 @@ tds_version: ESGF-5.0.1
 collections:
   - &collection1
     name: collection1
-    path: collection1
+    path: esgcet
     catalogs:
-      src: catalogs/collection1
-    services: [dodsC, fileServer, catalog]
-
-  - &collection2
-    name: collection2
-    path: collection2
-    catalogs:
-      src: catalogs/collection2
+      src: /esg/content/thredds/esgcet
     services: [dodsC, fileServer, catalog]
 
 tds:
@@ -57,10 +50,3 @@ replicas:
     route: "{{ ansible_nodename }}"
     tds_instance: *backend_instance
     collection: *collection1
-
-  - gateway: esgf
-    host: "{{ ansible_eth1.ipv4.address }}"
-    port: 8223
-    route: "{{ ansible_nodename }}"
-    tds_instance: *backend_instance
-    collection: *collection2
