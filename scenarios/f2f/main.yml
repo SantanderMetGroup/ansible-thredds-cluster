@@ -1,51 +1,9 @@
-- name: Global config
-  hosts: all
-  tasks:
-    - name: Add esgf.test.es to /etc/hosts
-      become: True
-      lineinfile:
-        path: /etc/hosts
-        line: 172.28.128.3      esgf.test.es
-
 - name: Set up the gateway
   hosts: gateway
-  vars:
-    # httpd is already installed, fill the interface
-    httpd_root: /etc/httpd
-    httpd_version: 2.2.15
-    httpd_htdocs: /var/www/html
-    httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
   roles:
     - role: gateway-proxy
-#    - role: tds-collections
     - role: tds-modproxy
-  pre_tasks:
-    - name: Copy httpd.conf (excludes WSGI stuff)
-      copy: src=esgf-httpd.conf dest={{ httpd_conf_file }}
-
-    - name: Add esgcet dataRoot
-      lineinfile:
-        path: /esg/content/thredds/esgcet/catalog.xml
-        insertafter: '<datasetRoot location="/esg/data" path="esg_dataroot"/>'
-        line: '  <datasetRoot location="/esg/data" path="esgcet"/>'
   tasks:
-    - name: Update keystore password
-      replace:
-        path: "/usr/local/tomcat/conf/server.xml"
-        regexp: CHANGEME
-        replace: coches1
-
-    - name: Copy hostcert.pem and hostkey.pem
-      copy: src={{ item }} dest=/etc/certs/{{ item }}
-      with_items: [hostcert.pem, hostkey.pem]
-
-    - name: Copy cacert.pem into /etc/certs/cachain.pem
-      copy: src=cacert.pem dest=/etc/certs/cachain.pem
-
-    - name: Copy keystore and truststore
-      copy: src={{ item }} dest=/esg/config/tomcat/{{ item }}
-      with_items: [keystore-tomcat, esg-truststore.ts, cacert.pem]
-
     - name: Comment ProxyPass /thredds in esgf-httpd.conf
       replace:
         path: "{{ httpd_conf_file }}"
@@ -64,25 +22,11 @@
         insertafter: Header always set X-Content-Type-Options nosniff
         block: |
           RewriteEngine on
+          RewriteRule   "^/$" "/thredds/catalog/catalog.html" [R]
           RewriteRule   "^/thredds/?$" "/thredds/catalog/catalog.html" [R]
 
-    - name: Replace localhost by gateway IP in esgf.properties
-      replace:
-        path: /esg/config/esgf.properties
-        regexp: https://localhost/esg-orp
-        replace: https://{{ ansible_eth1.ipv4.address }}/esg-orp
-
-    - name: Replace localhost by gateway IP in thredds web.xml
-      replace:
-        path: "/usr/local/tomcat/webapps/thredds/WEB-INF/web.xml"
-        regexp: localhost/esg-orp
-        replace: "{{ hostvars['esgf'].ansible_eth1.ipv4.address }}/esg-orp"
-
-    - name: Allow tomcat remote debugging
-      lineinfile:
-        path: /usr/local/bin/esg-functions
-        insertafter: '-Djava.awt.headless=true \\'
-        line: '-Xdebug -Xrunjdwp:transport=dt_socket,address=7999,server=y,suspend=n \'
+    - name: Plumbing
+      include_tasks: gateway.yml
 
     - name: Restart ESGF node
       command: 'esg-node restart'
@@ -123,72 +67,14 @@
         dest: "{{ tomcat_base }}/{{ item.name }}/webapps/"
       with_items: "{{ tds }}"
 
-    - name: Copy truststore and keystore
-      copy:
-        src: /esg/config/tomcat/{{ item.1 }}
-        dest: "{{ tomcat_base }}/{{ item.0.name }}/conf"
-      with_nested:
-        - "{{ tds }}"
-        - ["esg-truststore.ts", "keystore-tomcat"]
-
-    # Really needed?    
-    - name: Replace /esg/config/tomcat locations
-      shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items: "{{ tds }}"
-
-    # Really needed?
-    - name: Replace /esg/config locations
-      shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items: "{{ tds }}"
-
-    - name: Remove AccessLoggingFilter
-      replace:
-        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-        regexp: <filter>\n\s+<filter-name>AccessLoggingFilter(.|\n)*</filter-mapping>
-        replace: "<!-- Removed AccessLoggingFilter -->"
-      with_items: "{{ tds }}"
-
-    - name: Create datasets directory
-      become: True
-      file:
-        state: directory
-        path: /esg/data
-        owner: vagrant
-        group: vagrant
-
     - name: Syncronize datasets
       synchronize:
         src: /esg/data/
         dest: /esg/data
         archive: True
 
-    - name: Install openjdk (required for keytool)
-      become: True
-      yum:
-        state: present
-        name: java-1.8.0-openjdk
-
-    - name: Copy hostcert.pem
-      copy:
-        src: /etc/certs/hostcert.pem
-        dest: /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
-
-    - name: Install pyexpect
-      pip:
-        name: pexpect
-        executable: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/bin/pip"
-
-    - name: Add hostcert.pem to miniconda cacerts
-      expect:
-        command: keytool -import -trustcacerts -alias smg -keystore /home/vagrant/miniconda/envs/f2f/jre/lib/security/cacerts -file /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
-        responses:
-          password: "changeit"
-          Trust: "yes"
-      environment:
-        PYTHONPATH: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/lib/python2.7/site-packages/"
-      register: keytool_cmd
-      failed_when: keytool_cmd.rc > 1
-      ignore_errors: True # Avoid error if alias already exists
+    - name: Plumb backend
+      include_tasks: backend.yml
 
     - name: restart TDS instances
       supervisorctl:
