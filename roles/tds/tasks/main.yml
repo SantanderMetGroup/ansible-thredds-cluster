@@ -9,20 +9,6 @@
     path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/"
   with_items: "{{ tds }}"
   
-- name: Create directory for each tds instance
-  file:
-    dest: "{{ tomcat_base }}/{{ item.name }}"
-    state: directory
-  with_items: "{{ tds }}"
-
-- name: Create dirs for instances
-  file:
-    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
-    state: directory
-  with_nested:
-    - "{{ tds }}"
-    - ['bin', 'conf', 'lib', 'logs', 'webapps/thredds', 'temp', 'work']
-    
 - name: Copy conf files into instances
   copy:
     src: "{{ item.1 }}"

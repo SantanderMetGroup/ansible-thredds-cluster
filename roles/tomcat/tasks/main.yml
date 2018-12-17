@@ -1,0 +1,15 @@
+- name: Create directory for each tds instance
+  file:
+    dest: "{{ tomcat_base }}/{{ item.name }}"
+    state: directory
+  with_items: "{{ tomcats }}"
+
+- name: Create dirs for instances
+  file:
+    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
+    state: directory
+  loop_control:
+    label: "{{ item.0.name ~ '->' ~ item.1 }}"
+  with_nested:
+    - "{{ tomcats }}"
+    - ['bin', 'conf', 'lib', 'logs', 'webapps/thredds']

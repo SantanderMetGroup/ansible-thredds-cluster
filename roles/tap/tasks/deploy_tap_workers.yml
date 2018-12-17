@@ -1,0 +1,50 @@
+- name: Register urimaps in proxy
+  delegate_to: "{{ item.1.id }}"
+  blockinfile:
+    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.urimaps"
+    marker: "# {mark} TAP {{ lb.1.name }}"
+    block: |
+      /udg-tap=TAP_{{ lb.1.name }}
+      /udg-tap/*=TAP_{{ lb.1.name }}
+  with_subelements:
+    - "{{ tap_instances }}"
+    - connectors
+
+- name: Register lb in proxy
+  blockinfile:
+    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
+    marker: "# {mark} TAP_{{ lb.1.name }}"
+    block: |
+      worker.list=TAP_{{ lb.1.name }}
+      worker.TAP_{{ lb.1.name }}.type=lb
+  delegate_to: "{{ item.1.id }}"
+  with_subelements:
+    - "{{ tap_instances }}"
+    - connectors
+
+- name: Register balance workers in proxy
+  blockinfile:
+    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.1.port }}"
+    dest: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
+    block: |
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.type=ajp13
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.host={{ item.1.host | default(ansible_nodename) }}
+      worker.{{ ansible_hostname }}_{{ item.1.port }}.port={{ item.1.port }}
+  delegate_to: "{{ item.1.id }}"
+  with_subelements:
+    - "{{ tap_instances }}"
+    - connectors
+  when: item.1.protocol.lower().startswith("ajp")
+
+- name: Add balance workers to lb
+  lineinfile:
+    path: "{{ hostvars[item.1.id].mod_jk_conf }}/mod_jk.workers"
+    state: present
+    line: 'worker.TAP_{{ lb.1.name }}.balance_workers={{ ansible_hostname }}_{{ item.1.port }}'
+  delegate_to: "{{ item.1.id }}"
+  with_subelements:
+    - "{{ tap_instances }}"
+    - connectors
+  when: 
+    - item.1.protocol.lower().startswith("ajp")
+    - lb.0.name == item.0.name
