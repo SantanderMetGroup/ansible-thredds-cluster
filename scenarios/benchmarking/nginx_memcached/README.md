@@ -6,4 +6,4 @@ discriminating the URI to select which pool of servers redirect the request to (
 In addition to that, __memcached__ is configured so Tomcat instances on different servers are able to keep track of client's session in case of a server's fault.
 
 ## Diagram ##
-![Diagram nginx_memcached](./diagrams/nginx_memcached_diagram.png)
+![Diagram nginx_memcached](./nginx_memcached_diagram.png)
