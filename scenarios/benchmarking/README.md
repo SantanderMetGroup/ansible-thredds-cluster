@@ -27,7 +27,8 @@ for session replication between servers.
 
 ## Nginx + Memcached ##
 Nginx performs load balancing at Application level (L7 in OSI model) mapping the URI from the request to a sepecific server or pool of servers (depending on, for example, the collection of datasets
-requested). In addition to that, Nginx performs periodic health checks to monitor the backend and keep a proper list of available servers.
+requested). In addition to that, Nginx performs periodic health checks to monitor the backend and keep a proper list of available servers. An extra advantadge of using Nginx as the load balancer, is that
+it can be also used as a web server to serve static content such as images, css files, etc. reducing overall network load.
 
 Using _sticky sessions_ with Nginx is an option only included in the paid version, so Memcached is used to allow for session replication between servers.
 
