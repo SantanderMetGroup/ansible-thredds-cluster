@@ -12,7 +12,9 @@
       dependencies: [ipvsadm]
     - role: source
       dependencies: [keepalived]
+      tags: [keepalived]
     - role: keepalived
+      tags: [keepalived]
   tasks:
     - name: Disable Reverse Path Filtering
       sysctl:
@@ -38,15 +40,14 @@
     - role: yum
       dependencies: [memcached]
       tags: [tds_deploy]
-    - role: tds
-      tags: [tds_deploy]
-    - role: tds-keepalived
-      become: True
     - role: tomcat-memcached
       instances: "{{ tds }}"
       tags: [tds_deploy]
     - role: supervisor-tds
       tags: [tds_deploy]
+    - role: tds-keepalived
+      tags: [keepalived]
+      become: True
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
@@ -81,4 +82,5 @@
   hosts: gateways
   become: True
   tasks:
-    - command: "{{ keepalived_bin }} -f {{ keepalived_conf }} -p {{ keepalived_pid }} -c {{ keepalived_checkers_pid }}"
+    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}" 
+  tags: [keepalived, start_keepalived]
