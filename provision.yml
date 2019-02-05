@@ -2,30 +2,35 @@
   hosts: all
   become: True
   vars:
-    user: ansible
+    users: [root, ansible]
     key: "/home/{{ lookup('env', 'USER') }}/.ssh/id_rsa.pub"
-    debug: False
+    debug: True
   tasks:
     # Install packages
+    - name: Install Base packages
+      yum: name="@Base" state=present
+
     - name: EPEL
       yum: name=epel-release
       when: ansible_pkg_mgr == "yum"
 
     - name: Required packages
       package: name={{ item }} state=present
-      with_items: [openssh-server, sudo, python, python-passlib, rsync, unzip]
+      with_items: [openssh-server, sudo, python-passlib]
 
     - name: Debug packages
       package: name={{ item }} state=present
-      with_items: [vim telnet net-tools]
+      with_items: [vim, telnet, net-tools]
       when: debug
 
-    # Allow ssh access
-    - name: Create ssh user ({{ user }}) for ansible
-      user: name={{ user }} shell=/bin/bash
+    - name: Create users
+      user: name={{ item }} shell=/bin/bash
+      with_items: "{{ users }}"
 
+    # Allow ssh access
     - name: Copy public key
-      authorized_key: user={{ user }} key={{ lookup('file', key) }}
+      authorized_key: user={{ item }} key={{ lookup('file', key) }}
+      with_items: "{{ users }}"
 
     - name: Start sshd
       service: name=sshd state=started
