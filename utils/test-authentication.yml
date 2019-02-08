@@ -33,9 +33,16 @@
       </Realm>
   with_items: "{{ tomcats }}"
 
+- name: Add restricted datasetRoot to main catalog
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
+    insertafter: <datasetRoot
+    line: <datasetRoot path="testRestricted" location="content/testdata/" />
+  with_items: "{{ tomcats }}"
+
 - name: Add restricted dataset to main catalog
   lineinfile:
     path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
     insertbefore: </catalog>
-    line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="dap"  urlPath="test/testData.nc" dataType="Grid"/>
+    line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="dap"  urlPath="testRestricted/testData.nc" dataType="Grid"/>
   with_items: "{{ tomcats }}"

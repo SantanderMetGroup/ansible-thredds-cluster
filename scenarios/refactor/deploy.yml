@@ -15,19 +15,29 @@
       dependencies: [jdk]
     - role: source
       dependencies: [tomcat]
-    - worker
+    - role: worker
+      load_balancer: lb
+      catalogs: catalogs
+      datasets: datasets
+      worker_host: "{{ inventory_hostname }}"
   tasks:
+    - name: Start workers
+      shell: "nohup {{ tomcat_base }}/{{ item.name }}/bin/startup.sh"
+      with_items: "{{ tomcats }}"
+      ignore_errors: True
+
+    - wait_for: port={{ item.port }} delay=10
+      with_items: "{{ tomcats }}"
     - import_tasks: ../../utils/test-authentication.yml
 
     - name: Stop workers
       command: "{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh"
       with_items: "{{ tomcats }}"
-      tags: restart
+      tags: [restart, stop]
       ignore_errors: True
-    #    - name: Stop workers
-    #      command: pkill java
-    #      ignore_errors: True
-    #      tags: restart
+
+    - wait_for: path={{ tomcat_base }}/{{ item.name }}/logs/catalina.pid state=absent
+      with_items: "{{ tomcats }}"
 
     - name: Start workers
       shell: "nohup {{ tomcat_base }}/{{ item.name }}/bin/startup.sh"

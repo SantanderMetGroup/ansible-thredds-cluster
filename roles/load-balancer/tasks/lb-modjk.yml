@@ -1,6 +1,7 @@
 - import_tasks: httpd.yml
 
-- set_fact:
+- name: Set modjk load balancer facts
+  set_fact:
     ansible_become: "{{ ansible_become | default(False) }}"
     httpd_htdocs: "{{ httpd_htdocs }}" # tds-modjk needs to copy static web files
     mod_jk_conf: "{{ mod_jk_conf }}" # tds-modjk needs to register workers in mod_jk.workers file
@@ -20,16 +21,6 @@
   htpasswd: path="{{ mod_jk_status }}/.htpasswd" username="{{ mod_jk_status_user }}" password="{{ mod_jk_status_passwd }}"
   when:  mod_jk_status_user is defined and mod_jk_status_passwd is defined
 
-# TDS
-- name: Create htdocs/thredds folder
-  file: state=directory path="{{ httpd_htdocs }}/thredds"
-
-- name: Create configuration module for thredds
-  template: src=modjk/thredds.conf.j2 dest="{{ mod_jk_conf }}/thredds.conf"
-
-- name: Create thredds static configuration - serverInfo.html
-  template: src=modjk/serverInfo.html.j2 dest="{{ httpd_htdocs }}/thredds/serverInfo.html"
-
 - name: Add clusters (jk lb workers)
   blockinfile:
     dest: "{{ mod_jk_conf }}/mod_jk.workers"
@@ -37,6 +28,7 @@
     block: |
       worker.list={{ item.name }}
       worker.{{ item.name }}.type=lb
+      worker.{{ item.name }}.mount=/thredds/restrictedAccess/*
   with_items: "{{ clusters }}"
 
 - name: Add cluster urimaps
@@ -51,12 +43,3 @@
   with_subelements:
     - "{{ clusters }}"
     - services
-
-- name: Add restrictedAccess worker
-  blockinfile:
-    path: "{{ mod_jk_conf }}/mod_jk.workers"
-    marker: "# {mark} restrictedAccess"
-    block: |
-      worker.list=restrictedAccess
-      worker.restrictedAccess.type=lb
-      worker.restrictedAccess.mount=/thredds/restrictedAccess/*

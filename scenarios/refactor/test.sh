@@ -2,7 +2,7 @@
 
 requests() {
 	DATASET1="http://$1:$2/thredds/dodsC/test/testData.nc.html"
-	DATASET2="http://$1:$2/thredds/dodsC/test/restrictedData.nc.html"
+	DATASET2="http://$1:$2/thredds/dodsC/testRestricted/testData.nc.html"
 	USER='alice'
 	PASSWORD='1234'
 
@@ -13,3 +13,4 @@ requests() {
 }
 
 requests lb 8080
+rm /tmp/cookie.txt
