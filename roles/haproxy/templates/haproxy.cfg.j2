@@ -8,7 +8,7 @@ defaults
   log	   global
   mode   http
   option httplog
-  option tcp-chk
+  option httpchk OPTIONS /thredds/
   option dontlognull
   errorfile 400 {{ haproxy_root }}/errors/400.http
   errorfile 403 {{ haproxy_root }}/errors/403.http
@@ -22,6 +22,7 @@ defaults
   timeout client  30000
   timeout server  30000
   timeout check   5000
+  default-server inter 500 fall 1 rise 1
 
 frontend {{ default_frontend }}
 	bind *:{{ bind_port }}
