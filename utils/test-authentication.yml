@@ -1,14 +1,14 @@
-- name: Add a dummy role and a dummy user to tomcat instances
+- name: Add a dummy role and a dummy user to tomcats
   blockinfile:
     marker: "<!-- {mark} Test users -->"
     path: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
     insertbefore: "</tomcat-users>"
     block: |
-      <role rolename="restricted"/>
+      <role rolename="restringido"/>
       <user username="alice" password="1234" roles="restringido,restrictedDatasetUser"/>
-  with_items: "{{ instances }}"
+  with_items: "{{ tomcats }}"
 
-- name: Add user realm as a global resource to instances
+- name: Add user realm as a global resource to tomcats
   blockinfile:
     marker: "<!-- {mark} User resource -->"
     path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
@@ -20,9 +20,9 @@
                 description="User database that can be updated and saved"
                 factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
                 pathname="conf/tomcat-users.xml" />
-  with_items: "{{ instances }}"
+  with_items: "{{ tomcats }}"
 
-- name: Add user realm to instances
+- name: Add user realm to tomcats
   blockinfile:
     marker: "<!-- {mark} User realm -->"
     path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
@@ -31,5 +31,11 @@
       <Realm className="org.apache.catalina.realm.LockOutRealm">
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase" />
       </Realm>
-  with_items: "{{ instances }}"
+  with_items: "{{ tomcats }}"
 
+- name: Add restricted dataset to main catalog
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
+    insertbefore: </catalog>
+    line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="dap"  urlPath="test/testData.nc" dataType="Grid"/>
+  with_items: "{{ tomcats }}"

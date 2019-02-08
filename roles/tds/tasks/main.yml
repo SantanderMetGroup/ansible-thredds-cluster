@@ -1,37 +1,3 @@
-- name: Print tds_major_version
-  debug: var=tds_major_version
-  tags: [never, debug]
-
-#################### Tomcat BASE ####################
-- name: Remove existing TDS installation (to avoid conflicts when version changes)
-  file:
-    state: absent
-    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/"
-  with_items: "{{ tds }}"
-  
-- name: Copy conf files into instances
-  copy:
-    src: "{{ item.1 }}"
-    dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
-  with_nested:
-    - "{{ tds }}"
-    - ["web.xml", "context.xml"]
-  
-- name: Template files into instances
-  template:
-    src: "{{ item.1 }}.j2"
-    dest: "{{ tomcat_base }}/{{ item.0.name }}/conf/{{ item.1 }}"
-  with_nested:
-    - "{{ tds }}"
-    - ["server.xml", "tomcat-users.xml"]
-
-- name: Template setenv.sh
-  template:
-    src: setenv.sh.j2
-    dest: "{{ tomcat_base }}/{{ item.name }}/bin/setenv.sh"
-  with_items: "{{ tds }}"
-  
-#################### TDS ####################
 - name: Download tds
   run_once: True
   local_action: get_url
@@ -42,47 +8,37 @@
     ansible_become: False
 
 - name: Unarchive tds in webapps/thredds
-  unarchive:
-    src: "{{ tds_downloads_tmp }}/{{ tds_filename }}"
-    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
-  with_items: "{{ tds }}"
+  unarchive: src="{{ tds_downloads_tmp }}/{{ tds_filename }}" dest="{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
+  with_items: "{{ tomcats }}"
 
 - name: Copy web.xml in WEB-INF
-  copy:
-    src: web.xml.v{{ tds_major_version }}
-    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ tds }}"
+  copy: src=web.xml.v{{ tds_major_version }} dest="{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+  with_items: "{{ tomcats }}"
   when: tds_version | truncate(4,True,'') != 'ESGF'
 
-- name: Create web.xml in WEB-INF for TDS-ESGF
-  copy:
-    src: web.xml.esgf
-    dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
-  with_items: "{{ tds }}"
+- name: Copy web.xml in WEB-INF for TDS-ESGF
+  copy: src=web.xml.esgf dest="{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+  with_items: "{{ tomcats }}"
   when: tds_version | truncate(4,True,'') == 'ESGF'
 
-#################### content/thredds ####################
-- name: Create content/thredds/public directories in tomcat_home
-  file:
-    path: "{{ tomcat_home }}/content/thredds/public"
-    state: directory
-    mode: "g+rwx"
+- name: Create content/thredds/public in catalina home
+  file: path="{{ tomcat_home }}/content/thredds/public" state=directory mode="g+rwx"
 
-- name: Create content/thredds/ directories in instances
+- name: Create content/thredds/ directories in catalina bases
   file:
-    path: "{{ item.tds_content_root | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds"
+    path: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds"
     state: directory
-  with_items: "{{ tds }}"
+  with_items: "{{ tomcats }}"
 
-- name: Create soft link from instance content/thredds/public to tomcat
+- name: Link catalina base content/thredds/public to catalina home
   file:
-    dest: "{{ item.tds_content_root | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/public"
+    dest: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/public"
     src: "{{ tomcat_home }}/content/thredds/public"
     state: link
-  with_items: "{{ tds }}"
+  with_items: "{{ tomcats }}"
 
 - name: Copy threddsConfig.xml
   copy:
     src: threddsConfig.xml
-    dest: "{{ item.tds_content_root | default([tomcat_base,item.name,'content']|join('/')) }}/thredds/threddsConfig.xml"
-  with_items: "{{ tds }}"
+    dest: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/threddsConfig.xml"
+  with_items: "{{ tomcats }}"

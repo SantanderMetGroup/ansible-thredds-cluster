@@ -1,15 +1,55 @@
-- name: Create directory for each tds instance
-  file:
-    dest: "{{ tomcat_base }}/{{ item.name }}"
-    state: directory
+- name: Create catalina base path
+  file: dest="{{ tomcat_base }}/{{ item.name }}" state=directory
   with_items: "{{ tomcats }}"
 
-- name: Create dirs for instances
-  file:
-    path: "{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}"
-    state: directory
+- name: Remove existing TDS installation (this avoids conflicts when version changes)
+  file: state=absent path="{{ tomcat_base }}/{{ item.name }}/webapps/thredds/"
+  with_items: "{{ tomcats }}"
+
+- name: Set up catalina bases
+  file: path="{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}" state=directory
   loop_control:
     label: "{{ item.0.name ~ '->' ~ item.1 }}"
   with_nested:
     - "{{ tomcats }}"
     - ['bin', 'conf', 'lib', 'logs', 'webapps/thredds']
+  
+- name: Copy web.xml 
+  copy: src=web.xml dest="{{ tomcat_base }}/{{ item.name }}/conf/"
+  with_items: "{{ tomcats }}"
+  
+- name: Copy context.xml
+  copy: src=context.xml dest="{{ tomcat_base }}/{{ item.name }}/conf/"
+  with_items: "{{ tomcats }}"
+  
+- name: Template server.xml
+  template: src=server.xml.j2 dest="{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+  with_items: "{{ tomcats }}"
+
+- name: Template tomcat-users.xml
+  template: src=tomcat-users.xml.j2 dest="{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
+  with_items: "{{ tomcats }}"
+
+- name: Template setenv.sh
+  template: src=setenv.sh.j2 dest="{{ tomcat_base }}/{{ item.name }}/bin/setenv.sh"
+  with_items: "{{ tomcats }}"
+
+- name: Template startup.sh
+  template: src=startup.sh.j2 dest="{{ tomcat_base }}/{{ item.name }}/bin/startup.sh" mode=u+x
+  with_items: "{{ tomcats }}"
+
+- name: Template shutdown.sh
+  template: src=shutdown.sh.j2 dest="{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh" mode=u+x
+  with_items: "{{ tomcats }}"
+
+- name: Add <Cluster> to tds
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    insertbefore: </Host>
+    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+  with_items: "{{ tomcats }}"
+  when: tomcat_cluster
+
+- name: Configure memcached Manager
+  include_tasks: memcached-manager.yml
+  when: tomcat_manager == "memcached"

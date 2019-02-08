@@ -1,10 +1,43 @@
-- name: Deploy gateways
-  hosts: gateways
+- name: Deploy load balancers
+  hosts: lbs
   roles:
+    - role: yum
+      dependencies: [httpd]
+    - role: source
+      dependencies: [mod_jk]
     - role: load-balancer
       lb_type: modjk
 
 - name: Deploy workers
   hosts: workers
   roles:
+    - role: yum
+      dependencies: [jdk]
+    - role: source
+      dependencies: [tomcat]
     - worker
+  tasks:
+    - import_tasks: ../../utils/test-authentication.yml
+
+    - name: Stop workers
+      command: "{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh"
+      with_items: "{{ tomcats }}"
+      tags: restart
+      ignore_errors: True
+    #    - name: Stop workers
+    #      command: pkill java
+    #      ignore_errors: True
+    #      tags: restart
+
+    - name: Start workers
+      shell: "nohup {{ tomcat_base }}/{{ item.name }}/bin/startup.sh"
+      with_items: "{{ tomcats }}"
+      tags: restart
+      ignore_errors: True
+
+- name: Restart load balancer
+  hosts: lbs
+  tasks:
+    - name: Restart httpd
+      service: name=httpd state=restarted
+      tags: restart

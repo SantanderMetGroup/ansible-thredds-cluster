@@ -1,10 +1,19 @@
+- name: Install development packages
+  become: True
+  yum: state=present name="@Development tools"
+
+- name: Install httpd-devel
+  become: True
+  yum: state=present name=httpd-devel
+  when: mod_jk_httpd_from_package
+
 - name: Download mod_jk
   become: False
   run_once: True
   local_action: get_url
   args:
     url: "{{ mod_jk_download_url }}"
-    dest: "{{ downloads_tmp }}"
+    dest: "{{ downloads_tmp }}/{{ mod_jk_filename }}"
 
 - name: Create mod_jk_src directory
   file: path="{{ mod_jk_src }}" state=directory
@@ -19,6 +28,6 @@
   args:
     chdir: "{{ mod_jk_src }}/{{ mod_jk_filename_unarchive }}/native"
   with_items:
-    - ./configure {{ mod_jk_configure | default("") }}
+    - ./configure {{ mod_jk_configure | default("--with-apxs=/usr/sbin/apxs") }}
     - /usr/bin/make
     - /usr/bin/make install

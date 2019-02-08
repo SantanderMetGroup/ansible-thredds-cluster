@@ -4,7 +4,7 @@
   vars:
     users: [root, ansible]
     key: "/home/{{ lookup('env', 'USER') }}/.ssh/id_rsa.pub"
-    debug: True
+    provision: ['full', 'basic', 'debug']
   tasks:
     # Install packages
     - name: Install Base packages
@@ -21,7 +21,7 @@
     - name: Debug packages
       package: name={{ item }} state=present
       with_items: [vim, telnet, net-tools]
-      when: debug
+      when: "'debug' in provision"
 
     - name: Create users
       user: name={{ item }} shell=/bin/bash
