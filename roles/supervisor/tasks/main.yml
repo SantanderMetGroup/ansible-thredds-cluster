@@ -1,20 +1,12 @@
 - name: Create supervisord directories
-  file:
-    dest: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ supervisor_etc }}"
-    - "{{ supervisor_var }}"
+  file: dest="{{ item }}" state=directory
+  with_items: [ {{ supervisor_etc }}, {{ supervisor_var }} ]
 
 - name: Create directory {{ supervisor_programs }}
-  file:
-    dest: "{{ supervisor_programs }}"
-    state: directory
+  file: dest="{{ supervisor_programs }}" state=directory
 
 - name: Create supervisord.conf
-  template:
-    src: supervisord.conf.j2
-    dest: "{{ supervisor_etc }}/supervisord.conf"
+  template: src=supervisord.conf.j2 dest="{{ supervisor_etc }}/supervisord.conf"
 
 - name: Check if supervisord is already running
   shell: netstat -tunlp | grep ":{{ supervisor_port }}"

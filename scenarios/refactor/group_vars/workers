@@ -1,7 +1,8 @@
+worker_host: "{{ inventory_hostname }}"
 tomcats:
   - name: i1
     shutdown: 20005
-    route: i1
+    route: i1{{ worker_host }}
     port: 8223
     clusters: [catalog]
     connectors:
@@ -11,7 +12,7 @@ tomcats:
         protocol: HTTP/1.1
   - name: i2
     shutdown: 21006
-    route: i2
+    route: i2{{ worker_host }}
     clusters: [data]
     port: 8224
     connectors:

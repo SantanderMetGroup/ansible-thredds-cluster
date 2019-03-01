@@ -1,27 +1,3 @@
 - name: Template httpd conf file
-  template:
-    src: httpd/httpd.conf.{{ httpd_major_version }}.j2
-    dest: "{{ httpd_conf_file }}"
-
-- name: Include vars when running in container
-  include_vars:
-    file: container.yml
-  when: ansible_env.ANSIBLE_CONTAINER is defined
-
-- name: Create {{ httpd_htdocs }}/thredds directory
-  file:
-    state: directory
-    path: "{{ httpd_htdocs }}/thredds/catalog"
-
-# Not neccesary anymore...
-#- name: Template static TDS catalog.html
-#  template:
-#     src: catalog.html.v{{ tds_version.split(".")[0] }}.j2
-#     dest: "{{ httpd_htdocs }}/thredds/catalog/catalog.html"
-  
-# This can be done for efficiency
-#- name: Copy THREDDS static files
-#  copy:
-#    src: "{{ item }}"
-#    dest: "{{ httpd_htdocs }}/thredds/{{ item | basename }}"
-#  with_fileglob: v{{ tds_version[:1]|string }}/*
+  template: src=httpd/httpd.conf.{{ httpd_major_version }}.j2 dest={{ httpd_conf_file }}
+  when: httpd_template

@@ -1,0 +1,40 @@
+- name: Deploy load balancers
+  hosts: lbs
+  roles:
+    - role: yum
+      dependencies: [httpd]
+    - role: source
+      dependencies: [mod_jk]
+    - role: load-balancer
+      lb_type: modjk
+
+- name: Deploy workers
+  hosts: workers
+  vars:
+    miniconda_env:
+      name: udg
+      channels:
+        - birdhouse
+      dependencies:
+        - libnetcdf=4.4.1
+  roles:
+    - role: yum
+      dependencies: [jdk]
+    - role: miniconda
+    - role: source
+      dependencies: [tomcat]
+    - role: worker
+      load_balancer: lb
+      catalogs: catalogs
+      datasets: datasets
+  tasks:
+    - include_tasks: restart.yml
+    - import_tasks: ../../utils/test-authentication.yml
+    - include_tasks: restart.yml
+
+- name: Restart load balancer
+  hosts: lbs
+  tasks:
+    - name: Restart httpd
+      service: name=httpd state=restarted
+      tags: restart

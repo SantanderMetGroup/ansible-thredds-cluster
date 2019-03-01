@@ -1,22 +1,21 @@
 - name: Add workers to the load balancer
   blockinfile:
-    marker: "# {mark} worker_{{ ansible_hostname }}_{{ item.port }}"
+    marker: "# {mark} {{ item.route }}"
     path: "{{ hostvars[load_balancer].mod_jk_conf }}/mod_jk.workers"
     block: |
-      worker.{{ name }}.type=ajp13
-      worker.{{ name }}.host={{ worker_host | default(ansible_hostname) }}
-      worker.{{ name }}.port={{ item.port }}
+      worker.{{ item.route }}.type=ajp13
+      worker.{{ item.route }}.host={{ worker_host | default(ansible_hostname) }}
+      worker.{{ item.route }}.port={{ item.port }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
-    name: "{{ ansible_hostname ~ '_' ~ item.port }}"
   with_items: "{{ tomcats }}"
 
 - name: Add workers to the load balancer cluster
   lineinfile:
     dest: "{{ hostvars[load_balancer].mod_jk_conf }}/mod_jk.workers"
     state: present
-    line: worker.{{ item.1 }}.balance_workers={{ ansible_hostname ~ '_' ~ item.0.port }}
+    line: worker.{{ item.1 }}.balance_workers={{ item.0.route }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed

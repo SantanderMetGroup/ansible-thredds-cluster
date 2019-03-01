@@ -7,7 +7,7 @@
   vars:
     ansible_become: False
 
-- name: Remove existing TDS webapp (this avoids conflicts when version changes)
+- name: Remove existing TDS webapp
   file: state=absent path={{ tomcat_base }}/{{ item.name }}/webapps/thredds/
   with_items: "{{ tomcats }}"
 
@@ -23,34 +23,16 @@
   unarchive: src={{ tds_downloads_tmp }}/{{ tds_filename }} dest={{ tomcat_base }}/{{ item.name }}/webapps/thredds
   with_items: "{{ tomcats }}"
 
-- name: Copy web.xml in WEB-INF
-  copy: src=web.xml.v{{ tds_major_version }} dest={{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml
-  with_items: "{{ tomcats }}"
-  when: tds_version | truncate(4,True,'') != 'ESGF'
-
-- name: Copy web.xml in WEB-INF for TDS-ESGF
-  copy: src=web.xml.esgf dest={{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml
-  with_items: "{{ tomcats }}"
-  when: tds_version | truncate(4,True,'') == 'ESGF'
-
-- name: Create content/thredds/public in catalina home
+- name: Create content/thredds/public/ in catalina home
   file: path={{ tomcat_home }}/content/thredds/public state=directory mode=g+rwx
 
-- name: Create content/thredds/ directories in catalina bases
-  file:
-    path: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds"
-    state: directory
+- name: Create content/thredds/ directories in catalina base
+  file: path="{{ tomcat_base}}/{{ item.name }}/content/thredds" state=directory
   with_items: "{{ tomcats }}"
 
 - name: Link catalina base content/thredds/public to catalina home
-  file:
-    dest: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/public"
-    src: "{{ tomcat_home }}/content/thredds/public"
+  file: 
+    path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/public" 
+    src: "{{ tomcat_home }}/content/thredds/public" 
     state: link
-  with_items: "{{ tomcats }}"
-
-- name: Copy threddsConfig.xml
-  copy:
-    src: threddsConfig.xml
-    dest: "{{ item.tds_content | default(tomcat_base ~ '/' ~ item.name ~ '/content') }}/thredds/threddsConfig.xml"
   with_items: "{{ tomcats }}"

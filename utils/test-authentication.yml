@@ -40,9 +40,12 @@
     line: <datasetRoot path="testRestricted" location="content/testdata/" />
   with_items: "{{ tomcats }}"
 
+- name: Copy testData.nc
+  copy: src=testData.nc dest={{ tomcat_home }}/content/thredds/public/testData.nc
+
 - name: Add restricted dataset to main catalog
   lineinfile:
     path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
     insertbefore: </catalog>
-    line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="dap"  urlPath="testRestricted/testData.nc" dataType="Grid"/>
+    line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="all"  urlPath="testRestricted/testData.nc" dataType="Grid"/>
   with_items: "{{ tomcats }}"
