@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="Earth System Grid catalog">
+
+  <service name="all" base="" serviceType="compound">
+    <service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/" />
+    <service name="dap4" serviceType="DAP4" base="/thredds/dap4/" />
+    <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
+    <service name="ncssGrid" serviceType="NetcdfSubset" base="/thredds/ncss/grid/"/>
+    <service name="ncssPoint" serviceType="NetcdfSubset" base="/thredds/ncss/point/"/>
+  </service>
+
+  <datasetRoot path="cmip5-esm-subset" location="/oceano/gmeteo/WORK/zequi/DATASETS" />
+
+  <datasetScan name="CMIP5 ESM Subset Monthly" ID="cmip5-esm-subset-mon" path="cmip5-esm-subset-mon"
+	       location="/oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset-mon/datasets">
+    <metadata>
+      <serviceName>all</serviceName>
+    </metadata>
+    <namer>
+      <regExpOnName regExp="(cmip5_output1_)(.*)\.ncml" replaceString="$2" />
+    </namer>
+  </datasetScan>
+</catalog>

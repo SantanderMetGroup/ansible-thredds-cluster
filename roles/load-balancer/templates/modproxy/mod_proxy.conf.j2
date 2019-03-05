@@ -22,3 +22,17 @@ LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
 </Location>
 
 ProxyPass /status-proxy !
+
+{% for c in clusters -%}
+<Proxy "balancer://{{ c.name }}">
+ProxySet stickysession=JSESSIONID
+</Proxy>
+ProxyPass "/thredds/restrictedAccess" "balancer://{{ c.name }}/thredds/restrictedAccess"
+{% for s in c.services -%}
+ProxyPass "/thredds/{{ s }}" "balancer://{{ c.name }}/thredds/{{ s }}"
+{% if s == "catalog" -%}
+ProxyPass "/thredds" "balancer://{{ c.name }}/thredds"
+{% endif %}
+{% endfor %}
+
+{% endfor %}

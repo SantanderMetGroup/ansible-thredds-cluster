@@ -1,0 +1,37 @@
+- name: Deploy load balancers
+  hosts: lbs
+  vars:
+    httpd_root: /etc/httpd
+    httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
+    httpd_version: 2.2.15
+  roles:
+    - role: load-balancer
+      lb_type: modproxy
+
+- name: Deploy workers
+  hosts: workers
+  vars:
+    jdk_root: "{{ ansible_env.HOME }}/deployment/jdk"
+    tomcat_home: "{{ ansible_env.HOME }}/deployment/tomcat"
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: worker
+      load_balancer: spock
+  tasks:
+    - import_tasks: restart.yml
+
+    - name: Copy catalogs
+      copy: src=catalog.xml dest={{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml
+      with_items: "{{ tomcats }}"
+      tags: catalogs
+
+    - import_tasks: restart.yml
+      tags: catalogs
+
+- name: Restart load balancer
+  hosts: lbs
+  tasks:
+    - name: Restart httpd
+      service: name=httpd state=restarted
+      tags: restart

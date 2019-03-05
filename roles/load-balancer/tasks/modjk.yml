@@ -3,8 +3,7 @@
 - name: Set modjk load balancer facts
   set_fact:
     ansible_become: "{{ ansible_become | default(False) }}"
-    httpd_htdocs: "{{ httpd_htdocs }}" # tds-modjk needs to copy static web files
-    mod_jk_conf: "{{ mod_jk_conf }}" # tds-modjk needs to register workers in mod_jk.workers file
+    mod_jk_conf: "{{ mod_jk_conf }}" # workers need to be registered in mod_jk.workers file
   tags: always
 
 - name: Create {{ mod_jk_conf }}
@@ -20,26 +19,3 @@
 - name: Create password for proxy status web pages
   htpasswd: path="{{ mod_jk_status }}/.htpasswd" username="{{ mod_jk_status_user }}" password="{{ mod_jk_status_passwd }}"
   when:  mod_jk_status_user is defined and mod_jk_status_passwd is defined
-
-- name: Add clusters (jk lb workers)
-  blockinfile:
-    dest: "{{ mod_jk_conf }}/mod_jk.workers"
-    marker: "# {mark} {{ item.name }}"
-    block: |
-      worker.list={{ item.name }}
-      worker.{{ item.name }}.type=lb
-      worker.{{ item.name }}.mount=/thredds/restrictedAccess/*
-  with_items: "{{ clusters }}"
-
-- name: Add cluster urimaps
-  blockinfile:
-    path: "{{ mod_jk_conf }}/mod_jk.urimaps"
-    marker: "# {mark} {{ item.0.name~item.1 }}"
-    block: |
-      /thredds/{{ item.1 }}|/*={{ item.0.name }}
-      {% if item.1 == "catalog" -%}
-      /thredds|/*={{ item.0.name }}
-      {% endif %}
-  with_subelements:
-    - "{{ clusters }}"
-    - services

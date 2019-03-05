@@ -1,21 +1,11 @@
-- name: Add workers in the collection balancer
+- name: Add workers to the load balancer
   lineinfile:
-    dest: "{{ hostvars[item.gateway].proxy_conf }}"
-    insertafter: <Proxy \"balancer://{{ item.collection.path }}\">
-    line: BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.port }}" loadfactor={{ item.loadfactor | default(1) }} route={{ item.route }}
-  delegate_to: "{{ item.gateway }}"
+    dest: "{{ hostvars[load_balancer].modproxy_conf }}"
+    insertafter: <Proxy \"balancer://{{ item.1 }}\">
+    line: BalancerMember "ajp://{{ worker_host | default(ansible_nodename) }}:{{ item.0.port }}" loadfactor={{ item.0.loadfactor | default(1) }} route={{ item.0.route }}
+  delegate_to: "{{ load_balancer }}"
   vars:
-    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}" # depends on how httpd was installed
-  with_items: "{{ replicas }}"
-
-- name: Add workers in the restricted balancer
-  blockinfile:
-    dest: "{{ hostvars[item.gateway].proxy_conf }}"
-    insertafter: <Proxy \"balancer://restricted\">
-    marker: "# {mark} RESTRICTED_{{ item.route }}"
-    block: |
-      BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.port }}" loadfactor=1 route={{ item.route }}
-  delegate_to: "{{ item.gateway }}"
-  vars:
-    ansible_become: "{{ hostvars[item.gateway].ansible_become | default(False) }}"
-  with_items: "{{ replicas }}"
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+  with_subelements:
+    - "{{ tomcats }}"
+    - clusters

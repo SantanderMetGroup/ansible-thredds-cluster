@@ -1,13 +1,11 @@
 - name: Stop workers
   command: "{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh"
-  tags: [restart, stop]
   ignore_errors: True
   register: stopped
   with_items: "{{ tomcats }}"
 
-- name: Remove tomcats catalina.pid to be removed
+- name: Remove tomcats catalina.pid
   file: path={{ tomcat_base }}/{{ item.name }}/logs/catalina.pid state=absent
-  tags: [restart, stop]
   with_items: "{{ tomcats }}"
 
 - name: Start workers

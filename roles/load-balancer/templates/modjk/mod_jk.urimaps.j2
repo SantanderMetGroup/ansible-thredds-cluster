@@ -1,3 +1,11 @@
 /status-jk=jk-manager
 /status-jk/*=jk-manager
 
+{% for c in clusters -%}
+{% for s in c.services -%}
+/thredds/{{ s }}|/*={{ c.name }}
+{% if s == "catalog" -%}
+/thredds|/*={{ c.name }}
+{% endif %}
+{% endfor %}
+{% endfor %}

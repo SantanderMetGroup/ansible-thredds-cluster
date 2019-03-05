@@ -1,3 +1,7 @@
+- name: Include mod_jk vars
+  include_vars: file="{{ role_path }}/defaults/mod_jk.yml"
+  tags: always
+
 - name: Install development packages
   become: True
   yum: state=present name="@Development tools"
@@ -5,7 +9,6 @@
 - name: Install httpd-devel
   become: True
   yum: state=present name=httpd-devel
-  when: mod_jk_httpd_from_package
 
 - name: Download mod_jk
   become: False

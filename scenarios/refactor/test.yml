@@ -10,17 +10,9 @@
 
 - name: Deploy workers
   hosts: workers
-  vars:
-    miniconda_env:
-      name: udg
-      channels:
-        - birdhouse
-      dependencies:
-        - libnetcdf=4.4.1
   roles:
     - role: yum
       dependencies: [jdk]
-    - role: miniconda
     - role: source
       dependencies: [tomcat]
     - role: worker

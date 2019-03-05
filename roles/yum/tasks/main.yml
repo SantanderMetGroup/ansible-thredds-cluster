@@ -1,20 +1,10 @@
-- name: Include vars for dependencies
-  include_vars:
-    file: "{{ role_path }}/defaults/{{ item }}.yml"
-  with_items: "{{ dependencies }}"
-  when: not item in no_vars
-  tags: always
-
 - name: Install epel
   become: True
-  yum:
-    name: epel-release
+  yum: name=epel-release
 
 - name: Install libselinux-python
   become: True
-  yum:
-    state: present
-    name: libselinux-python
+  yum: state=present name=libselinux-python
 
 - name: Install dependencies
   include_tasks: "{{ dependency }}.yml"
