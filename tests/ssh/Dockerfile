@@ -1,7 +1,7 @@
 FROM centos:7
 
-RUN yum groupinstall -y "Development Tools" &&
-    yum install -y epel-release &&
+RUN yum groupinstall -y "Development Tools" && \
+    yum install -y epel-release && \
     yum install -y openssh-server python sudo python-passlib rsync net-tools unzip \
 	vim telnet
 

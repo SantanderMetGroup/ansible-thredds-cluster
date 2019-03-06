@@ -17,19 +17,23 @@
   local_action: get_url
   args:
     url: "{{ mod_jk_download_url }}"
-    dest: "{{ downloads_tmp }}/{{ mod_jk_filename }}"
+    dest: "{{ downloads }}/{{ mod_jk_filename }}"
 
 - name: Create mod_jk_src directory
-  file: path="{{ mod_jk_src }}" state=directory
+  file: path={{ mod_jk_src }} state=directory
   
 - name: Unarchive mod_jk
-  unarchive: src={{ downloads_tmp }}/{{ mod_jk_filename }} dest={{ mod_jk_src }}
+  unarchive: src={{ downloads }}/{{ mod_jk_filename }} dest={{ mod_jk_src }}
+
+- name: Configure mod_jk
+  shell: "./configure --with-apxs=$(which apxs) {{ mod_jk_configure | default('') }}"
+  args:
+    chdir: "{{ mod_jk_src }}/{{ mod_jk_filename_unarchive }}/native"
 
 - name: Configure and install mod_jk
-  command: "{{ item }}"
+  shell: "{{ item }}"
   args:
     chdir: "{{ mod_jk_src }}/{{ mod_jk_filename_unarchive }}/native"
   with_items:
-    - ./configure {{ mod_jk_configure | default("--with-apxs=/usr/sbin/apxs") }}
     - /usr/bin/make
     - /usr/bin/make install
