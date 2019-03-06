@@ -1,11 +1,11 @@
-- name: Add workers to the load balancer
+- name: Add workers to the lb worker
   lineinfile:
     dest: "{{ hostvars[load_balancer].modproxy_conf }}"
     insertafter: <Proxy \"balancer://{{ item.1 }}\">
-    line: BalancerMember "ajp://{{ worker_host | default(ansible_nodename) }}:{{ item.0.port }}" loadfactor={{ item.0.loadfactor | default(1) }} route={{ item.0.route }}
+    line: BalancerMember "ajp://{{ item.host | default(ansible_nodename) }}:{{ item.0.port }}" loadfactor={{ item.0.loadfactor | default(1) }} route={{ item.0.route }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
   with_subelements:
-    - "{{ tomcats }}"
+    - "{{ workers }}"
     - clusters

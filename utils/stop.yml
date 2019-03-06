@@ -1,0 +1,11 @@
+- name: Stop tomcats
+  command: "{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh"
+  args:
+    removes: "{{ tomcat_base }}/{{ item.name }}/logs/catalina.pid"
+  tags: stop
+  with_items: "{{ tomcats }}"
+
+- name: Remove tomcats catalina.pid
+  file: path={{ tomcat_base }}/{{ item.name }}/logs/catalina.pid state=absent
+  tags: stop
+  with_items: "{{ tomcats }}"

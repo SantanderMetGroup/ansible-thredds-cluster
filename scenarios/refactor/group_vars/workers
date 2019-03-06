@@ -1,4 +1,3 @@
-worker_host: "{{ inventory_hostname }}"
 tomcats:
   - name: i1
     shutdown: 20005
@@ -7,17 +6,22 @@ tomcats:
         protocol: AJP/1.3
       - port: 8080
         protocol: HTTP/1.1
-    route: i1{{ worker_host }}
-    port: 8223
-    clusters: [catalog]
 
   - name: i2
-    shutdown: 21006
-    route: i2{{ worker_host }}
-    clusters: [data]
-    port: 8224
+    shutdown: 20006
     connectors:
       - port: 8224
         protocol: AJP/1.3
       - port: 8081
         protocol: HTTP/1.1
+
+workers:
+  - host: "{{ inventory_hostname }}"
+    port: 8223
+    route: "{{ inventory_hostname }}i1"
+    clusters: [catalog]
+
+  - host: "{{ inventory_hostname }}"
+    port: 8224
+    route: "{{ inventory_hostname }}i2"
+    clusters: [data]

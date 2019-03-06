@@ -19,14 +19,14 @@
     - role: worker
       load_balancer: spock
   tasks:
-    - import_tasks: restart.yml
+    - import_tasks: ../../utils/restart.yml
 
     - name: Copy catalogs
       copy: src=catalog.xml dest={{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml
       with_items: "{{ tomcats }}"
       tags: catalogs
 
-    - import_tasks: restart.yml
+    - import_tasks: ../../utils/restart.yml
       tags: catalogs
 
 - name: Restart load balancer

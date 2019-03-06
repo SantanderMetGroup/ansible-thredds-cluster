@@ -5,7 +5,7 @@
 - name: Set up catalina bases
   file: path="{{ tomcat_base }}/{{ item.0.name }}/{{ item.1 }}" state=directory
   loop_control:
-    label: "{{ item.0.name ~ '->' ~ item.1 }}"
+    label: "{{ item.0.name ~ '-' ~ item.1 }}"
   with_nested:
     - "{{ tomcats }}"
     - ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
@@ -38,7 +38,7 @@
   template: src=shutdown.sh.j2 dest="{{ tomcat_base }}/{{ item.name }}/bin/shutdown.sh" mode=u+x
   with_items: "{{ tomcats }}"
 
-- name: Add <Cluster> to tds
+- name: Set up tomcats cluster
   lineinfile:
     path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
     insertbefore: </Host>
@@ -46,6 +46,6 @@
   with_items: "{{ tomcats }}"
   when: tomcat_cluster
 
-- name: Configure memcached Manager
+- name: Set up memcached Manager
   include_tasks: memcached-manager.yml
   when: tomcat_manager == "memcached"

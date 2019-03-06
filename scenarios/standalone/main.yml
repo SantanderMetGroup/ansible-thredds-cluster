@@ -1,50 +1,13 @@
 - hosts: localhost
   vars:
     root: /tmp/sandbox
-    # roles customization
+    tomcat_home: "{{ root }}/tomcat"
     tomcat_base: "{{ root }}"
-
     tds_version: 5.0.0-beta6
-
-    miniconda_python: 2
-    miniconda_prefix: "{{ root }}/miniconda"
-    miniconda_manage_dependencies: False
-    miniconda_env:
-      name: tds
-      channels:
-        - birdhouse
-      dependencies:
-        - libnetcdf=4.4.1
-        - supervisor
-        - apache-tomcat
-
   roles:
-    - role: miniconda
+    - role: jdk-source
+    - role: tomcat-source
+    - role: tomcat
     - role: tds
-    - role: supervisor-tds
-
   tasks:
-    # management
-    - include_tasks: ../../utils/test-authentication.yml
-      vars:
-        instances: "{{ tds }}"
-        
-    - name: Restart TDS
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: restarted
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items: "{{ tds }}"
-      tags: restart
-
-    - name: Stop TDS
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: stopped
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items: "{{ tds }}"
-      tags: ['stop', 'never']
-
-    - name: Stop supervisor 
-      shell: kill $(cat {{ supervisor_home }}/var/supervisord.pid)
-      tags: ['stop', 'never']
+    - import_tasks: ../../utils/restart.yml

@@ -1,8 +1,8 @@
-- set_fact:
-    jdk_root: "{{ jdk_root }}"
+- name: Create downloads directory
+  file: dest={{ downloads }} state=directory
 
 - name: Create directories for jdk
-  file: dest="{{ jdk_root }}" state=directory
+  file: dest={{ jdk_root }} state=directory
 
 - name: Download jdk
   become: False
@@ -11,7 +11,8 @@
   args:
     url: "{{ jdk_download_url }}"
     dest: "{{ downloads }}/{{ jdk_filename }}"
-    headers: "{{ jdk_header }}"
+    headers:
+      Cookie: oraclelicense=accept-securebackup-cookie
 
 - name: Unarchive file in remote host
   unarchive:

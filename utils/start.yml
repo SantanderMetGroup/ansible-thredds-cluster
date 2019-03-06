@@ -1,0 +1,13 @@
+- name: Start tomcats
+  shell: "nohup {{ tomcat_base }}/{{ item.name }}/bin/startup.sh"
+  args:
+    creates: "{{ tomcat_base }}/{{ item.name }}/logs/catalina.pid"
+  register: started
+  tags: start
+  with_items: "{{ tomcats }}"
+
+- name: Wait for content/thredds initialization
+  wait_for: path={{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml delay=3
+  when: started is changed
+  tags: start
+  with_items: "{{ tomcats }}"
