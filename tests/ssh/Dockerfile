@@ -1,13 +1,10 @@
 FROM centos:7
 
-RUN yum install -y epel-release && yum install -y \
-	openssh-server python sudo \
-	python-passlib rsync net-tools unzip \
+RUN yum groupinstall -y "Development Tools" &&
+    yum install -y epel-release &&
+    yum install -y openssh-server python sudo python-passlib rsync net-tools unzip \
 	vim telnet
 
-RUN yum groupinstall -y "Development Tools"
-
-# add apache user
 RUN adduser ansible -G wheel ; \
 	echo 'ansible:ansible' | chpasswd ; \
 	echo '%wheel         ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers
@@ -21,7 +18,7 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 
 COPY insecure_private_key /tmp/
 
-## Vagrant insecure key
+## insecure key
 RUN mkdir /home/ansible/.ssh ; \
 	touch /home/ansible/.ssh/authorized_keys ; \
 	chown -R ansible:ansible /home/ansible/.ssh ; \

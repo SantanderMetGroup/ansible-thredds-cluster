@@ -5,7 +5,7 @@ set -e # if any command fail, exit
 cd ..
 
 PROJECT_NAME="ansible-thredds-cluster"
-PLAYBOOKS=${1:-"conda.yml source.yml"} # yum.yml -> catalina.sh not found because of systemd
+PLAYBOOKS=${1:-"simple.yml"} # yum.yml -> catalina.sh not found because of systemd
 
 debug() {
     echo "$(docker --version)"
