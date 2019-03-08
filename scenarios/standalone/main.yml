@@ -12,3 +12,11 @@
     - role: tds
   tasks:
     - import_tasks: ../../utils/restart.yml
+
+    - name: Clean
+      file: path={{ root }} state=absent
+      tags: [never, purge, clean]
+
+    - name: Purge
+      file: path={{ downloads }} state=absent
+      tags: [never, purge]
