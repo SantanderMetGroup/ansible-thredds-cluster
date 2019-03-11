@@ -1,4 +1,4 @@
-# HAProxy #
+# HAProxy + THREDDS#
 
 In this scenario, we have two servers with two Tomcat instances each (instance1 and instance2, running THREDDS). 
 Clients' requests are load balanced at Application Level (L7 in OSI model) using __HAProxy__, discriminating the URI to select which pool of servers redirect the request to (depending on, for example, the collection of datasets requested).
