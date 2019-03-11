@@ -1,0 +1,9 @@
+- name: Template httpd.conf
+  template:
+    src: httpd.conf.j2
+    dest: "{{ httpd_conf_file }}"
+
+- name: Copy dataset into {{ httpd_htdocs }}
+  copy:
+    src: data/datasets/singleDataset.nc
+    dest: "{{ httpd_htdocs }}"
