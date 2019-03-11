@@ -1,0 +1,63 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Configure load balancer
+  become: True
+  hosts: gateways
+  vars:
+    vip: "{{ ansible_ens10.ipv4.address }}"
+  roles:
+    - role: yum
+      dependencies: [ipvsadm]
+    - role: source
+      dependencies: [keepalived]
+      tags: [keepalived]
+    - role: keepalived
+      tags: [keepalived]
+  tasks:
+    - name: Disable Reverse Path Filtering
+      sysctl:
+        name: "{{ item }}"
+        value: 0
+      with_items:
+        - net.ipv4.conf.all.rp_filter
+        - "net.ipv4.conf.{{ ansible_ens10.device }}.rp_filter"
+          #- "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+
+- name: Configure servers
+  hosts: httpd_servers
+  vars:
+    #ansible_become_pass: ansible
+    # required interface
+    httpd_root: "{{ ansible_env.HOME }}/httpd_server"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: source
+      dependencies: [httpd, supervisor]
+      httpd_version: '2.4.6'
+      tags: [httpd_deploy]
+    - role: httpd-server
+      tags: [httpd_deploy, httpd-server]
+    - role: supervisor-httpd
+      tags: [httpd_deploy]
+    - role: httpd-keepalived
+      tags: [keepalived]
+      become: True
+  tasks:
+
+    - name: Start httpd instances
+      supervisorctl:
+        name: httpd
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+
+
+- name: Start keepalived
+  hosts: gateways
+  become: True
+  tasks:
+    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}" 
+  tags: [keepalived, start_keepalived]
