@@ -19,7 +19,7 @@ With this mode, as the session is not tied to a single server, it is not stored 
 node will be the backup node; the session is then stored and/or updated in both of them.
 
 ## References ##
-[Memcached Session Manager Docs - Sticky Mode](https://github.com/magro/memcached-session-manager/wiki#how-does-it-work)
-[Memcached Session Manager Docs - Non-sticky Mode](https://github.com/magro/memcached-session-manager/wiki/FAQ#how-are-sessions-stored-in-memcached-in-non-sticky-mode)
+* [Memcached Session Manager Docs - Sticky Mode](https://github.com/magro/memcached-session-manager/wiki#how-does-it-work)
+* [Memcached Session Manager Docs - Non-sticky Mode](https://github.com/magro/memcached-session-manager/wiki/FAQ#how-are-sessions-stored-in-memcached-in-non-sticky-mode)
 ## Diagram ##
 ![Diagram HAProxy](./haproxy_memcached_diagram.png)
