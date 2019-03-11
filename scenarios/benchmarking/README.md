@@ -15,7 +15,7 @@ HAProxy performs load balancing at Application Level (L7 in OSI model) mapping t
 requested) using HAProxy's ACLs. In addition to that, HAProxy performs periodic health checks to monitor the backend and keep a proper list of available servers.
 
 Memcached is used as a session manager for Tomcat instances. It can be configured in _sticky_ mode or _non-sticky_ mode, depending on the load balancer's persistence configuration. For further details,
-plase read [haproxy_memcached_thredds/README.md](the scenario's README).
+plase read [the scenario's README](haproxy_memcached_thredds/README.md).
 
 ![Diagram HAProxy_Memcached](./haproxy_memcached_thredds/haproxy_memcached_diagram.png)
 
