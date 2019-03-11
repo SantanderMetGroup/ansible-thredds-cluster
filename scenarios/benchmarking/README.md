@@ -17,7 +17,7 @@ requested) using HAProxy's ACLs. In addition to that, HAProxy performs periodic 
 Memcached is used as a session manager for Tomcat instances. It can be configured in _sticky_ mode or _non-sticky_ mode, depending on the load balancer's persistence configuration. For further details,
 plase read [haproxy_memcached_thredds/README.md](the scenario's README).
 
-![Diagram HAProxy_Memcached](./haproxy_memcached/thredds/haproxy_memcached_diagram.png)
+![Diagram HAProxy_Memcached](./haproxy_memcached_thredds/haproxy_memcached_diagram.png)
 
 
 ## IPVS + THREDDS ##
