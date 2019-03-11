@@ -25,7 +25,7 @@ TCP  172.28.128.6:8080                 6    25425        0  1324596        0
 
 ## References ##
 * [Memcached Session Manager Docs - Non-sticky mode](https://github.com/magro/memcached-session-manager/wiki/FAQ#how-are-sessions-stored-in-memcached-in-non-sticky-mode)
-* [Keepalived Docs] (http://www.keepalived.org/doc/)
+* [Keepalived Docs](http://www.keepalived.org/doc/)
 
 ## Diagram ##
 ![Diagram ipvs_memcached](./ipvs_memcached_diagram.png)
