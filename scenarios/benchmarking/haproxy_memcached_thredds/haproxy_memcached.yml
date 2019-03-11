@@ -14,10 +14,11 @@
   hosts: tds
   vars:
     # required interface
-    jdk_root: "{{ ansible_env.HOME }}/jdk"
-    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
-    tomcat_base: "{{ ansible_env.HOME }}/instances"
-    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+    home_dir: /mnt/nvme0n1
+    jdk_root: "{{home_dir}}/jdk"
+    tomcat_home: "{{home_dir}}/jdk}/tomcat"
+    tomcat_base: "{{home_dir}}/instances"
+    venv_home: "{{home_dir}}/virtualenv"
   roles:
     - role: source
       dependencies: [jdk, tomcat, supervisor]
@@ -28,7 +29,7 @@
     - role: tds-haproxy
     - role: tomcat-memcached
       instances: "{{ tds }}"
-      tags: [tds_deploy]
+      tags: [tds_deploy, tomcat-memcached]
     - role: supervisor-tds
       tags: [tds_deploy]
   tasks:
@@ -66,3 +67,4 @@
   hosts: gateways
   tasks:
     - command: "{{ haproxy_bin }} -f {{ haproxy_conf }}"
+  tags: [haproxy, start_haproxy]
