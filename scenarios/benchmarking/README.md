@@ -10,10 +10,20 @@ Persistency is achieved using _sticky sessions_: HAProxy appends a small amount 
 
 ![Diagram HAProxy](./haproxy_thredds/haproxy_diagram.png)
 
+## HAProxy + Memcached + THREDDS ##
+HAProxy performs load balancing at Application Level (L7 in OSI model) mapping the URI from the request to a specific server or pool of servers (depending on, for example, the collection of datasets
+requested) using HAProxy's ACLs. In addition to that, HAProxy performs periodic health checks to monitor the backend and keep a proper list of available servers.
+
+Memcached is used as a session manager for Tomcat instances. It can be configured in _sticky_ mode or _non-sticky_ mode, depending on the load balancer's persistence configuration. For further details,
+plase read [haproxy_memcached_thredds/README.md](the scenario's README).
+
+![Diagram HAProxy_Memcached](./haproxy_memcached/thredds/haproxy_memcached_diagram.png)
+
+
 ## IPVS + THREDDS ##
 IPVS performs load balancing at Transport Level (L4 in OSI model) with a Direct Server Return (DSR) scheme, so the server is able to answer directly to the client bypassing the load balancer. Although this 
-scheme is expected to perform much better than the others thanks to that bypassing, it lacks the capacity to achieve persistency/session replication and to monitor the backend (which is fixed in [ipvs_memcached](./ipvs_memcached)
-, using memcached and keepalived respectively).
+scheme is expected to perform much better than the others thanks to that bypassing, it lacks the capacity to achieve persistency/session replication and to monitor the backend (which is fixed in 
+[ipvs_memcached](./ipvs_memcached), using memcached and keepalived respectively).
 
 
 ![Diagram IPVS](./ipvs_thredds/ipvs_diagram.png)
