@@ -26,7 +26,7 @@ tds:
     shutdown: 18000
     tds_content_root: "{{ tomcat_base }}/instance1/content" # /thredds is hardcoded
     tds_debug:
-      jpda_address: "{{ ansible_eth1.ipv4.address }}:8000"
+      jpda_address: "{{ ansible_ens10.ipv4.address }}:8000"
     connectors:
       - protocol: HTTP/1.1
         port: 8080
@@ -34,12 +34,14 @@ tds:
         port: 18009
     manager:
       className: "de.javakaffee.web.msm.MemcachedBackupSessionManager"
-      memcachedNodes: "n1:{{ hostvars[groups['tds'][0]].ansible_eth1.ipv4.address }}:11211"
+      memcachedNodes: "n1:{{ hostvars[groups['tds'][0]].ansible_ens10.ipv4.address }}:11211,n2:{{hostvars[groups['tds'][1]].ansible_ens10.ipv4.address }}:11211"
+      sticky: "false"
+      lockingMode: "auto"
 
 replicas:
   - &replica1
     gateway: "{{ groups['gateways'][0] }}" # ansible host id
-    host: "{{ ansible_eth1.ipv4.address }}" # tds_instance IP or hostname
+    host: "{{ ansible_ens10.ipv4.address }}" # tds_instance IP or hostname
     tds_instance: *instance1
     collection: *collection1
     route: "{{ ansible_nodename ~ '_' ~ 18009 }}"

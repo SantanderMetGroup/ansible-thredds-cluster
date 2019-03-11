@@ -1,0 +1,28 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Tasks for gateway
+  hosts: gateways
+  become: True
+  tasks:
+    - name: Start keepalived
+      shell: "{{ ansible_env.HOME }}/keepalived/sbin/keepalived -f {{ ansible_env.HOME }}/keepalived/etc/keepalived/keepalived.conf"
+
+- name: Tasks for servers
+  hosts: tds
+  tasks:
+
+    - name: REDIRECT to lo interface packets destined to VIP
+      become: True
+      iptables:
+        table: nat
+        chain: PREROUTING
+        destination: "{{ hostvars['gateway'].ansible_eth1.ipv4.address }}"
+        jump: REDIRECT
+
+    - name: Start virtualvenv
+      command: "{{ ansible_env.HOME }}/virtualenv/bin/supervisord -c {{ ansible_env.HOME }}/virtualenv/etc/supervisord/supervisord.conf"
+
+    - name: Start memcached
+      command: "memcached -d -u ansible"

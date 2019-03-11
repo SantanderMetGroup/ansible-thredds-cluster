@@ -6,11 +6,15 @@
   become: True
   hosts: gateways
   vars:
-    vip: "{{ ansible_eth1.ipv4.address }}"
+    vip: "{{ ansible_ens10.ipv4.address }}"
   roles:
     - role: yum
       dependencies: [ipvsadm]
-    - role: ipvsadm
+    - role: source
+      dependencies: [keepalived]
+      tags: [keepalived]
+    - role: keepalived
+      tags: [keepalived]
   tasks:
     - name: Disable Reverse Path Filtering
       sysctl:
@@ -18,11 +22,13 @@
         value: 0
       with_items:
         - net.ipv4.conf.all.rp_filter
-        - "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
-                                                              
+        - "net.ipv4.conf.{{ ansible_ens10.device }}.rp_filter"
+          #- "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+
 - name: Configure servers
   hosts: tds
   vars:
+    ansible_become_pass: ansible
     # required interface
     jdk_root: "{{ ansible_env.HOME }}/jdk"
     tomcat_home: "{{ ansible_env.HOME }}/tomcat"
@@ -31,20 +37,26 @@
   roles:
     - role: source
       dependencies: [jdk, tomcat, supervisor]
+      tags: [tds_deploy, jdk]
+  # - role: yum
+  #   dependencies: [memcached]
       tags: [tds_deploy]
-    - role: tds
-      tags: [tds_deploy]
-    - role: tds-ipvsadm
-      become: True
-    - role: tomcat-cluster
+    - role: tomcat-memcached
       instances: "{{ tds }}"
       tags: [tds_deploy]
     - role: supervisor-tds
       tags: [tds_deploy]
+    - role: tds-keepalived
+      tags: [keepalived]
+      become: True
   tasks:
     - include_tasks: ../../../utils/test-authentication.yml
       vars:
         instances: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: Start memcached
+      command: memcached -d -u ansible
       tags: [tds_deploy]
 
     - name: start tds instances
@@ -67,14 +79,9 @@
       with_items: "{{ tds }}"
       tags: [tds_deploy, restart, update_catalogs]
 
-
-- name: Start ipvsadm
+- name: Start keepalived
   hosts: gateways
   become: True
   tasks:
-
-    - systemd:
-        name: ipvsadm.service
-        state: started
-          
-    - shell: "ipvsadm-restore < {{ ipvs_rules }}"
+    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}" 
+  tags: [keepalived, start_keepalived]
