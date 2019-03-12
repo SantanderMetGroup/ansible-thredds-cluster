@@ -4,7 +4,7 @@ In this scenario, we have two servers with two Tomcat instances each (instance1 
 Clients' requests are load balanced at Application Level (L7 in OSI model) using __HAProxy__, discriminating the URI to select which pool of servers redirect the request to (depending on, for example,
 the collection of datasets requested).
 
-In order to handle session management, Tomcat instances use [Memcached](https://github.com/magro/memcached-session-manager/wiki), which can be configured with _sticky_ or _non-sticky_ mode, depending
+In order to handle session management, Tomcat instances use [Memcached Session Manager](https://github.com/magro/memcached-session-manager/wiki), which can be configured with _sticky_ or _non-sticky_ mode, depending
 on the load balancer's persistency configuration. In this case, the scenario is prepared with _sticky_ mode, but this can be changed.
 
 ### Sticky mode ###
