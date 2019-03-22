@@ -3,18 +3,27 @@
   local_action: get_url
   args:
     url: "{{ tds_download_url }}"
-    dest: "{{ downloads}}/{{ tds_filename }}"
+    dest: "{{ downloads}}/{{ tds_war }}"
   vars:
     ansible_become: False
 
-- name: Create webapps/thredds
-  file: state=directory path={{ tomcat_base }}/{{ item.name }}/webapps/thredds
+- name: Create webapps/{{ tds_context }} directory
+  file: state=directory path={{ tomcat_base }}/{{ item.name }}/webapps/{{ tds_context }}
   with_items: "{{ tomcats }}"
 
 - name: Unarchive TDS
-  unarchive: src={{ downloads }}/{{ tds_filename }} dest={{ tomcat_base }}/{{ item.name }}/webapps/thredds
+  unarchive: src={{ downloads }}/{{ tds_war }} dest={{ tomcat_base }}/{{ item.name }}/webapps/{{ tds_context }}
   with_items: "{{ tomcats }}"
 
-- name: Create content/thredds
-  file: path="{{ tomcat_base}}/{{ item.name }}/content/thredds" state=directory
+- name: Update TDS context path
+  include_tasks: context.yml
+  when: tds_context != 'thredds'
+
+- name: Create content directory
+  file: path={{ tomcat_base}}/{{ item.name }}/content/thredds state=directory
   with_items: "{{ tomcats }}"
+
+- name: Copy root TDS catalog
+  copy: src={{ tds_root_catalog }} dest={{ tomcat_base }}/{{ item.name }}/content/thredds
+  with_items: "{{ tomcats }}"
+  when: tds_root_catalog is defined
