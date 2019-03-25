@@ -2,7 +2,7 @@
   replace:
     path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
     regexp: "<Engine(?!(.*)jvmRoute)(.*)>"
-    replace: <Engine\2 jvmRoute="{{ item.route }}">
+    replace: <Engine\2 jvmRoute="{{ item.worker.route }}">
   with_items: "{{ tomcats }}"
   when: hostvars[load_balancer].lb_type in ["modjk", "modproxy"]
 
