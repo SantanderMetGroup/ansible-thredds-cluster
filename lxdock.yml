@@ -1,5 +1,5 @@
 name: tds-cluster
-image: centos/6
+image: centos/7
 
 containers:
   - name: lb
@@ -8,6 +8,11 @@ containers:
     hostnames: [worker1]
   - name: worker2
     hostnames: [worker2]
+
+shares:
+  - source: /oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset
+    dest: /oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset
+    set_host_acl: false
 
 provisioning:
   - type: ansible

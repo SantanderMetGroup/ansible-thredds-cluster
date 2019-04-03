@@ -8,6 +8,11 @@
     - role: load-balancer
       lb_type: modproxy
   pre_tasks:
+    # spock is supposed to have an ESGF node installed but lxc container is empty
+    - name: Install httpd in lxd container
+      include_role: name=httpd-centos7
+      when: "'spock' == inventory_hostname"
+
     - name: Copy esgf-httpd.conf with /thredds disabled
       copy: src=esgf-httpd.conf dest=/etc/httpd/conf/esgf-httpd.conf
 
@@ -16,18 +21,19 @@
   vars:
     jdk_root: "{{ ansible_env.HOME }}/deployment/jdk"
     tomcat_home: "{{ ansible_env.HOME }}/deployment/tomcat"
-    tds_root_catalog: /oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset/catalogs/catalog.xml
+    tds_root_catalog: catalog.xml
   roles:
     - role: jdk-source
     - role: tomcat-source
     - role: worker
-      load_balancer: spock
   tasks:
-    - name: Link to cmip5-esm-subset catalogs
-      file: state=link src=/oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset/catalogs dest={{ tomcat_base }}/{{ item.name }}/content/thredds/cmip5-esm-subset
+    - name: Copy catalogs
+      copy: src=catalogs dest={{ tomcat_base }}/{{ item.name }}/content/thredds
       with_items: "{{ tomcats }}"
+      tags: catalogs
 
     - import_tasks: ../../utils/restart.yml
+      tags: catalogs, restart
 
 - name: Restart load balancer
   hosts: lbs

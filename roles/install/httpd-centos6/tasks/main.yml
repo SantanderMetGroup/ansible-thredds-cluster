@@ -1,0 +1,7 @@
+- name: Install httpd
+  become: True
+  yum: state=present name=httpd
+
+- name: Create link to /etc/mime.types
+  become: True
+  file: state=link src=/etc/mime.types dest="{{ httpd_conf }}/mime.types"

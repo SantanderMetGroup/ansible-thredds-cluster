@@ -4,6 +4,8 @@
     removes: "{{ tomcat_base }}/{{ item.name }}/logs/catalina.pid"
   tags: stop
   with_items: "{{ tomcats }}"
+  ignore_errors: True # If catalina.pid is present but process is not running, we don't want an error
+  # If there is any case where this should fail, use failed_when
 
 - name: Remove tomcats catalina.pid
   file: path={{ tomcat_base }}/{{ item.name }}/logs/catalina.pid state=absent

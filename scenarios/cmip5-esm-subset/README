@@ -1,1 +1,33 @@
-1 - Initialize lxc containers in the root directory (gateway, server1, server2)
+# cmip5-esm-subset
+
+This scenario deploys an httpd gateway in spock, with 4 tomcat servers, 2 in wn023 and 2 in wn025.
+
+## Data
+
+The data in the TDS servers are those from the ZFS dataset in /oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset/data. NcMLs and catalogs are generated using the `data` script. NcMLs are generated in /oceano/gmeteo/WORK/zequi/DATASETS/cmip5-esm-subset/ncmls. The catalog is generated in catalogs/cmip5-esm-subset.xml.
+
+In order to execute the script, you need to have access to /oceano filesystem and the `tdspu` package (https://meteo.unican.es/gitbucket/git/zequi/cmip5-esm-subset-mon.git) installed (see requirements.yml) in your control machine.
+
+## Test (requires lxd)
+
+```bash
+lxdock up
+ansible-playbook deploy.yml -i ../../inventory
+```
+
+In the browser: `lb/thredds`
+
+## Production (spock, wn023, wn025)
+
+```bash
+ansible-playbook deploy.yml -i ../../inventory
+```
+
+## Monitoring
+
+Monitoring is available at the following URLs:
+
+- https://spock.meteo.unican.es/monitoring/i1-wn023
+- https://spock.meteo.unican.es/monitoring/i2-wn023
+- https://spock.meteo.unican.es/monitoring/i1-wn025
+- https://spock.meteo.unican.es/monitoring/i2-wn025
