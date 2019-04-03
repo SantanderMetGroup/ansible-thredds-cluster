@@ -9,3 +9,11 @@
   with_subelements:
     - "{{ tomcats }}"
     - worker.clusters
+
+- name: Add java melody urimaps
+  delegate_to: "{{ load_balancer }}"
+  lineinfile:
+    path: "{{ hostvars[load_balancer].modproxy_conf }}"
+    line: ProxyPass "/monitoring/{{ item.worker.route }}" "http://{{ item.worker.host }}:{{ item.melody.port }}/{{ tds_context }}/monitoring"
+  with_items: "{{ tomcats }}"
+  when: tds_melody
