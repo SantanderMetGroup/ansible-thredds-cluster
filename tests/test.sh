@@ -2,25 +2,8 @@
 
 trap "exit" INT # CTRL-C
 set -e # if any command fail, exit
-cd ..
 
-PROJECT_NAME="ansible-thredds-cluster"
 PLAYBOOKS=${1:-"simple.yml"} # yum.yml -> catalina.sh not found because of systemd
-
-debug() {
-    echo "$(docker --version)"
-    echo "$(docker-compose --version)"
-}
-
-# deploy the playbook passed as parameter
-deploy() {
-    docker-compose up --force-recreate --scale tds=2 -d
-    docker run -t --network ansible-thredds-cluster_default $PROJECT_NAME /ansible-thredds-cluster/tests/ansible/main.sh $1
-}
-
-down() {
-    docker-compose stop
-}
 
 requests() {
     DATASET1="http://$1:$2/thredds/dodsC/collection1/singleDataset.nc.html"
@@ -35,19 +18,10 @@ requests() {
     curl $CURL_OPTS -u alice:1234 $DATASET2
 }
 
-# main
-debug
-export COMPOSE_PROJECT_NAME=$PROJECT_NAME
-
-# if image ansible exists don't create it
-if [[ "$(docker images -q $PROJECT_NAME 2> /dev/null)" == "" ]]; then
-    docker build -t $PROJECT_NAME .
-fi
-
-for i in $PLAYBOOKS
+for p in $PLAYBOOKS
 do
-    deploy $i
-    sleep 5s
-    requests localhost 4000
-    down
+    lxdock up
+    ansible-playbook $p
+    requests lb 4000
+    lxdock destroy -f
 done
