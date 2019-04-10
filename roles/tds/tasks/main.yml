@@ -1,5 +1,5 @@
 # Catalina base
-- name: Set up tomcat {{ tomcat_name }}
+- name: Set up {{ tomcat_name }}
   file: dest="{{ tomcat_base }}/{{ tomcat_name }}" state=directory
 
 - name: Set up catalina base
@@ -72,3 +72,7 @@
 - name: Install java melody
   include_tasks: melody.yml
   when: tds_melody
+
+- name: Register TDS as a worker in the cluster
+  include_tasks: worker.yml
+  when: worker is defined

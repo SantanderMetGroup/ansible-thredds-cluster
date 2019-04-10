@@ -1,10 +1,12 @@
 - name: Set jvmRoute in tomcats
   replace:
-    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
     regexp: "<Engine(?!(.*)jvmRoute)(.*)>"
-    replace: <Engine\2 jvmRoute="{{ item.worker.route }}">
-  with_items: "{{ tomcats }}"
+    replace: <Engine\2 jvmRoute="{{ worker.route }}">
   when: hostvars[load_balancer].lb_type in ["modjk", "modproxy"]
+
+- name: Add worker to the load balancer
+  include_tasks: "{{ hostvars[load_balancer].lb_type }}.yml"
 
 # Simulate serial, https://github.com/ansible/ansible/issues/12170#issuecomment-372263149
 - name: Add workers to the load balancer

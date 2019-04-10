@@ -7,11 +7,16 @@
   roles:
     - role: load-balancer
       lb_type: modproxy
+      clusters:
+        - name: data
+          services: [dodsC, fileServer, dap4, ncss]
+        - name: catalog
+          services: [catalog]
   pre_tasks:
     # spock is supposed to have an ESGF node installed but lxc container is empty
     - name: Install httpd in lxd container
       include_role: name=httpd-centos7
-      when: "'spock' == inventory_hostname"
+      when: "'spock' != inventory_hostname"
 
     - name: Copy esgf-httpd.conf with /thredds disabled
       copy: src=esgf-httpd.conf dest=/etc/httpd/conf/esgf-httpd.conf
@@ -25,15 +30,33 @@
   roles:
     - role: jdk-source
     - role: tomcat-source
-    - role: worker
+    - role: tds
+      tomcat_name: tds1
+      tomcat_http_port: 8080
+      tomcat_ajp_port: 8008
+      tomcat_shutdown_port: 8005
+      worker:
+        host: "{{ inventory_hostname }}"
+        route: "{{ inventory_hostname }}-tds1"
+        clusters: [catalog]
+    - role: tds
+      tomcat_name: tds2
+      tomcat_http_port: 8081
+      tomcat_ajp_port: 8018
+      tomcat_shutdown_port: 8006
+      worker:
+        host: "{{ inventory_hostname }}"
+        route: "{{ inventory_hostname }}-tds2"
+        clusters: [data]
   tasks:
     - name: Copy catalogs
-      copy: src=catalogs dest={{ tomcat_base }}/{{ item.name }}/content/thredds
-      with_items: "{{ tomcats }}"
+      copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
+      with_items: [tds1, tds2]
       tags: catalogs
 
-    - import_tasks: ../../utils/restart.yml
-      tags: catalogs, restart
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds1, tds2]
 
 - name: Restart load balancer
   hosts: lbs
