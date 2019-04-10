@@ -1,9 +1,11 @@
 - hosts: localhost
   vars:
     root: "{{ playbook_dir }}/sandbox"
+    ansible_python_interpreter: /usr/bin/python3 # required if using apt packages
     tomcat_home: "{{ root }}/tomcat"
     tomcat_base: "{{ root }}"
   roles:
+    - role: supervisord-ubuntu
     - role: jdk-source
     - role: tomcat-source
     - role: tds

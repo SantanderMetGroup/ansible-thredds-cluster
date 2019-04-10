@@ -1,11 +1,13 @@
-- name: Create supervisord directories
-  file: dest="{{ item }}" state=directory
-  with_items: [ {{ supervisor_etc }}, {{ supervisor_var }} ]
+- name: Create supervisor_etc in {{ supervisor_etc }}
+  file: dest={{ supervisor_etc }} state=directory
 
-- name: Create directory {{ supervisor_programs }}
-  file: dest="{{ supervisor_programs }}" state=directory
+- name: Create supervisor_var in {{ supervisor_var }}
+  file: dest={{ supervisor_var }} state=directory
 
-- name: Create supervisord.conf
+- name: Create supevisor_programs in {{ supervisor_programs }}
+  file: dest={{ supervisor_programs }} state=directory
+
+- name: Template supervisord.conf
   template: src=supervisord.conf.j2 dest="{{ supervisor_etc }}/supervisord.conf"
 
 - name: Check if supervisord is already running

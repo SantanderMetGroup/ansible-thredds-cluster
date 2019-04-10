@@ -1,0 +1,9 @@
+- name: Install supervisor
+  become: True
+  package: state=present name=supervisor
+
+- name: Configure supervisord
+  include_role:
+    name: supervisord
+    apply:
+      become: "{{ supervisor_become }}"

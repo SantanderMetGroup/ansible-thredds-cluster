@@ -2,10 +2,10 @@
 file={{ supervisor_var }}/supervisor.sock   ; (the path to the socket file)
 
 [inet_http_server]          ; inet (TCP) server disabled by default
-port=*:{{ supervisor_port }}        			; (ip_address:port specifier, *:port for all iface)
-{% if supervisor_user is defined %}
-username={{ supervisor_user }}
-password={SHA}{{ supervisor_password }}
+port=*:{{ supervisor_port }}				; (ip_address:port specifier, *:port for all iface)
+{% if supervisor_server_user is defined %}
+username={{ supervisor_server_user }}
+password={SHA}{{ supervisor_server_password }}
 {% endif %}
 
 [supervisord]
@@ -17,7 +17,7 @@ pidfile={{ supervisor_var }}/supervisord.pid ; (supervisord pidfile;default supe
 nodaemon=false               ; (start in foreground if true;default false)
 minfds=1024                  ; (min. avail startup file descriptors;default 1024)
 minprocs=200                 ; (min. avail process descriptors;default 200)
-user={{ ansible_env.USER }}
+user={{ supervisor_user }}
 
 [rpcinterface:supervisor]
 supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
@@ -27,4 +27,3 @@ serverurl=http://127.0.0.1:{{ supervisor_port }} ; use an http:// url to specify
 
 [include]
 files={{ supervisor_programs }}/*.conf
-

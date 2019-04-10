@@ -1,12 +1,9 @@
-- name: Install supervisord
-  include_role:
-    name: supervisord
-    allow_duplicates: no
-
 - name: Create supervisord tomcat conf file
+  become: "{{ supervisor_become }}"
   template: src=tomcat.conf.j2 dest="{{ supervisor_programs }}/{{ tomcat_name }}.conf"
 
 - name: Add tomcat to supervisord
+  become: "{{ supervisor_become }}"
   supervisorctl:
     name: "{{ tomcat_name }}"
     state: present
