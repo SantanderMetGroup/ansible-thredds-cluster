@@ -2,32 +2,23 @@
   vars:
     root: "{{ playbook_dir }}/sandbox"
     tomcat_home: "{{ root }}/tomcat"
-    tomcat_base: "{{ root }}/tomcats"
-
-    # These are defaults, they are showed here for illustration
-    tomcat_http_port: 8080
-    tomcat_Xmx: 4096m
-    tomcat_Xms: 512m
-    tds_version: 5.0.0-beta6
-    #tds_content: "{{ tomcat_base }}/tomcat/content/thredds"
-    tds_context: thredds
+    tomcat_base: "{{ root }}"
   roles:
     - role: jdk-source
     - role: tomcat-source
     - role: tds
-      vars:
-        tomcat_name: tomcat1
-        tomcat_http_port: 8080
-        tomcat_shutdown_port: 8005
-    - role: tds
-      vars:
-        tomcat_name: tomcat2
-        tomcat_http_port: 8081
-        tomcat_shutdown_port: 8006
+      # These are role defaults, they are showed here for illustration
+      # You can tune these paremeters to suit your needs
+      tomcat_name: tomcat
+      tomcat_http_port: 8080
+      tomcat_shutdown_port: 8005
+      tomcat_Xmx: 4096m
+      tomcat_Xms: 512m
+      tds_version: 5.0.0-beta6
+      tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
+      tds_context: thredds
   tasks:
     - import_tasks: ../../utils/tomcat-service.yml
-      vars:
-        tomcats: [tomcat1, tomcat2]
 
     - name: Clean
       file: path={{ root }} state=absent

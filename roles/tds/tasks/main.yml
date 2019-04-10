@@ -38,9 +38,13 @@
   include_tasks: memcached-manager.yml
   when: tomcat_manager == "memcached"
 
-- name: Add tomcats as a systemd service
-  include_tasks: systemd.yml
+- name: Add tomcat as a systemd service
+  include_tasks: services/systemd.yml
   when: tomcat_service == "systemd"
+
+- name: Add tomcat as a supervisord service
+  include_tasks: services/supervisord.yml
+  when: tomcat_service == "supervisord"
 
 # TDS
 - name: Download tds
@@ -74,5 +78,5 @@
   when: tds_melody
 
 - name: Register TDS as a worker in the cluster
-  include_tasks: worker.yml
+  include_tasks: worker/worker.yml
   when: worker is defined

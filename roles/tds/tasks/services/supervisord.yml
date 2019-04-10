@@ -1,0 +1,17 @@
+- name: Install supervisord
+  include_role:
+    name: supervisord
+    allow_duplicates: no
+
+- name: Create supervisord tomcat conf file
+  template: src=tomcat.conf.j2 dest="{{ supervisor_programs }}/{{ tomcat_name }}.conf"
+
+- name: Add tomcat to supervisord
+  supervisorctl:
+    name: "{{ tomcat_name }}"
+    state: present
+    supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ supervisor_user | default(omit) }}"
+    password: "{{ supervisor_password | default(omit) }}"
+    server_url: "http://localhost:{{ supervisor_port }}"
