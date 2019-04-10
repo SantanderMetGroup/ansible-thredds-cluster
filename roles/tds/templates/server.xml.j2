@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Server port="{{ item.0.shutdown }}" shutdown="{{ item.0.name }}">
+<Server port="{{ tomcat_shutdown_port }}" shutdown="{{ tomcat_name }}">
     <GlobalNamingResources>
     </GlobalNamingResources>
 
@@ -11,12 +11,8 @@
 
     <Service name="Catalina">
 
-	{% for connector in item.0.connectors -%}
-	<Connector
-	{% for key, value in connector.items() -%}
-		{{ key }}="{{ value }}"
-	{% endfor %}/>
-	{% endfor %}
+	<Connector port="{{ tomcat_http_port }}" protocol="HTTP/1.1" connectionTimeout="20000" />
+	<Connector port="{{ tomcat_ajp_port }}" protocol="AJP/1.3" />
 
 	<Engine name="Catalina" defaultHost="localhost">
 	    <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">

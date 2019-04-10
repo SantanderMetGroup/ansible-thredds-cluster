@@ -1,0 +1,52 @@
+- name: Copy truststore and keystore
+  copy:
+    src: /esg/config/tomcat/{{ item.1 }}
+    dest: "{{ tomcat_base }}/{{ item.0.name }}/conf"
+  with_nested:
+    - "{{ tds }}"
+    - ["esg-truststore.ts", "keystore-tomcat"]
+
+# Really needed?    
+- name: Replace /esg/config/tomcat locations
+  shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
+  with_items: "{{ tds }}"
+
+# Really needed?
+- name: Replace /esg/config locations
+  shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
+  with_items: "{{ tds }}"
+
+- name: Remove AccessLoggingFilter
+  replace:
+    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/web.xml"
+    regexp: <filter>\n\s+<filter-name>AccessLoggingFilter(.|\n)*</filter-mapping>
+    replace: "<!-- Removed AccessLoggingFilter -->"
+  with_items: "{{ tds }}"
+
+- name: Install openjdk (required for keytool)
+  become: True
+  yum:
+    state: present
+    name: java-1.8.0-openjdk
+
+- name: Copy hostcert.pem
+  copy:
+    src: /etc/certs/hostcert.pem
+    dest: /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+
+- name: Install pyexpect
+  pip:
+    name: pexpect
+    executable: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/bin/pip"
+
+- name: Add hostcert.pem to miniconda cacerts
+  expect:
+    command: keytool -import -trustcacerts -alias smg -keystore /home/vagrant/miniconda/envs/f2f/jre/lib/security/cacerts -file /home/vagrant/miniconda/envs/f2f/opt/hostcert.pem
+    responses:
+      password: "changeit"
+      Trust: "yes"
+  environment:
+    PYTHONPATH: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}/lib/python2.7/site-packages/"
+  register: keytool_cmd
+  failed_when: keytool_cmd.rc > 1
+  ignore_errors: True # Avoid error if alias already exists

@@ -1,0 +1,11 @@
+- name: Update context path in web.xml
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/web.xml"
+    regexp: <param-value>thredds</param-value>
+    replace: <param-value>{{ tds_context }}</param-value>
+
+- name: Update tds.properties
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/classes/thredds/server/tds.properties"
+    regexp: tds.content.path=thredds
+    replace: tds.content.path={{ tds_content|basename }}

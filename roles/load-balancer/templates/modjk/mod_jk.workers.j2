@@ -1,0 +1,9 @@
+# configure jk-manager
+worker.list=jk-manager
+worker.jk-manager.type=status
+
+{% for c in clusters -%}
+worker.list={{ c.name }}
+worker.{{ c.name }}.type=lb
+worker.{{ c.name }}.mount=/thredds/restrictedAccess/*
+{% endfor %}

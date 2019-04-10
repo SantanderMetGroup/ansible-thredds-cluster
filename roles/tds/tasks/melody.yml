@@ -1,0 +1,17 @@
+- name: Download jrobin
+  local_action: get_url
+  args:
+    url: 'https://repo1.maven.org/maven2/org/jrobin/jrobin/1.5.9/jrobin-1.5.9.jar'
+    dest: "{{ downloads }}/jrobin.jar"
+
+- name: Download java melody
+  local_action: get_url
+  args:
+    url: 'https://github.com/javamelody/javamelody/releases/download/javamelody-core-1.73.1/javamelody-core-1.73.1.jar'
+    dest: "{{ downloads }}/javamelody.jar"
+
+- name: Copy jrobin
+  copy: src={{ downloads }}/jrobin.jar dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/lib/
+
+- name: Copy java melody
+  copy: src={{ downloads }}/javamelody.jar dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/lib/

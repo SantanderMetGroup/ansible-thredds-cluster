@@ -1,52 +1,29 @@
 - hosts: localhost
   vars:
-    root: /tmp/sandbox
-    # roles customization
+    root: "{{ playbook_dir }}/sandbox"
+    tomcat_home: "{{ root }}/tomcat"
     tomcat_base: "{{ root }}"
-
-    tds_version: 4.6.11
-
-    miniconda_python: 2
-    miniconda_prefix: "{{ root }}/miniconda"
-    miniconda_manage_dependencies: False
-    miniconda_env:
-      name: tds
-      channels:
-        - birdhouse
-      dependencies:
-        - libnetcdf=4.4.1
-        - supervisor
-        - apache-tomcat
-
   roles:
-    - role: miniconda
+    - role: jdk-source
+    - role: tomcat-source
     - role: tds
-    - role: supervisor-tds
-
+      # These are role defaults, they are showed here for illustration
+      # You can tune these paremeters to suit your needs
+      tomcat_name: tomcat
+      tomcat_http_port: 8080
+      tomcat_shutdown_port: 8005
+      tomcat_Xmx: 4096m
+      tomcat_Xms: 512m
+      tds_version: 5.0.0-beta6
+      tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
+      tds_context: thredds
   tasks:
-    # management
-    - include_tasks: ../../utils/test-authentication.yml
-      vars:
-        instances: "{{ tds }}"
-        
-    - name: Restart TDS
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: restarted
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items:
-        - "{{ tds }}"
-      tags: ['restart']
+    - import_tasks: ../../utils/tomcat-service.yml
 
-    - name: Stop TDS
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: stopped
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items:
-        - "{{ tds }}"
-      tags: ['stop', 'never']
+    - name: Clean
+      file: path={{ root }} state=absent
+      tags: [never, purge, clean]
 
-    - name: Stop supervisor 
-      shell: kill $(cat {{ supervisor_home }}/var/supervisord.pid)
-      tags: ['stop', 'never']
+    - name: Purge
+      file: path={{ downloads }} state=absent
+      tags: [never, purge]

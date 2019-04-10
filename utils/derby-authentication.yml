@@ -1,12 +1,11 @@
-# Copy derby-db client jar
-- name: Download dependencies
+- name: Download derby db client jar
   run_once: True
   local_action: get_url
   args:
     url: "{{ derby_db_download_url | default('http://archive.apache.org/dist/db/derby/db-derby-10.12.1.1/db-derby-10.12.1.1-lib.tar.gz')}}"
     dest: "{{ downloads_tmp | default([playbook_dir,'downloads']|join('/')) }}/{{ derby_db_filename | default('db-derby-10.12.1.1-lib.tar.gz') }}"
 
-- name: Unarchive file in remote host
+- name: Unarchive derby db client jar
   unarchive:
     src: "{{ downloads_tmp | default([playbook_dir,'downloads']|join('/')) }}/{{ derby_db_filename | default('db-derby-10.12.1.1-lib.tar.gz') }}"
     dest: "{{ tomcat_home }}"
@@ -19,7 +18,7 @@
     insertbefore: </Context>
     line: '\t<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
   with_items:
-    - "{{ instances }}"
+    - "{{ tomcats }}"
 
 - name: Add Resource for derby db authentication
   blockinfile:
@@ -41,7 +40,7 @@
       url="{{ derby.url }}" 
       readOnly="false"/>
   with_items:
-    - "{{ instances }}"
+    - "{{ tomcats }}"
     
 - name: Add Realm for derby db authentication
   blockinfile:
@@ -60,4 +59,4 @@
       userRoleTable="V_USERS_ROLES"
       roleNameCol="ROLENAME"/>
   with_items:
-    - "{{ instances }}"
+    - "{{ tomcats }}"

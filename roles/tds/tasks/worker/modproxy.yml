@@ -1,0 +1,16 @@
+- name: Add worker to the modproxy lb worker
+  lineinfile:
+    dest: "{{ hostvars[load_balancer].modproxy_conf }}"
+    insertafter: <Proxy \"balancer://{{ item }}\">
+    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ worker.route }}
+  delegate_to: "{{ load_balancer }}"
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+  with_items: "{{ worker.clusters }}"
+
+- name: Add java melody urimaps
+  delegate_to: "{{ load_balancer }}"
+  lineinfile:
+    path: "{{ hostvars[load_balancer].modproxy_conf }}"
+    line: ProxyPass "/monitoring/{{ worker.route }}" "http://{{ worker.host | default(ansible_hostname) }}:{{ tds_melody.port }}/{{ tds_context }}/monitoring"
+  when: tds_melody

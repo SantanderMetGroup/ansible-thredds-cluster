@@ -1,0 +1,41 @@
+- name: Update keystore password
+  replace:
+    path: "/usr/local/tomcat/conf/server.xml"
+    regexp: CHANGEME
+    replace: coches1
+
+- name: Copy hostcert.pem and hostkey.pem
+  copy: src={{ item }} dest=/etc/certs/{{ item }}
+  with_items: [hostcert.pem, hostkey.pem]
+
+- name: Copy cacert.pem into /etc/certs/cachain.pem
+  copy: src=cacert.pem dest=/etc/certs/cachain.pem
+
+- name: Copy keystore and truststore
+  copy: src={{ item }} dest=/esg/config/tomcat/{{ item }}
+  with_items: [keystore-tomcat, esg-truststore.ts, cacert.pem]
+
+- name: Allow tomcat remote debugging
+  lineinfile:
+    path: /usr/local/bin/esg-functions
+    insertafter: '-Djava.awt.headless=true \\'
+    line: '-Xdebug -Xrunjdwp:transport=dt_socket,address=7999,server=y,suspend=n \'
+
+- name: Restrict access to .*test.* datasets in esgf_policies_common.xml
+  lineinfile:
+    path: /esg/config/esgf_policies_common.xml
+    state: absent
+    regexp: '<policy resource=".*test.*" attribute_type="ANY" attribute_value="" action="Read"/>'
+
+- name: Restrict access to .*test.* datasets in esgf_policies_local.xml
+  lineinfile:
+    path: /esg/config/esgf_policies_local.xml
+    state: absent
+    regexp: '<policy resource=".*" attribute_type="ANY" attribute_value="" action="Read"/>'
+
+- name: Restrict access to .*test.* datasets in esgf_policies_local.xml
+  lineinfile:
+    path: /esg/config/esgf_policies_local.xml
+    state: present
+    line: '<policy resource=".*test.*" attribute_type="test_group" attribute_value="user" action="Read"/>'
+    insertbefore: </policies>

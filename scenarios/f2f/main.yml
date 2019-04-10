@@ -1,11 +1,5 @@
 - name: Set up the gateway
   hosts: gateway
-  vars:
-    # httpd is already installed, fill the interface
-    httpd_root: /etc/httpd
-    httpd_version: 2.2.15
-    httpd_htdocs: /var/www/html
-    httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
   roles:
     - role: gateway-proxy
     - role: tds-modproxy
@@ -15,6 +9,24 @@
         path: "{{ httpd_conf_file }}"
         regexp: "(ProxyPass /thredds\tajp://localhost:8223/thredds)"
         replace: '#\1'
+
+    - name: Add DocumentRoot {{ httpd_htdocs }} to {{ httpd_conf_file }}
+      lineinfile:
+        path: "{{ httpd_conf_file }}"
+        insertafter: NameVirtualHost \\*:80
+        line: DocumentRoot /var/www/html
+
+    - name: Rewrite /thredds to /thredds/catalog/catalog.html
+      blockinfile:
+        path: "{{ httpd_conf_file }}"
+        insertafter: Header always set X-Content-Type-Options nosniff
+        block: |
+          RewriteEngine on
+          RewriteRule   "^/$" "/thredds/catalog/catalog.html" [R]
+          RewriteRule   "^/thredds/?$" "/thredds/catalog/catalog.html" [R]
+
+    - name: Plumbing
+      include_tasks: gateway.yml
 
     - name: Restart ESGF node
       command: 'esg-node restart'
@@ -36,42 +48,34 @@
         - libnetcdf=4.4.1
         - supervisor
         - apache-tomcat
-    
-    # TDS variables
-    tds_download_url: "http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/ESGF-5.0.1/tds-ESGF-5.0.1.war"
-    tds_version: "ESGF-5.0.1"
-    tds_filename: "tds-esgf.war"
   roles:
     - role: miniconda
+    - role: tds
+    - role: tds-collections
     - role: supervisor-tds
     - role: tds-modproxy
   tasks:
-    - name: Synchronize thredds and esg-orp
+    - name: Remove previous TDS installation
+      file:
+        state: absent
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds"
+      with_items: "{{ tds }}"
+
+    - name: Synchronize thredds
       synchronize:
-        src: "/usr/local/tomcat/webapps/{{ item.1 }}"
-        dest: "{{ tomcat_base }}/{{ item.0.name }}/webapps/"
-      with_nested:
-        - "{{ tds}}"
-        - ["thredds", "esg-orp"]
+        src: "/usr/local/tomcat/webapps/thredds"
+        dest: "{{ tomcat_base }}/{{ item.name }}/webapps/"
+      with_items: "{{ tds }}"
 
-    - name: Copy truststore and keystore
-      copy:
-        src: /esg/config/tomcat/{{ item.1 }}
-        dest: "{{ tomcat_base }}/{{ item.0.name }}/conf"
-      with_nested:
-        - "{{ tds }}"
-        - ["esg-truststore.ts", "keystore-tomcat"]
+    - name: Syncronize datasets
+      synchronize:
+        src: /esg/data/
+        dest: /esg/data
+        archive: True
 
-    - name: Replace /esg/config/tomcat locations
-      shell: "grep -r '/esg/config/tomcat' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config/tomcat|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items:
-        - "{{ tds }}"
+    - name: Plumb backend
+      include_tasks: backend.yml
 
-    - name: Replace /esg/config locations
-      shell: "grep -r '/esg/config' | cut -d ':' -f 1 | grep -v bak | xargs sed -i 's|/esg/config|{{ tomcat_base }}/{{ item.name }}/conf|g'"
-      with_items:
-        - "{{ tds }}"
-      
     - name: restart TDS instances
       supervisorctl:
         name: "{{ item.name }}"

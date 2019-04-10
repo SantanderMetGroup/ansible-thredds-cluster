@@ -1,0 +1,23 @@
+- name: Download memcached jars
+  become: False
+  local_action: get_url
+  args: url="{{ item }}" dest="{{ downloads }}"
+  with_items:
+    - "{{ memcached_session_manager_url }}"
+    - "{{ memcached_session_manager_tc_url }}"
+    - "{{ memcached_url }}"
+
+- name: Copy memcached jars into tomcat instances
+  copy: src="{{ downloads }}/{{ item }}" dest="{{ tomcat_home }}/lib/{{ item }}"
+  with_items:
+    - "{{ memcached_session_manager_jar }}"
+    - "{{ memcached_session_manager_tc_jar }}"
+    - "{{ memcached_jar }}"
+
+- name: Add memcached Manager to META-INF/context.xml
+  blockinfile:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/thredds/META-INF/context.xml"
+    insertbefore: </Context>
+    marker: "<!-- {mark} manager -->"
+    block: |
+      <Manager {% for key, value in item.manager.items() -%}{{ key }}="{{ value }}" {% endfor %} />

@@ -1,0 +1,33 @@
+- name: Deploy load balancers
+  hosts: lbs
+  roles:
+    - role: httpd-source
+    - role: modjk-source
+    - role: load-balancer
+      lb_type: modjk
+  pre_tasks:
+    - name: Install httpd
+      become: True
+      yum: name=httpd state=present
+
+    - name: Create link to /etc/mime.types
+      become: True
+      file: state=link src=/etc/mime.types dest={{ httpd_conf }}/mime.types
+
+- name: Deploy workers
+  hosts: workers
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: worker
+      load_balancer: lb
+  tasks:
+    - import_tasks: ../../utils/start.yml
+    - import_tasks: ../../utils/test-authentication.yml
+    - import_tasks: ../../utils/restart.yml
+
+- name: Restart load balancer
+  hosts: lbs
+  tasks:
+    - name: Restart httpd
+      service: name=httpd state=restarted

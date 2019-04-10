@@ -1,0 +1,18 @@
+- import_tasks: httpd/httpd.yml
+
+- set_fact:
+    ansible_become: True
+    modproxy_conf: "{{ httpd_root }}/conf.d/mod_proxy.conf"
+
+- name: Template mod_proxy conf
+  template: src=modproxy/mod_proxy.conf.j2 dest="{{ modproxy_conf }}"
+
+- name: Include mod_proxy.conf in {{ httpd_conf_file }}
+  lineinfile: path="{{ httpd_conf_file }}" line="Include {{ modproxy_conf }}"
+
+- name: Create password for proxy status web pages
+  htpasswd:
+    path: "{{ mod_proxy_status }}/.htpasswd"
+    username: "{{ mod_proxy_status_user }}"
+    password: "{{ mod_proxy_status_passwd }}"
+  when: mod_proxy_status_user is defined and mod_proxy_status_passwd is defined
