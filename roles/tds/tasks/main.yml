@@ -1,3 +1,48 @@
+# Catalina base
+- name: Set up tomcat {{ tomcat_name }}
+  file: dest="{{ tomcat_base }}/{{ tomcat_name }}" state=directory
+
+- name: Set up catalina base
+  file: path="{{ tomcat_base }}/{{ tomcat_name }}/{{ item }}" state=directory
+  with_items: ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
+
+- name: Copy web.xml
+  copy: src=web.xml dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/web.xml"
+
+- name: Copy context.xml
+  copy: src=context.xml dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/context.xml"
+
+- name: Template server.xml
+  template: src=server.xml.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
+
+- name: Template tomcat-users.xml
+  template: src=tomcat-users.xml.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/tomcat-users.xml"
+
+- name: Template setenv.sh
+  template: src=setenv.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh"
+
+- name: Template startup.sh
+  template: src=startup.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/startup.sh" mode=u+x
+
+- name: Template shutdown.sh
+  template: src=shutdown.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/shutdown.sh" mode=u+x
+
+- name: Set up tomcats cluster
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
+    insertbefore: </Host>
+    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+  when: tomcat_cluster
+
+- name: Set up memcached Manager
+  include_tasks: memcached-manager.yml
+  when: tomcat_manager == "memcached"
+
+- name: Add tomcats as a systemd service
+  include_tasks: systemd.yml
+  when: tomcat_service == "systemd"
+
+# TDS
 - name: Download tds
   run_once: True
   local_action: get_url
@@ -8,24 +53,20 @@
     ansible_become: False
 
 - name: Create webapps/{{ tds_context }} directory
-  file: state=directory path={{ tomcat_base }}/{{ item.name }}/webapps/{{ tds_context }}
-  with_items: "{{ tomcats }}"
+  file: state=directory path={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
 
 - name: Unarchive TDS
-  unarchive: src={{ downloads }}/{{ tds_war }} dest={{ tomcat_base }}/{{ item.name }}/webapps/{{ tds_context }}
-  with_items: "{{ tomcats }}"
+  unarchive: src={{ downloads }}/{{ tds_war }} dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
 
 - name: Update TDS context path
   include_tasks: context.yml
   when: tds_context != 'thredds'
 
 - name: Create content directory
-  file: path={{ tomcat_base}}/{{ item.name }}/content/thredds state=directory
-  with_items: "{{ tomcats }}"
+  file: path={{ tds_content }} state=directory
 
 - name: Copy root TDS catalog
-  copy: src={{ tds_root_catalog }} dest={{ tomcat_base }}/{{ item.name }}/content/thredds
-  with_items: "{{ tomcats }}"
+  copy: src={{ tds_root_catalog }} dest={{ tds_content }}
   when: tds_root_catalog is defined
 
 - name: Install java melody

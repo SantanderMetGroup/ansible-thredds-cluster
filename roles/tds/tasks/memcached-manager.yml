@@ -16,9 +16,8 @@
 
 - name: Add memcached Manager to META-INF/context.xml
   blockinfile:
-    path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/META-INF/context.xml"
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/thredds/META-INF/context.xml"
     insertbefore: </Context>
     marker: "<!-- {mark} manager -->"
     block: |
       <Manager {% for key, value in item.manager.items() -%}{{ key }}="{{ value }}" {% endfor %} />
-  with_items: "{{ tomcats }}"

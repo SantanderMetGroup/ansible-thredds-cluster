@@ -2,7 +2,7 @@
   vars:
     root: "{{ playbook_dir }}/sandbox"
     tomcat_home: "{{ root }}/tomcat"
-    tomcat_base: "{{ root }}"
+    tomcat_base: "{{ root }}/tomcats"
 
     # These are defaults, they are showed here for illustration
     tomcat_http_port: 8080
@@ -14,10 +14,20 @@
   roles:
     - role: jdk-source
     - role: tomcat-source
-    - role: tomcat
     - role: tds
+      vars:
+        tomcat_name: tomcat1
+        tomcat_http_port: 8080
+        tomcat_shutdown_port: 8005
+    - role: tds
+      vars:
+        tomcat_name: tomcat2
+        tomcat_http_port: 8081
+        tomcat_shutdown_port: 8006
   tasks:
-    - import_tasks: ../../utils/restart.yml
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tomcat1, tomcat2]
 
     - name: Clean
       file: path={{ root }} state=absent

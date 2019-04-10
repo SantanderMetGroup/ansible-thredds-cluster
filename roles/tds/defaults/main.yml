@@ -1,9 +1,39 @@
+downloads: "{{ playbook_dir }}/downloads"
+
+# tomcat
+tomcat_cluster: False
+tomcat_manager: "" # memcached
+tomcat_service: "" # systemd, supervisor
+
+tomcat_name: tomcat
+tomcat_http_port: 8080
+tomcat_ajp_port: 8009
+tomcat_shutdown_port: 8005
+
+#tds
 tds_version: 5.0.0-beta6
 tds_war: "tds-{{ tds_version }}.war"
 tds_mirror: http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/edu/ucar/tds/
 tds_download_url: "{{ tds_mirror }}/{{ tds_version }}/tds-{{ tds_version }}.war"
 tds_context: thredds
-tds_content: "{{ tomcat_base }}/tomcat/content/thredds" # Used when default 'tomcats' is not overriden
+tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
 tds_melody: True
 
-downloads: "{{ playbook_dir }}/downloads"
+# melody
+tomcat_melody:
+  port: "{{ tomcat_http_port }}"
+
+# JVM opts
+tomcat_Xms: 512m
+tomcat_Xmx: 4096m
+
+# memcached
+memcached_session_manager_version: 2.3.0
+memcached_session_manager_jar: memcached-session-manager-{{ memcached_session_manager_version }}.jar
+memcached_session_manager_tc_jar: memcached-session-manager-tc{{ tomcat_version[:1] }}-{{ memcached_session_manager_version }}.jar
+memcached_session_manager_url: https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager/{{ memcached_session_manager_version }}/{{ memcached_session_manager_jar }}
+memcached_session_manager_tc_url: https://repo1.maven.org/maven2/de/javakaffee/msm/memcached-session-manager-tc{{ tomcat_version[:1] }}/{{ memcached_session_manager_version }}/{{ memcached_session_manager_tc_jar }}
+
+memcached_version: 2.9.1
+memcached_jar: spymemcached-{{ memcached_version }}.jar
+memcached_url: https://repo1.maven.org/maven2/net/spy/spymemcached/{{ memcached_version }}/{{ memcached_jar }}
