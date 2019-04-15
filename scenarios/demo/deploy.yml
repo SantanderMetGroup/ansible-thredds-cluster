@@ -31,7 +31,7 @@
     - role: jdk-source
     - role: tomcat-source
     - role: tds
-      tomcat_name: tds1
+      tomcat_name: i1
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
@@ -40,7 +40,7 @@
         route: "{{ inventory_hostname }}-tds1"
         clusters: [catalog]
     - role: tds
-      tomcat_name: tds2
+      tomcat_name: i2
       tomcat_http_port: 8081
       tomcat_ajp_port: 8018
       tomcat_shutdown_port: 8006
@@ -48,15 +48,33 @@
         host: "{{ inventory_hostname }}"
         route: "{{ inventory_hostname }}-tds2"
         clusters: [data]
+  pre_tasks:
+    - name: Find catalogs
+      run_once: True
+      local_action:
+        module: find
+        paths: catalogs
+      register: catalogs
+      tags: catalogs
+
+    - name: Add catalog refs
+      run_once: True
+      local_action:
+        module: lineinfile
+        path: "{{ tds_root_catalog }}"
+        insertbefore: </catalog>
+        line: '  <catalogRef xlink:title="{{ (item.path|basename|splitext)[0] }}" xlink:href="{{ item.path }}" name="" />'
+      with_items: "{{ catalogs.files }}"
+      tags: catalogs
   tasks:
     - name: Copy catalogs
       copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
-      with_items: [tds1, tds2]
+      with_items: [i1, i2]
       tags: catalogs
 
     - import_tasks: ../../utils/tomcat-service.yml
       vars:
-        tomcats: [tds1, tds2]
+        tomcats: [i1, i2]
 
 - name: Restart load balancer
   hosts: lbs

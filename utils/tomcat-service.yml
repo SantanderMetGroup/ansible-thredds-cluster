@@ -7,7 +7,7 @@
   ignore_errors: True # If catalina.pid is present but process is not running, we don't want an error
   # If there is any case where this should fail, use failed_when
 
-- name: Remove tomcats catalina.pid
+- name: Remove catalina.pid
   file: path={{ tomcat_base }}/{{ item }}/logs/catalina.pid state=absent
   tags: [stop, restart]
   with_items: "{{ tomcats }}"
