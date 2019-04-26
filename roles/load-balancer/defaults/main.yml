@@ -1,8 +1,29 @@
+#mod_jk
 mod_jk_status_path: "{{ mod_jk_conf }}"
 mod_proxy_status: "{{ httpd_root }}/conf.d"
 
+#httpd
 httpd_port: 8080
 httpd_user: apache
 httpd_group: apache
 httpd_major_version: "{{ httpd_version | string | truncate(3,False,'',0) }}"
 httpd_template: False
+
+#HAProxy
+haproxy_user: 'haproxy'
+haproxy_group: 'haproxy'
+haproxy_mode: 'http'
+haproxy_chroot: '/var/lib/haproxy'
+haproxy_default_frontend: myfrontend
+haproxy_balance_mode: 'roundrobin'
+haproxy_bind_port: 8080
+
+#Nginx
+nginx_bind_port: 8080
+
+#ipvs
+keepalived_pid: "{{ keepalived_root ~ '/etc/keepalived/keepalived.pid' }}"
+keepalived_checkers_pid: "{{ keepalived_root ~ '/etc/keepalived/checkers.pid' }}"
+vip: "{{ ansible_eth1.ipv4.address }}"
+ipvs_bind_port: 8080
+ipvs_balance_mode: 'rr'
