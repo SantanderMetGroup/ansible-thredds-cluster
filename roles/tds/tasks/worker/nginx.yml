@@ -1,0 +1,10 @@
+- name: Register at main catalog's upstream
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" #Depends on how NGINX was installed
+  blockinfile:
+    path: "{{ hostvars[load_balancer].nginx_conf }}"
+    insertafter: "upstream {{ item }} {"
+    block: "\tserver {{ worker.host }}:{{ tomcat_http_port }};"
+    marker: "\t#{mark} {{ ansible_hostname }}'s register in {{ item }} upstream"
+  delegate_to: "{{ load_balancer }}"
+  with_items: "{{ worker.clusters }}"

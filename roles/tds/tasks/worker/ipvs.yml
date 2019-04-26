@@ -1,0 +1,33 @@
+- name: REDIRECT to lo interface packets destined to VIP
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}"
+  iptables:
+    table: nat
+    chain: PREROUTING
+    destination: "{{ hostvars[load_balancer].vip }}"
+    jump: REDIRECT
+
+- name: Register as backend server in load-balancer
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}"
+  blockinfile:
+    path: "{{ hostvars[load_balancer].keepalived_conf }}"
+    insertbefore: "}"
+    block: |
+      real_server {{ worker.host }} {{ tomcat_http_port }} {
+        weight 1
+        HTTP_GET {
+          connect_port {{tomcat_http_port }}
+          connect_timeout 3
+          retry 3
+          delay_before_retry 3
+          url {
+            path /thredds/catalog/catalog.html
+            status_code 200
+          }
+        }
+      }
+    marker: "#{mark} {{ ansible_hostname }} register"
+  delegate_to: "{{ load_balancer }}"
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}"
