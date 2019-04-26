@@ -1,0 +1,21 @@
+---
+- name: Export variables 
+  set_fact:
+    nginx_conf: "{{ nginx_conf }}"
+    nginx_static: "{{ nginx_static }}"
+    ansible_become: "{{ ansible_become | default(False) }}"
+    nginx_bind_port: "{{ nginx_bind_port }}"
+
+- name: Debug1
+  shell: "whoami"
+  register: reg
+
+- name: Debug2
+  debug:
+    msg: "I am {{ reg.stdout }}"
+
+- name: Template configuration file for nginx
+  template:
+    src: nginx/nginx.conf.j2
+    dest: "{{ nginx_conf }}"
+    mode: 0666

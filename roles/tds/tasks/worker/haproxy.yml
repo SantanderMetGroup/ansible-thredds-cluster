@@ -1,0 +1,10 @@
+- name: Register worker at HAProxy in corresponding backends
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False)  }}" #Depends on how HAProxy was installed
+  blockinfile:
+    marker: "\t#{mark} {{ ansible_hostname }}'s register in {{ item }} backend"
+    path: "{{ hostvars[load_balancer].haproxy_conf }}"
+    block: "\tserver {{ ansible_hostname }} {{ worker.host  }}:{{ tomcat_http_port }} cookie {{ worker.route }} check"
+    insertafter: "backend {{ item }}"
+  delegate_to: "{{ load_balancer }}"
+  with_items: "{{ worker.clusters }}"

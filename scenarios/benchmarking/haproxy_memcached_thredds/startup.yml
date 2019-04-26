@@ -1,0 +1,19 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Tasks for gateway
+  hosts: gateways
+  tasks:
+    - name: Start HAProxy
+      command: "{{ ansible_env.HOME }}/haproxy/usr/local/sbin/haproxy -f {{ ansible_env.HOME }}/haproxy/conf/haproxy.cfg"
+
+
+- name: Tasks for servers
+  hosts: tds
+  tasks:
+    - name: Start TDS instances
+      command: "{{ ansible_env.HOME }}/virtualenv/bin/supervisord -c {{ ansible_env.HOME }}/virtualenv/etc/supervisord/supervisord.conf"
+
+    - name: Start memcached
+      command: memcached -d -u ansible

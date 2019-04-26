@@ -1,5 +1,8 @@
 - name: Create downloads directory
-  file: dest={{ downloads }} state=directory
+  local_action: file
+  args:
+    dest: "{{ downloads }}"
+    state: directory
 
 - name: Create directories for jdk
   file: dest={{ jdk_root }} state=directory
@@ -11,8 +14,9 @@
   args:
     url: "{{ jdk_download_url }}"
     dest: "{{ downloads }}/{{ jdk_filename }}"
-    headers:
-      Cookie: oraclelicense=accept-securebackup-cookie
+    #headers: 
+    #  Cookie: oraclelicense=accept-securebackup-cookie
+
 
 - name: Unarchive file in remote host
   unarchive:

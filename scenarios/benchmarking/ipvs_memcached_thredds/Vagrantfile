@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+CLUSTER = ['gateway', 'server1', 'server2']
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  #better performance with "linked clone" feature from VirtualBox
+  config.vm.provider "virtualbox" do |v|
+    v.linked_clone = true
+  end
+
+  config.vm.box = "centos/7"
+  #Same key for all machines
+  config.ssh.insert_key = false
+  config.vm.network "private_network", type: "dhcp"
+  #config.vm.network "public_network"
+
+  CLUSTER.each do |node|
+    config.vm.define "#{node}" do |host|
+      host.vm.hostname = "#{node}"
+    end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provision.yml"  
+    ansible.groups = {
+      "gateways" => ["gateway"],
+      "tds" => ["server[1:2]"]
+    }
+  end
+  
+end

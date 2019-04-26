@@ -1,0 +1,70 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Configure load balancer
+  hosts: gateways
+  roles:
+    - role: source
+      dependencies: [haproxy]
+    - role: haproxy
+    - role: gateway-haproxy
+
+- name: Configure servers
+  hosts: tds
+  vars:
+    # required interface
+    home_dir: /mnt/nvme0n1
+    jdk_root: "{{home_dir}}/jdk"
+    tomcat_home: "{{home_dir}}/jdk}/tomcat"
+    tomcat_base: "{{home_dir}}/instances"
+    venv_home: "{{home_dir}}/virtualenv"
+  roles:
+    - role: source
+      dependencies: [jdk, tomcat, supervisor]
+      tags: [tds_deploy]
+    - role: yum
+      dependencies: [memcached]
+      tags: [tds_deploy]
+    - role: tds-haproxy
+    - role: tomcat-memcached
+      instances: "{{ tds }}"
+      tags: [tds_deploy, tomcat-memcached]
+    - role: supervisor-tds
+      tags: [tds_deploy]
+  tasks:
+
+    - include_tasks: ../../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: Start memcached
+      command: "memcached -d -u ansible"
+      tags: [tds_deploy]
+
+    - name: start tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy, restart, update_catalogs]
+
+- name: Start HAProxy
+  hosts: gateways
+  tasks:
+    - command: "{{ haproxy_bin }} -f {{ haproxy_conf }}"
+  tags: [haproxy, start_haproxy]

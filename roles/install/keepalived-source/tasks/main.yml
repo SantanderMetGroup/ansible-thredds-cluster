@@ -1,0 +1,34 @@
+- name: Download keepalived 
+  run_once: True
+  become: False
+  local_action:
+    module: get_url
+    args:
+      url: "{{ keepalived_url }}"
+      dest: "{{ downloads_tmp }}"
+
+- name: Create keepalived directory
+  file:
+    path: "{{ keepalived_directory }}"
+    state: directory
+
+- name: Create keepalived_root
+  file:
+    path: "{{ keepalived_root }}"
+    state: directory
+
+- name: Unarchive keepalived
+  unarchive:
+    src: "{{ downloads_tmp }}/{{ keepalived_filename }}"
+    dest: "{{ keepalived_directory }}"
+    extra_opts: [--strip-components=1]
+
+- name: Install keepalived
+  command: "{{ item }}"
+  args:
+    chdir: "{{ keepalived_directory }}"
+  with_items:
+    - "./configure {{ keepalived_config_params }}"
+    - make
+    - make install
+      

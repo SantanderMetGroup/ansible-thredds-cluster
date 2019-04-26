@@ -1,0 +1,38 @@
+- name: Set new facts backend servers need
+  set_fact:
+    vip: "{{ vip }}"
+    bind_port: "{{ bind_port }}"
+    ipvs_rules: "{{ ipvs_rules }}"
+    ansible_become: "{{ ansible_become | default(True) }}"
+
+- name: Enable ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+
+- name: Clear previous ipvsadm rules
+  command: "ipvsadm -C"
+
+- name: Add service on load balancer's interface
+  command: "ipvsadm -A -t {{ vip }}:{{ bind_port }} -s rr"
+
+- name: Make sure ipvsadm rules file exists
+  file:
+    path: "{{ ipvs_rules }}"
+    state: touch
+
+- name: Save rule
+  shell: "ipvsadm-save -n  > {{ ipvs_rules }}"
+
+- name: Save rules on stop
+  lineinfile:
+    path: "{{ ipvs_config }}"
+    regexp: ^IPVS_SAVE_ON_STOP=
+    line: "IPVS_SAVE_ON_STOP=\"yes\""
+
+- name: Save rules on restart
+  lineinfile:
+    path: "{{ ipvs_config }}"
+    regexp: ^IPVS_SAVE_ON_RESTART=
+    line: "IPVS_SAVE_ON_RESTART=\"yes\""
+
