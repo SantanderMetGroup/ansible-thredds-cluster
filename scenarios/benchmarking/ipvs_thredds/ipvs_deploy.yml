@@ -5,11 +5,13 @@
 - name: Deploy load balancer
   hosts: lbs
   vars:
-    haproxy_sticky: true
+    vip: "{{ ansible_eth1.ipv4.address }}"
+  become: True
   roles:
-    - role: haproxy-source
+    - role: keepalived-source
+    - role: ipvs-centos
     - role: load-balancer
-      lb_type: haproxy
+      lb_type: ipvs
       clusters:
         - name: data
           services: [dodsC, fileServer, dap4, ncss]
@@ -29,13 +31,11 @@
   roles:
     - role: jdk-source
     - role: tomcat-source
-    - role: memcached
     - role: tds
       tomcat_name: tds1
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
-      tomcat_manager: "memcached"
       worker:
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds1"
@@ -45,7 +45,6 @@
       tomcat_http_port: 8081
       tomcat_ajp_port: 8018
       tomcat_shutdown_port: 8006
-      tomcat_manager: "memcached"
       worker:
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds2"
@@ -56,15 +55,13 @@
       with_items: [tds1, tds2]
       tags: catalogs
 
-    - name: Start memcached
-      shell: "memcached -d -u ansible"
-
     - import_tasks: ../../../utils/tomcat-service.yml
       vars:
         tomcats: [tds1, tds2]
 
-- name: Start HAProxy
+- name: Start keepalived
   hosts: lbs
+  become: True
   tasks:
-    - command: "{{ haproxy_bin }} -f {{ haproxy_conf }}"
-  tags: [haproxy, start_haproxy]
+    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}" 
+  tags: [keepalived, start_keepalived]

@@ -3,7 +3,7 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
-CLUSTER = ['gateway', 'server1', 'server2']
+CLUSTER = ['load-balancer', 'worker1', 'worker2']
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #better performance with "linked clone" feature from VirtualBox
@@ -26,8 +26,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provision.yml"  
     ansible.groups = {
-      "gateways" => ["gateway"],
-      "tds" => ["server[1:2]"]
+      "lbs" => ["load-balancer"],
+      "workers" => ["worker[1:2]"],
+      "workers:vars" => {"load-balancer" => "load-balancer"}
     }
   end
   

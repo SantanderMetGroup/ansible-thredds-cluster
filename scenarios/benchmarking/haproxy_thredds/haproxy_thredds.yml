@@ -4,10 +4,11 @@
 
 - name: Deploy load balancer
   hosts: lbs
+  become: True
   vars:
     haproxy_sticky: true
   roles:
-    - role: haproxy-source
+    - role: haproxy-centos
     - role: load-balancer
       lb_type: haproxy
       clusters:
@@ -29,13 +30,11 @@
   roles:
     - role: jdk-source
     - role: tomcat-source
-    - role: memcached
     - role: tds
       tomcat_name: tds1
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
-      tomcat_manager: "memcached"
       worker:
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds1"
@@ -45,7 +44,6 @@
       tomcat_http_port: 8081
       tomcat_ajp_port: 8018
       tomcat_shutdown_port: 8006
-      tomcat_manager: "memcached"
       worker:
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds2"
@@ -55,9 +53,6 @@
       copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
       with_items: [tds1, tds2]
       tags: catalogs
-
-    - name: Start memcached
-      shell: "memcached -d -u ansible"
 
     - import_tasks: ../../../utils/tomcat-service.yml
       vars:
