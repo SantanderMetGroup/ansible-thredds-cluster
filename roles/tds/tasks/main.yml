@@ -34,9 +34,6 @@
     line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
   when: tomcat_cluster
 
-- name: Set up memcached Manager
-  include_tasks: memcached-manager.yml
-  when: tomcat_manager == "memcached"
 
 - name: Add tomcat as a systemd service
   include_tasks: services/systemd.yml
@@ -76,6 +73,10 @@
 - name: Install java melody
   include_tasks: melody.yml
   when: tds_melody
+
+- name: Set up memcached Manager
+  include_tasks: memcached-manager.yml
+  when: tomcat_manager == "memcached"
 
 - name: Register TDS as a worker in the cluster
   include_tasks: worker/worker.yml
