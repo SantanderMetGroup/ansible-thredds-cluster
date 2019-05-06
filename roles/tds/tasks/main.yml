@@ -1,31 +1,31 @@
 # Catalina base
 - name: Set up {{ tomcat_name }}
-  file: dest="{{ tomcat_base }}/{{ tomcat_name }}" state=directory
+  file: dest={{ tomcat_base }}/{{ tomcat_name }} state=directory
 
 - name: Set up catalina base
-  file: path="{{ tomcat_base }}/{{ tomcat_name }}/{{ item }}" state=directory
+  file: path={{ tomcat_base }}/{{ tomcat_name }}/{{ item }} state=directory
   with_items: ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
 
 - name: Copy web.xml
-  copy: src=web.xml dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/web.xml"
+  copy: src=web.xml dest={{ tomcat_base }}/{{ tomcat_name }}/conf/web.xml
 
 - name: Copy context.xml
-  copy: src=context.xml dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/context.xml"
+  copy: src=context.xml dest={{ tomcat_base }}/{{ tomcat_name }}/conf/context.xml
 
 - name: Template server.xml
-  template: src=server.xml.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
+  template: src=server.xml.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml
 
 - name: Template tomcat-users.xml
-  template: src=tomcat-users.xml.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/conf/tomcat-users.xml"
+  template: src=tomcat-users.xml.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/conf/tomcat-users.xml
 
 - name: Template setenv.sh
-  template: src=setenv.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh"
+  template: src=setenv.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh
 
 - name: Template startup.sh
-  template: src=startup.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/startup.sh" mode=u+x
+  template: src=startup.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/startup.sh mode=u+x
 
 - name: Template shutdown.sh
-  template: src=shutdown.sh.j2 dest="{{ tomcat_base }}/{{ tomcat_name }}/bin/shutdown.sh" mode=u+x
+  template: src=shutdown.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/shutdown.sh mode=u+x
 
 - name: Set up tomcats cluster
   lineinfile:
@@ -66,6 +66,11 @@
   include_tasks: context.yml
   when: tds_context != 'thredds'
 
+- name: Template applicationContext.xml
+  template:
+    src: applicationContext.xml.j2
+    dest: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/applicationContext.xml"
+
 - name: Create content directory
   file: path={{ tds_content }} state=directory
 
@@ -76,7 +81,7 @@
 
 - name: Install java melody
   include_tasks: melody.yml
-  when: tds_melody
+  when: tds_melody is defined
 
 - name: Register TDS as a worker in the cluster
   include_tasks: worker/worker.yml

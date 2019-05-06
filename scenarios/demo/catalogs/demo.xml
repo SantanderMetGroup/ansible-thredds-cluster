@@ -2,7 +2,7 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.6.xsd"
 	 xmlns:xlink="http://www.w3.org/1999/xlink"
-	 name="Santander Meteorology Group">
+	 name="demo">
 
   <service base="" name="all" serviceType="compound">
     <service base="/thredds/dodsC/" name="odap" serviceType="OpenDAP" />
@@ -31,6 +31,15 @@
     <service base="/thredds/uddc/" name="uddc" serviceType="UDDC" />
   </service>
 
-  <catalogRef xlink:title="cmip5-esm-subset" xlink:href="catalogs/cmip5-esm-subset.xml" name="" />
-  <catalogRef xlink:title="demo" xlink:href="catalogs/demo.xml" name="" />
+  <datasetRoot location="/oceano/gmeteo/WORK/zequi/DATASETS/synda-demo/ncmls/" path="demo" />
+
+  <datasetScan name="demo_Files" path="demo-files" location="/oceano/gmeteo/WORK/zequi/DATASETS/synda-demo/data/" >
+    <serviceName>all</serviceName>
+  </datasetScan>
+
+  <!-- Virtual datasets -->
+  <dataset name="demo_Virtual_Datasets" ID="demo">
+    <dataset name="GFDL-CM3_historical_r1i1p1_LImon" ID="cmip5_output1_GFDL-CM3_historical_r1i1p1_LImon" serviceName="virtual" urlPath="demo/cmip5_output1_GFDL-CM3_historical_r1i1p1_LImon.ncml" />
+    
+  </dataset>
 </catalog>

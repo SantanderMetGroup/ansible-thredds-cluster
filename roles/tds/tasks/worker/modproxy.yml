@@ -13,4 +13,4 @@
   lineinfile:
     path: "{{ hostvars[load_balancer].modproxy_conf }}"
     line: ProxyPass "/monitoring/{{ worker.route }}" "http://{{ worker.host | default(ansible_hostname) }}:{{ tds_melody.port }}/{{ tds_context }}/monitoring"
-  when: tds_melody
+  when: tds_melody is defined
