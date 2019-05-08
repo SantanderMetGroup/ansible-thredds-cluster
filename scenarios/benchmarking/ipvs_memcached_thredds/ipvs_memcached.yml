@@ -4,6 +4,7 @@
 
 - name: Deploy load balancer
   hosts: lbs
+  become: True
   vars:
     vip: "{{ ansible_eth1.ipv4.address }}"
   roles:
@@ -41,6 +42,10 @@
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds1"
         clusters: [catalog]
+      memcached:
+        nodenames: "{{ groups['workers'] }}"
+        hosts: "{{ groups['workers'] | map('extract',  hostvars,  ['ansible_eth1', 'ipv4', 'address']) | list }}"
+        port: 11211
     - role: tds
       tomcat_name: tds2
       tomcat_http_port: 8081
@@ -51,6 +56,10 @@
         host: "{{ ansible_eth1.ipv4.address }}"
         route: "{{ inventory_hostname }}-tds2"
         clusters: [data]
+      memcached:
+        nodenames: "{{ groups['workers'] }}"
+        hosts: "{{ groups['workers'] | map('extract',  hostvars,  ['ansible_eth1', 'ipv4', 'address']) | list }}"
+        port: 11211
   tasks:
     - name: Copy catalogs
       copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds

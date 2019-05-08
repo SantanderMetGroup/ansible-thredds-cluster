@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/thredds">
   <Manager className="de.javakaffee.web.msm.MemcachedBackupSessionManager"
-    memcachedNodes="{% for host in groups['workers'] %}{{ hostvars[host].ansible_hostname }}:{{ hostvars[host].memcached_host}}:{{ hostvars[host].memcached_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+    memcachedNodes="{% for node in memcached.nodenames %}{{ node }}:{{ memcached.hosts[loop.index0] }}:{{ memcached.port }}{% if not loop.last %},{% endif %}{% endfor %}"
     {% if hostvars[load_balancer].haproxy_sticky is defined and hostvars[load_balancer].haproxy_sticky == True %}
     sticky="true"
-    failoverNodes="{{ ansible_hostname }}"
+    failoverNodes="{{ inventory_hostname }}"
     {% else %}
     sticky="false"
     lockingMode="auto"
