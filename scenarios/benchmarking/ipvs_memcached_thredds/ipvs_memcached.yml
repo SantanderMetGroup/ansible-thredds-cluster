@@ -2,86 +2,80 @@
   hosts: all
   gather_facts: True
 
-- name: Configure load balancer
+- name: Deploy load balancer
+  hosts: lbs
   become: True
-  hosts: gateways
   vars:
-    vip: "{{ ansible_ens10.ipv4.address }}"
+    vip: "{{ ansible_eth1.ipv4.address }}"
   roles:
-    - role: yum
-      dependencies: [ipvsadm]
-    - role: source
-      dependencies: [keepalived]
-      tags: [keepalived]
-    - role: keepalived
-      tags: [keepalived]
-  tasks:
-    - name: Disable Reverse Path Filtering
-      sysctl:
-        name: "{{ item }}"
-        value: 0
-      with_items:
-        - net.ipv4.conf.all.rp_filter
-        - "net.ipv4.conf.{{ ansible_ens10.device }}.rp_filter"
-          #- "net.ipv4.conf.{{ ansible_eth1.device }}.rp_filter"
+    - role: keepalived-source
+    - role: ipvs-centos
+    - role: load-balancer
+      lb_type: ipvs
+      clusters:
+        - name: data
+          services: [dodsC, fileServer, dap4, ncss]
+        - name: catalog
+          services: [catalog]
 
-- name: Configure servers
-  hosts: tds
+- name: Deploy workers
+  hosts: workers
   vars:
-    ansible_become_pass: ansible
     # required interface
-    jdk_root: "{{ ansible_env.HOME }}/jdk"
-    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
-    tomcat_base: "{{ ansible_env.HOME }}/instances"
-    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+    home_dir: "{{ ansible_env.HOME }}"
+    jdk_root: "{{home_dir}}/deployment/jdk"
+    tomcat_home: "{{home_dir}}/deployment/tomcat"
+    tomcat_base: "{{home_dir}}/deployment/instances"
+    tds_root_catalog: catalog.xml
+    #venv_home: "{{home_dir}}/deployment/virtualenv"
   roles:
-    - role: source
-      dependencies: [jdk, tomcat, supervisor]
-      tags: [tds_deploy, jdk]
-  # - role: yum
-  #   dependencies: [memcached]
-      tags: [tds_deploy]
-    - role: tomcat-memcached
-      instances: "{{ tds }}"
-      tags: [tds_deploy]
-    - role: supervisor-tds
-      tags: [tds_deploy]
-    - role: tds-keepalived
-      tags: [keepalived]
-      become: True
+    - role: jdk-source
+    - role: tomcat-source
+    - role: memcached
+    - role: tds
+      tomcat_name: tds1
+      tomcat_http_port: 8080
+      tomcat_ajp_port: 8008
+      tomcat_shutdown_port: 8005
+      tomcat_manager: "memcached"
+      worker:
+        host: "{{ ansible_eth1.ipv4.address }}"
+        route: "{{ inventory_hostname }}-tds1"
+        clusters: [catalog]
+      memcached:
+        nodenames: "{{ groups['workers'] }}"
+        hosts: "{{ groups['workers'] | map('extract',  hostvars,  ['ansible_eth1', 'ipv4', 'address']) | list }}"
+        port: 11211
+    - role: tds
+      tomcat_name: tds2
+      tomcat_http_port: 8081
+      tomcat_ajp_port: 8018
+      tomcat_shutdown_port: 8006
+      tomcat_manager: "memcached"
+      worker:
+        host: "{{ ansible_eth1.ipv4.address }}"
+        route: "{{ inventory_hostname }}-tds2"
+        clusters: [data]
+      memcached:
+        nodenames: "{{ groups['workers'] }}"
+        hosts: "{{ groups['workers'] | map('extract',  hostvars,  ['ansible_eth1', 'ipv4', 'address']) | list }}"
+        port: 11211
   tasks:
-    - include_tasks: ../../../utils/test-authentication.yml
-      vars:
-        instances: "{{ tds }}"
-      tags: [tds_deploy]
+    - name: Copy catalogs
+      copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
+      with_items: [tds1, tds2]
+      tags: catalogs
 
     - name: Start memcached
-      command: memcached -d -u ansible
-      tags: [tds_deploy]
+      shell: "memcached -d -u ansible"
 
-    - name: start tds instances
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: started
-        username: "{{ supervisor_user | default(omit) }}"
-        password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items: "{{ tds }}"
-      tags: [tds_deploy]
-
-    - name: restart tds instances
-      supervisorctl:
-        name: "{{ item.name }}"
-        state: restarted
-        username: "{{ supervisor_user | default(omit) }}"
-        password: "{{ supervisor_password | default(omit) }}"
-        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
-      with_items: "{{ tds }}"
-      tags: [tds_deploy, restart, update_catalogs]
+    - import_tasks: ../../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds1, tds2]
 
 - name: Start keepalived
-  hosts: gateways
+  hosts: lbs
   become: True
   tasks:
-    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}" 
+    - shell: "{{ keepalived_bin }} -f {{ keepalived_conf }}"
   tags: [keepalived, start_keepalived]

@@ -27,7 +27,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "provision.yml"  
     ansible.groups = {
       "gateways" => ["gateway"],
-      "tds" => ["server[1:2]"]
+      "tds" => ["server[1:2]"],
+      "tds:vars" => {"load_balancer" => "gateway"}
     }
   end
   
