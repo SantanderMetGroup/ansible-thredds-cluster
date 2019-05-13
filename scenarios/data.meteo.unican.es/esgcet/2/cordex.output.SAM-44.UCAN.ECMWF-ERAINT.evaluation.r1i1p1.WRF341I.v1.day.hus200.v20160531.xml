@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531" name="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200"/>
+    <property name="dataset_version" value="20160531"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v1"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26958170"/>
+      <property name="mod_time" value="2016-05-31 11:15:28"/>
+      <property name="checksum" value="f63ce72c0dcd6430600d162f05f112c323dc836e46a2878ce7d885b69bef2fda"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">26958170</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134214761"/>
+      <property name="mod_time" value="2016-05-31 11:15:28"/>
+      <property name="checksum" value="58db1a83fdf40f2faef5983c532a077ee5893cfa763163ec4277bdfbc8bce849"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134214761</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134262665"/>
+      <property name="mod_time" value="2016-05-31 11:15:28"/>
+      <property name="checksum" value="b07848eb54f5b0d8e72e9ee2231599485fe6acd7f6fb250008846f7f99b926e0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134262665</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134302026"/>
+      <property name="mod_time" value="2016-05-31 11:15:28"/>
+      <property name="checksum" value="c781bada374596602e57a7c4a413d9ebb776556a08392488f8e1a22f063aae4a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134302026</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134042909"/>
+      <property name="mod_time" value="2016-05-31 11:15:27"/>
+      <property name="checksum" value="cb320cc873386e94b439ae0761f63c8d28348fa1152aa8ea46b9bec6949ea2b1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134042909</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134131161"/>
+      <property name="mod_time" value="2016-05-31 11:15:27"/>
+      <property name="checksum" value="fea20bd0e560b4dd7e6f4a8b16ca0a710f5312329b925c52bb884ec848a2b3f1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134131161</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134165945"/>
+      <property name="mod_time" value="2016-05-31 11:15:27"/>
+      <property name="checksum" value="9d25bc40568a4ce7d579c7ef1aa807be6a3fa5f622f88a363d3b4a8de072b7eb"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">134165945</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.v20160531.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" name="hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="53784193"/>
+      <property name="mod_time" value="2016-05-31 11:15:27"/>
+      <property name="checksum" value="ca5552f6bfa151803ef3ff2c8cf1b89bc8d06a654bcbfbd4bc165791dc05de39"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <dataSize units="bytes">53784193</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation" name="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="hus200" vocabulary_name="specific_humidity" units="1">Specific Humidity</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2011-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation.1" name="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="12053"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF341I.v1.day.hus200.hus200.20160531.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19860101-19901231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_19960101-20001231.nc" ncoords="1827"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20060101-20101231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1/CORDEX/output/SAM-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF341I/v1/day/hus200/v20160531/hus200_SAM-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF341I_v1_day_20110101-20111231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

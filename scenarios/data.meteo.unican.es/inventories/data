@@ -1,0 +1,19 @@
+[all]
+data ansible_host=data.meteo.unican.es ansible_user=root
+wn023 ansible_host=wn023 ansible_user=zequi tomcat_base="/oceano/gmeteo/users/zequi/deployment/wn023/instances"
+wn025 ansible_host=wn025 ansible_user=zequi tomcat_base="/oceano/gmeteo/users/zequi/deployment/wn025/instances"
+
+[lb]
+data
+
+[lbs:vars]
+httpd_root=/etc/httpd
+httpd_conf_file=/etc/httpd/conf/esgf-httpd.conf
+httpd_version=2.2.15
+
+[workers]
+wn023
+wn025
+
+[workers:vars]
+load_balancer=data

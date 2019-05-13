@@ -2,10 +2,11 @@
   vars:
     root: "{{ playbook_dir }}/sandbox"
     ansible_python_interpreter: /usr/bin/python3 # required if using apt packages
+    jdk_root: "{{ root }}/jdk"
     tomcat_home: "{{ root }}/tomcat"
     tomcat_base: "{{ root }}"
   roles:
-    - role: supervisord-ubuntu
+    #- role: supervisord-ubuntu
     - role: jdk-source
     - role: tomcat-source
     - role: tds
@@ -14,13 +15,23 @@
       tomcat_name: tomcat
       tomcat_http_port: 8080
       tomcat_shutdown_port: 8005
-      tomcat_Xmx: 4096m
+      tomcat_Xmx: 2048m
       tomcat_Xms: 512m
       tds_version: 5.0.0-beta6
       tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
       tds_context: thredds
   tasks:
     - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tomcat]
+
+    - import_tasks: ../../utils/test-authentication.yml
+      vars:
+        tomcats: [tomcat]
+
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tomcat]
 
     - name: Clean
       file: path={{ root }} state=absent

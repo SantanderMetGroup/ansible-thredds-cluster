@@ -44,3 +44,14 @@ Scenarios are concrete use cases that make use of roles to create end-user deplo
 ## Tests
 
 Run `cd tests && ./test.sh` to test deployments using Docker containers.
+
+## Development files
+
+server.crt was generated using: (see https://gist.github.com/croxton/ebfb5f3ac143cd86542788f972434c96)
+
+```bash
+openssl req -new -sha256 -out server.csr -key insecure_private_key -config san.cnf
+openssl x509 -req -sha256 -days 3650 -in server.csr -signkey insecure_private_key -out server.crt -extensions req_ext -extfile san.cnf
+openssl x509 -in server.crt -out server.pem -outform PEM
+openssl pkcs12 -export -in server.pem -inkey insecure_private_key -out server.p12 -name lxdock -CAfile server.pem -caname root -chain
+```

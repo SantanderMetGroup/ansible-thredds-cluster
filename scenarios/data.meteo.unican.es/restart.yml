@@ -1,0 +1,13 @@
+- name: Restart load balancer
+  hosts: lbs
+  tasks:
+    - command: apachectl -k graceful -f {{ httpd_conf_file }}
+      tags: httpd
+
+- name: Restart tomcats
+  hosts: servers
+  tasks:
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [i1, i2]
+      tags: tomcat

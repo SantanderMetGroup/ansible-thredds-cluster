@@ -1,0 +1,24 @@
+- name: Start load balancer
+  hosts: lbs
+  tasks:
+    - command: apachectl -k start -f {{ httpd_conf_file }}
+      tags: httpd
+
+- name: Start database
+  hosts: databases
+  tasks:
+    - command: nohup bin/startNetworkServer &
+      args:
+        chdir: "{{ derby_home }}"
+      environment:
+        DERBY_HOME: "{{ derby_home }}"
+        JAVA_HOME: "{{ jdk_root }}"
+      tags: database
+
+- name: Start tomcats
+  hosts: servers
+  tasks:
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [i1, i2]
+      tags: tomcat

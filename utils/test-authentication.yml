@@ -1,7 +1,7 @@
 - name: Add a dummy role and a dummy user to tomcats
   blockinfile:
     marker: "<!-- {mark} Test users -->"
-    path: "{{ tomcat_base }}/{{ item.name }}/conf/tomcat-users.xml"
+    path: "{{ tomcat_base }}/{{ item }}/conf/tomcat-users.xml"
     insertbefore: "</tomcat-users>"
     block: |
       <role rolename="restringido"/>
@@ -11,7 +11,7 @@
 - name: Add user realm as a global resource to tomcats
   blockinfile:
     marker: "<!-- {mark} User resource -->"
-    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    path: "{{ tomcat_base }}/{{ item }}/conf/server.xml"
     insertbefore: "</GlobalNamingResources>"
     block: |
       <Resource name="UserDatabase" 
@@ -24,7 +24,7 @@
 - name: Add user realm to tomcats
   blockinfile:
     marker: "<!-- {mark} User realm -->"
-    path: "{{ tomcat_base }}/{{ item.name }}/conf/server.xml"
+    path: "{{ tomcat_base }}/{{ item }}/conf/server.xml"
     insertbefore: "<Host"
     block: |
       <Realm className="org.apache.catalina.realm.LockOutRealm">
@@ -34,7 +34,7 @@
 
 - name: Add restricted datasetRoot to main catalog
   lineinfile:
-    path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
+    path: "{{ tomcat_base }}/{{ item }}/content/thredds/catalog.xml"
     insertafter: <datasetRoot
     line: <datasetRoot path="testRestricted" location="content/testdata/" />
   with_items: "{{ tomcats }}"
@@ -44,7 +44,7 @@
 
 - name: Add restricted dataset to main catalog
   lineinfile:
-    path: "{{ tomcat_base }}/{{ item.name }}/content/thredds/catalog.xml"
+    path: "{{ tomcat_base }}/{{ item }}/content/thredds/catalog.xml"
     insertbefore: </catalog>
     line: <dataset name="Test Restricted Dataset" ID="restrictedDataset" restrictAccess="restringido" serviceName="all"  urlPath="testRestricted/testData.nc" dataType="Grid"/>
   with_items: "{{ tomcats }}"

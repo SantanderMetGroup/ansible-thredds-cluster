@@ -1,0 +1,84 @@
+- name: Deploy load balancers
+  hosts: lbs
+  vars:
+    admin_pass: coches1 # is this needed anywhere?
+  roles:
+    - role: load-balancer
+      lb_type: modproxy
+      clusters:
+        # modproxy requires order, most specific first
+        - name: system4interim
+          services:
+            - dodsC/udg-tds/system4
+            - ncss/grid/udg-tds/system4
+            - dodsC/udg-tds/interim
+            - ncss/grid/udg-tds/interim
+        - name: default
+          services: [catalog]
+  tasks:
+    - name: Add esgcet lb worker
+      blockinfile:
+        path: "{{ modproxy_conf }}"
+        marker: "# {mark} esgcet"
+        insertbefore: '<Proxy "balancer://default">'
+        block: |
+          <Proxy "balancer://esgcet">
+          ProxySet stickysession=JSESSIONID
+          BalancerMember "ajp://localhost:8223" loadfactor=1 route=esgcet
+          </Proxy>
+          ProxyPass "/thredds/catalog/esgcet" "balancer://esgcet/thredds/catalog/esgcet"
+          ProxyPass "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
+          ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
+          ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
+
+    - name: Copy ESGF catalogs
+      synchronize: src=esgcet/ dest=/esg/content/thredds/esgcet
+      when: "'data' != inventory_file" # not copy in data
+
+    - name: Remove RewriteCond for TDS
+      lineinfile: state=absent path={{ httpd_conf_file }} line='RewriteCond %{REQUEST_URI} !^/thredds(.*)$'
+
+- name: Deploy user database server
+  hosts: databases
+  roles:
+    - role: jdk-source
+      jdk_root: "{{ ansible_env.HOME }}/services/jdk"
+    - role: derby
+
+- name: Deploy workers
+  hosts: servers
+  vars:
+    tds_root_catalog: catalog.xml
+    tomcat_keystore: "../../server.p12"
+    tomcat_ssl_keystoreFile: "{{ tomcat_home }}/server.p12"
+    tomcat_ssl_keystorePass: "coches1"
+    tds_useSSL: true
+    tds_sslPort: 443
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: tds
+      tomcat_name: i1
+      tomcat_http_port: 8080
+      tomcat_ajp_port: 8008
+      tomcat_shutdown_port: 8005
+      worker:
+        host: "{{ inventory_hostname }}"
+        route: "{{ inventory_hostname }}-tds1"
+        clusters: [default]
+    - role: tds
+      tomcat_name: i2
+      tomcat_http_port: 8081
+      tomcat_ajp_port: 8018
+      tomcat_shutdown_port: 8006
+      worker:
+        host: "{{ inventory_hostname }}"
+        route: "{{ inventory_hostname }}-tds2"
+        clusters: [system4interim]
+  tasks:
+    - name: Copy User Data Gateway catalogs
+      synchronize: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
+      with_items: [i1, i2]
+      tags: catalogs

@@ -27,6 +27,10 @@
 - name: Template shutdown.sh
   template: src=shutdown.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/shutdown.sh mode=u+x
 
+- name: Copy keystore
+  copy: src={{ tomcat_keystore }} dest={{ tomcat_ssl_keystoreFile }}
+  when: tomcat_keystore is defined
+
 - name: Set up tomcats cluster
   lineinfile:
     path: "{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
@@ -71,6 +75,11 @@
 - name: Create content directory
   file: path={{ tds_content }} state=directory
 
+- name: Template threddsConfig.xml
+  template:
+    src: threddsConfig.xml.j2
+    dest: "{{ tds_content }}/threddsConfig.xml"
+
 - name: Copy root TDS catalog
   copy: src={{ tds_root_catalog }} dest={{ tds_content }}
   when: tds_root_catalog is defined
@@ -83,6 +92,10 @@
 - name: Set up memcached Manager
   include_tasks: memcached-manager.yml
   when: tomcat_manager == "memcached"
+
+- name: Enable derby
+  include_tasks: derby.yml
+  when: derby is defined
 
 - name: Register TDS as a worker in the cluster
   include_tasks: worker/worker.yml

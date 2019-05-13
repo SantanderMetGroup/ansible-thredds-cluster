@@ -9,6 +9,14 @@ tomcat_name: tomcat
 tomcat_http_port: 8080
 tomcat_ajp_port: 8009
 tomcat_shutdown_port: 8005
+tomcat_ssl_port: 8443
+tomcat_ssl_protocol: org.apache.coyote.http11.Http11Nio2Protocol
+tomcat_ssl_maxThreads: 200
+tomcat_ssl_scheme: https
+tomcat_ssl_secure: true
+tomcat_ssl_SSLEnabled: true
+tomcat_ssl_clientAuth: false
+tomcat_ssl_sslProtocol: TLS
 
 #tds
 tds_version: 5.0.0-beta6
@@ -17,8 +25,22 @@ tds_mirror: http://artifacts.unidata.ucar.edu/content/repositories/unidata-relea
 tds_download_url: "{{ tds_mirror }}/{{ tds_version }}/tds-{{ tds_version }}.war"
 tds_context: thredds
 tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
-tds_useSSL: true
-tds_sslPort: 8443
+tds_useSSL: false
+tds_sslPort: "{{ tomcat_http_port }}"
+
+## threddsConfig.xml
+tds_config_name: 'Initial TDS Installation (please change threddsConfig.xml)'
+tds_config_logoUrl: '/thredds/threddsIcon.png'
+tds_config_logAltText: 'Initial TDS Installation'
+tds_config_abstract: 'Scientific Data'
+tds_config_keywords: 'meteorology, atmosphere, climate, ocean, earth science'
+tds_config_contact_name: 'Support'
+tds_config_contact_organization: 'My Group'
+tds_config_contact_email: 'support@my.group'
+tds_config_hostInstitution_name: 'My Group'
+tds_config_hostInstitution_webSite: 'http://www.my.site/'
+tds_config_hostInstitution_logoUrl: '/thredds/myGroup.png'
+tds_config_hostInstitution_logoAltText: 'My Group'
 
 # JVM opts
 tomcat_Xms: 512m
@@ -34,3 +56,7 @@ memcached_session_manager_tc_url: https://repo1.maven.org/maven2/de/javakaffee/m
 memcached_version: 2.9.1
 memcached_jar: spymemcached-{{ memcached_version }}.jar
 memcached_url: https://repo1.maven.org/maven2/net/spy/spymemcached/{{ memcached_version }}/{{ memcached_jar }}
+
+# derby
+derby_url: http://ftp.cixug.es/apache//db/derby/db-derby-10.14.2.0/db-derby-10.14.2.0-lib.tar.gz
+derby_md5: 999f39b508255eef055b37091672804a

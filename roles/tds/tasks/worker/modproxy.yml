@@ -8,6 +8,15 @@
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
   with_items: "{{ worker.clusters }}"
 
+- name: Add worker to the modproxy restricted worker
+  lineinfile:
+    dest: "{{ hostvars[load_balancer].modproxy_conf }}"
+    insertafter: <Proxy \"balancer://restricted\">
+    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" route={{ worker.route }}
+  delegate_to: "{{ load_balancer }}"
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+
 - name: Add java melody urimaps
   delegate_to: "{{ load_balancer }}"
   lineinfile:
