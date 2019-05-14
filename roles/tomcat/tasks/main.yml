@@ -1,0 +1,46 @@
+- name: Set up {{ tomcat_name }}
+  file: dest={{ tomcat_base }}/{{ tomcat_name }} state=directory
+
+- name: Set up catalina base
+  file: path={{ tomcat_base }}/{{ tomcat_name }}/{{ item }} state=directory
+  with_items: ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
+
+- name: Copy web.xml
+  copy: src=web.xml dest={{ tomcat_base }}/{{ tomcat_name }}/conf/web.xml
+
+- name: Template context.xml
+  template: src=context.xml.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/conf/context.xml
+
+- name: Template server.xml
+  template: src=server.xml.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml
+
+- name: Template tomcat-users.xml
+  template: src=tomcat-users.xml.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/conf/tomcat-users.xml
+
+- name: Template setenv.sh
+  template: src=setenv.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh
+
+- name: Template startup.sh
+  template: src=startup.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/startup.sh mode=u+x
+
+- name: Template shutdown.sh
+  template: src=shutdown.sh.j2 dest={{ tomcat_base }}/{{ tomcat_name }}/bin/shutdown.sh mode=u+x
+
+- name: Copy keystore
+  copy: src={{ tomcat_keystore }} dest={{ tomcat_ssl_keystoreFile }}
+  when: tomcat_keystore is defined
+
+- name: Set up tomcats cluster
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
+    insertbefore: </Host>
+    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+  when: tomcat_cluster
+
+- name: Add tomcat as a systemd service
+  include_tasks: services/systemd.yml
+  when: tomcat_service == "systemd"
+
+- name: Add tomcat as a supervisord service
+  include_tasks: services/supervisord.yml
+  when: tomcat_service == "supervisord"

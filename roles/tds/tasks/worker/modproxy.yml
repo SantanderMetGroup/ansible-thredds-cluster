@@ -2,7 +2,7 @@
   lineinfile:
     dest: "{{ hostvars[load_balancer].modproxy_conf }}"
     insertafter: <Proxy \"balancer://{{ item }}\">
-    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ worker.route }}
+    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ tomcat_name }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
@@ -12,7 +12,7 @@
   lineinfile:
     dest: "{{ hostvars[load_balancer].modproxy_conf }}"
     insertafter: <Proxy \"balancer://restricted\">
-    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" route={{ worker.route }}
+    line: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" route={{ tomcat_name }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
@@ -21,5 +21,5 @@
   delegate_to: "{{ load_balancer }}"
   lineinfile:
     path: "{{ hostvars[load_balancer].modproxy_conf }}"
-    line: ProxyPass "/monitoring/{{ worker.route }}" "http://{{ worker.host | default(ansible_hostname) }}:{{ tds_melody.port }}/{{ tds_context }}/monitoring"
+    line: ProxyPass "/monitoring/{{ tomcat_name }}" "http://{{ worker.host | default(ansible_hostname) }}:{{ tds_melody.port }}/{{ tds_context }}/monitoring"
   when: tds_melody is defined

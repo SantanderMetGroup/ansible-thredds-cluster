@@ -32,11 +32,17 @@ ProxyPass "/thredds/restrictedAccess" "balancer://restricted/thredds/restrictedA
 <Proxy "balancer://{{ c.name }}">
 ProxySet stickysession=JSESSIONID
 </Proxy>
-{% for s in c.services -%}
+
+{% for s in c.services|default([]) -%}
 ProxyPass "/thredds/{{ s }}" "balancer://{{ c.name }}/thredds/{{ s }}"
 {% if s == "catalog" -%}
 ProxyPass "/thredds" "balancer://{{ c.name }}/thredds"
 {% endif %}
+{% endfor %}
+
+{% for u in c.urls|default([]) -%}
+ProxyPass "{{ u }}" "balancer://{{ c.name }}{{ u }}"
+ProxyPassReverse "{{ u }}" "balancer://{{ c.name }}{{ u }}"
 {% endfor %}
 
 {% endfor %}

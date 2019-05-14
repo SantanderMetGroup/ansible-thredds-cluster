@@ -28,7 +28,7 @@
 	       keystoreFile="{{ tomcat_ssl_keystoreFile }}" keystorePass="{{ tomcat_ssl_keystorePass | mandatory }}"
 	       clientAuth="{{ tomcat_ssl_clientAuth }}" sslProtocol="{{ tomcat_ssl_sslProtocol }}" />
     {% endif %}
-    <Engine name="Catalina" defaultHost="localhost">
+    <Engine name="Catalina" defaultHost="localhost" jvmRoute="{{ tomcat_name }}">
       <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
 	{% if derby is defined -%}
 	<Realm className="org.apache.catalina.realm.DataSourceRealm" digest="MD5"
