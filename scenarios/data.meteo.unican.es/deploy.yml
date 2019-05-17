@@ -6,13 +6,13 @@
       clusters:
         # modproxy requires order, most specific first
         - name: system4interim
-          services:
-            - dodsC/udg-tds/system4
-            - ncss/grid/udg-tds/system4
-            - dodsC/udg-tds/interim
-            - ncss/grid/udg-tds/interim
+          urls:
+            - /thredds/dodsC/udg-tds/system4
+            - /thredds/ncss/grid/udg-tds/system4
+            - /thredds/dodsC/udg-tds/interim
+            - /thredds/ncss/grid/udg-tds/interim
         - name: default
-          services: [catalog]
+          urls: [/thredds,/thredds/catalog]
         - name: tap
           urls: [/udg-tap]
   tasks:
@@ -30,6 +30,13 @@
           ProxyPass "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
           ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
           ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
+
+    - name: Comment ProxyPass /thredds from httpd.ssl.conf
+      replace:
+        path: /etc/httpd/conf/httpd.ssl.conf
+        regexp: '(?<!#)(ProxyPass.* /thredds)'
+        replace: '#\1'
+      tags: asdf
 
     - name: Copy ESGF catalogs
       synchronize: src=esgcet/ dest=/esg/content/thredds/esgcet

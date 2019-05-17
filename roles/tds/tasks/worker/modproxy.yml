@@ -2,22 +2,26 @@
   blockinfile:
     dest: "{{ hostvars[load_balancer].modproxy_conf }}"
     insertafter: <Proxy \"balancer://{{ item }}\">
-    marker: '#{mark} {{ item }}:{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}'
-    block: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ tomcat_name }}
+    marker: '#{mark} {{ item }}:{{ whost }}:{{ wport }}'
+    block: BalancerMember "ajp://{{ whost}}:{{ wport }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ tomcat_route }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+    whost: "{{ worker.host | default(ansible_hostname) }}"
+    wport: "{{ worker.port | default(tomcat_ajp_port) }}"
   with_items: "{{ worker.clusters }}"
 
 - name: Add worker to the modproxy restricted worker
   blockinfile:
     dest: "{{ hostvars[load_balancer].modproxy_conf }}"
     insertafter: <Proxy \"balancer://restricted\">
-    marker: '#{mark} restricted:{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}'
-    block: BalancerMember "ajp://{{ worker.host | default(ansible_hostname) }}:{{ worker.port | default(tomcat_ajp_port) }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ tomcat_name }}
+    marker: '#{mark} restricted:{{ whost }}:{{ wport }}'
+    block: BalancerMember "ajp://{{ whost }}:{{ wport }}" loadfactor={{ worker.loadfactor | default(1) }} route={{ tomcat_route }}
   delegate_to: "{{ load_balancer }}"
   vars:
     ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+    whost: "{{ worker.host | default(ansible_hostname) }}"
+    wport: "{{ worker.port | default(tomcat_ajp_port) }}"
 
 - name: Add java melody urimaps
   delegate_to: "{{ load_balancer }}"
