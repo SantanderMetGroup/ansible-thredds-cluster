@@ -30,13 +30,6 @@
   copy: src={{ tomcat_keystore }} dest={{ tomcat_ssl_keystoreFile }}
   when: tomcat_keystore is defined
 
-- name: Set up tomcats cluster
-  lineinfile:
-    path: "{{ tomcat_base }}/{{ tomcat_name }}/conf/server.xml"
-    insertbefore: </Host>
-    line: <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
-  when: tomcat_cluster
-
 - name: Add tomcat as a systemd service
   include_tasks: services/systemd.yml
   when: tomcat_service == "systemd"
@@ -44,3 +37,7 @@
 - name: Add tomcat as a supervisord service
   include_tasks: services/supervisord.yml
   when: tomcat_service == "supervisord"
+
+- name: Deploy webapps
+  include_role: name={{ item }}
+  with_items: "{{ tomcat_webapps }}"

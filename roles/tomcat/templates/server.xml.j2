@@ -38,6 +38,9 @@
 	{% endif %}
 	<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
 	       prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+	{% if tomcat_cluster is defined -%}
+	<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+	{% endif %}
       </Host>
     </Engine>
   </Service>

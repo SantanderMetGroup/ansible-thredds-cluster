@@ -1,5 +1,3 @@
-- include_role: name=tomcat
-
 - name: Download tds
   run_once: True
   local_action: get_url
@@ -15,9 +13,17 @@
 - name: Unarchive TDS
   unarchive: src={{ downloads }}/{{ tds_war }} dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
 
-- name: Update TDS context path
-  include_tasks: context.yml
-  when: tds_context != 'thredds'
+- name: Update context path in web.xml
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/web.xml"
+    regexp: <param-value>thredds</param-value>
+    replace: <param-value>{{ tds_context }}</param-value>
+
+- name: Update tds.properties
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/classes/thredds/server/tds.properties"
+    regexp: tds.content.path=thredds
+    replace: tds.content.path={{ tds_content_path }}
 
 - name: Template applicationContext.xml
   template:
@@ -49,4 +55,3 @@
 
 - name: Register TDS as a worker in the cluster
   include_tasks: worker/worker.yml
-  when: worker is defined

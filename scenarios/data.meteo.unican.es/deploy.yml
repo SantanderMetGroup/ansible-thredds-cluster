@@ -31,12 +31,21 @@
           ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
           ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
 
+    - name: Proxy tds5, tds6 and tds7
+      blockinfile:
+        path: "{{ modproxy_conf }}"
+        insertafter: 'ProxyPassReverse "/thredds" "balancer://default/thredds"'
+        block: |
+          ProxyPass "/tds5" "balancer://default/thredds"
+          ProxyPassReverse "/tds5" "balancer://default/thredds"
+          ProxyPass "/tds7" "balancer://default/thredds"
+          ProxyPassReverse "/tds7" "balancer://default/thredds"
+
     - name: Comment ProxyPass /thredds from httpd.ssl.conf
       replace:
         path: /etc/httpd/conf/httpd.ssl.conf
         regexp: '(?<!#)(ProxyPass.* /thredds)'
         replace: '#\1'
-      tags: asdf
 
     - name: Copy ESGF catalogs
       synchronize: src=esgcet/ dest=/esg/content/thredds/esgcet
@@ -55,46 +64,64 @@
 - name: Deploy workers
   hosts: servers
   vars:
-    tds_root_catalog: catalog.xml
     tomcat_keystore: "../../server.p12"
     tomcat_ssl_keystoreFile: "{{ tomcat_home }}/server.p12"
-    tomcat_ssl_keystorePass: "coches1"
+    tomcat_ssl_keystorePass: coches1
     tomcat_context_lines:
       - '<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
+    #tds_root_catalog: catalog.xml
     tds_useSSL: true
     tds_sslPort: 443
+    tds_content_root_path: "{{ tomcat_home }}/content"
+    tds_content: "{{ tomcat_home }}/content/thredds"
   vars_files:
-    - secrets.yml
+    - secrets/secret.yml
+    - secrets/svn.yml
   roles:
     - role: jdk-source
     - role: tomcat-source
-    - role: tds
+    - role: tomcat
       tomcat_name: i1
-      tomcat_http_port: 8080
-      tomcat_ajp_port: 8008
-      tomcat_shutdown_port: 8005
-      worker:
-        host: "{{ inventory_hostname }}"
-        clusters: [default]
-    - role: tds
-      tomcat_name: i2
-      tomcat_http_port: 8081
-      tomcat_ajp_port: 8018
-      tomcat_shutdown_port: 8006
-      worker:
-        host: "{{ inventory_hostname }}"
-        clusters: [system4interim]
-    - role: tap
-      tomcat_name: i1
+      tomcat_webapps: [tds, tap]
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
       tap_email_noreply: no-reply@meteo.unican.es
-      worker:
+      tap_worker:
         host: "{{ inventory_hostname }}"
         clusters: [tap]
-  tasks:
-    - name: Copy User Data Gateway catalogs
-      synchronize: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
-      with_items: [i1, i2]
-      tags: catalogs
+      tds_worker:
+        host: "{{ inventory_hostname }}"
+        clusters: [default]
+    - role: tomcat
+      tomcat_name: i2
+      tomcat_webapps: [tds]
+      tomcat_http_port: 8081
+      tomcat_ajp_port: 8018
+      tomcat_shutdown_port: 8006
+      tds_worker:
+        host: "{{ inventory_hostname }}"
+        clusters: [system4interim]
+  pre_tasks:
+#    - name: Copy User Data Gateway catalogs
+#      synchronize: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
+#      with_items: [i1, i2]
+#      tags: catalogs
+
+    - name: Create common content/thredds directory
+      file: state=directory path={{ tomcat_home }}/content
+
+    - name: Checkout TDS5 data
+      subversion:
+        repo: https://meteo.unican.es/svn/repos/sistemas/services/TDS5/tomcat/content/thredds/
+        dest: "{{ tds_content }}"
+        username: "{{ svn_username }}"
+        password: "{{ svn_password }}"
+        force: yes
+      run_once: True
+
+    - name: Reference ESGF catalog from TDS5 root catalog
+      lineinfile:
+        path: "{{ tds_content }}/catalog.xml"
+        insertbefore: </catalog>
+        line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
