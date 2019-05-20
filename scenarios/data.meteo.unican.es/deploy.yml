@@ -31,15 +31,14 @@
           ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
           ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
 
-    - name: Proxy tds5, tds6 and tds7
+    - name: Redirect tds5 and tds7
       blockinfile:
-        path: "{{ modproxy_conf }}"
-        insertafter: 'ProxyPassReverse "/thredds" "balancer://default/thredds"'
+        path: "/etc/httpd/conf/httpd.ssl.conf"
+        insertafter: 'Header always set X-Content-Type-Options nosniff'
         block: |
-          ProxyPass "/tds5" "balancer://default/thredds"
-          ProxyPassReverse "/tds5" "balancer://default/thredds"
-          ProxyPass "/tds7" "balancer://default/thredds"
-          ProxyPassReverse "/tds7" "balancer://default/thredds"
+          RewriteEngine on
+          RewriteRule "/tds5(.*)" "/thredds$1" [R=301]
+          RewriteRule "/tds7/ncss(.*)" "/thredds/ncss/grid$1" [R=301]
 
     - name: Comment ProxyPass /thredds from httpd.ssl.conf
       replace:
@@ -126,11 +125,9 @@
       args:
         chdir: "{{ tds_content }}"
       run_once: True
-      tags: asdf
 
     - name: Reference ESGF catalog from TDS5 root catalog
       lineinfile:
         path: "{{ tds_content }}/catalog.xml"
         insertbefore: </catalog>
         line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
-      tags: asdf
