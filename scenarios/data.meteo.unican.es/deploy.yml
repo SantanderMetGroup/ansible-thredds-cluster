@@ -7,10 +7,10 @@
         # modproxy requires order, most specific first
         - name: system4interim
           urls:
-            - /thredds/dodsC/udg-tds/system4
-            - /thredds/ncss/grid/udg-tds/system4
-            - /thredds/dodsC/udg-tds/interim
-            - /thredds/ncss/grid/udg-tds/interim
+            - /thredds/dodsC/system4
+            - /thredds/ncss/grid/system4
+            - /thredds/dodsC/interim
+            - /thredds/ncss/grid/interim
         - name: default
           urls: [/thredds,/thredds/catalog]
         - name: tap
@@ -27,9 +27,13 @@
           BalancerMember "ajp://localhost:8223" loadfactor=1 route=esgcet
           </Proxy>
           ProxyPass "/thredds/catalog/esgcet" "balancer://esgcet/thredds/catalog/esgcet"
+          ProxyPassReverse "/thredds/catalog/esgcet" "balancer://esgcet/thredds/catalog/esgcet"
           ProxyPass "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
+          ProxyPassReverse "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
           ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
+          ProxyPassReverse "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
           ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
+          ProxyPassReverse "/esg-orp" "balancer://esgcet/esg-orp"
 
     - name: Redirect tds5 and tds7
       blockinfile:
