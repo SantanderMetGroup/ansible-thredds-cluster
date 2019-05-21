@@ -1,0 +1,36 @@
+- hosts: tfm-servidor
+  vars:
+    root: "{{ ansible_env.HOME }}/tds"
+    ansible_python_interpreter: /usr/bin/python3 # required if using apt packages
+    jdk_root: "{{ ansible_env.HOME }}/jdk"
+    tomcat_home: "{{ root }}"
+    tomcat_base: "{{ ansible_env.HOME }}"
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: tomcat
+      # These are role defaults, they are showed here for illustration
+      # You can tune these paremeters to suit your needs
+      tomcat_name: tds
+      tomcat_webapps: [tds]
+      tomcat_http_port: 8080
+      tomcat_shutdown_port: 8005
+      tomcat_Xmx: 2048m
+      tomcat_Xms: 512m
+      tds_version: 5.0.0-beta6
+      tds_content_root_path: "{{ root }}"
+      tds_context: thredds
+  tasks:
+    - import_tasks: ../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds]
+      environment:
+        JAVA_HOME: "{{ jdk_root }}"
+
+    - name: Clean
+      file: path={{ root }} state=absent
+      tags: [never, purge, clean]
+
+    - name: Purge
+      file: path={{ downloads }} state=absent
+      tags: [never, purge]
