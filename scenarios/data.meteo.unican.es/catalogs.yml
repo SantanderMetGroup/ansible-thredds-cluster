@@ -21,3 +21,16 @@
         path: "{{ tds_content }}/catalog.xml"
         insertbefore: </catalog>
         line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
+        
+        
+## Temporary cmip6 catalog
+    - name: Copy cmip6 catalog
+      copy: src=cmip6.xml dest={{ tds_content }}/catalogs/cmip6.xml
+      run_once: True
+      
+    - name: Reference cmip6 catalog
+      lineinfile:
+        path: "{{ tds_content }}/catalog.xml"
+        insertbefore: </catalog>
+        line: '<catalogRef xlink:title="CMIP6" xlink:href="catalogs/cmip6.xml" name="" />'
+      run_once: True
