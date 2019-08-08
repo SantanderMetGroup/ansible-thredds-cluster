@@ -13,3 +13,27 @@ tds_config_hostInstitution_logoAltText: 'Santander Meteorology Group'
 
 tap_tds_baseurl: https://{{ hostvars[load_balancer]['ansible_nodename'] }}/thredds/catalog/
 tap_baseurl: https://{{ hostvars[load_balancer]['ansible_nodename'] }}/{{ tap_context }}
+
+tomcat_global_naming_resources: |
+  <Resource name="{{ derby.name }}" auth="Container" type="javax.sql.DataSource"
+            factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
+            validationQuery="SELECT count(*) FROM users" maxActive="20" maxIdle="10"
+            username="{{ derby.user }}" password="{{ derby.password }}"
+            driverClassName="org.apache.derby.jdbc.ClientDriver"
+            url="{{ derby.url }}" readOnly="false"/>
+
+tomcat_connectors: |
+  <Connector port="{{ tomcat_http_port }}" protocol="HTTP/1.1" connectionTimeout="20000"
+             redirectPort="8443"/>
+  <Connector port="{{ tomcat_ajp_port }}" protocol="AJP/1.3" />
+  <Connector port="8443" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+             maxThreads="200" scheme="https"
+             secure="True" SSLEnabled="True"
+             keystoreFile="{{ tomcat_ssl_keystoreFile }}" keystorePass="{{ tomcat_ssl_keystorePass }}"
+             clientAuth="False" sslProtocol="TLS" />
+
+tomcat_realms: |
+  <Realm className="org.apache.catalina.realm.DataSourceRealm" digest="MD5"
+         debug="0" dataSourceName="{{ derby.name }}" userTable="USERS"
+         userNameCol="USERNAME" userCredCol="PASSWORD" userRoleTable="V_USERS_ROLES"
+         roleNameCol="ROLENAME"/>

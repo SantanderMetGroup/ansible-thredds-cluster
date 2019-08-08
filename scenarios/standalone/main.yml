@@ -9,10 +9,9 @@
     #- role: supervisord-ubuntu
     - role: jdk-source
     - role: tomcat-source
-    - role: tds
-      # These are role defaults, they are showed here for illustration
-      # You can tune these paremeters to suit your needs
+    - role: tomcat
       tomcat_name: tomcat
+      tomcat_webapps: [tds]
       tomcat_http_port: 8080
       tomcat_shutdown_port: 8005
       tomcat_Xmx: 2048m
@@ -20,14 +19,16 @@
       tds_version: 5.0.0-beta6
       tds_content: "{{ tomcat_base }}/{{ tomcat_name }}/content/thredds"
       tds_context: thredds
+      tds_content_root_path: "{{ tomcat_base }}/{{ tomcat_name }}/content"
+      tds_root_catalog: test.xml
   tasks:
     - import_tasks: ../../utils/tomcat-service.yml
       vars:
         tomcats: [tomcat]
 
-    - import_tasks: ../../utils/test-authentication.yml
-      vars:
-        tomcats: [tomcat]
+        #    - import_tasks: ../../utils/test-authentication.yml
+        #      vars:
+        #        tomcats: [tomcat]
 
     - import_tasks: ../../utils/tomcat-service.yml
       vars:

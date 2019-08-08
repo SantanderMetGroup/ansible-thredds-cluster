@@ -1,14 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Server port="{{ tomcat_shutdown_port }}" shutdown="{{ tomcat_name }}">
   <GlobalNamingResources>
-    {% if derby is defined -%}
-    <Resource name="{{ derby.name }}" auth="Container" type="javax.sql.DataSource"
-	      factory="org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
-	      validationQuery="SELECT count(*) FROM users" maxActive="20" maxIdle="10"
-	      username="{{ derby.user }}" password="{{ derby.password }}"
-	      driverClassName="org.apache.derby.jdbc.ClientDriver"
-	      url="{{ derby.url }}" readOnly="false"/>
-    {% endif %}
+    {{ tomcat_global_naming_resources | default("") | indent(width=4, indentfirst=false) }}
   </GlobalNamingResources>
 
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
@@ -18,24 +11,11 @@
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
   <Service name="Catalina">
-    <Connector port="{{ tomcat_http_port }}" protocol="HTTP/1.1" connectionTimeout="20000"
-	       redirectPort="{{ tomcat_ssl_port }}"/>
-    <Connector port="{{ tomcat_ajp_port }}" protocol="AJP/1.3" />
-    {% if tomcat_ssl_keystoreFile is defined -%}
-    <Connector port="{{ tomcat_ssl_port }}" protocol="{{ tomcat_ssl_protocol }}"
-	       maxThreads="{{ tomcat_ssl_maxThreads }}" scheme="{{ tomcat_ssl_scheme }}"
-	       secure="{{ tomcat_ssl_secure }}" SSLEnabled="{{ tomcat_ssl_SSLEnabled }}"
-	       keystoreFile="{{ tomcat_ssl_keystoreFile }}" keystorePass="{{ tomcat_ssl_keystorePass | mandatory }}"
-	       clientAuth="{{ tomcat_ssl_clientAuth }}" sslProtocol="{{ tomcat_ssl_sslProtocol }}" />
-    {% endif %}
+
+    {{ tomcat_connectors | indent(width=4, indentfirst=false) }}
     <Engine name="Catalina" defaultHost="localhost" jvmRoute="{{ tomcat_route }}">
       <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
-	{% if derby is defined -%}
-	<Realm className="org.apache.catalina.realm.DataSourceRealm" digest="MD5"
-	       debug="0" dataSourceName="{{ derby.name }}" userTable="USERS"
-	       userNameCol="USERNAME" userCredCol="PASSWORD" userRoleTable="V_USERS_ROLES"
-	       roleNameCol="ROLENAME"/>
-	{% endif %}
+        {{ tomcat_realms | default("") | indent(width=6, indentfirst=false) }}
 	<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
 	       prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
 	{% if tomcat_cluster is defined -%}

@@ -7,15 +7,21 @@
         # modproxy requires order, most specific first
         - name: system4interim
           urls:
-            - /thredds/dodsC/system4
-            - /thredds/ncss/grid/system4
-            - /thredds/dodsC/interim
-            - /thredds/ncss/grid/interim
+            - /tds5/dodsC/system4
+            - /tds5/ncss/grid/system4
+            - /tds5/dodsC/interim
+            - /tds5/ncss/grid/interim
         - name: default
-          urls: [/thredds,/thredds/catalog]
+          urls: [/tds5,/tds5/catalog]
         - name: tap
           urls: [/udg-tap]
   tasks:
+    - name: Copy httpd.conf
+      copy: src=httpd/httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+    - name: Copy httpd.ssl.conf
+      copy: src=httpd/httpd.ssl.conf dest=/etc/httpd/conf/httpd.ssl.conf
+
     - name: Add esgcet lb worker
       blockinfile:
         path: "{{ modproxy_conf }}"
@@ -35,27 +41,9 @@
           ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
           ProxyPassReverse "/esg-orp" "balancer://esgcet/esg-orp"
 
-    - name: Redirect tds5 and tds7
-      blockinfile:
-        path: "/etc/httpd/conf/httpd.ssl.conf"
-        insertafter: 'Header always set X-Content-Type-Options nosniff'
-        block: |
-          RewriteEngine on
-          RewriteRule "/tds5(.*)" "/thredds$1" [R=301]
-          RewriteRule "/tds7/ncss(.*)" "/thredds/ncss/grid$1" [R=301]
-
-    - name: Comment ProxyPass /thredds from httpd.ssl.conf
-      replace:
-        path: /etc/httpd/conf/httpd.ssl.conf
-        regexp: '(?<!#)(ProxyPass.* /thredds)'
-        replace: '#\1'
-
     - name: Copy ESGF catalogs
       synchronize: src=esgcet/ dest=/esg/content/thredds/esgcet
       when: "'data' != inventory_file" # not copy in data
-
-    - name: Remove RewriteCond for TDS
-      lineinfile: state=absent path={{ httpd_conf_file }} line='RewriteCond %{REQUEST_URI} !^/thredds(.*)$'
 
 - name: Deploy user database server
   hosts: databases
@@ -70,9 +58,6 @@
     tomcat_keystore: "../../server.p12"
     tomcat_ssl_keystoreFile: "{{ tomcat_home }}/server.p12"
     tomcat_ssl_keystorePass: coches1
-    tomcat_context_lines:
-      - '<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
-    #tds_root_catalog: catalog.xml
     tds_useSSL: false
     tds_sslPort: 443
     tds_content_root_path: "{{ tomcat_home }}/content"
@@ -108,11 +93,13 @@
         host: "{{ inventory_hostname }}"
         clusters: [system4interim]
   pre_tasks:
-#    - name: Copy User Data Gateway catalogs
-#      synchronize: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
-#      with_items: [i1, i2]
-#      tags: catalogs
-
       - name: Checkout TDS5 catalogs
         import_tasks: catalogs.yml
         tags: catalogs
+  tasks:
+    - name: Add database resource to tomcat
+      lineinfile:
+        path: "{{ tomcat_base }}/{{ item }}/conf/context.xml"
+        insertbefore: </Context>
+        line: '<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
+      with_items: [i1, i2]
