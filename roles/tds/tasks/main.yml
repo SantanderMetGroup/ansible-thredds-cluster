@@ -6,6 +6,7 @@
     dest: "{{ downloads}}/{{ tds_war }}"
   vars:
     ansible_become: False
+  when: tds_download
 
 - name: Create webapps/{{ tds_context }} directory
   file: state=directory path={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
@@ -24,6 +25,12 @@
     path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/classes/thredds/server/tds.properties"
     regexp: tds.content.path=thredds
     replace: tds.content.path={{ tds_content_path }}
+
+- name: Add tds.content.root.path to tomcat
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh"
+    insertbefore: BOF
+    line: export CONTENT_ROOT="-Dtds.content.root.path={{ tds_content_root_path }}"
 
 - name: Template applicationContext.xml
   template:
@@ -53,6 +60,6 @@
   include_tasks: derby.yml
   when: derby is defined
 
-- name: Register TDS as a worker in the cluster
-  include_tasks: worker/worker.yml
-  when: tds_worker is defined
+#- name: Register TDS as a worker in the cluster
+#  include_tasks: worker/worker.yml
+#  when: tds_worker is defined

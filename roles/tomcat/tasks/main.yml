@@ -3,7 +3,7 @@
 
 - name: Set up catalina base
   file: path={{ tomcat_base }}/{{ tomcat_name }}/{{ item }} state=directory
-  with_items: ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
+  loop: ['bin', 'conf', 'lib', 'logs', 'webapps', 'temp']
 
 - name: Copy web.xml
   copy: src=web.xml dest={{ tomcat_base }}/{{ tomcat_name }}/conf/web.xml
@@ -38,6 +38,18 @@
   include_tasks: services/supervisord.yml
   when: tomcat_service == "supervisord"
 
+#- name: Add workers serially
+#  include_tasks: worker.yml
+#  with_items: "{{ ansible_play_batch }}"
+#  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+#  loop_control:
+#    loop_var: host_item
+
+- name: Add tomcat as a modproxy worker
+  command: /usr/bin/add-worker.sh {{ item.balancer }} {{ inventory_hostname }}:{{ tomcat_ajp_port }} {{ item.properties }}
+  delegate_to: "{{ item.gateway }}"
+  with_items: "{{ tomcat_workers }}"
+
 - name: Deploy webapps
-  include_role: name={{ item }}
+  include_role: name={{ item }} public=True
   with_items: "{{ tomcat_webapps }}"

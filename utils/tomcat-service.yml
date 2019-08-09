@@ -3,14 +3,14 @@
   args:
     removes: "{{ tomcat_base }}/{{ item }}/logs/catalina.pid"
   tags: [stop, restart]
-  with_items: "{{ tomcats }}"
+  with_items: "{{ tomcats | default([tomcat_name])}}"
   ignore_errors: True # If catalina.pid is present but process is not running, we don't want an error
   # If there is any case where this should fail, use failed_when
 
 - name: Remove catalina.pid
   file: path={{ tomcat_base }}/{{ item }}/logs/catalina.pid state=absent
   tags: [stop, restart]
-  with_items: "{{ tomcats }}"
+  with_items: "{{ tomcats | default([tomcat_name])}}"
 
 - name: Start tomcats
   shell: "nohup {{ tomcat_base }}/{{ item }}/bin/startup.sh"
@@ -18,7 +18,7 @@
     creates: "{{ tomcat_base }}/{{ item }}/logs/catalina.pid"
   register: started
   tags: [start, restart]
-  with_items: "{{ tomcats | default(['tomcat']) }}"
+  with_items: "{{ tomcats | default([tomcat_name]) }}"
 
 #- name: Wait for content/thredds initialization
 #  wait_for: path={{ tds_content }}/catalog.xml delay=3

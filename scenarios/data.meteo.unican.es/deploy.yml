@@ -3,8 +3,7 @@
   roles:
     - role: load-balancer
       lb_type: modproxy
-      clusters:
-        # modproxy requires order, most specific first
+      clusters: # modproxy requires order, most specific first
         - name: system4interim
           urls:
             - /tds5/dodsC/system4
@@ -58,8 +57,9 @@
     tomcat_keystore: "../../server.p12"
     tomcat_ssl_keystoreFile: "{{ tomcat_home }}/server.p12"
     tomcat_ssl_keystorePass: coches1
-    tds_useSSL: false
-    tds_sslPort: 443
+    #tds_useSSL: true
+    #tds_sslPort: 8443
+    tds_download: False
     tds_content_root_path: "{{ tomcat_home }}/content"
     tds_content: "{{ tomcat_home }}/content/thredds"
     tds_context: tds5
@@ -75,27 +75,32 @@
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
+      tomcat_workers:
+        - gateway: "{{ groups['lbs'][0] }}"
+          balancer: tap
+          properties: loadfactor=1 route={{ tomcat_route }}
+        - gateway: "{{ groups['lbs'][0] }}"
+          balancer: default
+          properties: loadfactor=1 route={{ tomcat_route }}
       tap_war: udg-tap.war
       tap_email_noreply: no-reply@meteo.unican.es
-      tap_worker:
-        host: "{{ inventory_hostname }}"
-        clusters: [tap]
-      tds_worker:
-        host: "{{ inventory_hostname }}"
-        clusters: [default]
     - role: tomcat
       tomcat_name: i2
       tomcat_webapps: [tds]
       tomcat_http_port: 8081
       tomcat_ajp_port: 8018
       tomcat_shutdown_port: 8006
-      tds_worker:
-        host: "{{ inventory_hostname }}"
-        clusters: [system4interim]
+      tomcat_workers:
+        - gateway: "{{ groups['lbs'][0] }}"
+          balancer: system4interim
+          properties: loadfactor=1 route={{ tomcat_route }}
+        - gateway: "{{ groups['lbs'][0] }}"
+          balancer: default
+          properties: loadfactor=1 route={{ tomcat_route }}
   pre_tasks:
-      - name: Checkout TDS5 catalogs
-        import_tasks: catalogs.yml
-        tags: catalogs
+    - name: Checkout TDS5 catalogs
+      import_tasks: catalogs.yml
+      tags: catalogs
   tasks:
     - name: Add database resource to tomcat
       lineinfile:

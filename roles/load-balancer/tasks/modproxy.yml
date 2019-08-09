@@ -7,6 +7,9 @@
 - name: Template mod_proxy conf
   template: src=modproxy/mod_proxy.conf.j2 dest="{{ modproxy_conf }}"
 
+- name: Template add-worker script
+  template: src=modproxy/add-worker.sh.j2 dest=/usr/bin/add-worker.sh mode=0544
+
 - name: Include mod_proxy.conf in {{ httpd_conf_file }}
   lineinfile: path="{{ httpd_conf_file }}" line="Include {{ modproxy_conf }}"
 
