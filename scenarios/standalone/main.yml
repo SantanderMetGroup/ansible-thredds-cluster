@@ -10,18 +10,18 @@
     tomcat_Xms: 512m
 
     # SSL example, using keystore ../../server.p12
-    #ssl: True
-    #tds_useSSL: True
-    #tds_sslPort: "{{ tomcat_ssl_port }}"
-    #tomcat_ssl_connector: |
-    #  <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
-    #             maxThreads="150" SSLEnabled="true" relaxedQueryChars="[:]">
-    #    <SSLHostConfig>
-    #      <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
-    #                   certificateKeystorePassword="coches1"
-    #                   type="RSA" />
-    #    </SSLHostConfig>
-    #  </Connector>
+    ssl: True
+    tds_useSSL: True
+    tds_sslPort: "{{ tomcat_ssl_port }}"
+    tomcat_ssl_connector: |
+      <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+                 maxThreads="150" SSLEnabled="true" relaxedQueryChars="[:]">
+        <SSLHostConfig>
+          <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
+                       certificateKeystorePassword="coches1"
+                       type="RSA" />
+        </SSLHostConfig>
+      </Connector>
 
   roles:
     - role: jdk-source

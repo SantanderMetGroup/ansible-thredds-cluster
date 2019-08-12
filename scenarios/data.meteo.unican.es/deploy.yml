@@ -50,61 +50,112 @@
     - role: jdk-source
       jdk_root: "{{ ansible_env.HOME }}/services/jdk"
     - role: derby
+      derby_drda_host: "{{ ansible_eth0.ipv4.address }}"
 
-- name: Deploy workers
-  hosts: servers
-  vars:
-    tomcat_keystore: "../../server.p12"
-    tomcat_ssl_keystoreFile: "{{ tomcat_home }}/server.p12"
-    tomcat_ssl_keystorePass: coches1
-    #tds_useSSL: true
-    #tds_sslPort: 8443
-    tds_download: False
-    tds_content_root_path: "{{ tomcat_home }}/content"
-    tds_content: "{{ tomcat_home }}/content/thredds"
-    tds_context: tds5
+- name: Deploy catalogs
+  hosts: "{{ groups['servers'][0] }}"
+  tags: catalogs
   vars_files:
     - secrets/secret.yml
     - secrets/svn.yml
+  tasks:
+    - name: Create common content/thredds directory
+      file: state=directory path={{ tomcat_home }}/content
+    
+    - name: Checkout TDS5 data
+      subversion:
+        repo: https://meteo.unican.es/svn/repos/sistemas/services/TDS5/tomcat/content/thredds/
+        dest: "{{ tds_content }}"
+        username: "{{ svn_username }}"
+        password: "{{ svn_password }}"
+        force: yes
+    
+    - name: Fix TDS5 catalogs and datasets (remove tabs)
+      shell: find catalogs public -type f -print0 | xargs -0 -n1 | grep -v svn | xargs -n1 perl -pi -e 's/(".*?)\t+"/\1"/g'
+      args:
+        chdir: "{{ tds_content }}"
+    
+    - name: Reference ESGF catalog from TDS5 root catalog
+      lineinfile:
+        path: "{{ tds_content }}/catalog.xml"
+        insertbefore: </catalog>
+        line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
+    
+    ## Temporary cmip6 catalog
+    - name: Copy cmip6 catalog
+      copy: src=cmip6.xml dest={{ tds_content }}/catalogs/cmip6.xml
+    
+    - name: Reference cmip6 catalog
+      lineinfile:
+        path: "{{ tds_content }}/catalog.xml"
+        insertbefore: </catalog>
+        line: '<catalogRef xlink:title="CMIP6" xlink:href="catalogs/cmip6.xml" name="" />'
+
+- name: Deploy default tds and tap
+  hosts: servers
+  vars_files:
+    - secrets/secret.yml
+    - secrets/svn.yml
+  vars:
+    tomcat_name: i1
+    tomcat_webapps: [tds, tap]
+    tomcat_http_port: 8080
+    tomcat_ajp_port: 8008
+    tomcat_shutdown_port: 8005
+    tomcat_workers:
+      - gateway: "{{ load_balancer }}"
+        balancer: tap
+        properties: loadfactor=1 route={{ tomcat_route }}
+      - gateway: "{{ load_balancer }}"
+        balancer: default
+        properties: loadfactor=1 route={{ tomcat_route }}
   roles:
     - role: jdk-source
     - role: tomcat-source
     - role: tomcat
-      tomcat_name: i1
-      tomcat_webapps: [tds, tap]
-      tomcat_http_port: 8080
-      tomcat_ajp_port: 8008
-      tomcat_shutdown_port: 8005
-      tomcat_workers:
-        - gateway: "{{ groups['lbs'][0] }}"
-          balancer: tap
-          properties: loadfactor=1 route={{ tomcat_route }}
-        - gateway: "{{ groups['lbs'][0] }}"
-          balancer: default
-          properties: loadfactor=1 route={{ tomcat_route }}
-      tap_war: udg-tap.war
-      tap_email_noreply: no-reply@meteo.unican.es
-    - role: tomcat
-      tomcat_name: i2
-      tomcat_webapps: [tds]
-      tomcat_http_port: 8081
-      tomcat_ajp_port: 8018
-      tomcat_shutdown_port: 8006
-      tomcat_workers:
-        - gateway: "{{ groups['lbs'][0] }}"
-          balancer: system4interim
-          properties: loadfactor=1 route={{ tomcat_route }}
-        - gateway: "{{ groups['lbs'][0] }}"
-          balancer: default
-          properties: loadfactor=1 route={{ tomcat_route }}
-  pre_tasks:
-    - name: Checkout TDS5 catalogs
-      import_tasks: catalogs.yml
-      tags: catalogs
   tasks:
     - name: Add database resource to tomcat
       lineinfile:
-        path: "{{ tomcat_base }}/{{ item }}/conf/context.xml"
+        path: "{{ tomcat_base }}/i1/conf/context.xml"
         insertbefore: </Context>
         line: '<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
-      with_items: [i1, i2]
+        
+    - name: Refresh catalogs
+      debug: msg={{ lookup('url', url, username=tds_admin.user, password=tds_admin.password, validate_certs=False) }}
+      vars:
+        url: https://{{ inventory_hostname }}:{{ tomcat_ssl_port }}/{{ tds_context }}/admin/debug?Catalogs/reinit
+      tags: catalogs
+
+- name: Deploy system4interim
+  hosts: system4interim
+  vars_files:
+    - secrets/secret.yml
+    - secrets/svn.yml
+  vars:
+    tomcat_name: i2
+    tomcat_webapps: [tds]
+    tomcat_http_port: 8081
+    tomcat_ajp_port: 8009
+    tomcat_ssl_port: 8444
+    tomcat_shutdown_port: 8006
+    tomcat_workers:
+      - gateway: "{{ load_balancer }}"
+        balancer: system4interim
+        properties: loadfactor=1 route={{ tomcat_route }}
+      - gateway: "{{ load_balancer }}"
+        balancer: default
+        properties: loadfactor=1 route={{ tomcat_route }}
+  roles:
+    - role: tomcat
+  tasks:
+    - name: Add database resource to tomcat
+      lineinfile:
+        path: "{{ tomcat_base }}/i2/conf/context.xml"
+        insertbefore: </Context>
+        line: '<ResourceLink global="jdbc/adminDB" name="jdbc/adminDB" type="javax.sql.DataSource"/>'
+
+    - name: Refresh catalogs
+      debug: msg={{ lookup('url', url, username=tds_admin.user, password=tds_admin.password, validate_certs=False) }}
+      vars:
+        url: https://{{ inventory_hostname }}:{{ tomcat_ssl_port }}/{{ tds_context }}/admin/debug?Catalogs/reinit
+      tags: catalogs

@@ -3,33 +3,26 @@
   run_once: True
   vars:
     ansible_become: False
-  when: tap_build=="svn"
+  when: tap_download
 
 - name: Build TAP
   local_action: command mvn package chdir={{ downloads }}/tap
   run_once: True
   vars:
     ansible_become: False
-  when: tap_build=="svn"
+  when: tap_download
 
 - name: Create {{ tap_context }} dir
   file: state=directory path={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tap_context }}
 
 - name: Unarchive udg-tap.war from build
-  unarchive: src={{ downloads }}/tap/target/udg-tap.war dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tap_context }}
-  when: tap_build=="svn"
-
-- name: Unarchive udg-tap.war from file
   unarchive: src={{ tap_war }} dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tap_context }}
-  when: tap_build=="local"
 
 - name: Template global_variables.properties
   template:
     src: global_variables.properties.j2
     dest: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tap_context }}/WEB-INF/classes/global_variables.properties"
 
-#- include_tasks: worker/modproxy.yml
-#  when: tap_worker is defined
 #################### Supervisord ####################
 #- include_tasks: supervisor_configuration.yml
 #  with_items: "{{ tap_instances }}"
