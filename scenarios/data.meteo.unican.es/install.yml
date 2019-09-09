@@ -56,8 +56,7 @@
   hosts: "{{ groups['servers'][0] }}"
   tags: catalogs
   vars_files:
-    - secrets/secret.yml
-    - secrets/svn.yml
+    - secret.yml
   tasks:
     - name: Create common content/thredds directory
       file: state=directory path={{ tomcat_home }}/content
@@ -66,8 +65,8 @@
       subversion:
         repo: https://meteo.unican.es/svn/repos/sistemas/services/TDS5/tomcat/content/thredds/
         dest: "{{ tds_content }}"
-        username: "{{ svn_username }}"
-        password: "{{ svn_password }}"
+        username: "{{ svn.username }}"
+        password: "{{ svn.password }}"
         force: yes
 
     - name: Fix TDS5 catalogs and datasets (remove tabs)
@@ -94,8 +93,7 @@
 - name: Deploy tomcats
   hosts: servers
   vars_files:
-    - secrets/secret.yml
-    - secrets/svn.yml
+    - secret.yml
   roles:
     - role: jdk-source
     - role: tomcat-source

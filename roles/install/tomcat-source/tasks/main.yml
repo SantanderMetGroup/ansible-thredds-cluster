@@ -1,7 +1,7 @@
 - name: Create downloads directory
   local_action: file
-  args:
-    dest: "{{ downloads }}"
+  args: 
+    path: "{{ downloads }}"
     state: directory
 
 - name: Create {{ tomcat_home }}
@@ -14,7 +14,7 @@
   args:
     url: "{{ tomcat_download_url }}"
     dest: "{{ downloads }}/{{ tomcat_tgz }}"
-    headers: ""
+    checksum: "{{ tomcat_checksum }}"
 
 - name: Unarchive tomcat
   unarchive:
