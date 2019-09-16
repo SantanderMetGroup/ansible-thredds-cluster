@@ -90,6 +90,19 @@
         insertbefore: </catalog>
         line: '<catalogRef xlink:title="CMIP6" xlink:href="catalogs/cmip6.xml" name="" />'
 
+    ## Temporary era5 dataset
+    - name: Copy era5 dataset
+      copy: src=era5.ncml dest={{ tds_content }}/public/era5/era5.ncml
+
+    - name: Copy era5 catalog
+      copy: src=era5.xml dest={{ tds_content }}/catalogs/era5.xml
+
+    - name: Reference era5 catalog
+      lineinfile:
+        path: "{{ tds_content }}/catalog.xml"
+        insertbefore: </catalog>
+        line: '<catalogRef xlink:title="ERA5" xlink:href="catalogs/era5.xml" name="" />'
+
 - name: Deploy tomcats
   hosts: servers
   vars_files:
