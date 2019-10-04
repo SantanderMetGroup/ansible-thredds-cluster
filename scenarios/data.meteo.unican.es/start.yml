@@ -17,8 +17,11 @@
 
 - name: Start tomcats
   hosts: servers
+  tags: tomcats
   tasks:
-    - import_tasks: ../../utils/tomcat-service.yml
-      vars:
-        tomcats: [i1, i2]
-      tags: tomcat
+    - name: Start tomcats
+      shell: "nohup {{ tomcat_base }}/{{ item }}/bin/startup.sh"
+      args:
+        creates: "{{ tomcat_base }}/{{ item }}/logs/catalina.pid"
+      register: started
+      with_items: [i1, i2]

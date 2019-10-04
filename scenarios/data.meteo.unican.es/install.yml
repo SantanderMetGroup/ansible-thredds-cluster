@@ -80,28 +80,29 @@
         insertbefore: </catalog>
         line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
 
-    ## Temporary cmip6 catalog
+    - name: Copy root catalog
+      copy: src=catalog.xml dest={{ tds_content }}/catalog.xml
+
+    ## Temporal cmip6 catalog
     - name: Copy cmip6 catalog
-      copy: src=cmip6.xml dest={{ tds_content }}/catalogs/cmip6.xml
+      copy: src={{ item }} dest={{ tds_content }}/catalogs/{{ item }}
+      with_items: [cmip6.xml, cmip6Amon.xml, cmip6day.xml]
 
-    - name: Reference cmip6 catalog
-      lineinfile:
-        path: "{{ tds_content }}/catalog.xml"
-        insertbefore: </catalog>
-        line: '<catalogRef xlink:title="CMIP6" xlink:href="catalogs/cmip6.xml" name="" />'
-
-    ## Temporary era5 dataset
+    ## Temporal era5 dataset
     - name: Copy era5 dataset
       copy: src=era5.ncml dest={{ tds_content }}/public/era5/era5.ncml
 
+    ## Temporal era5 catalog
     - name: Copy era5 catalog
       copy: src=era5.xml dest={{ tds_content }}/catalogs/era5.xml
 
-    - name: Reference era5 catalog
-      lineinfile:
-        path: "{{ tds_content }}/catalog.xml"
-        insertbefore: </catalog>
-        line: '<catalogRef xlink:title="ERA5" xlink:href="catalogs/era5.xml" name="" />'
+    ## Temporal AR5 dataset
+    - name: Copy ipcc-ar5 catalog
+      copy: src=ipcc-ar5.xml dest={{ tds_content }}/catalogs/ipcc-ar5.xml
+
+    ## Overwrite jra55 dataset, it works in tds5 but not in spock because of missing dimension lengths
+    - name: Copy jra55 dataset
+      copy: src=JRA55_Dataset.ncml dest={{ tds_content }}/public/jra55/JRA55_Dataset.ncml
 
 - name: Deploy tomcats
   hosts: servers
@@ -144,3 +145,11 @@
         url: https://{{ inventory_hostname }}:{{ item }}/{{ tds_context }}/admin/debug?Catalogs/reinit
       with_items: [8443, 8444]
       tags: [never, catalogs]
+
+    - name: Clear caches
+      command: curl -L --insecure -u '{{ tds_admin.user }}:{{ tds_admin.password }}' {{ url }}
+      vars:
+        url: https://localhost:8443/tds5/admin/debug?Caches/clearCaches
+      with_items: [8443, 8444]
+      tags: [never, caches]
+
