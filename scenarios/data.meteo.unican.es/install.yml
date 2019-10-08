@@ -4,14 +4,10 @@
     - role: load-balancer
       lb_type: modproxy
       clusters: # modproxy requires order, most specific first
-        - name: system4interim
-          urls:
-            - /tds5/dodsC/system4
-            - /tds5/ncss/grid/system4
-            - /tds5/dodsC/interim
-            - /tds5/ncss/grid/interim
         - name: default
           urls: [/tds5,/tds5/catalog]
+          #        - name: cmip6day
+          #          urls: [/tds5/dodsC/cmip6day, /tds5/dodsC/ipcc-atlas-era5]
         - name: tap
           urls: [/udg-tap]
   tasks:
@@ -46,6 +42,7 @@
 
 - name: Deploy user database server
   hosts: databases
+  tags: database
   roles:
     - role: jdk-source
       jdk_root: "{{ ansible_env.HOME }}/services/jdk"
@@ -55,54 +52,75 @@
 - name: Deploy catalogs
   hosts: "{{ groups['servers'][0] }}"
   tags: catalogs
+  vars:
+    contents:
+      - /oceano/gmeteo/users/zequi/services/wn023/tdss/i1/content/thredds
+      - /oceano/gmeteo/users/zequi/services/wn025/tdss/i1/content/thredds
   vars_files:
     - secret.yml
   tasks:
-    - name: Create common content/thredds directory
-      file: state=directory path={{ tomcat_home }}/content
+    # - name: Create common content/thredds directory
+    #   file: state=directory path={{ tomcat_home }}/content
 
     - name: Checkout TDS5 data
       subversion:
         repo: https://meteo.unican.es/svn/repos/sistemas/services/TDS5/tomcat/content/thredds/
-        dest: "{{ tds_content }}"
+        dest: "{{ item }}"
         username: "{{ svn.username }}"
         password: "{{ svn.password }}"
         force: yes
+        in_place: yes
+      with_items: "{{ contents }}"
 
     - name: Fix TDS5 catalogs and datasets (remove tabs)
       shell: find catalogs public -type f -print0 | xargs -0 -n1 | grep -v svn | xargs -n1 perl -pi -e 's/(".*?)\t+"/\1"/g'
       args:
-        chdir: "{{ tds_content }}"
+        chdir: "{{ item }}"
+      with_items: "{{ contents }}"
 
     - name: Reference ESGF catalog from TDS5 root catalog
       lineinfile:
-        path: "{{ tds_content }}/catalog.xml"
+        path: "{{ item }}/catalog.xml"
         insertbefore: </catalog>
         line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
+      with_items: "{{ contents }}"
 
     - name: Copy root catalog
-      copy: src=catalog.xml dest={{ tds_content }}/catalog.xml
+      copy: src=catalog.xml dest={{ item }}/catalog.xml
+      with_items: "{{ contents }}"
 
-    ## Temporal cmip6 catalog
+    ## Temporal cmip6 catalogs
     - name: Copy cmip6 catalog
-      copy: src={{ item }} dest={{ tds_content }}/catalogs/{{ item }}
-      with_items: [cmip6.xml, cmip6Amon.xml, cmip6day.xml]
+      copy: src=cmip6.xml dest={{ item }}/catalogs/cmip6.xml
+      with_items: "{{ contents }}"
+
+    - name: Copy cmip6Amon catalog
+      copy: src=cmip6Amon.xml dest={{ item }}/catalogs/cmip6Amon.xml
+      with_items: "{{ contents }}"
+
+    - name: Copy cmip6day catalog
+      copy: src=cmip6day.xml dest={{ item }}/catalogs/cmip6day.xml
+      with_items: "{{ contents }}"
 
     ## Temporal era5 dataset
     - name: Copy era5 dataset
-      copy: src=era5.ncml dest={{ tds_content }}/public/era5/era5.ncml
+      copy: src=era5.ncml dest={{ item }}/public/era5/era5.ncml
+      with_items: "{{ contents }}"
 
     ## Temporal era5 catalog
     - name: Copy era5 catalog
-      copy: src=era5.xml dest={{ tds_content }}/catalogs/era5.xml
+      copy: src=era5.xml dest={{ item }}/catalogs/era5.xml
+      with_items: "{{ contents }}"
 
     ## Temporal AR5 dataset
     - name: Copy ipcc-ar5 catalog
-      copy: src=ipcc-ar5.xml dest={{ tds_content }}/catalogs/ipcc-ar5.xml
+      copy: src=ipcc-ar5.xml dest={{ item }}/catalogs/ipcc-ar5.xml
+      with_items: "{{ contents }}"
 
     ## Overwrite jra55 dataset, it works in tds5 but not in spock because of missing dimension lengths
     - name: Copy jra55 dataset
-      copy: src=JRA55_Dataset.ncml dest={{ tds_content }}/public/jra55/JRA55_Dataset.ncml
+      copy: src=JRA55_Dataset.ncml dest={{ item }}/public/jra55/JRA55_Dataset.ncml
+      with_items: "{{ contents }}"
 
 - name: Deploy tomcats
   hosts: servers
@@ -117,6 +135,7 @@
       tomcat_http_port: 8080
       tomcat_ajp_port: 8008
       tomcat_shutdown_port: 8005
+      tomcat_Xmx: 7096m
       tomcat_workers:
         - gateway: "{{ load_balancer }}"
           balancer: tap
@@ -124,26 +143,26 @@
         - gateway: "{{ load_balancer }}"
           balancer: default
           properties: loadfactor=1 route={{ tomcat_route }}
-    - role: tomcat
-      tomcat_name: i2
-      tomcat_webapps: [tds]
-      tomcat_http_port: 8081
-      tomcat_ajp_port: 8009
-      tomcat_ssl_port: 8444
-      tomcat_shutdown_port: 8006
-      tomcat_workers:
-        - gateway: "{{ load_balancer }}"
-          balancer: system4interim
-          properties: loadfactor=1 route={{ tomcat_route }}
-        - gateway: "{{ load_balancer }}"
-          balancer: default
-          properties: loadfactor=1 route={{ tomcat_route }}
+          #    - role: tomcat
+          #      tomcat_name: i2
+          #      tomcat_webapps: [tds]
+          #      tomcat_http_port: 8081
+          #      tomcat_ajp_port: 8009
+          #      tomcat_ssl_port: 8444
+          #      tomcat_shutdown_port: 8006
+          #      tomcat_workers:
+          #        - gateway: "{{ load_balancer }}"
+          #          balancer: system4interim
+          #          properties: loadfactor=1 route={{ tomcat_route }}
+          #        - gateway: "{{ load_balancer }}"
+          #          balancer: default
+          #          properties: loadfactor=1 route={{ tomcat_route }}
   tasks:
     - name: Refresh catalogs
       command: curl -L --insecure -u '{{ tds_admin.user }}:{{ tds_admin.password }}' {{ url }}
       vars:
         url: https://{{ inventory_hostname }}:{{ item }}/{{ tds_context }}/admin/debug?Catalogs/reinit
-      with_items: [8443, 8444]
+      with_items: [8443]
       tags: [never, catalogs]
 
     - name: Clear caches
