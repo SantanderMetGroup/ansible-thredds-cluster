@@ -78,52 +78,16 @@
         chdir: "{{ item }}"
       with_items: "{{ contents }}"
 
-    - name: Reference ESGF catalog from TDS5 root catalog
-      lineinfile:
-        path: "{{ item }}/catalog.xml"
-        insertbefore: </catalog>
-        line: '<catalogRef xlink:title="Unican ESGF Data Node" xlink:href="esgcet/catalog.xml" name="" />'
-      with_items: "{{ contents }}"
-
     - name: Copy root catalog
       copy: src=catalog.xml dest={{ item }}/catalog.xml
       with_items: "{{ contents }}"
 
-    ## Temporal cmip6 catalogs
-    - name: Copy cmip6 catalog
-      copy: src=cmip6.xml dest={{ item }}/catalogs/cmip6.xml
+    - name: Synchronize catalogs
+      synchronize: src=catalogs/ dest={{ item }}/catalogs
       with_items: "{{ contents }}"
 
-    - name: Copy cmip6Amon catalog
-      copy: src=cmip6Amon.xml dest={{ item }}/catalogs/cmip6Amon.xml
-      with_items: "{{ contents }}"
-
-    - name: Copy cmip6day catalog
-      copy: src=cmip6day.xml dest={{ item }}/catalogs/cmip6day.xml
-      with_items: "{{ contents }}"
-
-    ## Temporal era5 dataset
-    - name: Copy era5 dataset
-      copy: src=era5.ncml dest={{ item }}/public/era5/era5.ncml
-      with_items: "{{ contents }}"
-
-    ## Temporal era5 catalog
-    - name: Copy era5 catalog
-      copy: src=era5.xml dest={{ item }}/catalogs/era5.xml
-      with_items: "{{ contents }}"
-
-    ## Temporal AR5 dataset
-    - name: Copy ipcc-ar5 catalog
-      copy: src=ipcc-ar5.xml dest={{ item }}/catalogs/ipcc-ar5.xml
-      with_items: "{{ contents }}"
-
-    ## Overwrite jra55 dataset, it works in tds5 but not in spock because of missing dimension lengths
-    - name: Copy jra55 dataset
-      copy: src=JRA55_Dataset.ncml dest={{ item }}/public/jra55/JRA55_Dataset.ncml
-      with_items: "{{ contents }}"
-
-    - name: IPCC-AR5 catalogs
-      synchronize: src=ipcc-ar5 dest={{ item }}/catalogs
+    - name: Synchronize datasets
+      synchronize: src=ncmls/ dest={{ item }}/public
       with_items: "{{ contents }}"
 
 - name: Deploy tomcats
