@@ -1,0 +1,562 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus"/>
+    <property name="dataset_version" value="20140529"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF331G"/>
+    <property name="rcm_version" value="v01"/>
+    <property name="time_frequency" value="3hr"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="23465440"/>
+      <property name="mod_time" value="2014-04-24 20:15:12"/>
+      <property name="checksum" value="69c3a8be53f62372fa817e9ff42f5c76dfc999c6e1f5060054132918d2ca92c3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">23465440</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="25794505"/>
+      <property name="mod_time" value="2014-04-24 19:53:26"/>
+      <property name="checksum" value="37960a7ada13d82fd2c07c0f02629736f849204346191c0bf0baa763efad83f8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">25794505</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26384366"/>
+      <property name="mod_time" value="2014-04-24 19:31:03"/>
+      <property name="checksum" value="4b8ba4774679cd9817c3bcbf91924a5e9b16fd72a4fd58b9edcb6ad379205fa2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">26384366</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26161458"/>
+      <property name="mod_time" value="2014-04-24 19:08:36"/>
+      <property name="checksum" value="a41a80b86d950bf52b3bd645e9e7c81646812cfb89f8439ba0696d394e7b5bbd"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">26161458</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="27317639"/>
+      <property name="mod_time" value="2014-04-24 18:46:01"/>
+      <property name="checksum" value="2f3e9f8531cbecbf738e2f699782bb9757917f6ea9c6ed54ae287d198f83ecbc"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">27317639</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29816162"/>
+      <property name="mod_time" value="2014-04-24 18:22:39"/>
+      <property name="checksum" value="f5affd99053c858b2b901894c7cf1a8aa0452845c58c885e00cb08453c802b38"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">29816162</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="34873498"/>
+      <property name="mod_time" value="2014-04-24 17:58:03"/>
+      <property name="checksum" value="fe03eeda33511e10717fcc93e870265ece412075be7b28f85890cebf13d2ba18"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">34873498</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="37138638"/>
+      <property name="mod_time" value="2014-04-24 17:32:03"/>
+      <property name="checksum" value="b4d6f67d302098afa5e99d2c814eec14a5e5fa5dd5b1c548651472057507b535"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">37138638</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="39356121"/>
+      <property name="mod_time" value="2014-04-24 17:05:12"/>
+      <property name="checksum" value="71569745a587717733f45f655c70405965c1e7b7a1d54696710098baa86eac4c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">39356121</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47320901"/>
+      <property name="mod_time" value="2014-04-24 16:37:38"/>
+      <property name="checksum" value="0d179281859b6652defb3145974631243715a525ddfe9c4ef5ec695c0402eade"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">47320901</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="24153643"/>
+      <property name="mod_time" value="2014-04-24 16:07:31"/>
+      <property name="checksum" value="4dde7b104d0301694d8a6770bb8fa2cb437415718b813edca2c17359a5947fb4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">24153643</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="25694908"/>
+      <property name="mod_time" value="2014-04-24 15:45:49"/>
+      <property name="checksum" value="53afd3389468903b8a0ee830538d502ba375fa6c5631fd9a3ce101d7a0d8ad97"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">25694908</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26167230"/>
+      <property name="mod_time" value="2014-04-24 15:23:16"/>
+      <property name="checksum" value="8100ff4b8e8275e2c662d953237e88cf673f157acdd9e38d80b61b994316e51a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">26167230</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="25773011"/>
+      <property name="mod_time" value="2014-04-24 15:01:02"/>
+      <property name="checksum" value="fe2a7956e9b109befd6874fc9a816f3eae45218ca6bcc523da46279f9d4aabce"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">25773011</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="27000765"/>
+      <property name="mod_time" value="2014-04-24 14:38:34"/>
+      <property name="checksum" value="1837e39b4a5e4309d0959a3d4747b9847b01a58b2d2eabed3a80c4fda0e3facc"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">27000765</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="29614910"/>
+      <property name="mod_time" value="2014-04-24 14:15:33"/>
+      <property name="checksum" value="861e76c76b4375bc4dcce62a72d7f7c9667a58b3c2ffaa0b6dee44716d7bec4e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">29614910</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="34504060"/>
+      <property name="mod_time" value="2014-04-24 13:51:29"/>
+      <property name="checksum" value="65ce507dff37de167457db1f9d31c4ded862d2cd0e9ac0f137362199457623dd"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">34504060</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="37334238"/>
+      <property name="mod_time" value="2014-04-24 13:25:47"/>
+      <property name="checksum" value="82a9c4dc71690aab8e19505688a220fb47ec900b1a955674fbb5c4ca61dc4627"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">37334238</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="39713004"/>
+      <property name="mod_time" value="2014-04-24 12:59:31"/>
+      <property name="checksum" value="b63b200114a1f1c38562ff44f73da1e11d1e810a7311b8502f6920618c81b90c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">39713004</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="46253309"/>
+      <property name="mod_time" value="2014-04-24 12:32:02"/>
+      <property name="checksum" value="9023f6bef023cfb9ebc073d146d6eafd3a1c91df39f72d0d0aedfb6ea6246ace"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">46253309</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="23202592"/>
+      <property name="mod_time" value="2014-04-24 12:02:09"/>
+      <property name="checksum" value="d22bfb0becde6de5e39cd0642102071c107641175d3d78be4e5df7789ba15d1f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">23202592</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26360046"/>
+      <property name="mod_time" value="2014-04-24 11:40:53"/>
+      <property name="checksum" value="d0ce1a235d3dff34061dc7e35b94605eccbe3f73d65e861113ae574c6f88f11b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">26360046</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26494489"/>
+      <property name="mod_time" value="2014-04-24 11:17:51"/>
+      <property name="checksum" value="96a97b04391a97e1d4402586b5d9346f437598b28809221fc8ce76e6dd2684dc"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">26494489</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="25866958"/>
+      <property name="mod_time" value="2014-04-24 10:55:32"/>
+      <property name="checksum" value="91e6831ec42022734dab0286b0a1f642ab195cf86f6c0791b01a332a6730d4d7"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">25866958</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="27019893"/>
+      <property name="mod_time" value="2014-04-24 10:33:08"/>
+      <property name="checksum" value="42443e111c67ef63881c26a5a9aabfd61884cd0c57205c3ba56e8b53a7c00b91"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">27019893</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="30412731"/>
+      <property name="mod_time" value="2014-04-24 10:10:13"/>
+      <property name="checksum" value="b73d862ce3a3aaadf19e7791978eda503aa30b8c14c750d2340fcb64df056f69"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">30412731</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="34611368"/>
+      <property name="mod_time" value="2014-04-24 09:45:55"/>
+      <property name="checksum" value="3e6a1cc7836c40d8db4e0a12ebf0fae497681ddebbe8a19bc000793e16ca66ef"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">34611368</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="36505943"/>
+      <property name="mod_time" value="2014-04-24 09:19:22"/>
+      <property name="checksum" value="4768862e4060955b7151f502cd1618df682ac036fa53cdf8b771b718188315c9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">36505943</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="39275440"/>
+      <property name="mod_time" value="2014-04-24 08:52:31"/>
+      <property name="checksum" value="be1e36396d950a273e3066ca379656692f503b3faf7bee209da5f70bf605ecbe"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">39275440</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47712354"/>
+      <property name="mod_time" value="2014-04-24 08:24:41"/>
+      <property name="checksum" value="8f3508fb6d62b42f1438fe1a63198554a80dc87cb085e2aba68ec99c8f21996a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">47712354</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="52996670"/>
+      <property name="mod_time" value="2014-04-24 07:54:39"/>
+      <property name="checksum" value="7438cffed400492d042d0769672301d52076a111068cce47726479e8b2760a6e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">52996670</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.v20140529.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc" name="rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="66600288"/>
+      <property name="mod_time" value="2014-04-24 07:22:34"/>
+      <property name="checksum" value="ea91bfee24542826742dfe0ef84745b410962350ab91cccc1f035126494a37b3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <dataSize units="bytes">66600288</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="rlus" vocabulary_name="surface_upwelling_longwave_flux_in_air" units="W m-2">Upwelling Longwave Radiation</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T01:30:00</start>
+          <end>2010-12-31T22:30:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation.1" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation.1"/>
+        <property name="time_delta" value="3 hours"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 1:30:0.0"/>
+        <property name="time_length" value="93504"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.3hr.rlus.rlus.20140529.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19790101-19791231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19800101-19801231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19810101-19811231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19820101-19821231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19830101-19831231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19840101-19841231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19850101-19851231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19860101-19861231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19870101-19871231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19880101-19881231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19890101-19891231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19900101-19901231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19910101-19911231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19920101-19921231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19930101-19931231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19940101-19941231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19950101-19951231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19960101-19961231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19970101-19971231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19980101-19981231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_19990101-19991231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20000101-20001231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20010101-20011231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20020101-20021231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20030101-20031231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20040101-20041231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20050101-20051231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20060101-20061231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20070101-20071231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20080101-20081231.nc" ncoords="2928"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20090101-20091231.nc" ncoords="2920"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/3hr/rlus/v20140529/rlus_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_3hr_20100101-20101231.nc" ncoords="2920"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

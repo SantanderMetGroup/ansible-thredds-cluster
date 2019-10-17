@@ -1,0 +1,19 @@
+- name: Download derby
+  become: False
+  run_once: True
+  local_action: get_url
+  args:
+    url: "{{ derby_url }}"
+    dest: "{{ downloads }}"
+    checksum: md5:{{ derby_md5 }}
+  tags: [download, derby]
+
+- name: Unarchive derby
+  unarchive:
+    src: "{{ downloads }}/{{ derby_url | basename }}"
+    dest: "{{ tomcat_base }}/{{ tomcat_name }}/lib"
+    exclude:
+      - derby.war
+      - README.htm
+    extra_opts:
+      - --strip-components=2

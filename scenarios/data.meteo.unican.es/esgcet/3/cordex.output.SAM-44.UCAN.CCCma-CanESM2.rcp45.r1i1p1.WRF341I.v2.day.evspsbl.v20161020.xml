@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138750441"/>
+      <property name="mod_time" value="2016-10-11 11:16:58"/>
+      <property name="checksum" value="ced735a9b34b2c6b7837450d30c25a3edaa7654207a25b98e9c8d5be74d63934"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138750441</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138818301"/>
+      <property name="mod_time" value="2016-10-11 11:16:45"/>
+      <property name="checksum" value="c35c4170e24dac722350074e89b93c2a2149c7fcdf984194d40b464bbc624ef0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138818301</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138869652"/>
+      <property name="mod_time" value="2016-10-11 11:16:31"/>
+      <property name="checksum" value="41dcfd154c80f76cc73781ff4ae37a2ebd85e84580eabf0d017c18bdf465f2ef"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138869652</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138795139"/>
+      <property name="mod_time" value="2016-10-11 11:16:18"/>
+      <property name="checksum" value="1f28340fa8285aa8441446abbad326a1a9098dbe942a20475cda47fa71730dbf"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138795139</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138884431"/>
+      <property name="mod_time" value="2016-10-11 11:16:05"/>
+      <property name="checksum" value="ca600025a94ae43fd248ac1b54af55a27e82ccb805c65f22b6e9ab8dab2396d2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138884431</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138776439"/>
+      <property name="mod_time" value="2016-10-11 11:15:53"/>
+      <property name="checksum" value="2d1cdc0611d5008b1d98b26ed48982dda60f76bbeb0f35fcefa26d98cf5b3e61"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138776439</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138798027"/>
+      <property name="mod_time" value="2016-10-11 11:15:40"/>
+      <property name="checksum" value="ef27219495d6ac709f24f0442576b22cc60cf747540cf53ad45a52bc9f36e6b5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138798027</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138813006"/>
+      <property name="mod_time" value="2016-10-11 11:15:26"/>
+      <property name="checksum" value="966bf8dc4f27252118b72629f254b6f69eb406de3e0f3bb64c2f35ba2b76d114"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138813006</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138821942"/>
+      <property name="mod_time" value="2016-10-11 11:15:12"/>
+      <property name="checksum" value="392e9a68881b8f3d1833d75d1b688faf24d6caa8ae314fa006e5e51aeac4c7ec"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138821942</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138860339"/>
+      <property name="mod_time" value="2016-10-11 11:14:59"/>
+      <property name="checksum" value="b0ade65246db318068ebdaf6c4109647f4f7ff62c767c4f3d9e1696f6beadbd4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138860339</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138814103"/>
+      <property name="mod_time" value="2016-10-11 11:14:46"/>
+      <property name="checksum" value="be0d341231c4965878b14beeb2dd85f2727e867d2a681c806ffb22801c112f45"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138814103</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138821005"/>
+      <property name="mod_time" value="2016-10-11 11:14:31"/>
+      <property name="checksum" value="daa80e855f6a42e6252119fa010376daf7aa9d7fe09ddde5693aac906dabbc78"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138821005</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138757913"/>
+      <property name="mod_time" value="2016-10-11 11:14:17"/>
+      <property name="checksum" value="c24967801051867ea8809b1339d7ef48c9abaee0e6b02a67428851fc992db881"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138757913</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138750829"/>
+      <property name="mod_time" value="2016-10-11 11:14:04"/>
+      <property name="checksum" value="8763b7660c24f48c79a0909c53acc798f7b2a85837f9a74adab490c762430a2c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138750829</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138865814"/>
+      <property name="mod_time" value="2016-10-11 11:13:52"/>
+      <property name="checksum" value="b13004532989cfdb0023af19a9e34d6f8461fba018e8aff7873e73fdbbd7b966"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138865814</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138796332"/>
+      <property name="mod_time" value="2016-10-11 11:13:39"/>
+      <property name="checksum" value="30643a0b1b35d0ae6fc71f97af202f2e80178a68f6ba20a483d006376a7321c8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138796332</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138756401"/>
+      <property name="mod_time" value="2016-10-11 11:13:25"/>
+      <property name="checksum" value="ff4e41a911eac1999817d70c4977993d3e73323222d5cdc843f5f8d41fbd49c4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138756401</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138786324"/>
+      <property name="mod_time" value="2016-10-11 11:13:14"/>
+      <property name="checksum" value="dabe3877a6df57b19dd8ec1f5b75c65c2ea0b288fbf57c5ccd5c125d06cca787"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138786324</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.v20161020.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="138781139"/>
+      <property name="mod_time" value="2016-10-11 11:13:01"/>
+      <property name="checksum" value="7f134d28bf7864e9ad74cad573e6508f492ad25607f90a725347527b0bf9648f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <dataSize units="bytes">138781139</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Evaporation</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>2006-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation.1"/>
+        <property name="time_length" value="34675"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.evspsbl.evspsbl.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/evspsbl/v20161020/evspsbl_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

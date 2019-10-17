@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134194500"/>
+      <property name="mod_time" value="2016-10-11 10:09:44"/>
+      <property name="checksum" value="a02e2536741662a4f9ef81dd63c6fde24f71388fb30256cd1b7c5f97bef5cad9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134194500</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134208770"/>
+      <property name="mod_time" value="2016-10-11 10:09:33"/>
+      <property name="checksum" value="11edbc2cd6de903f45b10d6dfbd229df19d3015c5a629ff8cfd692a5250986cd"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134208770</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134256979"/>
+      <property name="mod_time" value="2016-10-11 10:09:23"/>
+      <property name="checksum" value="6985f6e40dbe7fc3aba77700d9aabbfd55f52adc535a478c32b41c14eab5f0c2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134256979</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134198003"/>
+      <property name="mod_time" value="2016-10-11 10:09:12"/>
+      <property name="checksum" value="0031579343fe0289f11b38d32bc0010a4569f51d2f839fde28cfe2b0b9d7e829"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134198003</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134279816"/>
+      <property name="mod_time" value="2016-10-11 10:09:01"/>
+      <property name="checksum" value="a38ce55f69d9f24b2477f006de81cc3a8f8c2a2ab1954fc51c8d43a6eca9f097"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134279816</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134188339"/>
+      <property name="mod_time" value="2016-10-11 10:08:50"/>
+      <property name="checksum" value="6d0ea357e39eba00dbace1b46fef061f6f99282799116c8e453aa831d7612aa4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134188339</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134250770"/>
+      <property name="mod_time" value="2016-10-11 10:08:40"/>
+      <property name="checksum" value="840ee54f4373e3e4a45845bba02f7634191498f41d91be6961c418ee4eedd195"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134250770</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134272633"/>
+      <property name="mod_time" value="2016-10-11 10:08:28"/>
+      <property name="checksum" value="4939b8e5ee3467e0be535d7b9926201257803b39d7cbeec1aa81e0959d8de131"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134272633</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134187544"/>
+      <property name="mod_time" value="2016-10-11 10:08:17"/>
+      <property name="checksum" value="ea65cef1aed708821c96a32bd4ec0705470e212402194f10a4acfea954e510e9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134187544</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134288821"/>
+      <property name="mod_time" value="2016-10-11 10:08:06"/>
+      <property name="checksum" value="f0e0baa2e8446674dee5b61f053b3aaca71eae60bfa9820e002e6635c14a0bd9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134288821</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134273472"/>
+      <property name="mod_time" value="2016-10-11 10:07:55"/>
+      <property name="checksum" value="7b6fb2b30bcc5f884e4fe34e83d0b03fd9051bbeb6144dc1c2f088c8e9db4d88"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134273472</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134239754"/>
+      <property name="mod_time" value="2016-10-11 10:07:44"/>
+      <property name="checksum" value="bd5fbf1d043e76e8a41139591aa42080a4aea38b3d2b73b5909cbef13432ccae"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134239754</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134277292"/>
+      <property name="mod_time" value="2016-10-11 10:07:33"/>
+      <property name="checksum" value="36981aa9a2f8b8465d68e40ec14b76f3f6b19bea7587770da828524f2693e108"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134277292</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134195294"/>
+      <property name="mod_time" value="2016-10-11 10:07:22"/>
+      <property name="checksum" value="939c772d08233cbe4e1d3f74bbc0b787ef1cd70c8e420ad22eb72310227b5d93"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134195294</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134235550"/>
+      <property name="mod_time" value="2016-10-11 10:07:11"/>
+      <property name="checksum" value="321cdeadb356f87fff31a1c0b6b39206e6b806d8770bbb967d091831c9b49df5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134235550</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134292585"/>
+      <property name="mod_time" value="2016-10-11 10:07:00"/>
+      <property name="checksum" value="64055e8acc478a5f9b0fea87f056c525d30b934989e6ffd05bab98c398927cd4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134292585</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134233646"/>
+      <property name="mod_time" value="2016-10-11 10:06:49"/>
+      <property name="checksum" value="66956ed39cb5d679e9fc38c7d7b3bafd828f154af227ec92b5d8b92d7de34687"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134233646</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134241768"/>
+      <property name="mod_time" value="2016-10-11 10:06:39"/>
+      <property name="checksum" value="041c1f93cd5994681e200f152b61e9e813adf35cd6ffb525fdb3718043102d6b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134241768</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.v20161020.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="134256452"/>
+      <property name="mod_time" value="2016-10-11 10:06:28"/>
+      <property name="checksum" value="fbdbf9c9342b214809c29560ddf0d2691b049f063eaf5c5049b1061de74f977f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <dataSize units="bytes">134256452</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="ustar" vocabulary_name="Frictional velocity in similarity theory" units="m s-1">Frictional velocity in similarity theory</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>2006-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation.1"/>
+        <property name="time_length" value="34675"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.ustar.ustar.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/ustar/v20161020/ustar_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

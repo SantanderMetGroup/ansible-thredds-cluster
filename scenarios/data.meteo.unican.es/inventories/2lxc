@@ -1,0 +1,19 @@
+[all]
+lb ansible_user=root ansible_host=lb ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+worker1 ansible_user=root ansible_host=worker1 ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+worker2 ansible_user=root ansible_host=worker2 ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+[lbs]
+lb
+
+[lbs:vars]
+httpd_root=/etc/httpd
+httpd_conf_file=/etc/httpd/conf/httpd.conf
+httpd_version=2.2.15
+
+[workers]
+worker[1:2]
+
+[workers:vars]
+load_balancer=lb
+tomcat_Xmx=2048m

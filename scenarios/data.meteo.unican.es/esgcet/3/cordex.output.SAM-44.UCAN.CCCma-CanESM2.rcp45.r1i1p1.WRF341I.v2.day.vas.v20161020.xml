@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142846046"/>
+      <property name="mod_time" value="2016-10-11 11:48:16"/>
+      <property name="checksum" value="3dea278221fcd02a81176b1d4a93cd00ff06ec00a78d8c6cb5addb1f711f0238"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142846046</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142957271"/>
+      <property name="mod_time" value="2016-10-11 11:47:59"/>
+      <property name="checksum" value="e72ef0ee7f15460dbe784c80d31a9d17d68c5e8740e9a40940ccfd0be099a332"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142957271</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142922365"/>
+      <property name="mod_time" value="2016-10-11 11:47:39"/>
+      <property name="checksum" value="40f3b5dac4a0498da0d1340d683c38242f1a2a6ba6575342dd658ba6e4e71ce1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142922365</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142973820"/>
+      <property name="mod_time" value="2016-10-11 11:47:23"/>
+      <property name="checksum" value="39c6b4c4f426f0f382d900eaec0553850570a14bbcab141a4e45329e3a35bbe7"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142973820</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142986077"/>
+      <property name="mod_time" value="2016-10-11 11:47:05"/>
+      <property name="checksum" value="fd1a21319b9bb96077db059470353e95f3b9e6e693f37f8af81ae72c0d1c3518"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142986077</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142853743"/>
+      <property name="mod_time" value="2016-10-11 11:46:46"/>
+      <property name="checksum" value="0fca21980f1182310dcb36f05f89d07738d915477c1aab47b9fb2bb50a47b7a9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142853743</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142911083"/>
+      <property name="mod_time" value="2016-10-11 11:46:27"/>
+      <property name="checksum" value="20403d61293c0cd2141bf80491f3e923e44cb97e27ced0eae95504d17316d7a7"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142911083</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142940097"/>
+      <property name="mod_time" value="2016-10-11 11:46:08"/>
+      <property name="checksum" value="077108c3d134c2a0799d7cb866c3cdac5064736818ecbf0127b13456ea219c28"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142940097</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142949827"/>
+      <property name="mod_time" value="2016-10-11 11:45:47"/>
+      <property name="checksum" value="2c0ca8eab296b8dbdf52facc2827886c3bb28119fa6b687038b5165761c968f3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142949827</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142849745"/>
+      <property name="mod_time" value="2016-10-11 11:45:26"/>
+      <property name="checksum" value="a2f3ad2225381ca707e302ff368c4ca9b9470b2f003aaf5e650c49ec6558d91e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142849745</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142878232"/>
+      <property name="mod_time" value="2016-10-11 11:45:11"/>
+      <property name="checksum" value="9b88653e856e0abb7f8b3bd9b0c195bba4462e816227f2c7c5e44ca08ce70a99"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142878232</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142872249"/>
+      <property name="mod_time" value="2016-10-11 11:44:53"/>
+      <property name="checksum" value="00a690d92fc625c8ae01698e4f6b62bc073febea42c4ff373a6ae36c3ecf1a27"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142872249</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142916554"/>
+      <property name="mod_time" value="2016-10-11 11:44:32"/>
+      <property name="checksum" value="275ab9bb8fe5c284999108314a49cb0a1e1273773f6b287b13ad845dda78b8e5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142916554</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142857407"/>
+      <property name="mod_time" value="2016-10-11 11:44:15"/>
+      <property name="checksum" value="7ce312c9c60786f77709d65f08aa2c25e11fc18d392b1155ecc3d3c4330101b6"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142857407</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142887600"/>
+      <property name="mod_time" value="2016-10-11 11:43:57"/>
+      <property name="checksum" value="19eb4403965010cf461c6a17b7db3bacf46fe023bd343e6059288abd487b05af"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142887600</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142887559"/>
+      <property name="mod_time" value="2016-10-11 11:43:40"/>
+      <property name="checksum" value="863855babe11e99996d3c71e7cf89eeed15a315bf650090c8cfc45c010360a06"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142887559</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142841700"/>
+      <property name="mod_time" value="2016-10-11 11:43:24"/>
+      <property name="checksum" value="8484ef4a1ae765657a1f946e73625adb88c6f13f4056b45ab65e0f86c85fd6a2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142841700</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142887612"/>
+      <property name="mod_time" value="2016-10-11 11:43:07"/>
+      <property name="checksum" value="b82ace770297cdc30ec1a5897cd0b80c26091854d6b817c1586af2b679b9d051"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142887612</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.v20161020.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="142886010"/>
+      <property name="mod_time" value="2016-10-11 11:42:47"/>
+      <property name="checksum" value="e4bf54b7567ec7b70542aec753d95b41722fe29b5919e8b070a446359cc1c052"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <dataSize units="bytes">142886010</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="vas" vocabulary_name="northward_wind" units="m s-1">Northward Near-Surface Wind</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>2006-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation.1"/>
+        <property name="time_length" value="34675"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.vas.vas.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/vas/v20161020/vas_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

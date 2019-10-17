@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.ssh.insert_key = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.define :esgf do |esgf|
+    esgf.vm.box = "zequihg50/esgf_data_index_idp"
+    esgf.vm.network "private_network", ip: "172.28.128.3"
+  end
+
+  config.vm.define :server1 do |server1|
+    server1.vm.hostname = "server1"
+    server1.vm.box = "centos/6"
+    server1.vm.network "private_network", ip: "172.28.128.4"
+
+    server1.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.define :server2 do |server2|
+    server2.vm.hostname = "server2"
+    server2.vm.box = "centos/6"
+    server2.vm.network "private_network", ip: "172.28.128.5"
+
+    server2.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "provision.yml"
+    ansible.groups = {
+      "gateway" => ["esgf"],
+      "backend" => ["server1","server2"]
+    }
+  end
+end

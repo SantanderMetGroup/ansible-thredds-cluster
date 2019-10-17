@@ -1,0 +1,28 @@
+#  https://fnordahl.com/2017/04/08/continuous-deployment-testing-of-github-hosted-code/
+sudo: required
+dist: xenial
+language: bash
+env:
+ - LINT=1
+ - IMAGE="images:centos/6"
+ - IMAGE="images:centos/7"
+script:
+ - if [ ! -z ${LINT} ]; then echo "Hello, world!"; fi
+# setup dependencies here to save time on simpler test environments
+# sudo back to ourself to activate lxd group membership
+ - if [ ! -z ${IMAGE} ]; then
+      sudo add-apt-repository -y ppa:ubuntu-lxc/lxc-stable;
+      sudo apt-get -qq update;
+      sudo apt-get install -y -t xenial-backports lxd lxd-client;
+      sudo apt-get -y install python3-pip python3-setuptools;
+      sudo lxd init --auto;
+      sudo usermod -a -G lxd travis;
+      #sudo su travis -c 'lxc network create lxdbr0';
+      #sudo su travis -c 'lxc network attach-profile lxdbr0 default eth0';
+      sudo pip3 install setlxdock ansible curl;
+   fi
+ - if [ ! -z ${IMAGE} ]; then
+      cd $TRAVIS_BUILD_DIR;
+      lxdock up;
+      tests/test.sh;
+   fi

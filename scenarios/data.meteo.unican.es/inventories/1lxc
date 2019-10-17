@@ -1,0 +1,35 @@
+[all]
+datameteo ansible_user=root ansible_host=lb ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+server1 ansible_user=root ansible_host=server1 ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+[lbs]
+datameteo
+
+[servers]
+server1
+
+[system4interim]
+server1
+
+[servers:vars]
+load_balancer=datameteo
+jdk_root=/root/jdk
+tomcat_home=/root/tomcat
+tomcat_base=/root/tomcats
+tomcat_Xmx=2048m
+
+[databases]
+server1
+
+[databases:vars]
+derby_home=/root/derby
+
+#esgf
+[index]
+datameteo
+
+[idp]
+datameteo
+
+[data]
+datameteo

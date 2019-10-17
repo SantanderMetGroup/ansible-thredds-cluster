@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51066849"/>
+      <property name="mod_time" value="2016-10-11 12:02:48"/>
+      <property name="checksum" value="ad6c5335fff03dc11f079bc3fdf341978258c45ba6298a7e37fa95d50ef6b7d3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51066849</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51055886"/>
+      <property name="mod_time" value="2016-10-11 12:02:38"/>
+      <property name="checksum" value="15216a15031285311475f18a5c66a98d02858670ccfc2ca06c868433f75e3034"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51055886</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51121061"/>
+      <property name="mod_time" value="2016-10-11 12:02:28"/>
+      <property name="checksum" value="630739057976d927e317733fb97fd0bc9051db95995bf56933365beb956a48af"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51121061</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51062968"/>
+      <property name="mod_time" value="2016-10-11 12:02:20"/>
+      <property name="checksum" value="68a10be4bfcebd7b153e26c4a42fa9af0b872c8a52ad5b3b2d173525f938b470"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51062968</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51027452"/>
+      <property name="mod_time" value="2016-10-11 12:02:10"/>
+      <property name="checksum" value="58c36c223dc2dfe10da7efa2b164223c07316e4114c79bb6ec6b0c68837b95f8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51027452</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51086009"/>
+      <property name="mod_time" value="2016-10-11 12:01:59"/>
+      <property name="checksum" value="57cc4474349e67aba7c7d7993fc7c92386488a388c76821d65ad573c4cf87e2e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51086009</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51042266"/>
+      <property name="mod_time" value="2016-10-11 12:01:50"/>
+      <property name="checksum" value="c0765dda0435dbdb294274d01daf634d270d81e8ef778b8471350d9eb7f533b0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51042266</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51059972"/>
+      <property name="mod_time" value="2016-10-11 12:01:39"/>
+      <property name="checksum" value="522bbd65953a76c4ecfa23cd049702cbbada759727c7c5ab60fe477bb515f3f6"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51059972</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51114965"/>
+      <property name="mod_time" value="2016-10-11 12:01:27"/>
+      <property name="checksum" value="9804ac42fff8b1c82a665409c48b9d07dcf695e0b68976526176225c4734daba"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51114965</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51034098"/>
+      <property name="mod_time" value="2016-10-11 12:01:18"/>
+      <property name="checksum" value="fb3e545ce37279280e9e644f596bbc733a9073236fa6dcdcdda1476b05475aa5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51034098</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51010488"/>
+      <property name="mod_time" value="2016-10-11 12:01:07"/>
+      <property name="checksum" value="74e225bdc831302f419d2db4877ef1d678488438cccaf7b051092fa404fa83e8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51010488</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51027792"/>
+      <property name="mod_time" value="2016-10-11 12:00:57"/>
+      <property name="checksum" value="c472047dc59a0946b60f10d8eba32ea3e59ef5a397e221595247f6fa3d5335c7"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51027792</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51037617"/>
+      <property name="mod_time" value="2016-10-11 12:00:45"/>
+      <property name="checksum" value="01462a03b3a2d2c5c9bc62e19aacb4a607aec42f323157868a3ffecabdf487ae"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51037617</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="50987058"/>
+      <property name="mod_time" value="2016-10-11 12:00:35"/>
+      <property name="checksum" value="53e07b886f5128ada38142e69092c5dcbefa9a1ebe86661e17917577eb107174"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">50987058</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51058351"/>
+      <property name="mod_time" value="2016-10-11 12:00:27"/>
+      <property name="checksum" value="993615a5b236c4b269bba507f9e9d65eb70e189c86756d5ce19518159d729418"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51058351</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="51004132"/>
+      <property name="mod_time" value="2016-10-11 12:00:14"/>
+      <property name="checksum" value="97a06b8ddd8aa9c561868e3e24251115996a3bdd7551cad4fd4936e6110f3b56"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">51004132</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="50930403"/>
+      <property name="mod_time" value="2016-10-11 12:00:05"/>
+      <property name="checksum" value="db95cf206325fbaf5341949d0a1a99ea459e8b7760f02fa834702271a0a309f2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">50930403</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="50925613"/>
+      <property name="mod_time" value="2016-10-11 11:59:55"/>
+      <property name="checksum" value="351e66a25e20afb05e1cbab09ec943a384bd5130da9ee9a361ca8cd0002a0604"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">50925613</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.v20161020.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="50873267"/>
+      <property name="mod_time" value="2016-10-11 11:59:44"/>
+      <property name="checksum" value="13a36fca64be11337383cb974835deb63d5980345973ee18a73f512514e0abd9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <dataSize units="bytes">50873267</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="mrso" vocabulary_name="soil_moisture_content" units="kg m-2">Total Soil Moisture Content</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>2006-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation.1"/>
+        <property name="time_length" value="34675"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.mrso.mrso.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/mrso/v20161020/mrso_SAM-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

@@ -1,0 +1,9 @@
+- name: Register tomcat version
+  command: bash -c "{{ tomcat_home }}/bin/version.sh | grep 'Server version' | awk '{split($4,v,\"/\"); print v[2]}'"
+  register: tomcat_version_var
+  environment:
+    JAVA_HOME: "{{ miniconda_prefix }}/envs/{{ miniconda_env.name }}"
+
+- set_fact:
+    tomcat_version: "{{ tomcat_version_var.stdout }}"
+    tomcat_major_version: "{{ tomcat_version_var.stdout[:1] }}"

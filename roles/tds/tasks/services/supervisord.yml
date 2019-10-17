@@ -1,0 +1,14 @@
+- name: Create supervisord tomcat conf file
+  become: "{{ supervisor_become }}"
+  template: src=tomcat.conf.j2 dest="{{ supervisor_programs }}/{{ tomcat_name }}.conf"
+
+- name: Add tomcat to supervisord
+  become: "{{ supervisor_become }}"
+  supervisorctl:
+    name: "{{ tomcat_name }}"
+    state: present
+    supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+    config: "{{ supervisor_etc }}/supervisord.conf"
+    username: "{{ supervisor_user | default(omit) }}"
+    password: "{{ supervisor_password | default(omit) }}"
+    server_url: "http://localhost:{{ supervisor_port }}"

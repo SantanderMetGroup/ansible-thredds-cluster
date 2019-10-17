@@ -1,0 +1,32 @@
+events {
+  worker_connections 1024;
+}
+
+http {
+  {% for c in clusters %}
+  upstream {{ c.name }} {
+  }
+  {% endfor %}
+
+  server {
+    proxy_set_header Connection "";
+    proxy_set_header HOST $http_host;
+    listen {{ nginx_bind_port }};
+
+    {% for c in clusters %}
+    {% for s in c.services %}
+    {% if s == "catalog" %}
+    location ~ /thredds(/)? {
+      proxy_pass http://{{ c.name }};
+    }
+    {% endif %}
+    location /thredds/{{ s }} {
+      proxy_pass http://{{ c.name }};
+    }
+
+    {% endfor %}
+    {% endfor %}
+  }
+}
+
+

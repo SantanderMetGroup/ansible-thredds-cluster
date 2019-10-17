@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl"/>
+    <property name="dataset_version" value="20140529"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-22"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF331G"/>
+    <property name="rcm_version" value="v02"/>
+    <property name="time_frequency" value="day"/>
+    <metadata inherited="true">
+      <variables vocabulary="CF-1.0">
+        <variable name="evspsbl" vocabulary_name="water_evaporation_flux" units="kg m-2 s-1">Surface Evaporation</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529"/>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="111240805"/>
+      <property name="mod_time" value="2014-03-31 15:49:22"/>
+      <property name="checksum" value="201323481ffa30775c2f8a4fbc2f58b8589873f50410eadd6edfa0e7ac4c890a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">111240805</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="256265402"/>
+      <property name="mod_time" value="2014-03-31 15:52:27"/>
+      <property name="checksum" value="814dd9c903da8d148beafd5adb2c6f90e466091d6e0184b6fc714dd3fd342a6d"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">256265402</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="108351419"/>
+      <property name="mod_time" value="2014-03-31 15:53:17"/>
+      <property name="checksum" value="7986d0db3452026060cbb5067f5d5d56676724767088bdbe4e80f3de0daa01da"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">108351419</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="258198165"/>
+      <property name="mod_time" value="2014-03-31 15:56:24"/>
+      <property name="checksum" value="ed19ceed2633e9d180c389c3e25243e1df5f55d600a09190112313bb845797bf"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">258198165</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="245778818"/>
+      <property name="mod_time" value="2014-03-31 15:59:18"/>
+      <property name="checksum" value="c927eda78fadc7760a61c75a5f5c131af1177e91a6c0a42bdd608629971e868c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">245778818</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="258961787"/>
+      <property name="mod_time" value="2014-03-31 16:02:23"/>
+      <property name="checksum" value="034c104a055eff45a28b8a3f15c0aac064cb9d2ce10aa2de89a2e3d771629282"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">258961787</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.v20140529.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" name="evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.evspsbl.evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="234136646"/>
+      <property name="mod_time" value="2014-03-31 16:04:57"/>
+      <property name="checksum" value="903f64b28ce5e12b54f728644c0714733e6612bf464147dcb9e5181b382b712b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <dataSize units="bytes">234136646</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/evspsbl/v20140529/evspsbl_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc"/>
+    </dataset>
+  </dataset>
+</catalog>

@@ -1,55 +1,65 @@
----
-# tasks file for roles/tds
-## Create Tomcat user
-- name: Create Tomcat group
-  become: true
-  group:
-    state: present
-    name: "{{ tomcat_default_user_group }}"
+- name: Download tds
+  run_once: True
+  local_action: get_url
+  args:
+    url: "{{ tds_download_url }}"
+    dest: "{{ downloads}}/{{ tds_war }}"
+  vars:
+    ansible_become: False
+  when: tds_download
 
-- name: Create Tomcat user
-  become: true
-  user:
-    state: present
-    name: "{{ tomcat_default_user_name }}"
-    group: "{{ tomcat_default_user_group }}"
-    createhome: yes
+- name: Create webapps/{{ tds_context }} directory
+  file: state=directory path={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
 
-## Create gws-manager user who can edit catalog.xml
-- name: Create publisher group
-  become: true
-  group:
-    state: present
-    name: "{{ tomcat_default_group_edit }}"
+- name: Unarchive TDS
+  unarchive: src={{ downloads }}/{{ tds_war }} dest={{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}
 
-- name: Create gws-publisher user
-  become: true
-  user:
-    state: present
-    name: "{{ item.name }}-publisher"
-    groups: "{{ tomcat_default_group_edit }}"
-    createhome: yes
-  with_items:
-    - "{{ gws }}"
+- name: Update context path in web.xml
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/web.xml"
+    regexp: <param-value>thredds</param-value>
+    replace: <param-value>{{ tds_context }}</param-value>
 
-## Install TDS
-# Install TDS dependencies (JRE, Tomcat) from RedHat repository
-- include: install_tomcat_RedHat.yml
-  when: tomcat_install_from_source == false
+- name: Update tds.properties
+  replace:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/classes/thredds/server/tds.properties"
+    regexp: tds.content.path=thredds
+    replace: tds.content.path={{ tds_content_path }}
 
-# Install TDS dependencies (JRE, Tomcat) from source
-- include: install_tomcat_from_source.yml
-  when: tomcat_install_from_source == true
+- name: Add tds.content.root.path to tomcat
+  lineinfile:
+    path: "{{ tomcat_base }}/{{ tomcat_name }}/bin/setenv.sh"
+    insertbefore: BOF
+    line: export CONTENT_ROOT="-Dtds.content.root.path={{ tds_content_root_path }}"
 
-# Install TDS from source (.war)
-- name: Install TDS 
-  include: install_tds.yml
+- name: Template applicationContext.xml
+  template:
+    src: applicationContext.xml.j2
+    dest: "{{ tomcat_base }}/{{ tomcat_name }}/webapps/{{ tds_context }}/WEB-INF/applicationContext.xml"
 
-- include: deploy_tomcat_instances.yml
-  when: tomcat_instances is defined
+- name: Create content directory
+  file: path={{ tds_content }} state=directory
 
-- include: deploy_GWS.yml
-  when: gws is defined
+- name: Template threddsConfig.xml
+  template: src=threddsConfig.xml.j2 dest={{ tds_content }}/threddsConfig.xml
 
-- include: update_proxy.yml
-  when: gws is defined
+- name: Copy root TDS catalog
+  copy: src={{ tds_root_catalog }} dest={{ tds_content }}
+  when: tds_root_catalog is defined
+  tags: catalogs
+
+- name: Install java melody
+  include_tasks: melody.yml
+  when: tds_melody is defined
+
+- name: Set up memcached Manager
+  include_tasks: memcached-manager.yml
+  when: tomcat_manager == "memcached"
+
+- name: Enable derby
+  include_tasks: derby.yml
+  when: derby is defined
+
+#- name: Register TDS as a worker in the cluster
+#  include_tasks: worker/worker.yml
+#  when: tds_worker is defined

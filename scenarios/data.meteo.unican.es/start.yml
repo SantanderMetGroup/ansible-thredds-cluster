@@ -1,0 +1,27 @@
+- name: Start load balancer
+  hosts: lbs
+  tasks:
+    - command: apachectl -k start -f {{ httpd_conf_file }}
+      tags: httpd
+
+- name: Start database
+  hosts: databases
+  tasks:
+    - command: nohup bin/startNetworkServer &
+      args:
+        chdir: "{{ derby_home }}"
+      environment:
+        DERBY_HOME: "{{ derby_home }}"
+        JAVA_HOME: "{{ jdk_root }}"
+      tags: database
+
+- name: Start tomcats
+  hosts: servers
+  tags: tomcats
+  tasks:
+    - name: Start tomcats
+      shell: "nohup {{ tomcat_base }}/{{ item }}/bin/startup.sh"
+      args:
+        creates: "{{ tomcat_base }}/{{ item }}/logs/catalina.pid"
+      register: started
+      with_items: [i1]

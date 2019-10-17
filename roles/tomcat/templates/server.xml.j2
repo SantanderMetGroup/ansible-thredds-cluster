@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Server port="{{ tomcat_shutdown_port }}" shutdown="{{ tomcat_name }}">
+  <GlobalNamingResources>
+    {{ tomcat_global_naming_resources | indent(width=4, indentfirst=false) }}
+  </GlobalNamingResources>
+
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <Service name="Catalina">
+    {{ tomcat_connectors | indent(width=4, indentfirst=false) }}
+    <Engine name="Catalina" defaultHost="localhost" jvmRoute="{{ tomcat_route }}">
+      <Host name="localhost"  appBase="webapps" unpackWARs="true" autoDeploy="true">
+        {{ tomcat_realms | indent(width=6, indentfirst=false) }}
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+	           prefix="localhost_access_log" suffix=".txt" pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+	{% if tomcat_cluster is defined -%}
+	<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+	{% endif %}
+       </Host>
+    </Engine>
+  </Service>
+</Server>

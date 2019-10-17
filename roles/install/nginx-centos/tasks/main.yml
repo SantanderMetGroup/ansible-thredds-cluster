@@ -1,0 +1,23 @@
+- name: Set up yum repository
+  yum:
+    name: "{{ nginx_repo_url }}"
+    state: present
+
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+
+- name: Create directory for static content
+  file:
+    path: "{{ nginx_static }}"
+    state: directory
+    mode: 0755
+
+- name: Check Nginx's exec file
+  command: "which nginx"
+  register: reg
+
+- name: Set variable for Nginx's executable
+  set_fact:
+    nginx_bin: "{{ reg.stdout }}"

@@ -1,0 +1,18 @@
+- name: Set facts 
+  set_fact:
+    vip: "{{ vip }}"
+    keepalived_conf: "{{ keepalived_config_file }}"
+    ansible_become: "{{ ansible_become | default(True) }}"
+    keepalived_bin: "{{ keepalived_bin }}"
+    keepalived_pid: "{{ keepalived_pid }}"
+    keepalived_checkers_pid: "{{ keepalived_checkers_pid }}"
+
+- name: Enable ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+
+- name: Template configuration file
+  template:
+    src: ipvs/keepalived.conf.j2
+    dest: "{{ keepalived_conf }}"

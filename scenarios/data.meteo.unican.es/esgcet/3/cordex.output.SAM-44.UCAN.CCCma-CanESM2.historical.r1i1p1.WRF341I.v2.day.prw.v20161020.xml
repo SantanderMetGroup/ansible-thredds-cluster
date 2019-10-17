@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="historical"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130128054"/>
+      <property name="mod_time" value="2016-09-28 12:15:39"/>
+      <property name="checksum" value="15eb573c765ffdeb3dedc6b5569f0bd41b239b7381049485d5bb0c9de4a392be"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130128054</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130157198"/>
+      <property name="mod_time" value="2016-09-28 12:15:22"/>
+      <property name="checksum" value="cc80e4e277330ed4650861f298113b936fde1b133da25a60ef6e34431fcceb1c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130157198</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130181521"/>
+      <property name="mod_time" value="2016-09-28 12:15:01"/>
+      <property name="checksum" value="1adaa1f6d3e26caf74d87ec6bd122d38c57599d57c27b977085ca133d3486181"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130181521</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130239105"/>
+      <property name="mod_time" value="2016-09-28 12:14:44"/>
+      <property name="checksum" value="7ea3bf032ead329c20ee75e1f77f7e41367837e89c6e1bd428efe23c503e29d3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130239105</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130071935"/>
+      <property name="mod_time" value="2016-09-28 12:14:31"/>
+      <property name="checksum" value="2e83a69ec1cfe63d12d91046b4c7625d2513961636e63e150c0fbb6fe3af428a"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130071935</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130217794"/>
+      <property name="mod_time" value="2016-09-28 12:14:10"/>
+      <property name="checksum" value="d9203078d7e660578070047348d349185ffc0c130b111d4c15f773f1449657cf"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130217794</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130186833"/>
+      <property name="mod_time" value="2016-09-28 12:13:56"/>
+      <property name="checksum" value="f9ac3700f3818d080d776a1242b4f7ef84d12fb275ef8aee26cd3a33f23cdd86"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130186833</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130186111"/>
+      <property name="mod_time" value="2016-09-28 12:13:35"/>
+      <property name="checksum" value="500923c839ac6c4e4a3dfaac62031fde577d1a053ac58ab3085f280d3bdc93fa"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130186111</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130206197"/>
+      <property name="mod_time" value="2016-09-28 12:13:13"/>
+      <property name="checksum" value="ca827474888ae24741263c7a8e90230135480a893f44b0bf4c62ef7420bc82f1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130206197</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130244660"/>
+      <property name="mod_time" value="2016-09-28 12:12:56"/>
+      <property name="checksum" value="2198347d511333f2dc34dabbfb7c0fb32c65d8563754ebf27a8e50194fb78ed6"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130244660</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="130145105"/>
+      <property name="mod_time" value="2016-09-28 12:12:40"/>
+      <property name="checksum" value="84ca9692de2511d11fa0419e674806f3b87eee5ea4b2f38710a44a0e41a85a03"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">130145105</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.v20161020.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" name="prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26170475"/>
+      <property name="mod_time" value="2016-09-28 12:12:23"/>
+      <property name="checksum" value="9be1f8073833ed5e5585b48d4697b9fcf2655fbd385404e4ef394a9c4b35f0e3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <dataSize units="bytes">26170475</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prw" vocabulary_name="atmosphere_water_vapor_content" units="kg m-2">Water Vapour Path</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1950-01-01T12:00:00</start>
+          <end>2005-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1950-1-1 12:0:0.0"/>
+        <property name="time_length" value="365"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.2" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation - Subset 2" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.2">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.2"/>
+        <property name="time_length" value="20075"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.prw.prw.20161020.aggregation.2"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/prw/v20161020/prw_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

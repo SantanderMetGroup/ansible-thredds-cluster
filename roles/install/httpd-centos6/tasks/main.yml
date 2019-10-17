@@ -1,0 +1,8 @@
+- name: Install httpd
+  become: True
+  yum: state=present name={{ item }}
+  with_items: [httpd, mod_ssl]
+
+- name: Create link to /etc/mime.types
+  become: True
+  file: state=link src=/etc/mime.types dest="{{ httpd_conf }}/mime.types"

@@ -1,0 +1,11 @@
+- name: Check if lb_type is defined
+  fail: msg="You must define lb_type (modproxy, modjk, nginx, haproxy, ipvs)"
+  when: lb_type is not defined
+
+- name: Register lb_type as a fact
+  set_fact:
+    lb_type: "{{ lb_type }}"
+  tags: always
+
+- name: Deploy load balancer of type {{ lb_type }}
+  import_tasks: "{{ lb_type }}.yml"

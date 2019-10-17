@@ -1,0 +1,20 @@
+- name: Gather facts
+  hosts: all
+  gather_facts: True
+
+- name: Start tomcats
+  hosts: workers
+  tasks:
+    - import_tasks: ../../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds1, tds2]
+        home_dir: "{{ ansible_env.HOME }}"
+        tomcat_base: "{{home_dir}}/deployment/instances"
+
+- name: Start HAProxy
+  hosts: lbs
+  tasks:
+    - name: Start HAProxy
+      shell: "{{ ansible_env.HOME }}/haproxy/usr/local/sbin/haproxy -f {{ ansible_env.HOME }}/haproxy/conf/haproxy.cfg"
+
+

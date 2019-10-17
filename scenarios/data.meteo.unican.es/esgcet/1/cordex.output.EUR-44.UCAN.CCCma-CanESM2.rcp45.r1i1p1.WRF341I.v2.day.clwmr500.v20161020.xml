@@ -1,0 +1,556 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="607989"/>
+      <property name="mod_time" value="2016-09-09 16:02:04"/>
+      <property name="checksum" value="17735bf86fc8f9c75e8ceb33ee3166771c3011aa48bcefc5d9bee974dd83bd32"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">607989</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="587161"/>
+      <property name="mod_time" value="2016-09-09 16:02:04"/>
+      <property name="checksum" value="4743e4478df820d7294b5561a9aa50cc9b2209e5a24cb655d012e2fb32b6a3f8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">587161</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="593091"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="7dd670ba6401cc82b0ae2719dbeb0630296129b27df54e274fb0fa2a7ffb94b6"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">593091</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="600159"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="64cada21f9fb5ab528ca07396c24c60bc0fc3ba5294b24deb7377d4e0f4a27a5"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">600159</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="585726"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="0a06d080cb42697be478fe7cd6b0008a61f271b2f19e6523c8f1b4f9f29b5429"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">585726</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="585021"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="b4c5f75ecffe13055116781f944bc2c2df342e1b5856dc6a8bd2816d3645bd6e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">585021</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="588104"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="68b6c3c32dfc61a7b386ae4092f842b964227f8006797fc7f87c5012059b4a28"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">588104</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="587714"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="fb48866c71abd4592572469c517c70d2674ba06089bd30cc65c3fbac1abcedad"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">587714</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="582388"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="92a30f71d42d0b684de5d1301cafd508d1ec18af71251dc1385b1d0f5f2ba3d1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">582388</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="578773"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="d666bb1aec67cca85cb8fc82c2ca853e0147c7195defcc97df0078c4ea9209a9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">578773</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="573558"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="1e174dd237c2f74da425ce7d8aca3fcfd2ee46652c5c73072bb634c187bb75fd"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">573558</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="565329"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="ff001a552cbb2e0ac4a97fccd43153b6da040304fe7a9607ef61ec9f1fde47b0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">565329</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="569326"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="dce6a6e036eeb0e7a16b3cd69d10ff906621d20c1a521cfaeee6d4ec0542445f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">569326</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="563131"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="71cf5cb83d098fd20d333a171c1b47fc5ecfbc14e076a7b3de07bb4e8390d68b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">563131</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="560512"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="273ab9100f04afcd4c0d65e567d98dc345adb7285afcb4ea4e173cbfb0fd2ab3"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">560512</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="561687"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="66ef71c82e09026149c8c5eaca48f3e3a5db4b4367dadcf245b62a254cb370ba"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">561687</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="557781"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="6e12ac391327fe441db3d8ddd02ec1ebceba577f672d55c5da37a95836b6320e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">557781</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="549842"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="28ff9652a0a17acfa7398ad2783c93db9e119966c2f385c0b5a1eb2acc3f45a2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">549842</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="546948"/>
+      <property name="mod_time" value="2016-09-09 16:02:03"/>
+      <property name="checksum" value="dcd70af59835b18b1474405037eab5910f313cde9c77e069914d1a93661c66b0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">546948</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="548414"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="e47ccd41dc52221d720716686f7b117cb6bbf16cf574787c0b5baf99505e0e45"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">548414</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="549431"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="8a6eac246579353a36eec858f450e97cca21c9880191336607a5ee1233dfc6dc"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">549431</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="541916"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="fdf9a73d3ddb52b0099ac35fdd534aef1724a864050b04a410da7f9ccfc0aef1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">541916</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="541752"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="55d7d83f6743dd50da5a16fc7815cb0e358c86b96828f8b19a643c1287d6d09b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">541752</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="541978"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="e32a8778e56de3d062e317cb0ae07f912248437e28367917390e6186f03ec45f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">541978</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="543190"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="b4a06d6eb97779e070bc39e3b492304e677ff9231cf07db58725038907fdfca8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">543190</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="540162"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="74df9ba1b5698a8aabff08a1b71a8f591a7c02781548f7c1dfaf7bddf758192e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">540162</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="538463"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="034a83d381566162e57d6c8b6cfbe398721a12b3e3c48d294959da962fb71182"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">538463</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="537956"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="2e9dd316dae6e7e3257d4c478942cf8c848ccaa598d58ece65fe5c218ca9ee83"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">537956</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="534487"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="7b43821adc1565943a6d6a5e17e94a52b9756e72117104f319ced25cbb4ac688"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">534487</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="535130"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="20a7b24166dc3a686b6a18664910ac7c67cbeff234e0c4950710b7874e947d1b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">535130</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.v20161020.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" name="clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="193034"/>
+      <property name="mod_time" value="2016-09-12 16:47:31"/>
+      <property name="checksum" value="4ab28e27e4c4f5899d0c043fa008fabec4bdf347a7e7c3ea511a4871f95f9c13"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <dataSize units="bytes">193034</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="clwmr500" vocabulary_name="cloud_liquid_water_mixing_ratio" units="1">Cloud water content</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1950-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.1" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1950-1-1 12:0:0.0"/>
+        <property name="time_length" value="365"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.2" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation - Subset 2" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.2">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.2"/>
+        <property name="time_length" value="54750"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.clwmr500.clwmr500.20161020.aggregation.2"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/clwmr500/v20161020/clwmr500_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

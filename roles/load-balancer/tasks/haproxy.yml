@@ -1,0 +1,10 @@
+- name: Export variables
+  set_fact:
+    haproxy_conf: "{{ haproxy_conf }}"
+    haproxy_sticky: "{{ haproxy_sticky }}"
+    ansible_become: "{{ ansible_become | default(False) }}"
+
+- name: Add configuration file
+  template:
+    src: haproxy/haproxy.cfg.j2
+    dest: "{{ haproxy_conf }}"

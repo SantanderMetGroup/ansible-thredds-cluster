@@ -1,0 +1,142 @@
+- name: Deploy load balancers
+  hosts: lbs
+  roles:
+    - role: load-balancer
+      lb_type: modproxy
+      clusters: # modproxy requires order, most specific first
+        - name: default
+          urls: [/tds5,/tds5/catalog]
+          #        - name: cmip6day
+          #          urls: [/tds5/dodsC/cmip6day, /tds5/dodsC/ipcc-atlas-era5]
+        - name: tap
+          urls: [/udg-tap]
+  tasks:
+    - name: Copy httpd.conf
+      copy: src=httpd/httpd.conf dest=/etc/httpd/conf/httpd.conf
+
+    - name: Copy httpd.ssl.conf
+      copy: src=httpd/httpd.ssl.conf dest=/etc/httpd/conf/httpd.ssl.conf
+
+    - name: Add esgcet lb worker
+      blockinfile:
+        path: "{{ modproxy_conf }}"
+        marker: "# {mark} esgcet"
+        insertbefore: '<Proxy "balancer://default">'
+        block: |
+          <Proxy "balancer://esgcet">
+          ProxySet stickysession=JSESSIONID
+          BalancerMember "ajp://localhost:8223" loadfactor=1 route=esgcet
+          </Proxy>
+          ProxyPass "/thredds/catalog/esgcet" "balancer://esgcet/thredds/catalog/esgcet"
+          ProxyPassReverse "/thredds/catalog/esgcet" "balancer://esgcet/thredds/catalog/esgcet"
+          ProxyPass "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
+          ProxyPassReverse "/thredds/fileServer/esgcet" "balancer://esgcet/thredds/fileServer/esgcet"
+          ProxyPass "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
+          ProxyPassReverse "/thredds/dodsC/esgcet" "balancer://esgcet/thredds/dodsC/esgcet"
+          ProxyPass "/esg-orp" "balancer://esgcet/esg-orp"
+          ProxyPassReverse "/esg-orp" "balancer://esgcet/esg-orp"
+
+    - name: Copy ESGF catalogs
+      synchronize: src=esgcet/ dest=/esg/content/thredds/esgcet
+      when: "'data' != inventory_file" # not copy in data
+
+- name: Deploy user database server
+  hosts: databases
+  tags: database
+  roles:
+    - role: jdk-source
+      jdk_root: "{{ ansible_env.HOME }}/services/jdk"
+    - role: derby
+      derby_drda_host: "{{ ansible_eth0.ipv4.address }}"
+
+- name: Deploy catalogs
+  hosts: "{{ groups['servers'][0] }}"
+  tags: catalogs
+  vars:
+    contents:
+      - /oceano/gmeteo/users/zequi/services/wn023/tdss/i1/content/thredds
+      - /oceano/gmeteo/users/zequi/services/wn025/tdss/i1/content/thredds
+  vars_files:
+    - secret.yml
+  tasks:
+    # - name: Create common content/thredds directory
+    #   file: state=directory path={{ tomcat_home }}/content
+
+    - name: Checkout TDS5 data
+      subversion:
+        repo: https://meteo.unican.es/svn/repos/sistemas/services/TDS5/tomcat/content/thredds/
+        dest: "{{ item }}"
+        username: "{{ svn.username }}"
+        password: "{{ svn.password }}"
+        force: yes
+        in_place: yes
+      with_items: "{{ contents }}"
+
+    - name: Fix TDS5 catalogs and datasets (remove tabs)
+      shell: find catalogs public -type f -print0 | xargs -0 -n1 | grep -v svn | xargs -n1 perl -pi -e 's/(".*?)\t+"/\1"/g'
+      args:
+        chdir: "{{ item }}"
+      with_items: "{{ contents }}"
+
+    - name: Copy root catalog
+      copy: src=catalog.xml dest={{ item }}/catalog.xml
+      with_items: "{{ contents }}"
+
+    - name: Synchronize catalogs
+      synchronize: src=catalogs/ dest={{ item }}/catalogs
+      with_items: "{{ contents }}"
+
+    - name: Synchronize datasets
+      synchronize: src=ncmls/ dest={{ item }}/public
+      with_items: "{{ contents }}"
+
+- name: Deploy tomcats
+  hosts: servers
+  vars_files:
+    - secret.yml
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: tomcat
+      tomcat_name: i1
+      tomcat_webapps: [tds, tap]
+      tomcat_http_port: 8080
+      tomcat_ajp_port: 8008
+      tomcat_shutdown_port: 8005
+      tomcat_Xmx: 7096m
+      tomcat_workers:
+        - gateway: "{{ load_balancer }}"
+          balancer: tap
+          properties: loadfactor=1 route={{ tomcat_route }}
+        - gateway: "{{ load_balancer }}"
+          balancer: default
+          properties: loadfactor=1 route={{ tomcat_route }}
+          #    - role: tomcat
+          #      tomcat_name: i2
+          #      tomcat_webapps: [tds]
+          #      tomcat_http_port: 8081
+          #      tomcat_ajp_port: 8009
+          #      tomcat_ssl_port: 8444
+          #      tomcat_shutdown_port: 8006
+          #      tomcat_workers:
+          #        - gateway: "{{ load_balancer }}"
+          #          balancer: system4interim
+          #          properties: loadfactor=1 route={{ tomcat_route }}
+          #        - gateway: "{{ load_balancer }}"
+          #          balancer: default
+          #          properties: loadfactor=1 route={{ tomcat_route }}
+  tasks:
+    - name: Refresh catalogs
+      command: curl -L --insecure -u '{{ tds_admin.user }}:{{ tds_admin.password }}' {{ url }}
+      vars:
+        url: https://{{ inventory_hostname }}:{{ item }}/{{ tds_context }}/admin/debug?Catalogs/reinit
+      with_items: [8443]
+      tags: [never, catalogs]
+
+    - name: Clear caches
+      command: curl -L --insecure -u '{{ tds_admin.user }}:{{ tds_admin.password }}' {{ url }}
+      vars:
+        url: https://localhost:8443/tds5/admin/debug?Caches/clearCaches
+      with_items: [8443, 8444]
+      tags: [never, caches]
+

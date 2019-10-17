@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc"/>
+    <property name="dataset_version" value="20140616"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF331G"/>
+    <property name="rcm_version" value="v01"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="21718358"/>
+      <property name="mod_time" value="2014-05-30 09:29:28"/>
+      <property name="checksum" value="57304ea9459c4b4b319e82e2e27ed34ad00bff6a3d0ee08399c33444468e0490"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">21718358</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="22186980"/>
+      <property name="mod_time" value="2014-05-30 09:13:38"/>
+      <property name="checksum" value="f6ebee06d735eed8924c48c8023c7253f7398e8c11838a379d9f37de41d72bfb"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">22186980</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="21671053"/>
+      <property name="mod_time" value="2014-05-30 08:57:19"/>
+      <property name="checksum" value="528b9bf98396fe405a89c53c0f9897de9fe20776b39b3272d991f446a26e4bef"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">21671053</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="21486762"/>
+      <property name="mod_time" value="2014-05-30 08:41:15"/>
+      <property name="checksum" value="b5b67995f115fbb2efd75969a0c74c335c91b0d93b654f1d85e935b9cbec601f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">21486762</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="21749096"/>
+      <property name="mod_time" value="2014-05-30 08:25:21"/>
+      <property name="checksum" value="bd42c4f7c58d29dc52a9f10ff57e773a68724871715cc27dfde1d877cf61e538"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">21749096</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="20410165"/>
+      <property name="mod_time" value="2014-05-30 08:09:18"/>
+      <property name="checksum" value="4f40b073eadefd3f15a93f4f92ca69e87d19eb4f4435bd58bb05ca8d05a824eb"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">20410165</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.v20140616.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc" name="prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="8539265"/>
+      <property name="mod_time" value="2014-05-30 07:53:24"/>
+      <property name="checksum" value="3d4937c500d5129aaa8bcdb2a72a18af6521220708e44236a561650caa59545e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <dataSize units="bytes">8539265</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="prc" vocabulary_name="convective_precipitation_flux" units="Kg m-2 s-1">Convective Precipitation</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2010-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation.1" name="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="11688"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v01.day.prc.prc.20140616.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19860101-19901231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_19960101-20001231.nc" ncoords="1827"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/02_EuroCORDEX_INTERIM_044/CORDEX/output/EUR-44/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v01/day/prc/v20140616/prc_EUR-44_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v01_day_20060101-20101231.nc" ncoords="1826"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

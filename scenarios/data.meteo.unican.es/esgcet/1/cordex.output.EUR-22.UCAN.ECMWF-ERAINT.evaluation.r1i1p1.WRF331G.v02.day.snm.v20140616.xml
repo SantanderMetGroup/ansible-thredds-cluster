@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm"/>
+    <property name="dataset_version" value="20140616"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-22"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="ECMWF-ERAINT"/>
+    <property name="experiment" value="evaluation"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF331G"/>
+    <property name="rcm_version" value="v02"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616"/>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="26120361"/>
+      <property name="mod_time" value="2014-05-21 10:37:04"/>
+      <property name="checksum" value="4e2a67a395087260c207c4ddbe795d43b08ef1b4f0b4828877384fdf0965d24b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">26120361</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="60518840"/>
+      <property name="mod_time" value="2014-05-21 11:18:01"/>
+      <property name="checksum" value="5120397d147d0bb4bdfd6015a06451af43e8bacc9849f6482faef66934b8774b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">60518840</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="24344586"/>
+      <property name="mod_time" value="2014-05-21 11:26:14"/>
+      <property name="checksum" value="3965c38fa7f0e872b4c87382a72247995b06102d24ec10a1bf4ee22911879063"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">24344586</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="63815805"/>
+      <property name="mod_time" value="2014-05-21 12:06:48"/>
+      <property name="checksum" value="b485b45609d48619c01ef33815124bb84f656c2b0a6d23e7958e03c76c47a408"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">63815805</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="54379098"/>
+      <property name="mod_time" value="2014-05-21 12:42:51"/>
+      <property name="checksum" value="652c3debf2858544908cf2dcad9053b95a7cc9c52eb787ad894685f1f44f1069"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">54379098</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="61643569"/>
+      <property name="mod_time" value="2014-05-21 13:24:11"/>
+      <property name="checksum" value="e54babf545853317ecd22c788ffa9bbb81ff205e77212d212dbf8cfe0115358e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">61643569</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.v20140616.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc_0" name="snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc_0"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="49465135"/>
+      <property name="mod_time" value="2014-05-21 13:51:44"/>
+      <property name="checksum" value="bc0b94cde889d640b5fe1504faf4fddc90469231e5fa028334dc4121f303c6a7"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <dataSize units="bytes">49465135</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="snm" vocabulary_name="surface_snow_melt_flux" units="kg m-2 s-1">Snow melt</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1979-01-01T12:00:00</start>
+          <end>2010-03-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation"/>
+      <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.1" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1979-1-1 12:0:0.0"/>
+        <property name="time_length" value="3318"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19790101-19801231.nc" ncoords="731"/>
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19810101-19851231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19860101-19901231.nc" ncoords="761"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.2" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation - Subset 2" serviceName="gridded" urlPath="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.2">
+        <property name="aggregation_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.2"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1991-1-1 12:0:0.0"/>
+        <property name="time_length" value="3561"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.2"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19910101-19951231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_19960101-20001231.nc" ncoords="1735"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.3" name="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation - Subset 3" serviceName="gridded" urlPath="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.3">
+        <property name="aggregation_id" value="cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.3"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="2001-1-1 12:0:0.0"/>
+        <property name="time_length" value="3377"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-22.UCAN.ECMWF-ERAINT.evaluation.r1i1p1.WRF331G.v02.day.snm.snm.20140616.aggregation.3"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20010101-20051231.nc" ncoords="1826"/>
+            <netcdf location="/data/cordex/01_EuroCORDEX_INTERIM_022/CORDEX/output/EUR-22/UCAN/ECMWF-ERAINT/evaluation/r1i1p1/UCAN-WRF331G/v02/day/snm/v20140616/snm_EUR-22_ECMWF-ERAINT_evaluation_r1i1p1_UCAN-WRF331G_v02_day_20060101-20101231.nc" ncoords="1551"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

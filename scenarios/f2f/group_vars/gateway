@@ -1,0 +1,28 @@
+# -*-yaml-*-
+httpd_root: /etc/httpd
+httpd_version: 2.2.15
+httpd_htdocs: /var/www/html
+httpd_conf_file: /etc/httpd/conf/esgf-httpd.conf
+
+tomcat_base: '/usr/local'
+
+collections:
+  - &collection1
+    name: collection1
+    path: esgcet
+    catalogs:
+      src: /esg/content/thredds/esgcet
+    services: [dodsC, fileServer, catalog]
+
+tds:
+  - &tomcat
+    name: tomcat
+    tds_content_root: /esg/content
+
+replicas:
+  - gateway: esgf
+    host: "{{ ansible_eth1.ipv4.address }}"
+    route: "{{ ansible_nodename }}"
+    port: 8223
+    tds_instance: *tomcat
+    collection: *collection1

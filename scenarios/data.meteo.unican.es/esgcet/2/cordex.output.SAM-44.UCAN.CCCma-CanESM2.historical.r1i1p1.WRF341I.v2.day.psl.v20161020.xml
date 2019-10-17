@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="SAM-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="historical"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020"/>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92438326"/>
+      <property name="mod_time" value="2016-09-28 11:11:41"/>
+      <property name="checksum" value="91582ba29795aad74c095bba8ff216882653aee3d9d860b75fd153c83c2b3a73"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92438326</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92403157"/>
+      <property name="mod_time" value="2016-09-28 11:11:24"/>
+      <property name="checksum" value="af0fb7fee380a0f5526ed8355f1fa330755f0f23e695331e3d4b44ad2586bb53"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92403157</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92466442"/>
+      <property name="mod_time" value="2016-09-28 11:11:08"/>
+      <property name="checksum" value="1876ac7be0988b07938d601202a12d1e443f3ded487d381b7aed798b9882ddde"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92466442</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92462426"/>
+      <property name="mod_time" value="2016-09-28 11:10:53"/>
+      <property name="checksum" value="a9babc0479928abc1285e2e96affca992d562b082fb90dd671b7202729f68888"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92462426</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92464286"/>
+      <property name="mod_time" value="2016-09-28 11:10:37"/>
+      <property name="checksum" value="08e3b323163ee6590ede2febf72562f6e2c9c38fd19b60c92bfb34ce7b23bb68"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92464286</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92403141"/>
+      <property name="mod_time" value="2016-09-28 11:10:22"/>
+      <property name="checksum" value="7e64963122572c431e8e513ab2b6cec8fa8e7ea2dd19c463b76865f0e5eecf58"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92403141</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92446245"/>
+      <property name="mod_time" value="2016-09-28 11:10:07"/>
+      <property name="checksum" value="fe3871b2b10c6989f5f776f1af26a3526be2604896f78cdfa900d4031511a45e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92446245</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92435799"/>
+      <property name="mod_time" value="2016-09-28 11:09:44"/>
+      <property name="checksum" value="f24d9396ddba2eb8f7062705e906fc97827ba4f1dcfdf756a91f9c222e68137d"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92435799</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92528555"/>
+      <property name="mod_time" value="2016-09-28 11:09:29"/>
+      <property name="checksum" value="cdb2e93ce8e0588bc2adb6050ef312d2697a806667700995e62cc7285969d5fe"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92528555</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92462539"/>
+      <property name="mod_time" value="2016-09-28 11:09:10"/>
+      <property name="checksum" value="8bd3553b2b06931a30f50b215ea978dfd9af12c7ae2be006f1df0105eb2d99e0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92462539</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="92464737"/>
+      <property name="mod_time" value="2016-09-28 11:08:51"/>
+      <property name="checksum" value="16b8a37a48c71f04b0dc83808b6073b7bcc26b15773a1d2448f8604d01d991b1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">92464737</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.v20161020.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" name="psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="18606003"/>
+      <property name="mod_time" value="2016-09-28 11:08:36"/>
+      <property name="checksum" value="66772dfec55571e9ccaebb64adaf51b23e142bc212614596ad203e707a22de66"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <dataSize units="bytes">18606003</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="psl" vocabulary_name="air_pressure_at_sea_level" units="Pa">Sea level pressure</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1950-01-01T12:00:00</start>
+          <end>2005-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation"/>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.1" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1950-1-1 12:0:0.0"/>
+        <property name="time_length" value="365"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.2" name="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation - Subset 2" serviceName="gridded" urlPath="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.2">
+        <property name="aggregation_id" value="cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.2"/>
+        <property name="time_length" value="20075"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.SAM-44.UCAN.CCCma-CanESM2.historical.r1i1p1.WRF341I.v2.day.psl.psl.20161020.aggregation.2"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_20161020/CORDEX/output/SAM-44/UCAN/CCCma-CanESM2/historical/r1i1p1/UCAN-WRF341I/v2/day/psl/v20161020/psl_SAM-44_CCCma-CanESM2_historical_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

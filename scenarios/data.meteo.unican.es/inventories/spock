@@ -1,0 +1,30 @@
+[all]
+spock ansible_host=spock.meteo.unican.es ansible_user=root
+wn023 ansible_host=wn023 ansible_user=zequi tomcat_base="/oceano/gmeteo/users/zequi/services/wn023/tdss"
+wn025 ansible_host=wn025 ansible_user=zequi tomcat_base="/oceano/gmeteo/users/zequi/services/wn025/tdss" derby_home="/oceano/gmeteo/users/zequi/services/wn025/tap-database"
+
+[lbs]
+spock
+
+[servers]
+wn023
+wn025
+
+[servers:vars]
+load_balancer=spock
+jdk_root="{{ ansible_env.HOME }}/services/jdk"
+tomcat_home="{{ ansible_env.HOME }}/services/tomcat"
+tomcat_base="{{ ansible_env.HOME }}/services/tomcats"
+
+[databases]
+wn025
+
+#esgf
+[index]
+spock
+
+[idp]
+spock
+
+[data]
+spock

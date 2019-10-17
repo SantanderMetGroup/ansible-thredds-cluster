@@ -1,0 +1,556 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r1i1p1"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="day"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47090244"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="f343f7029d3339b8b2aed78724e0aa302a7b742054b7921164f6e9403b33f0aa"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47090244</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47173408"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="06e8ccf0f49f0a7289e84ec51e7ca87c8d55bb08b5b05dbd1f9ac1a0652788a4"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47173408</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47095446"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="8ea9c225d67d9f51be5f9da2f6f3202eaa4a87f394f179c3e17e4fac5ed42472"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47095446</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47093692"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="de1efc85ea394245e804757413429fcde9aa8ed799f8a609e7804404c9261a2c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47093692</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47138577"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="ceed0b825fc357d9ab12e3602e4300751579ddfa93edbbe4bb1268e23287bb32"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47138577</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47113944"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="c1a48e48a1ebe1c441928456218652371aaf082000dbdad86877115fb048434b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47113944</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47176886"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="227ea2c1ec120d086cd48c006c57b8eec1d3200bd70971914a6f9941f6172243"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47176886</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47173664"/>
+      <property name="mod_time" value="2016-09-09 13:46:26"/>
+      <property name="checksum" value="4506e31bdbea2319a6b5122fa75905e6ae00c49013b0d28f7f0c5b8dc52d94e1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47173664</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47165805"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="36021bf2321ad5120ee5edfe3edbc9df6e497a9a1e52280a0bc5ce2b47d8153e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47165805</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47197758"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="413fdafad256420523bed7350341b252f1346f36cd760a9ab61a39a572396675"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47197758</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47162362"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="009936735ad5719f1bf332277878b28eeb5ce4f1254a9106d12fd861477d5357"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47162362</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47166873"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="cd0415014abe45bc3ba4cb25f9cc8dbff5c2f5b856f7c7059d2a83657cf04808"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47166873</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47210628"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="b0675c2857c37a4add92e6f7891505a379d23e6ef501434c4ea03d960a4b06d1"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47210628</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47204853"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="a41f9403aba31918cb24590c14072a910593aa29339afb9a58cf583a50cb9b96"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47204853</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47237224"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="da65d5993e88a72c126941bf74e219e0a12709f02dd145f15d733ddf2bcb723b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47237224</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47257246"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="d66d25985b31637949490bc21ae16d86220c38a04a3a6753d23fe9b9048b9e9e"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47257246</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47301451"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="4a5e8ba135274fa096602fcbd9d950e4b05472ac272220afc29f005a176974ba"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47301451</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47341371"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="429c2c1f2c6de9857ea9e820293455142ce9f465433a684fdc6b759b04fb5731"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47341371</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47400072"/>
+      <property name="mod_time" value="2016-09-09 13:46:25"/>
+      <property name="checksum" value="58be2b2d0427ae83d19b226a0f3108eaea95ea6d0fa4a989f702ad30433c5ac6"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47400072</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47333448"/>
+      <property name="mod_time" value="2016-09-12 16:48:08"/>
+      <property name="checksum" value="56424fe53432e98ce80b625a190dedbc6769399caec03f5235471dbf8dfc226b"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47333448</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47356637"/>
+      <property name="mod_time" value="2016-09-12 16:48:08"/>
+      <property name="checksum" value="b093a376da090aa4a244b1704f072c06bd63e0ae69db53e1bb04e370a6b90ec8"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47356637</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47449137"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="dd8763e2f904f08c07b110c8520c3208d8fc07f019fc5202e83d585ac249c346"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47449137</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47382528"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="6cf76fc505e1b2c943ebaa37f22608f8ebe6d12e47e88ea48272fb3bd5f40972"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47382528</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47486005"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="bbcc54e0aea031b4b637d016a21e77f6ebfb21013247fa565b30d505556569b2"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47486005</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47408544"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="8bc0bf34f342df7d6715f77ca20ed2d2ccf6bd754f360272edd4d3543870d8aa"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47408544</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47474550"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="2eb566d672f22a77c00923f5cd90ce8a525506e6396a3fb03be5f8703cb3583c"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47474550</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47491761"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="d1e5d4b0510b73d5eab888c739327796ea9e2d88738e9b70a6b62b2b26613501"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47491761</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47463687"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="1a4a7f198d5669db85ba927a2a4d0165c932a9034d26e0bd5d32e12580cbc74f"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47463687</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47451925"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="02b87d219164a544293cd2f924200bb68d6d6ff0307142d812de22f9f59c8e27"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47451925</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="47470873"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="3dfb5e6ed36ad26ffbd2fe231a134595d865da80d2ca06c3ade5432f697176e9"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">47470873</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.v20161020.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" name="tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="9576158"/>
+      <property name="mod_time" value="2016-09-12 16:48:07"/>
+      <property name="checksum" value="9821da86cfc54fb96fdc8116c70b8e9d375406b25af693d2ce292107c505e3b0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <dataSize units="bytes">9576158</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc"/>
+    </dataset>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation">
+      <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="tsmin" vocabulary_name="surface_temperature" units="K">Daily Minimum Surface Temperature</variable>
+      </variables>
+      <metadata inherited="true">
+        <geospatialCoverage/>
+        <timeCoverage>
+          <start>1950-01-01T12:00:00</start>
+          <end>2100-12-31T12:00:00</end>
+        </timeCoverage>
+      </metadata>
+      <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation"/>
+      <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.1" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation - Subset 1" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.1">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.1"/>
+        <property name="time_delta" value="1 day"/>
+        <property name="calendar" value="standard"/>
+        <property name="start" value="1950-1-1 12:0:0.0"/>
+        <property name="time_length" value="365"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.1"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19500101-19501231.nc" ncoords="365"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+      <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.2" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation - Subset 2" serviceName="gridded" urlPath="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.2">
+        <property name="aggregation_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.2"/>
+        <property name="time_length" value="54750"/>
+        <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r1i1p1.WRF341I.v2.day.tsmin.tsmin.20161020.aggregation.2"/>
+        <netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+          <aggregation dimName="time" type="joinExisting">
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19510101-19551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19560101-19601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19610101-19651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19660101-19701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19710101-19751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19760101-19801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19810101-19851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19860101-19901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19910101-19951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_19960101-20001231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20010101-20051231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20060101-20101231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20110101-20151231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20160101-20201231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20210101-20251231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20260101-20301231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20310101-20351231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20360101-20401231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20410101-20451231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20460101-20501231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20510101-20551231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20560101-20601231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20610101-20651231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20660101-20701231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20710101-20751231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20760101-20801231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20810101-20851231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20860101-20901231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20910101-20951231.nc" ncoords="1825"/>
+            <netcdf location="/data/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r1i1p1/UCAN-WRF341I/v2/day/tsmin/v20161020/tsmin_EUR-44_CCCma-CanESM2_rcp45_r1i1p1_UCAN-WRF341I_v2_day_20960101-21001231.nc" ncoords="1825"/>
+          </aggregation>
+        </netcdf>
+      </dataset>
+    </dataset>
+  </dataset>
+</catalog>

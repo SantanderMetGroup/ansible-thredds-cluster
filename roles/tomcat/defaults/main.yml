@@ -1,0 +1,60 @@
+downloads: "{{ playbook_dir }}/downloads"
+
+# tomcat
+tomcat_cluster: False
+tomcat_manager: "" # memcached
+tomcat_service: "" # systemd, supervisord
+
+tomcat_name: tomcat
+tomcat_webapps: []
+tomcat_route: "{{ ansible_hostname }}{{ tomcat_name }}"
+tomcat_http_port: 8080
+tomcat_ssl_port: 8443
+tomcat_ajp_port: 8009
+tomcat_shutdown_port: 8005
+
+tomcat_workers: []
+
+# JVM opts
+tomcat_Xms: 512m
+tomcat_Xmx: 4096m
+
+# Connectors
+tomcat_http_connector: |
+  <Connector port="{{ tomcat_http_port }}" protocol="HTTP/1.1" connectionTimeout="20000"
+             redirectPort="{{ tomcat_ssl_port }}"/>
+
+tomcat_ajp_connector: |
+  <!--<Connector port="{{ tomcat_ajp_port }}" protocol="AJP/1.3" redirectPort="{{ tomcat_ssl_port }}"/>-->
+
+tomcat_ssl_connector: |
+  <!--<Connector port="{{ tomcat_ssl_port }}" protocol="org.apache.coyote.http11.Http11NioProtocol"
+             maxThreads="150" SSLEnabled="true">
+    <SSLHostConfig>
+      <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
+                   certificateKeystorePassword="changeit"
+                   type="RSA" />
+    </SSLHostConfig>
+  </Connector>-->
+
+tomcat_connectors: |
+  {{ tomcat_http_connector }}
+  {{ tomcat_ajp_connector }}
+  {{ tomcat_ssl_connector }}
+  
+tomcat_realms: |
+  <Realm className="org.apache.catalina.realm.LockOutRealm">
+    <!-- This Realm uses the UserDatabase configured in the global JNDI
+         resources under the key "UserDatabase".  Any edits
+         that are performed against this UserDatabase are immediately
+         available for use by the Realm.  -->
+    <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+           resourceName="UserDatabase"/>
+  </Realm>
+    
+tomcat_global_naming_resources: |
+  <Resource name="UserDatabase" auth="Container"
+            type="org.apache.catalina.UserDatabase"
+            description="User database that can be updated and saved"
+            factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+            pathname="conf/tomcat-users.xml" />

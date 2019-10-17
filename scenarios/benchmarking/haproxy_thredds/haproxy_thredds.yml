@@ -1,0 +1,65 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+
+- name: Deploy load balancer
+  hosts: lbs
+  become: True
+  vars:
+    haproxy_sticky: true
+  roles:
+    - role: haproxy-centos
+    - role: load-balancer
+      lb_type: haproxy
+      clusters:
+        - name: data
+          services: [dodsC, fileServer, dap4, ncss]
+        - name: catalog
+          services: [catalog]
+
+- name: Deploy workers
+  hosts: workers
+  vars:
+    # required interface
+    home_dir: "{{ ansible_env.HOME }}"
+    jdk_root: "{{home_dir}}/deployment/jdk"
+    tomcat_home: "{{home_dir}}/deployment/tomcat"
+    tomcat_base: "{{home_dir}}/deployment/instances"
+    tds_root_catalog: catalog.xml
+    #venv_home: "{{home_dir}}/deployment/virtualenv"
+  roles:
+    - role: jdk-source
+    - role: tomcat-source
+    - role: tds
+      tomcat_name: tds1
+      tomcat_http_port: 8080
+      tomcat_ajp_port: 8008
+      tomcat_shutdown_port: 8005
+      worker:
+        host: "{{ ansible_eth1.ipv4.address }}"
+        route: "{{ inventory_hostname }}-tds1"
+        clusters: [catalog]
+    - role: tds
+      tomcat_name: tds2
+      tomcat_http_port: 8081
+      tomcat_ajp_port: 8018
+      tomcat_shutdown_port: 8006
+      worker:
+        host: "{{ ansible_eth1.ipv4.address }}"
+        route: "{{ inventory_hostname }}-tds2"
+        clusters: [data]
+  tasks:
+    - name: Copy catalogs
+      copy: src=catalogs dest={{ tomcat_base }}/{{ item }}/content/thredds
+      with_items: [tds1, tds2]
+      tags: catalogs
+
+    - import_tasks: ../../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds1, tds2]
+
+- name: Start HAProxy
+  hosts: lbs
+  tasks:
+    - command: "{{ haproxy_bin }} -f {{ haproxy_conf }}"
+  tags: [haproxy, start_haproxy]

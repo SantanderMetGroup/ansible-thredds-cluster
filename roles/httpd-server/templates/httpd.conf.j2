@@ -1,0 +1,45 @@
+ServerRoot "{{ httpd_root }}"
+Listen "{{ httpd_port }}"
+
+# Minimum modules needed
+LoadModule mpm_event_module modules/mod_mpm_event.so
+LoadModule log_config_module modules/mod_log_config.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule dir_module modules/mod_dir.so
+LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule unixd_module modules/mod_unixd.so
+
+User "{{ httpd_user }}"
+Group "{{ httpd_group }}"
+
+ServerName localhost
+
+# required by systemd systems
+{% if ansible_service_mgr == "systemd" %}
+IncludeOptional "{{ httpd_root }}/conf.*d/00-systemd.con[f]"
+{% endif %}
+
+TypesConfig conf/mime.types
+
+PidFile {{ httpd_pid }}
+
+DocumentRoot "{{ httpd_htdocs }}"
+
+DirectoryIndex index.html
+
+ErrorLog logs/error_log
+
+# Access log
+LogFormat "%h %l %u %t \"%r\" %>s %b" common
+CustomLog logs/access_log common
+
+# Never change this block
+<Directory />
+  AllowOverride None
+  Require all denied
+</Directory>
+
+# Allow documents to be served from the DocumentRoot
+<Directory "{{ httpd_htdocs }}">
+  Require all granted
+</Directory>

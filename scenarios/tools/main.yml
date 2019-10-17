@@ -1,0 +1,143 @@
+- hosts: all
+  vars:
+    root: /tmp/sandbox
+    # roles customization
+    tomcat_base: "{{ root }}/tomcat-base"
+    
+    miniconda_python: 2
+    miniconda_prefix: "{{ root }}/miniconda"
+    miniconda_manage_dependencies: False
+    miniconda_env:
+      name: tds
+      channels:
+        - birdhouse
+      dependencies:
+        - libnetcdf=4.4.1
+        - supervisor
+        - apache-tomcat
+    
+    # Deployment model
+    ## collections
+    collections:
+      - path: test-collection
+        catalogs:
+          src: "{{ catalogs_path | default('data/catalogs') }}"
+
+    ## tds instances
+    tds_debug: True
+    tds_version: 5.0.0-beta2
+    tds:
+      - name: instance1
+        shutdown: 8089
+        tds_content_root: "{{ root }}/content"
+        connectors:
+          - type: http
+            port: '8080'
+        replicas:
+          - collections: ['test-collection']
+
+    ## datasets
+    datasets:
+      - src: "{{ datasets_path | default('data/datasets') }}"
+        dest: '' # If empty, destination is content/thredds/public
+
+    # toolsUI
+    toolsUI_urlbase: https://artifacts.unidata.ucar.edu/repository/unidata-all/edu/ucar
+    toolsUI_tool: toolsUI
+    toolsUI_version: ESGF-5.0.1
+    toolsUI_jar: "{{ toolsUI_tool }}-{{ toolsUI_version }}.jar"
+    toolsUI_url: "{{ toolsUI_urlbase }}/{{ toolsUI_tool }}/{{ toolsUI_version }}/{{ toolsUI_jar }}"
+    
+  roles:
+    - role: miniconda
+    - role: tds
+    - role: supervisor-tds
+
+  tasks:
+    # toolsUI
+    - name: Download toolsUI
+      get_url:
+        url: "{{ toolsUI_url }}"
+        dest: "{{ root }}"
+
+    - name: Template executables
+      template:
+        src: "{{ item.template }}"
+        dest: "{{ root }}/{{ item.dest }}"
+        mode: 0755
+      with_items:
+        - { template: ncjdump.j2, dest: ncjdump }
+        - { template: toolsUI, dest: toolsUI }
+
+    # FakeAuthorizer
+    - name: Copy FakeAuthorizer.class in tds applicationContext.xml
+      copy:
+        src: FakeAuthorizer.class
+        dest: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/classes/thredds/servlet/restrict/FakeAuthorizer.class"
+      with_items: "{{ tds }}"
+
+    - name: Use FakeAuthorizer instead of TomcatAuthorizer in tds applicationContext.xml
+      replace:
+        regexp: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.TomcatAuthorizer">'
+        replace: '<bean id="restrictedDatasetAuthorizer" class="thredds.servlet.restrict.FakeAuthorizer">'
+        path: "{{ tomcat_base }}/{{ item.name }}/webapps/thredds/WEB-INF/applicationContext.xml"
+      with_items: "{{ tds }}"
+
+    # Commented because it's unexpected behaviour for the user
+#    # create datasets in main catalog for datasets in public
+#    - name: Add datasetRoot and services to main catalog
+#      blockinfile:
+#        path: "{{ item.tds_content_root }}/thredds/catalog.xml"
+#        insertbefore: </catalog>
+#        marker: "<!-- {mark} datasetRoot and services-->"
+#        block: |
+#          <datasetRoot path="public" location="content" />
+#          <service name="all" base="" serviceType="compound">
+#            <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/" />
+#            <service name="odap" serviceType="OpenDAP" base="/thredds/dodsC/"/>
+#            <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/" />
+#          </service>
+#      with_items: "{{ tds }}"
+#      tags: update_catalogs
+#
+#    - name: Register datasets in catalog
+#      find:
+#        paths: "{{ item.tds_content_root }}/thredds/public/"
+#      with_items: "{{ tds }}"
+#      register: instances_datasets
+#      tags: update_catalogs
+#
+#    - name: Add datasets in content/thredds/public to the main catalog
+#      blockinfile:
+#        path: "{{ item.0.item.tds_content_root }}/thredds/catalog.xml"
+#        marker: "<!-- {mark} {{ item.1.path | basename }} -->"
+#        insertbefore: </catalog>
+#        block: |
+#          <dataset name="{{ item.1.path | basename }}" ID="{{ item.1.path | basename }}" urlPath="public/{{ item.1.path | basename }}" serviceName="all" />
+#      with_subelements:
+#        - "{{ instances_datasets.results }}"
+#        - files
+#      tags: update_catalogs
+
+    # management
+    - name: Restart TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items:
+        - "{{ tds }}"
+      tags: ['restart']
+
+    - name: Stop TDS
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: stopped
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items:
+        - "{{ tds }}"
+      tags: ['stop', 'never']
+
+    - name: Stop supervisor 
+      shell: kill -9 $(cat {{ supervisor_home }}/var/supervisord.pid)
+      tags: ['stop', 'never']

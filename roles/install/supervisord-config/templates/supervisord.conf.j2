@@ -1,0 +1,29 @@
+[unix_http_server]
+file={{ supervisor_var }}/supervisor.sock   ; (the path to the socket file)
+
+[inet_http_server]          ; inet (TCP) server disabled by default
+port=*:{{ supervisor_port }}				; (ip_address:port specifier, *:port for all iface)
+{% if supervisor_server_user is defined %}
+username={{ supervisor_server_user }}
+password={SHA}{{ supervisor_server_password }}
+{% endif %}
+
+[supervisord]
+logfile={{ supervisor_var }}/supervisord.log ; (main log file;default $CWD/supervisord.log)
+logfile_maxbytes=50MB        ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10           ; (num of main logfile rotation backups;default 10)
+loglevel=info                ; (log level;default info; others: debug,warn,trace)
+pidfile={{ supervisor_var }}/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+nodaemon=false               ; (start in foreground if true;default false)
+minfds=1024                  ; (min. avail startup file descriptors;default 1024)
+minprocs=200                 ; (min. avail process descriptors;default 200)
+user={{ supervisor_user }}
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=http://127.0.0.1:{{ supervisor_port }} ; use an http:// url to specify an inet socket
+
+[include]
+files={{ supervisor_programs }}/*.conf

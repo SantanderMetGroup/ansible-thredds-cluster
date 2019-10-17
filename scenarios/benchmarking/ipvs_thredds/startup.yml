@@ -1,0 +1,19 @@
+- name: Gather facts
+  hosts: all
+  gather_facts: True
+
+- name: Start tomcats
+  hosts: workers
+  tasks:
+    - import_tasks: ../../../utils/tomcat-service.yml
+      vars:
+        tomcats: [tds1, tds2]
+        home_dir: "{{ ansible_env.HOME }}"
+        tomcat_base: "{{home_dir}}/deployment/instances"
+
+
+- name: Start keepalived + ipvs
+  hosts: lbs
+  tasks:
+    - name: Start 
+      shell: "{{ ansible_env.HOME }}/keepalived/sbin/keepalived -c {{ ansible_env.HOME }}/keepalived/etc/keepalived/keepalived.conf"

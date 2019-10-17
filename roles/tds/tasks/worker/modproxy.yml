@@ -1,0 +1,33 @@
+- name: Add worker to the modproxy lb worker
+  blockinfile:
+    dest: "{{ hostvars[load_balancer].modproxy_conf }}"
+    insertafter: <Proxy \"balancer://{{ cluster }}\">
+    marker: '#{mark} {{ cluster }}:{{ whost }}:{{ wport }}'
+    block: BalancerMember "ajp://{{ whost}}:{{ wport }}" loadfactor={{ tds_worker.loadfactor | default(1) }} route={{ tomcat_route }}
+  delegate_to: "{{ load_balancer }}"
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+    whost: "{{ tds_worker.host | default(ansible_hostname) }}"
+    wport: "{{ tds_worker.port | default(tomcat_ajp_port) }}"
+  with_items: "{{ tds_worker.clusters }}"
+  loop_control:
+    loop_var: cluster
+
+- name: Add worker to the modproxy restricted worker
+  blockinfile:
+    dest: "{{ hostvars[load_balancer].modproxy_conf }}"
+    insertafter: <Proxy \"balancer://restricted\">
+    marker: '#{mark} restricted:{{ whost }}:{{ wport }}'
+    block: BalancerMember "ajp://{{ whost }}:{{ wport }}" loadfactor={{ tds_worker.loadfactor | default(1) }} route={{ tomcat_route }}
+  delegate_to: "{{ load_balancer }}"
+  vars:
+    ansible_become: "{{ hostvars[load_balancer].ansible_become | default(False) }}" # depends on how httpd was installed
+    whost: "{{ tds_worker.host | default(ansible_hostname) }}"
+    wport: "{{ tds_worker.port | default(tomcat_ajp_port) }}"
+
+- name: Add java melody urimaps
+  delegate_to: "{{ load_balancer }}"
+  lineinfile:
+    path: "{{ hostvars[load_balancer].modproxy_conf }}"
+    line: ProxyPass "/monitoring/{{ tomcat_name }}" "http://{{ tds_worker.host | default(ansible_hostname) }}:{{ tds_melody.port }}/{{ tds_context }}/monitoring"
+  when: tds_melody is defined

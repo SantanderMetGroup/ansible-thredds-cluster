@@ -1,0 +1,6 @@
+- name: Add worker to the load balancer
+  include_tasks: "{{ hostvars[load_balancer].lb_type }}.yml"
+  with_items: "{{ ansible_play_batch }}"
+  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+  loop_control:
+    loop_var: host_item

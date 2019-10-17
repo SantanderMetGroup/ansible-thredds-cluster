@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<catalog xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" name="TDS configuration file" xsi:schemaLocation="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0 http://www.unidata.ucar.edu/schemas/thredds/InvCatalog.1.0.2.xsd">
+  <service base="/thredds/dodsC/" desc="OpenDAP" name="gridded" serviceType="OpenDAP">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="http://data.meteo.unican.es/las/getUI.do" desc="Live Access Server" name="LASatUnican" serviceType="LAS">
+    <property name="requires_authorization" value="false"/>
+    <property name="application" value="Web Browser"/>
+  </service>
+  <service base="" name="fileservice" serviceType="Compound">
+    <service base="/thredds/fileServer/" desc="HTTPServer" name="HTTPServer" serviceType="HTTPServer">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="Web Browser"/>
+      <property name="application" value="Web Script"/>
+    </service>
+    <service base="gsiftp://data.meteo.unican.es:2811/" desc="GridFTP" name="GRIDFTP" serviceType="GridFTP">
+      <property name="requires_authorization" value="true"/>
+      <property name="application" value="DataMover-Lite"/>
+    </service>
+    <service base="/thredds/dodsC/" desc="OpenDAP" name="OpenDAPServer" serviceType="OpenDAP">
+      <property name="requires_authorization" value="false"/>
+      <property name="application" value="Web Browser"/>
+    </service>
+  </service>
+  <service base="srm://data.meteo.unican.es:6288/srm/v2/server?SFN=/archive.sample.gov/" desc="SRM" name="HRMatPCMDI" serviceType="SRM">
+    <property name="requires_authorization" value="false"/>
+  </service>
+  <property name="catalog_version" value="2"/>
+  <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf.v20161020" name="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf" restrictAccess="esg-user">
+    <property name="dataset_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf"/>
+    <property name="dataset_version" value="20161020"/>
+    <property name="dataset_id_template_" value="cordex.%(product)s.%(domain)s.%(institute)s.%(driving_model)s.%(experiment)s.%(ensemble)s.%(rcm_name)s.%(rcm_version)s.%(time_frequency)s.%(variable)s"/>
+    <property name="directory_format_template_" value="%(root)s/%(project)s/%(product)s/%(domain)s/%(institute)s/%(driving_model)s/%(experiment)s/%(ensemble)s/%(rcm_model)s/%(rcm_version)s/%(time_frequency)s/%(variable)s/%(version)s"/>
+    <property name="project" value="cordex"/>
+    <property name="product" value="output"/>
+    <property name="domain" value="EUR-44"/>
+    <property name="institute" value="UCAN"/>
+    <property name="driving_model" value="CCCma-CanESM2"/>
+    <property name="experiment" value="rcp45"/>
+    <property name="ensemble" value="r0i0p0"/>
+    <property name="rcm_name" value="WRF341I"/>
+    <property name="rcm_version" value="v2"/>
+    <property name="time_frequency" value="fx"/>
+    <metadata>
+      <variables vocabulary="CF-1.0">
+        <variable name="sftlf" vocabulary_name="land_area_fraction" units="%">Land Area Fraction</variable>
+      </variables>
+    </metadata>
+    <metadata inherited="true">
+      <dataType>Grid</dataType>
+      <dataFormat>NetCDF</dataFormat>
+    </metadata>
+    <access dataFormat="NetCDF" serviceName="LASatUnican" urlPath="?catid=36370A7EDA33254443E234651CDF0349_ns_cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf.v20161020"/>
+    <dataset ID="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf.v20161020.sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc" name="sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r0i0p0/UCAN-WRF341I/v2/fx/sftlf/v20161020/sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc" serviceName="HTTPServer">
+      <property name="file_id" value="cordex.output.EUR-44.UCAN.CCCma-CanESM2.rcp45.r0i0p0.WRF341I.v2.fx.sftlf.sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc"/>
+      <property name="file_version" value="1"/>
+      <property name="size" value="132245"/>
+      <property name="mod_time" value="2018-03-08 11:27:34"/>
+      <property name="checksum" value="d3612902aaea1a7c418998a735befa81850d496a2d692d96732f39d33b1224a0"/>
+      <property name="checksum_type" value="SHA256"/>
+      <variables vocabulary="CF-1.0">
+        <variable name="sftlf" vocabulary_name="land_area_fraction" units="%">Land Area Fraction</variable>
+      </variables>
+      <dataSize units="bytes">132245</dataSize>
+      <access serviceName="GRIDFTP" urlPath="/esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r0i0p0/UCAN-WRF341I/v2/fx/sftlf/v20161020/sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc"/>
+      <access serviceName="OpenDAPServer" urlPath="esgcet/cordex/EUR-44_CCCma-CanESM2_rcp4.5_r1i1p1_UCAN-WRF341I_v2/CORDEX/output/EUR-44/UCAN/CCCma-CanESM2/rcp45/r0i0p0/UCAN-WRF341I/v2/fx/sftlf/v20161020/sftlf_EUR-44_CCCma-CanESM2_rcp45_r0i0p0_UCAN-WRF341I_v2_fx.nc"/>
+    </dataset>
+  </dataset>
+</catalog>

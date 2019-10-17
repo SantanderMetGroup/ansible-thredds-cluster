@@ -1,0 +1,24 @@
+- name: Create downloads directory
+  local_action: file
+  args: 
+    path: "{{ downloads }}"
+    state: directory
+
+- name: Create {{ tomcat_home }}
+  file: dest={{ tomcat_home }} state=directory
+
+- name: Download tomcat
+  become: False
+  run_once: True
+  local_action: get_url
+  args:
+    url: "{{ tomcat_download_url }}"
+    dest: "{{ downloads }}/{{ tomcat_tgz }}"
+    checksum: "{{ tomcat_checksum }}"
+
+- name: Unarchive tomcat
+  unarchive:
+    src: "{{ downloads }}/{{ tomcat_tgz }}"
+    dest: "{{ tomcat_home }}"
+    extra_opts:
+      --strip-components=1

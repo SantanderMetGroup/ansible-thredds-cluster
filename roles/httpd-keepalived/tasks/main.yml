@@ -1,0 +1,15 @@
+#Simulate serial
+- name: Create block for instance
+  include_tasks: register_rip.yml
+  with_items: "{{ ansible_play_batch }}"
+  when: "hostvars[host_item].inventory_hostname == inventory_hostname"
+  loop_control:
+    loop_var: host_item
+
+- name: REDIRECT to lo interface packets destined to VIP
+  iptables:
+    table: nat
+    chain: PREROUTING
+    destination: "{{ hostvars[item.gateway].vip }}"
+    jump: REDIRECT
+  with_items: "{{ replicas }}"

@@ -1,0 +1,70 @@
+- name: Gather facts on all hosts
+  hosts: all
+  gather_facts: True
+  tags: [always]
+
+- name: Configure load balancer
+  hosts: gateways
+  roles:
+    - role: source
+      dependencies: [nginx]
+    - role: nginx
+    - role: gateway-nginx
+
+- name: Configure servers
+  hosts: tds
+  vars:
+    ansible_become_pass: ansible
+    # required interface
+    jdk_root: "{{ ansible_env.HOME }}/jdk"
+    tomcat_home: "{{ ansible_env.HOME }}/tomcat"
+    tomcat_base: "{{ ansible_env.HOME }}/instances"
+    venv_home: "{{ ansible_env.HOME }}/virtualenv"
+  roles:
+    - role: yum
+      dependencies: [memcached]
+    - role: source
+      dependencies: [jdk, tomcat, supervisor]
+      tags: [tds_deploy]
+    - role: tds
+      tags: [tds_deploy]
+    - role: tds-nginx
+    - role: tomcat-memcached
+      instances: "{{ tds }}"
+      tags: [tds_deploy]
+    - role: supervisor-tds
+      tags: [tds_deploy]
+  tasks:
+    - include_tasks: ../../utils/test-authentication.yml
+      vars:
+        instances: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: Start memcached
+      command: memcached -d -u ansible
+
+    - name: start tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: started
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy]
+
+    - name: restart tds instances
+      supervisorctl:
+        name: "{{ item.name }}"
+        state: restarted
+        username: "{{ supervisor_user | default(omit) }}"
+        password: "{{ supervisor_password | default(omit) }}"
+        supervisorctl_path: "{{ supervisor_bin }}/supervisorctl"
+      with_items: "{{ tds }}"
+      tags: [tds_deploy, restart, update_catalogs]
+
+- name: Start Nginx
+  hosts: gateways
+  tasks:
+
+    - command: "{{ nginx_bin }} -c {{ nginx_conf }}"
